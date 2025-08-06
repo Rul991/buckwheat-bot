@@ -1,0 +1,31 @@
+{
+  "name": "buckwheat-bot",
+  "version": "0.0.1",
+  "main": "src/app/index.ts",
+  "scripts": {
+    "dev": "npx nodemon --ext ts -w src --exec \"npm start\"",
+    "build": "npm i",
+    "start": "tsx .",
+    "typecheck": "npx tsc -b"
+  },
+  "keywords": [
+    "telegraf",
+    "mongoose",
+    "bakvit",
+    "bot",
+    "telegram"
+  ],
+  "author": "Rul",
+  "license": "MIT",
+  "description": "Bot for chat: \"https://t.me/envell_chat\"",
+  "devDependencies": {
+    "@types/mongoose": "^5.11.96",
+    "@types/node": "^24.1.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.0",
+    "mongoose": "^8.16.4",
+    "telegraf": "^4.16.3",
+    "tsx": "^4.20.3"
+  }
+}
