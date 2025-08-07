@@ -77,15 +77,6 @@ export default class Bot {
             }
 
             await action.execute(ctx, value)
-            await ctx.reply('test', {
-                reply_markup: {
-                    inline_keyboard: [
-                        [
-                            {text: 'asdfsd', callback_data: 'asdfadfs_asdf_фывафывавыфа'}
-                        ]
-                    ]
-                }
-            })
         })
     }
 
@@ -191,5 +182,9 @@ export default class Bot {
         this._bot.launch(() => {
             console.log(`Listened at https://t.me/${this._bot.botInfo?.username} (!)`)
         })
+    }
+
+    stop(reason?: string) {
+        this._bot.stop(reason)
     }
 }

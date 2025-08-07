@@ -27,6 +27,7 @@ import HelloCommand from '../classes/commands/buckwheat/HelloCommand'
 import DemuteCommand from '../classes/commands/buckwheat/admins/DemuteCommand'
 import KickCommand from '../classes/commands/buckwheat/admins/KickCommand'
 import UnbanCommand from '../classes/commands/buckwheat/admins/UnbanCommand'
+import CheatCommand from '../classes/commands/buckwheat/admins/CheatCommand'
 
 const isEnvVarsValidate = () => {
     if(!Validator.isEnvValueDefined(TOKEN)) {
@@ -68,9 +69,7 @@ const getSimpleCommands = async () => {
     return result
 }
 
-const launchBot = async () => {
-    const bot = new Bot(TOKEN)
-
+const launchBot = async (bot: Bot) => {
     bot.addEveryMessageActions(
         new WrongChatAction(), // it should be first
         new AddMessagesAction(),
@@ -104,6 +103,7 @@ const launchBot = async () => {
         new KickCommand(),
         new UnbanCommand(),
         new HelloCommand(),
+        new CheatCommand(),
         ...await getSimpleCommands()
     )
 
@@ -115,11 +115,25 @@ const launchBot = async () => {
     bot.launch()
 }
 
+const stopBot = (bot: Bot): NodeJS.SignalsListener => {
+    return signal => {
+        bot.stop(signal)
+        console.log(`bot is stopped [${signal}]`)
+        process.exit(0)
+    }
+}
+
 const main = async () => {
     if(!isEnvVarsValidate()) return
     
     await connectDatabase()
-    await launchBot()
+
+    const bot = new Bot(TOKEN)
+    await launchBot(bot)
+
+    const stopListener = stopBot(bot)
+    process.once('SIGINT', stopListener)
+    process.once('SIGTERM', stopListener)
 }
 
 main()
