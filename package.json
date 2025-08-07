@@ -8,7 +8,7 @@
     "start": "tsx .",
     "errors": "npx tsc -b",
     "back": "npm start &",
-    "stop": "pkill -f 'npm run start'"
+    "stop": "pkill -f 'node'"
   },
   "keywords": [
     "telegraf",
