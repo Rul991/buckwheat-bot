@@ -1,7 +1,8 @@
-import { readFile, stat } from 'fs/promises'
+import { appendFile, readFile, stat, writeFile } from 'fs/promises'
 import { join } from 'path'
 import FileCache from '../interfaces/other/FileCache'
 import StringUtils from './StringUtils'
+import Logging from './Logging'
 
 export default class FileUtils {
     private static _cache: Record<string, FileCache> = {}
@@ -37,8 +38,30 @@ export default class FileUtils {
             return result
         }
         catch(e) {
-            console.error(`cant read text from ${path}: ${e}`)
+            Logging.error(`cant read text from ${path}: ${e}`)
             return ``
+        }
+    }
+
+    static async write(path: string, data: string): Promise<boolean> {
+        try {
+            await writeFile(path, data)
+            return true
+        }
+        catch(e) {
+            Logging.error('Cant write:', e)
+            return false
+        }
+    }
+
+    static async append(path: string, data: string): Promise<boolean> {
+        try {
+            await appendFile(path, data)
+            return true
+        } 
+        catch (e) {
+            Logging.error('Cant append:', e)
+            return false
         }
     }
 
@@ -48,7 +71,7 @@ export default class FileUtils {
             return JSON.parse(text)
         }
         catch(e) {
-            console.warn(`cant read json from ${path}: ${e}`)
+            Logging.warn(`cant read json from ${path}: ${e}`)
             return null
         }
     }

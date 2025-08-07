@@ -3,6 +3,7 @@ import FileUtils from './FileUtils'
 import { Message } from 'telegraf/types'
 import { MaybeString } from './types'
 import { DEFAULT_USER_NAME, PARSE_MODE } from './consts'
+import Logging from './Logging'
 
 export default class ContextUtils {
     static async answerMessageFromResource(ctx: Context, path: string, changeValues: Record<string, string> = {}, isParseToHtmlEntities = true): Promise<Message.TextMessage> {
@@ -26,7 +27,7 @@ export default class ContextUtils {
             return await ctx.reply(text, {...options, parse_mode: PARSE_MODE})
         }
         catch(e) {
-            console.error(e)
+            Logging.error(e)
             return await ctx.reply(text, options)
         }
     }

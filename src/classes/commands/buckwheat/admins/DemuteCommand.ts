@@ -6,6 +6,7 @@ import UserNameService from '../../../db/services/user/UserNameService'
 import { DEFAULT_USER_NAME } from '../../../../utils/consts'
 import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
+import Logging from '../../../../utils/Logging'
 
 export default class DemuteCommand extends BuckwheatCommand {
     constructor() {
@@ -64,7 +65,7 @@ export default class DemuteCommand extends BuckwheatCommand {
                 )
             }
             catch(e) {
-                console.error(e)
+                Logging.error(e)
                 await ContextUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/mute/error.html',

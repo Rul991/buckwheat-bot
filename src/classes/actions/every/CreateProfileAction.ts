@@ -1,6 +1,7 @@
 import { Context } from 'telegraf'
 import EveryMessageAction from './EveryMessageAction'
 import UserProfileService from '../../db/services/user/UserProfileService'
+import Logging from '../../../utils/Logging'
 
 export default class CreateProfileAction extends EveryMessageAction {
     async execute(ctx: Context): Promise<void> {
@@ -10,10 +11,10 @@ export default class CreateProfileAction extends EveryMessageAction {
 
         const user = await UserProfileService.create(id, first_name)
         if(!user) {
-            console.warn(`profile(id: ${id}) exist`)
+            Logging.warn(`profile(id: ${id}) exist`)
         }
         else {
-            console.log(`created new profile: ${id}`)
+            Logging.log(`created new profile: ${id}`)
         }
     }
 

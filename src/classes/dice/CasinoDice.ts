@@ -2,7 +2,7 @@ import { Context } from 'telegraf'
 import BaseDice from './BaseDice'
 import ContextUtils from '../../utils/ContextUtils'
 import UserProfileService from '../db/services/user/UserProfileService'
-import { DEFAULT_USER_NAME, JACKPOT_PRIZE, LOSE_PRIZE, WIN_PRIZE } from '../../utils/consts'
+import { DEFAULT_USER_NAME, DICE_TIME, JACKPOT_PRIZE, LOSE_PRIZE, WIN_PRIZE } from '../../utils/consts'
 import CasinoAccountService from '../db/services/casino/CasinoAccountService'
 import CasinoAddService from '../db/services/casino/CasinoAddService'
 import Casino from '../../interfaces/schemas/Casino'
@@ -95,7 +95,9 @@ export default class CasinoDice extends BaseDice {
             return
         }
 
-        await this._handleGameResult(ctx, id, value, values)
-        await this._checkAndNotifyEndGame(ctx, id, values)
+        setTimeout(async () => {
+            await this._handleGameResult(ctx, id, value, values)
+            await this._checkAndNotifyEndGame(ctx, id, values)
+        }, DICE_TIME)
     }
 }

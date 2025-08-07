@@ -10,6 +10,7 @@ import BaseDice from '../dice/BaseDice'
 import WrongDice from '../dice/WrongDice'
 import EveryMessageAction from '../actions/every/EveryMessageAction'
 import CallbackButtonAction from '../callback-button/CallbackButtonAction'
+import Logging from '../../utils/Logging'
 
 export default class Bot {
     private static _names = ['баквит', 'гречка']
@@ -45,7 +46,7 @@ export default class Bot {
     private _onCallbackButtonAction(): void {
         this._bot.action(/^([^_]+)_(.+)$/, async ctx => {
             const [_, name, data] = ctx.match
-            console.log(_, name, data)
+            Logging.log('button:', name, data)
 
             if(!name) return
 
@@ -58,7 +59,8 @@ export default class Bot {
 
     private _onEveryMessage(): void {
         this._bot.on('message', async (ctx, next) => {
-            console.log(ctx.message)
+            Logging.log(ctx.message)
+
             for (const action of this._everyMessageActions) {
                 if(await action.execute(ctx)) return
             }
@@ -158,7 +160,7 @@ export default class Bot {
             else if(command instanceof BuckwheatCommand) {
                 this._addBuckwheatCommand(command)
             }
-            else console.warn('its not command', command)
+            else Logging.warn('its not command', command)
         })
     }
 

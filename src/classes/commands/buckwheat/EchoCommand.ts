@@ -11,11 +11,12 @@ export default class EchoCommand extends BuckwheatCommand {
 
     async execute(ctx: Context, other: MaybeString): Promise<void> {
         if(typeof other == 'string' && other.length) {
-            ContextUtils.answerMessageFromResource(
+            await ContextUtils.answerMessageFromResource(
                 ctx, 
                 'text/commands/echo/echo.html',
                 {other}
             )
+            await ctx.deleteMessage()
         }
         else {
             ContextUtils.answerMessageFromResource(ctx, 'text/commands/echo/echoError.html')

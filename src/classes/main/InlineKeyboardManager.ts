@@ -1,30 +1,8 @@
-import { InlineKeyboardMarkup } from 'telegraf/types'
+import { InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton } from 'telegraf/types'
+import FileUtils from '../../utils/FileUtils'
 
 export default class InlineKeyboardManager {
-    private static _instance: InlineKeyboardManager | null = null
-
-    private _keyboards!: Record<string, InlineKeyboardMarkup>
-
-    constructor() {
-        if(InlineKeyboardManager._instance) return InlineKeyboardManager._instance
-        InlineKeyboardManager._instance = this
-        
-        this._keyboards = {}
-    }
-
-    async loadFromResource() {
-
-    }
-
-    get(name: string, data = '@') {
-        return this._keyboards[name]
-            .inline_keyboard
-            .map(buttons => 
-                buttons.map(button => {
-                    if(!('callback_data' in button)) return button
-
-                    return {...button, callback_data: button.callback_data.replaceAll('@', data)} 
-                })
-            )
+    static async get(name: string, data = '@'): Promise<InlineKeyboardButton[][] | null> {
+        return await FileUtils.readJsonFromResource<InlineKeyboardButton[][]>(`json/inline_keyboards/${name}.json`)
     }
 }

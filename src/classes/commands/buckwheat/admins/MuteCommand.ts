@@ -8,6 +8,7 @@ import { DEFAULT_USER_NAME } from '../../../../utils/consts'
 import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
 import { ChatPermissions } from 'telegraf/types'
+import Logging from '../../../../utils/Logging'
 
 export default class MuteCommand extends BuckwheatCommand {
     protected _filename: string
@@ -85,7 +86,7 @@ export default class MuteCommand extends BuckwheatCommand {
                 )
             }
             catch(e) {
-                console.error(e)
+                Logging.error(e)
                 await ContextUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/mute/error.html',
