@@ -9,6 +9,7 @@ import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
 import { ChatPermissions } from 'telegraf/types'
 import Logging from '../../../../utils/Logging'
+import MessageUtils from '../../../../utils/MessageUtils'
 
 export default class MuteCommand extends BuckwheatCommand {
     protected _filename: string
@@ -58,7 +59,7 @@ export default class MuteCommand extends BuckwheatCommand {
                     || replyId == adminId
                     || time == -1
                 ) {
-                    await ContextUtils.answerMessageFromResource(
+                    await MessageUtils.answerMessageFromResource(
                         ctx,
                         'text/commands/mute/cancel.html'
                     )
@@ -73,31 +74,33 @@ export default class MuteCommand extends BuckwheatCommand {
                 const adminName = await UserNameService.get(adminId)
                 const replyName = await UserNameService.get(replyId)
 
-                await ContextUtils.answerMessageFromResource(
+                await MessageUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/mute/done.html',
                     {
-                        replyLink: ContextUtils.getLinkUrl(replyId),
-                        adminLink: ContextUtils.getLinkUrl(adminId),
-                        admName: adminName ?? DEFAULT_USER_NAME,
-                        nameReply: replyName ?? DEFAULT_USER_NAME,
-                        time: TimeUtils.getTimeName(time)
+                        changeValues: {
+                            replyLink: ContextUtils.getLinkUrl(replyId),
+                            adminLink: ContextUtils.getLinkUrl(adminId),
+                            admName: adminName ?? DEFAULT_USER_NAME,
+                            nameReply: replyName ?? DEFAULT_USER_NAME,
+                            time: TimeUtils.getTimeName(time)
+                        }
                     }
                 )
             }
             catch(e) {
                 Logging.error(e)
-                await ContextUtils.answerMessageFromResource(
+                await MessageUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/mute/error.html',
                     {
-                        e: e?.toString() ?? ''
+                        changeValues: {e: e?.toString() ?? ''}
                     }
                 )
             }
         }
         else {
-            await ContextUtils.answerMessageFromResource(
+            await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/mute/no-reply.html'
             )

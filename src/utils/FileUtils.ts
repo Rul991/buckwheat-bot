@@ -3,6 +3,8 @@ import { join } from 'path'
 import FileCache from '../interfaces/other/FileCache'
 import StringUtils from './StringUtils'
 import Logging from './Logging'
+import ReplaceOptions from '../interfaces/options/ReplaceOptions'
+import { render } from 'pug'
 
 export default class FileUtils {
     private static _cache: Record<string, FileCache> = {}
@@ -78,17 +80,37 @@ export default class FileUtils {
 
     static async readTextFromResource(
         path: string, 
-        changeValues: Record<string, string> = {}, 
-        isParseToHtmlEntities = true
+        options: ReplaceOptions = {}
     ): Promise<string> {
         let text = await this.readToString(join(this._resourceFolder, path))
+        const isPug = path.endsWith('.pug')
 
-        for (const key in changeValues) {
-            const replacedText = isParseToHtmlEntities ? StringUtils.toHtmlEntities(changeValues[key]) : changeValues[key]
-            text = text.replaceAll(`$${key}`, replacedText)
+        if(!isPug) {
+            return StringUtils.replaceLocalsInText(text, options)
         }
-
-        return text
+        else {
+            try {
+                return render(
+                    text, 
+                    Object.entries(options.changeValues ?? {})
+                        .reduce((prev, [key, value]) => 
+                            ({
+                                ...prev, 
+                                [key]: StringUtils.toHtmlEntitiesIfNeed(
+                                    value, 
+                                    options.isParseToHtmlEntities
+                                )
+                            })
+                        , 
+                        {}
+                    )
+                )
+            }
+            catch(e) {
+                Logging.error('pug parsing error:', e)
+                return ''
+            }
+        }
     }
 
     static async readJsonFromResource<T extends object>(path: string): Promise<T | null> {

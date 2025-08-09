@@ -4,12 +4,9 @@ import { Message } from 'telegraf/types'
 import { MaybeString } from './types'
 import { DEFAULT_USER_NAME, PARSE_MODE } from './consts'
 import Logging from './Logging'
+import InlineKeyboardManager from '../classes/main/InlineKeyboardManager'
 
 export default class ContextUtils {
-    static async answerMessageFromResource(ctx: Context, path: string, changeValues: Record<string, string> = {}, isParseToHtmlEntities = true): Promise<Message.TextMessage> {
-        return await ContextUtils.answer(ctx, await FileUtils.readTextFromResource(path, changeValues, isParseToHtmlEntities))
-    }
-
     static getLinkUrl(id: number): string {
         return `tg://user?id=${id}`
     }
@@ -18,18 +15,8 @@ export default class ContextUtils {
         return `<a href="${this.getLinkUrl(id)}">${name ?? DEFAULT_USER_NAME}</a>`
     }
 
-    static async answer(ctx: Context, text: string): Promise<Message.TextMessage> {
-        if(!text.length) return {text: '', message_id: -1, date: -1, chat: {first_name: '', type: 'private', 'id': -1}}
-
-        const options = {reply_parameters: {'message_id': ctx.message?.message_id ?? 0}}
-
-        try {
-            return await ctx.reply(text, {...options, parse_mode: PARSE_MODE})
-        }
-        catch(e) {
-            Logging.error(e)
-            return await ctx.reply(text, options)
-        }
+    static async showAlert(ctx: Context) {
+        await ctx.answerCbQuery('Убери свои шалавливые ручки!', {show_alert: true})
     }
 
     static async isCreator(ctx: Context): Promise<boolean> {

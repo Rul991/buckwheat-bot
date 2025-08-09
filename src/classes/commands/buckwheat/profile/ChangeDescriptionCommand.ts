@@ -4,6 +4,7 @@ import BuckwheatCommand from '../../base/BuckwheatCommand'
 import ContextUtils from '../../../../utils/ContextUtils'
 import { MAX_DESCRIPTION_LENGTH } from '../../../../utils/consts'
 import UserDescriptionService from '../../../db/services/user/UserDescriptionService'
+import MessageUtils from '../../../../utils/MessageUtils'
 
 export default class ChangeDescriptionCommand extends BuckwheatCommand {
     constructor() {
@@ -16,20 +17,19 @@ export default class ChangeDescriptionCommand extends BuckwheatCommand {
             let description = other ?? ''
 
             if(description.length > MAX_DESCRIPTION_LENGTH) {
-                await ContextUtils.answerMessageFromResource(
+                await MessageUtils.answerMessageFromResource(
                     ctx, 
                     'text/commands/change-description/big.html', 
-                    {max: MAX_DESCRIPTION_LENGTH.toString()}
+                    {changeValues: {max: MAX_DESCRIPTION_LENGTH.toString()}}
                 )
                 return
             }
 
-            if(await UserDescriptionService.update(ctx.from?.id ?? 0, description)) {
-                await ContextUtils.answerMessageFromResource(
-                    ctx, 
-                    'text/commands/change-description/changed.html'
-                )
-            }
+            await UserDescriptionService.update(ctx.from?.id ?? 0, description)
+            await MessageUtils.answerMessageFromResource(
+                ctx, 
+                'text/commands/change-description/changed.html'
+            )
         }
     }
 }

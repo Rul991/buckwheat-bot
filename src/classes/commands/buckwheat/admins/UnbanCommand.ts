@@ -8,6 +8,7 @@ import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
 import TimeUtils from '../../../../utils/TimeUtils'
 import Logging from '../../../../utils/Logging'
+import MessageUtils from '../../../../utils/MessageUtils'
 
 export default class UnbanCommand extends BuckwheatCommand {
     constructor() {
@@ -37,7 +38,7 @@ export default class UnbanCommand extends BuckwheatCommand {
                 if(!(RankUtils.canUse(adminRank, replyRank) || isCreator) 
                     || replyId == adminId
                 ) {
-                    await ContextUtils.answerMessageFromResource(
+                    await MessageUtils.answerMessageFromResource(
                         ctx,
                         'text/commands/kick/cancel.html'
                     )
@@ -49,28 +50,30 @@ export default class UnbanCommand extends BuckwheatCommand {
                 const adminName = await UserNameService.get(adminId)
                 const replyName = await UserNameService.get(replyId)
 
-                await ContextUtils.answerMessageFromResource(
+                await MessageUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/kick/unban.html',
                     {
-                        replyLink: ContextUtils.getLinkUrl(replyId),
-                        nameReply: replyName ?? DEFAULT_USER_NAME
+                        changeValues: {
+                            replyLink: ContextUtils.getLinkUrl(replyId),
+                            nameReply: replyName ?? DEFAULT_USER_NAME
+                        }
                     }
                 )
             }
             catch(e) {
                 Logging.error(e)
-                await ContextUtils.answerMessageFromResource(
+                await MessageUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/kick/error.html',
                     {
-                        e: e?.toString() ?? ''
+                        changeValues: {e: e?.toString() ?? ''}
                     }
                 )
             }
         }
         else {
-            await ContextUtils.answerMessageFromResource(
+            await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/kick/no-reply.html'
             )

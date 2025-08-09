@@ -2,6 +2,7 @@ import { Context } from 'telegraf'
 import { CommandStrings, MaybeString } from '../../../utils/types'
 import ContextUtils from '../../../utils/ContextUtils'
 import ConditionalCommand from '../base/ConditionalCommand'
+import MessageUtils from '../../../utils/MessageUtils'
 
 export default class NoCommand extends ConditionalCommand {
     condition(_ctx: Context, [_, command, _other]: CommandStrings): boolean | Promise<boolean> {
@@ -9,6 +10,6 @@ export default class NoCommand extends ConditionalCommand {
     }
 
     async execute(ctx: Context, _: MaybeString): Promise<void> {
-        await ContextUtils.answerMessageFromResource(ctx, 'text/commands/no.html')
+        await MessageUtils.answerMessageFromResource(ctx, 'text/commands/no.html')
     }
 }

@@ -1,5 +1,6 @@
 import { configDotenv } from 'dotenv'
 import { env } from 'process'
+import { ModeTypes } from './types'
 
 configDotenv()
 
@@ -8,6 +9,8 @@ export const DB_NAME = env.DB_NAME!
 export const DB_URL = env.DB_URL!
 export const CHAT_ID = env.CHAT_ID!
 export const EMPTY_PROFILE_IMAGE = env.EMPTY_PROFILE_IMAGE
+export const DEV_ID = env.DEV_ID
+export const MODE: ModeTypes = env.MODE as ModeTypes ?? 'dev'
 
 export const MAX_NAME_LENGTH = 48
 export const MAX_DESCRIPTION_LENGTH = 256
@@ -24,7 +27,9 @@ export const HOURS_IN_DAY = 24
 export const MILLISECONDS_IN_DAY = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY
 
 export const PARSE_MODE = 'HTML'
-export const DICE_TIME = 1750
+
+export const CASINO_TIME = 1750
+export const DICE_TIME = 3500
 
 export const DEFAULT_USER_NAME = 'игрок'
 export const DEFAULT_USER_NAME_CAPITAL = DEFAULT_USER_NAME

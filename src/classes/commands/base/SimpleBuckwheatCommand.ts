@@ -4,6 +4,7 @@ import BuckwheatCommand from './BuckwheatCommand'
 import FileUtils from '../../../utils/FileUtils'
 import SimpleCommand from '../../../interfaces/other/SimpleComand'
 import ContextUtils from '../../../utils/ContextUtils'
+import MessageUtils from '../../../utils/MessageUtils'
 
 export default class SimpleBuckwheatCommand extends BuckwheatCommand {
     static async loadFromJsonResource(path: string): Promise<SimpleBuckwheatCommand> {
@@ -28,10 +29,10 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
 
     async execute(ctx: Context, _: MaybeString): Promise<void> {
         if(typeof this._src == 'string') {
-            await ContextUtils.answerMessageFromResource(ctx, this._src)
+            await MessageUtils.answerMessageFromResource(ctx, this._src)
         }
         else if(typeof this._text == 'string') {
-            await ContextUtils.answer(ctx, this._text)
+            await MessageUtils.answer(ctx, this._text)
         }
     }
 

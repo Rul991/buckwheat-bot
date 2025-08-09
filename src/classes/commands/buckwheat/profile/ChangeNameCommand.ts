@@ -5,6 +5,7 @@ import ContextUtils from '../../../../utils/ContextUtils'
 import { DEFAULT_USER_NAME, MAX_NAME_LENGTH } from '../../../../utils/consts'
 import UserNameService from '../../../db/services/user/UserNameService'
 import StringUtils from '../../../../utils/StringUtils'
+import MessageUtils from '../../../../utils/MessageUtils'
 
 export default class ChangeNameCommand extends BuckwheatCommand {
     constructor() {
@@ -18,10 +19,10 @@ export default class ChangeNameCommand extends BuckwheatCommand {
         if(!other) {
             const name = await UserNameService.get(ctx.from?.id!) ?? DEFAULT_USER_NAME
 
-            await ContextUtils.answerMessageFromResource(
+            await MessageUtils.answerMessageFromResource(
                 ctx, 
                 'text/commands/change-name/name.html', 
-                {link, name}
+                {changeValues: {link, name}}
             )
         }
 
@@ -29,20 +30,21 @@ export default class ChangeNameCommand extends BuckwheatCommand {
             let name = StringUtils.validate(other ?? '')
 
             if(name.length > MAX_NAME_LENGTH) {
-                await ContextUtils.answerMessageFromResource(
+                await MessageUtils.answerMessageFromResource(
                     ctx, 
                     'text/commands/change-name/big-name.html', 
-                    {max: MAX_NAME_LENGTH.toString()}
+                    {changeValues: {max: MAX_NAME_LENGTH.toString()}}
                 )
                 return
             }
 
             if(await UserNameService.update(ctx.from?.id ?? 0, name)) {
-                await ContextUtils.answerMessageFromResource(
+                await MessageUtils.answerMessageFromResource(
                     ctx, 
                     'text/commands/change-name/changed.html', 
-                    {link, name},
-                    true
+                    {
+                        changeValues: {link, name}
+                    }
                 )
             }
         }

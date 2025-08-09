@@ -26,6 +26,7 @@ export default class Logging {
     }
 
     static error(...message: any[]) {
+        console.error(...message)
         this._addMessage('error', ...message)
     }
 

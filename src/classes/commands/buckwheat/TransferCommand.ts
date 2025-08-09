@@ -5,6 +5,7 @@ import ContextUtils from '../../../utils/ContextUtils'
 import CasinoGetService from '../../db/services/casino/CasinoGetService'
 import CasinoAddService from '../../db/services/casino/CasinoAddService'
 import UserNameService from '../../db/services/user/UserNameService'
+import MessageUtils from '../../../utils/MessageUtils'
 
 export default class TransferCommand extends BuckwheatCommand {
     private static _filenames = ['no-receiver', 'self', 'empty', 'wrong', 'negative']
@@ -31,7 +32,7 @@ export default class TransferCommand extends BuckwheatCommand {
     }
 
     private static async _sendMessage(ctx: Context, filename: string) {
-        await ContextUtils.answerMessageFromResource(
+        await MessageUtils.answerMessageFromResource(
             ctx,
             `text/commands/transfer/${filename}.html`
         )
@@ -79,15 +80,23 @@ export default class TransferCommand extends BuckwheatCommand {
             const senderName = await TransferCommand._getName(sender)
             const receiverName = await TransferCommand._getName(receiver)
 
-            ContextUtils.answerMessageFromResource(
+            MessageUtils.answerMessageFromResource(
                 ctx,
-                'text/commands/transfer/positive.html',
+                'text/commands/transfer/positive.pug',
                 {
-                    senderLink: ContextUtils.getLink(senderName, sender),
-                    receiverLink: ContextUtils.getLink(receiverName, receiver),
-                    count: diffMoney.toString()
-                },
-                false
+                    changeValues: {
+                        sender: {
+                            link: ContextUtils.getLinkUrl(sender),
+                            name: senderName
+                        },
+                        receiver: {
+                            link: ContextUtils.getLinkUrl(receiver),
+                            name: receiverName
+                        },
+                        count: diffMoney
+                    },
+                    isParseToHtmlEntities: true
+                }
             )
         }
     }

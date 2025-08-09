@@ -5,10 +5,8 @@
   "scripts": {
     "dev": "npx nodemon --ext ts -w src --exec \"npm start\"",
     "build": "npm i",
-    "start": "tsx .",
-    "errors": "npx tsc -b",
-    "back": "npm start &",
-    "stop": "pkill -f 'node'"
+    "start": "npx tsx .",
+    "check": "npx tsc -b"
   },
   "keywords": [
     "telegraf",
@@ -22,12 +20,13 @@
   "description": "Bot for chat: \"https://t.me/envell_chat\"",
   "devDependencies": {
     "@types/mongoose": "^5.11.96",
-    "@types/node": "^24.1.0"
+    "@types/node": "^24.1.0",
+    "@types/pug": "^2.0.10"
   },
   "dependencies": {
     "dotenv": "^17.2.0",
     "mongoose": "^8.16.4",
-    "telegraf": "^4.16.3",
-    "tsx": "^4.20.3"
+    "pug": "^3.0.3",
+    "telegraf": "^4.16.3"
   }
 }

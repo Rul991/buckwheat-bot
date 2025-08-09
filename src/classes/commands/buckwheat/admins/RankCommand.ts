@@ -6,24 +6,27 @@ import RankUtils from '../../../../utils/RankUtils'
 import ContextUtils from '../../../../utils/ContextUtils'
 import UserNameService from '../../../db/services/user/UserNameService'
 import { DEFAULT_USER_NAME } from '../../../../utils/consts'
+import MessageUtils from '../../../../utils/MessageUtils'
 
 export default class RankCommand extends BuckwheatCommand {
     private static async _answerMyRank(ctx: Context): Promise<void> {
         const rank = await UserRankService.get(ctx.from!.id)
 
-        await ContextUtils.answerMessageFromResource(
+        await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/rank/my.html',
             {
-                rank: rank.toString(),
-                nameRank: RankUtils.getRankByNumber(rank)
+                changeValues: {
+                    rank: rank.toString(),
+                    nameRank: RankUtils.getRankByNumber(rank)
+                }
             }
         )
     }
 
     private static async _answerIfWrongData(ctx: Context, data: string): Promise<boolean> {
         if(isNaN(+data)) {
-            await ContextUtils.answerMessageFromResource(
+            await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/rank/wrong.html'
             )
@@ -35,7 +38,7 @@ export default class RankCommand extends BuckwheatCommand {
 
     private static async _answerIfRankOutBounds(ctx: Context, rank: number): Promise<boolean> {
         if(!RankUtils.isRankInBounds(rank)) {
-            await ContextUtils.answerMessageFromResource(
+            await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/rank/out-bounds.html'
             )
@@ -47,7 +50,7 @@ export default class RankCommand extends BuckwheatCommand {
 
     private static async _answerIfNotAdmin(ctx: Context, rank: number): Promise<boolean> {
         if(rank < RankUtils.adminRank) {
-            await ContextUtils.answerMessageFromResource(
+            await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/rank/not-admin.html'
             )
@@ -61,7 +64,7 @@ export default class RankCommand extends BuckwheatCommand {
         const isCreator = await ContextUtils.isCreator(ctx)
 
         if((myRank < rank || myRank <= replyRank) && !isCreator) {
-            await ContextUtils.answerMessageFromResource(
+            await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/rank/low-rank.html'
             )
@@ -100,14 +103,16 @@ export default class RankCommand extends BuckwheatCommand {
                 const mode = replyRank <= rank ? 'up' : 'down'
                 
                 await UserRankService.update(replyId, rank)
-                await ContextUtils.answerMessageFromResource(
+                await MessageUtils.answerMessageFromResource(
                     ctx,
                     `text/commands/rank/${mode}.html`,
                     {
-                        rank: RankUtils.getRankByNumber(rank),
-                        emoji: RankUtils.getEmojiByRank(rank),
-                        name: replyName,
-                        link: ContextUtils.getLinkUrl(replyId)
+                        changeValues: {
+                            rank: RankUtils.getRankByNumber(rank),
+                            emoji: RankUtils.getEmojiByRank(rank),
+                            name: replyName,
+                            link: ContextUtils.getLinkUrl(replyId)
+                        }
                     }
                 )
             }

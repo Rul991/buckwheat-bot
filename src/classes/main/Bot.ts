@@ -11,6 +11,8 @@ import WrongDice from '../dice/WrongDice'
 import EveryMessageAction from '../actions/every/EveryMessageAction'
 import CallbackButtonAction from '../callback-button/CallbackButtonAction'
 import Logging from '../../utils/Logging'
+import { CHAT_ID, MODE } from '../../utils/consts'
+import FileUtils from '../../utils/FileUtils'
 
 export default class Bot {
     private static _names = ['баквит', 'гречка']
@@ -181,8 +183,15 @@ export default class Bot {
         this._onCallbackButtonAction()
 
         this._setBotCommands()
-        this._bot.launch(() => {
+
+        this._bot.launch(async () => {
             console.log(`Listened at https://t.me/${this._bot.botInfo?.username} (!)`)
+            if(MODE == 'prod') {
+                this._bot.telegram.sendMessage(
+                    CHAT_ID, 
+                    await FileUtils.readTextFromResource('text/commands/update/after_restart.html')
+                )
+            }
         })
     }
 

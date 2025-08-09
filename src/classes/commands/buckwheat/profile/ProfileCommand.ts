@@ -6,6 +6,8 @@ import ContextUtils from '../../../../utils/ContextUtils'
 import FileUtils from '../../../../utils/FileUtils'
 import { DEFAULT_USER_NAME, EMPTY_PROFILE_IMAGE as EMPTY_PROFILE_IMAGE_ID, PARSE_MODE } from '../../../../utils/consts'
 import RankUtils from '../../../../utils/RankUtils'
+import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import MessageUtils from '../../../../utils/MessageUtils'
 
 export default class ProfileCommand extends BuckwheatCommand {
     constructor() {
@@ -63,10 +65,10 @@ export default class ProfileCommand extends BuckwheatCommand {
             photoId = EMPTY_PROFILE_IMAGE_ID 
         }
         else {
-            await ContextUtils.answerMessageFromResource(
+            await MessageUtils.answerMessageFromResource(
                 ctx,
                 path,
-                changeValues
+                {changeValues}
             )
 
             return
@@ -74,7 +76,7 @@ export default class ProfileCommand extends BuckwheatCommand {
 
         const messageText = await FileUtils.readTextFromResource(
             path,
-            changeValues,
+            {changeValues}
         )
 
         await ctx.replyWithPhoto(photoId, {

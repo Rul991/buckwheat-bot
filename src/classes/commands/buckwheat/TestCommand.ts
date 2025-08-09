@@ -2,6 +2,7 @@ import { Context } from 'telegraf'
 import { MaybeString } from '../../../utils/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 import ContextUtils from '../../../utils/ContextUtils'
+import MessageUtils from '../../../utils/MessageUtils'
 
 export default class TestCommand extends BuckwheatCommand {
     constructor() {
@@ -10,9 +11,11 @@ export default class TestCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: Context, other: MaybeString): Promise<void> {
-        await ContextUtils.answerMessageFromResource(ctx, 
+        await MessageUtils.answerMessageFromResource(ctx, 
             'text/commands/test.html',
-            {other: other ?? ''}
+            {
+                changeValues: {other: other ?? ''}
+            }
         )
     }
 }

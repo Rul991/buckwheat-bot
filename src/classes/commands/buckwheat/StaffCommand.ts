@@ -4,6 +4,7 @@ import BuckwheatCommand from '../base/BuckwheatCommand'
 import ContextUtils from '../../../utils/ContextUtils'
 import UserRankService from '../../db/services/user/UserRankService'
 import RankUtils from '../../../utils/RankUtils'
+import MessageUtils from '../../../utils/MessageUtils'
 
 export default class StaffCommand extends BuckwheatCommand {
     constructor() {
@@ -12,26 +13,35 @@ export default class StaffCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: Context, other: MaybeString): Promise<void> {
-        let rating = ''
+        type Player = {id: number, name: string}
+        type Rating = {emoji: string, rankName: string, players: Player[]}
+        let ratings: Rating[] = []
 
         for (let rank = RankUtils.maxRank; rank >= 0; rank--) {
             const users = await UserRankService.findByRank(rank)
             if(!users.length) continue
 
-            rating += `\n<b>${RankUtils.getEmojiByRank(rank)} ${RankUtils.getRanksByNumber(rank)}:</b>\n`
+            const players: Player[] = []
 
             for await (const {id, name} of users) {
-                rating += `📍 ${ContextUtils.getLink(name, id ?? 0)}\n`
+                players.push({id, name})
             }
+
+            ratings.push({
+                emoji: RankUtils.getEmojiByRank(rank),
+                rankName: RankUtils.getRanksByNumber(rank),
+                players
+            })
         }
 
-        await ContextUtils.answerMessageFromResource(
+        await MessageUtils.answerMessageFromResource(
             ctx,
-            'text/commands/staff.html',
+            'text/commands/staff.pug',
             {
-                rating
-            },
-            false
+                changeValues: {
+                    ratings
+                }
+            }
         )
     }
 }

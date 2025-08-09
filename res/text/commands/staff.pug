@@ -1,0 +1,9 @@
+b 📌 Иерархия чата:
+each rating in ratings
+    |
+    |
+    | #{rating.emoji} #{rating.rankName}:
+    each player in rating.players
+        |
+        | 📍 
+        a(href=`tg://user?id=${player.id}`)=player.name

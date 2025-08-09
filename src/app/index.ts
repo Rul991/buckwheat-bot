@@ -8,7 +8,7 @@ import StartCommand from '../classes/commands/telegram/StartCommand'
 import EchoCommand from '../classes/commands/buckwheat/EchoCommand'
 import SimpleBuckwheatCommand from '../classes/commands/base/SimpleBuckwheatCommand'
 import connectDatabase from './db'
-import path, { join } from 'path'
+import { join } from 'path'
 import ProfileCommand from '../classes/commands/buckwheat/profile/ProfileCommand'
 import ChangeNameCommand from '../classes/commands/buckwheat/profile/ChangeNameCommand'
 import CasinoDice from '../classes/dice/CasinoDice'
@@ -25,9 +25,12 @@ import { readdir } from 'fs/promises'
 import MuteCommand from '../classes/commands/buckwheat/admins/MuteCommand'
 import HelloCommand from '../classes/commands/buckwheat/HelloCommand'
 import DemuteCommand from '../classes/commands/buckwheat/admins/DemuteCommand'
-import KickCommand from '../classes/commands/buckwheat/admins/KickCommand'
+import BanCommand from '../classes/commands/buckwheat/admins/BanCommand'
 import UnbanCommand from '../classes/commands/buckwheat/admins/UnbanCommand'
-import CheatCommand from '../classes/commands/buckwheat/admins/CheatCommand'
+import CubeYesAction from '../classes/callback-button/CubeYesAction'
+import CubeCommand from '../classes/commands/buckwheat/CubeCommand'
+import CubeNoAction from '../classes/callback-button/CubeNoAction'
+import UpdateCommand from '../classes/commands/buckwheat/UpdateCommand'
 
 const isEnvVarsValidate = () => {
     if(!Validator.isEnvValueDefined(TOKEN)) {
@@ -76,6 +79,11 @@ const launchBot = async (bot: Bot) => {
         new CreateProfileAction(),
     )
 
+    bot.addCallbackButtonAction(
+        new CubeYesAction(),
+        new CubeNoAction()
+    )
+
     bot.addDiceActions(
         new CasinoDice()
     )
@@ -100,10 +108,11 @@ const launchBot = async (bot: Bot) => {
         new RankCommand(),
         new MuteCommand(),
         new DemuteCommand(),
-        new KickCommand(),
+        new BanCommand(),
         new UnbanCommand(),
         new HelloCommand(),
-        new CheatCommand(),
+        new CubeCommand(),
+        new UpdateCommand(),
         ...await getSimpleCommands()
     )
 
@@ -125,7 +134,6 @@ const stopBot = (bot: Bot): NodeJS.SignalsListener => {
 
 const main = async () => {
     if(!isEnvVarsValidate()) return
-    
     await connectDatabase()
 
     const bot = new Bot(TOKEN)

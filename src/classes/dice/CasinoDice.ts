@@ -2,10 +2,11 @@ import { Context } from 'telegraf'
 import BaseDice from './BaseDice'
 import ContextUtils from '../../utils/ContextUtils'
 import UserProfileService from '../db/services/user/UserProfileService'
-import { DEFAULT_USER_NAME, DICE_TIME, JACKPOT_PRIZE, LOSE_PRIZE, WIN_PRIZE } from '../../utils/consts'
+import { DEFAULT_USER_NAME, CASINO_TIME, JACKPOT_PRIZE, LOSE_PRIZE, WIN_PRIZE } from '../../utils/consts'
 import CasinoAccountService from '../db/services/casino/CasinoAccountService'
 import CasinoAddService from '../db/services/casino/CasinoAddService'
 import Casino from '../../interfaces/schemas/Casino'
+import MessageUtils from '../../utils/MessageUtils'
 
 type ChangeValues = { name: string, link: string }
 
@@ -29,9 +30,14 @@ export default class CasinoDice extends BaseDice {
         CasinoAddService.addMoney(id, count)
         isWin ? CasinoAddService.addWins(id, 1) : CasinoAddService.addLoses(id, 1)
 
-        await ContextUtils.answerMessageFromResource(ctx, `text/dice/${filename}.html`, {
-            ...values,
-            count: Math.abs(count).toString(),
+        await MessageUtils.answerMessageFromResource(
+            ctx, 
+            `text/dice/${filename}.html`, 
+            {
+            changeValues: {
+                ...values,
+                count: Math.abs(count).toString(),
+            }
         })
     }
 
@@ -76,7 +82,7 @@ export default class CasinoDice extends BaseDice {
         const newCasino = await CasinoAccountService.get(id)
 
         if (newCasino && newCasino.money! <= 0) {
-            await ContextUtils.answerMessageFromResource(ctx, `text/dice/end.html`, values)
+            await MessageUtils.answerMessageFromResource(ctx, `text/dice/end.html`, {changeValues: values})
         }
     }
 
@@ -98,6 +104,6 @@ export default class CasinoDice extends BaseDice {
         setTimeout(async () => {
             await this._handleGameResult(ctx, id, value, values)
             await this._checkAndNotifyEndGame(ctx, id, values)
-        }, DICE_TIME)
+        }, CASINO_TIME)
     }
 }

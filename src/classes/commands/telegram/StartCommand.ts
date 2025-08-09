@@ -2,6 +2,7 @@ import { Context } from 'telegraf'
 import { MaybeString } from '../../../utils/types'
 import ContextUtils from '../../../utils/ContextUtils'
 import TelegramCommand from '../base/TelegramCommand'
+import MessageUtils from '../../../utils/MessageUtils'
 
 export default class StartCommand extends TelegramCommand {
     constructor() {
@@ -11,6 +12,6 @@ export default class StartCommand extends TelegramCommand {
     }
 
     async execute(ctx: Context, _: MaybeString): Promise<void> {
-        await ContextUtils.answerMessageFromResource(ctx, 'text/commands/start.html')
+        await MessageUtils.answerMessageFromResource(ctx, 'text/commands/start.html')
     }
 }

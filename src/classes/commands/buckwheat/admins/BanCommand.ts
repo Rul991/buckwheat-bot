@@ -8,8 +8,10 @@ import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
 import TimeUtils from '../../../../utils/TimeUtils'
 import Logging from '../../../../utils/Logging'
+import MessageUtils from '../../../../utils/MessageUtils'
+import AdminUtils from '../../../../utils/AdminUtils'
 
-export default class KickCommand extends BuckwheatCommand {
+export default class BanCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'бан'
@@ -26,55 +28,52 @@ export default class KickCommand extends BuckwheatCommand {
             
             if(!replyId) return
 
-            try {
-                const adminId = ctx.from?.id ?? 0
+            const adminId = ctx.from?.id ?? 0
 
-                const adminRank = await UserRankService.get(adminId)
-                const replyRank = await UserRankService.get(replyId)
+            const adminRank = await UserRankService.get(adminId)
+            const replyRank = await UserRankService.get(replyId)
 
-                const isCreator = await ContextUtils.isCreator(ctx)
-                const time = this._getUntilDate(other ?? 'навсегда')
+            const isCreator = await ContextUtils.isCreator(ctx)
+            const time = this._getUntilDate(other ?? 'навсегда')
 
-                if(!(RankUtils.canUse(adminRank, replyRank) || isCreator) 
-                    || replyId == adminId
-                ) {
-                    await ContextUtils.answerMessageFromResource(
-                        ctx,
-                        'text/commands/kick/cancel.html'
-                    )
-                    return
-                }
-
-                await ctx.banChatMember(replyId,  (time + Date.now()) / 1000)
-
-                const adminName = await UserNameService.get(adminId)
-                const replyName = await UserNameService.get(replyId)
-
-                await ContextUtils.answerMessageFromResource(
+            if(!(RankUtils.canUse(adminRank, replyRank) || isCreator) 
+                || replyId == adminId
+            ) {
+                await MessageUtils.answerMessageFromResource(
                     ctx,
-                    'text/commands/kick/done.html',
-                    {
+                    'text/commands/kick/cancel.html'
+                )
+                return
+            }
+
+            if(!await AdminUtils.ban(ctx, replyId, time)) {
+                await MessageUtils.answerMessageFromResource(
+                    ctx,
+                    'text/commands/kick/error.html'
+                )
+                return
+            }
+
+            const adminName = await UserNameService.get(adminId)
+            const replyName = await UserNameService.get(replyId)
+
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/kick/done.html',
+                {
+                    changeValues: {
                         replyLink: ContextUtils.getLinkUrl(replyId),
                         adminLink: ContextUtils.getLinkUrl(adminId),
                         admName: adminName ?? DEFAULT_USER_NAME,
                         nameReply: replyName ?? DEFAULT_USER_NAME,
                         time: TimeUtils.getTimeName(time)
                     }
-                )
-            }
-            catch(e) {
-                Logging.error(e)
-                await ContextUtils.answerMessageFromResource(
-                    ctx,
-                    'text/commands/kick/error.html',
-                    {
-                        e: e?.toString() ?? ''
-                    }
-                )
-            }
+                }
+            )
+        
         }
         else {
-            await ContextUtils.answerMessageFromResource(
+            await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/kick/no-reply.html'
             )
