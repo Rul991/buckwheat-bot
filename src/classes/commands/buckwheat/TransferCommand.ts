@@ -6,6 +6,7 @@ import CasinoGetService from '../../db/services/casino/CasinoGetService'
 import CasinoAddService from '../../db/services/casino/CasinoAddService'
 import UserNameService from '../../db/services/user/UserNameService'
 import MessageUtils from '../../../utils/MessageUtils'
+import CasinoAccountService from '../../db/services/casino/CasinoAccountService'
 
 export default class TransferCommand extends BuckwheatCommand {
     private static _filenames = ['no-receiver', 'self', 'empty', 'wrong', 'negative']
@@ -75,6 +76,7 @@ export default class TransferCommand extends BuckwheatCommand {
             }
 
             await CasinoAddService.addMoney(sender, -diffMoney)
+            await CasinoAccountService.create(receiver)
             await CasinoAddService.addMoney(receiver, diffMoney)
 
             const senderName = await TransferCommand._getName(sender)

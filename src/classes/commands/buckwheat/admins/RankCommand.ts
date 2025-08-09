@@ -7,6 +7,7 @@ import ContextUtils from '../../../../utils/ContextUtils'
 import UserNameService from '../../../db/services/user/UserNameService'
 import { DEFAULT_USER_NAME } from '../../../../utils/consts'
 import MessageUtils from '../../../../utils/MessageUtils'
+import CasinoAccountService from '../../../db/services/casino/CasinoAccountService'
 
 export default class RankCommand extends BuckwheatCommand {
     private static async _answerMyRank(ctx: Context): Promise<void> {
@@ -94,6 +95,8 @@ export default class RankCommand extends BuckwheatCommand {
                 if(await RankCommand._answerIfRankOutBounds(ctx, rank)) return
                 
                 const myRank = await UserRankService.get(myId)
+
+                await CasinoAccountService.create(replyId)
                 const replyRank = await UserRankService.get(replyId)
 
                 if(await RankCommand._answerIfNotAdmin(ctx, myRank)) return

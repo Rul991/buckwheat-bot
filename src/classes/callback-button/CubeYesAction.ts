@@ -1,5 +1,4 @@
-import { MILLISECONDS_IN_DAY, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './../../utils/consts';
-import { Context } from 'telegraf'
+import { MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './../../utils/consts';
 import { DEFAULT_USER_NAME, DICE_TIME } from '../../utils/consts'
 import ContextUtils from '../../utils/ContextUtils'
 import { CallbackButtonContext } from '../../utils/types'
@@ -9,6 +8,8 @@ import MessageUtils from '../../utils/MessageUtils'
 import CasinoGetService from '../db/services/casino/CasinoGetService'
 import AdminUtils from '../../utils/AdminUtils'
 import CasinoAddService from '../db/services/casino/CasinoAddService'
+import UserProfileService from '../db/services/user/UserProfileService'
+import CasinoAccountService from '../db/services/casino/CasinoAccountService'
 
 type DiceAndId = {dice: number, id: number}
 
@@ -63,6 +64,8 @@ export default class CubeYesAction extends CallbackButtonAction {
         const [replyId, userId, cost] = data.split('_').map(val => +val)
 
         if(ctx.from.id == replyId) {
+            await UserProfileService.create(replyId, 'игрок')
+            await CasinoAccountService.create(replyId)
             await ctx.editMessageReplyMarkup(undefined)
 
             const userDice = await CubeYesAction._sendDice(ctx, userId)
@@ -112,7 +115,13 @@ export default class CubeYesAction extends CallbackButtonAction {
                             await MessageUtils.answerMessageFromResource(
                                 ctx, 
                                 'text/commands/cubes/debt.html',
-                                {changeValues}
+                                {
+                                    changeValues: {
+                                        ...changeValues, 
+                                        link: ContextUtils.getLinkUrl(loserId),
+                                        name: UserNameService.get(loserId),
+                                    }
+                                }
                             )
                             await AdminUtils.ban(ctx, loserId, MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE)
                         }

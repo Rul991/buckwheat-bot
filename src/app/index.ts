@@ -24,7 +24,7 @@ import RankCommand from '../classes/commands/buckwheat/admins/RankCommand'
 import { readdir } from 'fs/promises'
 import MuteCommand from '../classes/commands/buckwheat/admins/MuteCommand'
 import HelloCommand from '../classes/commands/buckwheat/HelloCommand'
-import DemuteCommand from '../classes/commands/buckwheat/admins/DemuteCommand'
+import UnmuteCommand from '../classes/commands/buckwheat/admins/UnmuteCommand'
 import BanCommand from '../classes/commands/buckwheat/admins/BanCommand'
 import UnbanCommand from '../classes/commands/buckwheat/admins/UnbanCommand'
 import CubeYesAction from '../classes/callback-button/CubeYesAction'
@@ -107,7 +107,7 @@ const launchBot = async (bot: Bot) => {
         new CreatorCommand(),
         new RankCommand(),
         new MuteCommand(),
-        new DemuteCommand(),
+        new UnmuteCommand(),
         new BanCommand(),
         new UnbanCommand(),
         new HelloCommand(),
@@ -124,24 +124,12 @@ const launchBot = async (bot: Bot) => {
     bot.launch()
 }
 
-const stopBot = (bot: Bot): NodeJS.SignalsListener => {
-    return signal => {
-        bot.stop(signal)
-        console.log(`bot is stopped [${signal}]`)
-        process.exit(0)
-    }
-}
-
 const main = async () => {
     if(!isEnvVarsValidate()) return
     await connectDatabase()
 
     const bot = new Bot(TOKEN)
     await launchBot(bot)
-
-    const stopListener = stopBot(bot)
-    process.once('SIGINT', stopListener)
-    process.once('SIGTERM', stopListener)
 }
 
 main()

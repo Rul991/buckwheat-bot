@@ -3,7 +3,6 @@ import { MaybeString } from '../../../utils/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 import { DEV_ID } from '../../../utils/consts'
 import { exec } from 'node:child_process'
-import { pid } from 'node:process'
 import MessageUtils from '../../../utils/MessageUtils'
 
 export default class UpdateCommand extends BuckwheatCommand {
@@ -14,7 +13,19 @@ export default class UpdateCommand extends BuckwheatCommand {
 
     async execute(ctx: Context, _: MaybeString): Promise<void> {
         if(ctx.from?.id == DEV_ID) {
-            exec('git pull')
+            exec('git pull', async (_, stdout) => {
+                await MessageUtils.answerMessageFromResource(
+                    ctx,
+                    'text/commands/update/stdout.html',
+                    {changeValues: {stdout}}
+                )
+            })
+        }
+        else {
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/wrongCommand.html',
+            )
         }
     }
 }

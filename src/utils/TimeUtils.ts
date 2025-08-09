@@ -58,4 +58,8 @@ export default class TimeUtils {
 
         return `${Math.floor(time / timeValue * 100) / 100}${timeName}`
     }
+
+    static getUntilDate(ms: number): number {
+        return (ms + Date.now()) / 1000
+    }
 }

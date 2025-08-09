@@ -13,22 +13,20 @@ export default class CreatorCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: Context, _: MaybeString): Promise<void> {
-        let admins = await ctx.telegram.getChatAdministrators(ctx.chat?.id ?? '')
+        let member = await ctx.telegram.getChatMember(ctx.chat?.id ?? '', ctx.from?.id ?? 0)
 
-        for (const admin of admins) {
-            if(admin.user.id == ctx.from?.id && admin.status == 'creator') {
-                await UserRankService.update(ctx.from.id ?? 0, RankUtils.maxRank)
-                await MessageUtils.answerMessageFromResource(
-                    ctx,
-                    'text/commands/creator/done.html',
-                    {
-                        changeValues: {
-                            rank: RankUtils.getRankByNumber(RankUtils.maxRank)
-                        }
+        if(member.status == 'creator') {
+            await UserRankService.update(ctx.from?.id ?? 0, RankUtils.maxRank)
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/creator/done.html',
+                {
+                    changeValues: {
+                        rank: RankUtils.getRankByNumber(RankUtils.maxRank)
                     }
-                )
-                return
-            }
+                }
+            )
+            return
         }
 
         await MessageUtils.answerMessageFromResource(
