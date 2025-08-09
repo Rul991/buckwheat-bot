@@ -31,6 +31,7 @@ import CubeYesAction from '../classes/callback-button/CubeYesAction'
 import CubeCommand from '../classes/commands/buckwheat/CubeCommand'
 import CubeNoAction from '../classes/callback-button/CubeNoAction'
 import UpdateCommand from '../classes/commands/buckwheat/UpdateCommand'
+import AntiSpamAction from '../classes/actions/every/AntiSpamAction'
 
 const isEnvVarsValidate = () => {
     if(!Validator.isEnvValueDefined(TOKEN)) {
@@ -75,6 +76,7 @@ const getSimpleCommands = async () => {
 const launchBot = async (bot: Bot) => {
     bot.addEveryMessageActions(
         new WrongChatAction(), // it should be first
+        new AntiSpamAction(), // its should be second
         new AddMessagesAction(),
         new CreateProfileAction(),
     )

@@ -12,7 +12,7 @@ export default class StaffCommand extends BuckwheatCommand {
         this._name = 'топ'
     }
 
-    async execute(ctx: Context, other: MaybeString): Promise<void> {
+    async execute(ctx: Context, _: MaybeString): Promise<void> {
         type Player = {id: number, name: string}
         type Rating = {emoji: string, rankName: string, players: Player[]}
         let ratings: Rating[] = []
@@ -24,7 +24,8 @@ export default class StaffCommand extends BuckwheatCommand {
             const players: Player[] = []
 
             for await (const {id, name} of users) {
-                players.push({id, name})
+
+                players.push({id: rank >= RankUtils.adminRank ? id : 0, name})
             }
 
             ratings.push({
