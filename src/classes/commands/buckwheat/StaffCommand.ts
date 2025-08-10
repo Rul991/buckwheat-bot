@@ -5,6 +5,7 @@ import ContextUtils from '../../../utils/ContextUtils'
 import UserRankService from '../../db/services/user/UserRankService'
 import RankUtils from '../../../utils/RankUtils'
 import MessageUtils from '../../../utils/MessageUtils'
+import UserProfileService from '../../db/services/user/UserProfileService'
 
 export default class StaffCommand extends BuckwheatCommand {
     constructor() {
@@ -40,7 +41,9 @@ export default class StaffCommand extends BuckwheatCommand {
             'text/commands/staff.pug',
             {
                 changeValues: {
-                    ratings
+                    ratings,
+                    members: await UserProfileService.getMembersCount(),
+                    maxMembers: await ctx.telegram.getChatMembersCount(ctx.chat?.id ?? 0)
                 }
             }
         )

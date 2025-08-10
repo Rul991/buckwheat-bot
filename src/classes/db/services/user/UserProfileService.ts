@@ -32,4 +32,8 @@ export default class UserProfileService {
     static async get(id: number): Promise<User | null> {
         return await UserRepository.findOne(id)
     }
+
+    static async getMembersCount(): Promise<number> {
+        return (await UserRepository.findMany()).length
+    }
 }

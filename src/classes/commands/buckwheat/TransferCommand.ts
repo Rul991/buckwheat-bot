@@ -76,7 +76,6 @@ export default class TransferCommand extends BuckwheatCommand {
             }
 
             await CasinoAddService.addMoney(sender, -diffMoney)
-            await CasinoAccountService.create(receiver)
             await CasinoAddService.addMoney(receiver, diffMoney)
 
             const senderName = await TransferCommand._getName(sender)

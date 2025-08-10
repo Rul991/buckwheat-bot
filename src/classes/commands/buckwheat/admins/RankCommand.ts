@@ -96,7 +96,6 @@ export default class RankCommand extends BuckwheatCommand {
                 
                 const myRank = await UserRankService.get(myId)
 
-                await CasinoAccountService.create(replyId)
                 const replyRank = await UserRankService.get(replyId)
 
                 if(await RankCommand._answerIfNotAdmin(ctx, myRank)) return

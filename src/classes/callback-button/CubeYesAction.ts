@@ -66,8 +66,6 @@ export default class CubeYesAction extends CallbackButtonAction {
         const [replyId, userId, cost] = data.split('_').map(val => +val)
 
         if(ctx.from.id == replyId) {
-            await UserProfileService.create(replyId, 'игрок')
-            await CasinoAccountService.create(replyId)
             await ctx.editMessageReplyMarkup(undefined)
 
             const userDice = await CubeYesAction._sendDice(ctx, userId)

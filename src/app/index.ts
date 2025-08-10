@@ -78,9 +78,9 @@ const getSimpleCommands = async () => {
 const launchBot = async (bot: Bot) => {
     bot.addEveryMessageActions(
         new WrongChatAction(), // it should be first
-        new AntiSpamAction(), // its should be second
-        new AddMessagesAction(),
         new CreateProfileAction(),
+        new AntiSpamAction(), 
+        new AddMessagesAction(),
     )
 
     bot.addCallbackButtonAction(
