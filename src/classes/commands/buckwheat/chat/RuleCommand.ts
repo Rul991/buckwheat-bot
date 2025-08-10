@@ -7,7 +7,29 @@ import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
 import RulesService from '../../../db/services/chat/RulesService'
 
+type RuleSubCommand = {
+    needData: boolean
+    needAdmin: boolean
+    name: string
+    execute: (data: string) => Promise<boolean>
+    sendMessage: (path: string, changeValues: Record<string, any>) => Promise<void>
+}
+
 export default class RuleCommand extends BuckwheatCommand {
+    // private _subCommands: RuleSubCommand[] = [
+    //     {
+    //         needData: false,
+    //         needAdmin: false,
+    //         name: 'список',
+    //         execute: async data => {
+    //             return true
+    //         },
+    //         sendMessage: async (path, changeValues) => {
+
+    //         }
+    //     }
+    // ]
+
     constructor() {
         super()
         this._name = 'правила'

@@ -1,5 +1,6 @@
 import { PARSE_MODE } from '../../utils/consts'
 import FileUtils from '../../utils/FileUtils'
+import Logging from '../../utils/Logging'
 import { CallbackButtonContext } from '../../utils/types'
 import RulesService from '../db/services/chat/RulesService'
 import InlineKeyboardManager from '../main/InlineKeyboardManager'
@@ -29,23 +30,28 @@ export default class RuleChangeAction extends CallbackButtonAction {
 
         if(prevPage == currentPage) return
 
-        await ctx.editMessageText(
-            await FileUtils.readTextFromResource(
-                'text/commands/rules/rule.pug',
-                {
-                    changeValues: {
-                        number: currentPage,
-                        rulesCount: rules.length,
-                        text: rules[currentPage]
+        try {
+            await ctx.editMessageText(
+                await FileUtils.readTextFromResource(
+                    'text/commands/rules/rule.pug',
+                    {
+                        changeValues: {
+                            number: currentPage,
+                            rulesCount: rules.length,
+                            text: rules[currentPage]
+                        }
                     }
+                ),
+                {
+                    reply_markup: {
+                        inline_keyboard: await InlineKeyboardManager.get('rules', `${currentPage}`)
+                    },
+                    parse_mode: PARSE_MODE
                 }
-            ),
-            {
-                reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get('rules', `${currentPage}`)
-                },
-                parse_mode: PARSE_MODE
-            }
-        )
+            )
+        }
+        catch(e) {
+            Logging.error(e)
+        }
     }
 }

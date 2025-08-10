@@ -49,13 +49,11 @@ export default class CubeYesAction extends CallbackButtonAction {
 
         const boost = userDice == 1 || replyDice == 1 ? 2 : 1
 
-        if(userDice > replyDice || userDice == 1)
+        if((userDice > replyDice && replyDice !== 1) || userDice == 1)
             return [userId, replyId, boost]
-        else if(replyDice < userDice || replyDice == 1) {
+        else {
             return [replyId, userId, boost]
         }
-
-        return null
     }
 
     private static _createDiceAndId(id: number, dice: number): DiceAndId {
