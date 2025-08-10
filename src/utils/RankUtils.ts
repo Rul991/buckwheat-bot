@@ -53,7 +53,7 @@ export default class RankUtils {
         return this._rankEmoji[this._rankEmoji.length - rank - 1] ?? ''
     }
 
-    static canUse(userRank: number, replyRank: number): boolean {
-        return (userRank >= this.adminRank && replyRank < userRank)
+    static canUse(userRank: number, replyRank: number, adminRank: number = this.adminRank): boolean {
+        return (userRank >= adminRank && replyRank < userRank)
     }
 }

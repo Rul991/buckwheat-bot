@@ -1,0 +1,13 @@
+[
+    [
+        {
+            "text": "<<",
+            "callback_data": "rulechange_@_-1"
+        },
+
+        {
+            "text": ">>",
+            "callback_data": "rulechange_@_1"
+        }
+    ]
+]

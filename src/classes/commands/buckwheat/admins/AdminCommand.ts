@@ -13,11 +13,13 @@ import UserRankService from '../../../db/services/user/UserRankService'
 export default abstract class AdminCommand extends BuckwheatCommand {
     protected _folder: string
     protected _isUndoCommand: boolean
+    protected _minimumRank: number
 
     constructor() {
         super()
         this._folder = 'admin'
         this._isUndoCommand = true
+        this._minimumRank = RankUtils.adminRank
     }
 
     protected abstract _do(ctx: Context, replyId: number, time: number): Promise<boolean>
@@ -37,7 +39,7 @@ export default abstract class AdminCommand extends BuckwheatCommand {
             const isCreator = await ContextUtils.isCreator(ctx)
             const time = TimeUtils.getTime(other ?? 'навсегда')
 
-            if(!(RankUtils.canUse(adminRank, replyRank) || isCreator) 
+            if(!(RankUtils.canUse(adminRank, replyRank, this._minimumRank) || isCreator) 
                 || replyId == adminId
             ) {
                 await MessageUtils.answerMessageFromResource(

@@ -51,9 +51,11 @@ export default class CubeYesAction extends CallbackButtonAction {
 
         if(userDice > replyDice || userDice == 1)
             return [userId, replyId, boost]
-        else {
+        else if(replyDice < userDice || replyDice == 1) {
             return [replyId, userId, boost]
         }
+
+        return null
     }
 
     private static _createDiceAndId(id: number, dice: number): DiceAndId {
@@ -119,7 +121,7 @@ export default class CubeYesAction extends CallbackButtonAction {
                                     changeValues: {
                                         ...changeValues, 
                                         link: ContextUtils.getLinkUrl(loserId),
-                                        name: UserNameService.get(loserId),
+                                        name: await UserNameService.get(loserId),
                                     }
                                 }
                             )

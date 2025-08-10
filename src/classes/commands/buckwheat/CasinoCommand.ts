@@ -12,8 +12,7 @@ export default class CasinoCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: Context, _: MaybeString): Promise<void> {
-        const [casino] = await CasinoAccountService.updateDailyMoney(ctx.from?.id ?? 0)
-        if(!casino) return
+        const casino = await CasinoAccountService.create(ctx.from?.id ?? 0)
 
         await MessageUtils.answerMessageFromResource(
             ctx, 

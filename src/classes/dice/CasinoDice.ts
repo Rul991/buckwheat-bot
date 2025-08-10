@@ -42,13 +42,7 @@ export default class CasinoDice extends BaseDice {
     }
 
     private async _handleCasinoAccount(ctx: Context, id: number): Promise<Casino | null> {
-        let [casino] = await CasinoAccountService.updateDailyMoney(id)
-
-        if (!casino) {
-            return CasinoAccountService.create(id)
-        }
-        
-        return casino
+        return await CasinoAccountService.create(id)
     }
 
     private async _checkAndHandleCasinoMoney(ctx: Context, casino: Casino): Promise<boolean> {

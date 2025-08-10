@@ -32,6 +32,7 @@ import CubeCommand from '../classes/commands/buckwheat/CubeCommand'
 import CubeNoAction from '../classes/callback-button/CubeNoAction'
 import UpdateCommand from '../classes/commands/buckwheat/UpdateCommand'
 import AntiSpamAction from '../classes/actions/every/AntiSpamAction'
+import RuleCommand from '../classes/commands/buckwheat/chat/RuleCommand'
 
 const isEnvVarsValidate = () => {
     if(!Validator.isEnvValueDefined(TOKEN)) {
@@ -115,6 +116,7 @@ const launchBot = async (bot: Bot) => {
         new HelloCommand(),
         new CubeCommand(),
         new UpdateCommand(),
+        new RuleCommand(),
         ...await getSimpleCommands()
     )
 

@@ -7,6 +7,7 @@ export default class UnmuteCommand extends AdminCommand {
         super()
         this._name = 'размут'
         this._folder = 'mute'
+        this._minimumRank = 3
     }
 
     protected async _do(ctx: Context, replyId: number, _: number): Promise<boolean> {

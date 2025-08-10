@@ -8,6 +8,7 @@ export default class MuteCommand extends AdminCommand {
         this._name = 'мут'
         this._folder = 'mute'
         this._isUndoCommand = false
+        this._minimumRank = 3
     }
 
     protected async _do(ctx: Context, replyId: number, time: number): Promise<boolean> {

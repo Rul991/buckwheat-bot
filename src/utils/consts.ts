@@ -15,10 +15,10 @@ export const MODE: ModeTypes = env.MODE as ModeTypes ?? 'dev'
 export const MAX_NAME_LENGTH = 48
 export const MAX_DESCRIPTION_LENGTH = 256
 
-export const DAILY_MONEY = 20
-export const JACKPOT_PRIZE = 20
-export const WIN_PRIZE = 5
-export const LOSE_PRIZE = -1
+export const START_MONEY = 0
+export const JACKPOT_PRIZE = 12
+export const WIN_PRIZE = 6
+export const LOSE_PRIZE = -2
 
 export const MILLISECONDS_IN_SECOND = 1000
 export const SECONDS_IN_MINUTE = 60

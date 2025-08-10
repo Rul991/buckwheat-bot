@@ -26,8 +26,4 @@ export default class CasinoGetService {
     static async getWins(id: number): Promise<number> {
         return await this._get(id, 'wins')
     }
-
-    static async getLastDeposite(id: number): Promise<number> {
-        return await this._get(id, 'lastDeposite')
-    }
 }
