@@ -59,7 +59,7 @@ export default class RuleCommand extends BuckwheatCommand {
                 return
             }
 
-            if(!data) {
+            if(!data && command != 'список') {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/rules/help.html'
@@ -73,6 +73,18 @@ export default class RuleCommand extends BuckwheatCommand {
                     await MessageUtils.answerMessageFromResource(
                         ctx,
                         'text/commands/rules/done/add.pug'
+                    )
+                    return
+
+                case 'список':
+                    await MessageUtils.answerMessageFromResource(
+                        ctx,
+                        'text/commands/rules/list.pug',
+                        {
+                            changeValues: {
+                                rules: await RulesService.get()
+                            }
+                        }
                     )
                     return
 
