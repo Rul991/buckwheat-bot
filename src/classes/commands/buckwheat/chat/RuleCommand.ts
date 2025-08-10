@@ -13,16 +13,21 @@ export default class RuleCommand extends BuckwheatCommand {
         this._name = 'правила'
     }
 
-    private _deleteRule(data: string) {
+    private async _deleteRule(data: string): Promise<boolean> {
+        if(isNaN(+data)) {
+            return false
+        }
 
+        const index = +data - 1
+        const rules = await RulesService.get()
+
+        await RulesService.delete(index)
+        return index >= 0 && index < rules.length
     }
 
-    private _editRule(data: string) {
-
-    }
-
-    private _addRule(data: string) {
-
+    private async _addRule(data: string): Promise<boolean> {
+        await RulesService.add(data)
+        return true
     }
 
     async execute(ctx: Context, other: MaybeString): Promise<void> {
@@ -43,6 +48,9 @@ export default class RuleCommand extends BuckwheatCommand {
         }
         else {
             const rank = await UserRankService.get(id)
+            const [command, ...nonSplittedData] = StringUtils.splitBySpace(other)
+            const data = nonSplittedData.join(' ')
+
             if(rank < RankUtils.adminRank) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
@@ -51,13 +59,50 @@ export default class RuleCommand extends BuckwheatCommand {
                 return
             }
 
-            const [command, data] = StringUtils.splitBySpace(other)
             if(!data) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
-                    'text/commands/rules/noData.pug',
-                    {changeValues: {command}}
+                    'text/commands/rules/help.html'
                 )
+                return
+            }
+
+            switch (command) {
+                case 'добавить':
+                    await this._addRule(data)
+                    await MessageUtils.answerMessageFromResource(
+                        ctx,
+                        'text/commands/rules/done/add.pug'
+                    )
+                    return
+
+                case 'удалить':
+                    const isDeleted = await this._deleteRule(data)
+                    if(isDeleted) {
+                        await MessageUtils.answerMessageFromResource(
+                            ctx,
+                            'text/commands/rules/done/delete.pug',
+                            {
+                                changeValues: {
+                                    number: +data
+                                }
+                            }
+                        )
+                    }
+                    else {
+                        await MessageUtils.answerMessageFromResource(
+                            ctx,
+                            'text/commands/rules/help/delete.html'
+                        )
+                    }
+                    return
+            
+                default:
+                    await MessageUtils.answerMessageFromResource(
+                        ctx,
+                        'text/commands/rules/help.html'
+                    )
+                    return
             }
         }
     }
