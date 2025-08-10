@@ -31,6 +31,11 @@ export const PARSE_MODE = 'HTML'
 export const CASINO_TIME = 1750
 export const DICE_TIME = 3500
 
+export const MIN_WORK = 5
+export const MAX_WORK = 15
+
+export const WORK_TIME = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * 3
+
 export const DEFAULT_USER_NAME = 'игрок'
 export const DEFAULT_USER_NAME_CAPITAL = DEFAULT_USER_NAME
     .replace(
