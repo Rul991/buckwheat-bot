@@ -6,9 +6,10 @@ import { DEFAULT_USER_NAME, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from '..
 import MessageUtils from '../../../utils/MessageUtils'
 import UserNameService from '../../db/services/user/UserNameService'
 import ContextUtils from '../../../utils/ContextUtils'
+import { MessageContext } from '../../../utils/types'
 
 export default class AntiSpamAction extends EveryMessageAction {
-    async execute(ctx: Context): Promise<void | true> {
+    async execute(ctx: MessageContext): Promise<void | true> {
         const id = ctx.from?.id ?? 0
 
         await AntiSpamService.add(id, 'lastMessagesCount', 1)

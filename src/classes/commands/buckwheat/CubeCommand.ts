@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString } from '../../../utils/types'
+import { MaybeString, TextContext } from '../../../utils/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 import CasinoGetService from '../../db/services/casino/CasinoGetService'
 import ContextUtils from '../../../utils/ContextUtils'
@@ -13,7 +13,7 @@ export default class CubeCommand extends BuckwheatCommand {
         this._name = 'кубы'
     }
 
-    async execute(ctx: Context, other: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         if(ctx.message && 'reply_to_message' in ctx.message) {
             if(ctx.message.reply_to_message?.from?.is_bot) {
                 await MessageUtils.answerMessageFromResource(

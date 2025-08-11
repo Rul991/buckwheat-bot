@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString } from '../../../../utils/types'
+import { MaybeString, TextContext } from '../../../../utils/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserProfileService from '../../../db/services/user/UserProfileService'
 import ContextUtils from '../../../../utils/ContextUtils'
@@ -15,7 +15,7 @@ export default class ProfileCommand extends BuckwheatCommand {
         this._name = 'профиль'
     }
 
-    async execute(ctx: Context, _: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
         let id: number
         let name: string
 

@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString } from '../../../utils/types'
+import { MaybeString, TextContext } from '../../../utils/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 import ContextUtils from '../../../utils/ContextUtils'
 import CasinoAccountService from '../../db/services/casino/CasinoAccountService'
@@ -11,7 +11,7 @@ export default class CasinoCommand extends BuckwheatCommand {
         this._name = 'казино'
     }
 
-    async execute(ctx: Context, _: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
         const casino = await CasinoAccountService.create(ctx.from?.id ?? 0)
 
         await MessageUtils.answerMessageFromResource(

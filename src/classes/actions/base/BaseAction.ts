@@ -1,3 +1,5 @@
+import { Context } from 'telegraf'
+
 export default abstract class BaseAction {
     protected _name: string
 
@@ -8,4 +10,6 @@ export default abstract class BaseAction {
     get name(): string {
         return this._name
     }
+
+    abstract execute(ctx: Context, ...args: any[]): Promise<any>
 }

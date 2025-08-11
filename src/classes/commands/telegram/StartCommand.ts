@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString } from '../../../utils/types'
+import { MaybeString, TextContext } from '../../../utils/types'
 import ContextUtils from '../../../utils/ContextUtils'
 import TelegramCommand from '../base/TelegramCommand'
 import MessageUtils from '../../../utils/MessageUtils'
@@ -11,7 +11,13 @@ export default class StartCommand extends TelegramCommand {
         this._description  = 'Команда для запуска бота'
     }
 
-    async execute(ctx: Context, _: MaybeString): Promise<void> {
-        await MessageUtils.answerMessageFromResource(ctx, 'text/commands/start.html')
+    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
+        const title = ctx.chat.type != 'private' ? ctx.chat.title : ctx.botInfo.first_name
+
+        await MessageUtils.answerMessageFromResource(
+            ctx, 
+            'text/commands/start.html',
+            {changeValues: {title}}
+        )
     }
 }

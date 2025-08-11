@@ -23,7 +23,7 @@ import CreatorCommand from '../classes/commands/buckwheat/admins/CreatorCommand'
 import RankCommand from '../classes/commands/buckwheat/admins/RankCommand'
 import { readdir } from 'fs/promises'
 import MuteCommand from '../classes/commands/buckwheat/admins/MuteCommand'
-import HelloCommand from '../classes/commands/buckwheat/HelloCommand'
+import PingCommand from '../classes/commands/buckwheat/PingCommand'
 import UnmuteCommand from '../classes/commands/buckwheat/admins/UnmuteCommand'
 import BanCommand from '../classes/commands/buckwheat/admins/BanCommand'
 import UnbanCommand from '../classes/commands/buckwheat/admins/UnbanCommand'
@@ -35,26 +35,36 @@ import AntiSpamAction from '../classes/actions/every/AntiSpamAction'
 import RuleCommand from '../classes/commands/buckwheat/chat/RuleCommand'
 import RuleChangeAction from '../classes/callback-button/RuleChangeAction'
 import WorkCommand from '../classes/commands/buckwheat/WorkCommand'
+import { env } from 'process'
 
 const isEnvVarsValidate = () => {
-    if(!Validator.isEnvValueDefined(TOKEN)) {
-        console.error('undefined token')
-        return false
-    }
+    type EnvVariable = {name: string, isMustDefined: boolean}
 
-    if(!Validator.isEnvValueDefined(DB_NAME)) {
-        console.error('undefined db name')
-        return false
-    }
+    const createVariable = (name: string, isMustDefined = true) => 
+        ({name, isMustDefined} as EnvVariable)
 
-    if(!Validator.isEnvValueDefined(DB_URL)) {
-        console.error('undefined db url')
-        return false
-    }
+    const variables = [
+        createVariable('BOT_TOKEN'),
+        createVariable('DB_NAME'),
+        createVariable('DB_URL'),
+        createVariable('CHAT_ID'),
+        createVariable('EMPTY_PROFILE', false),
+        createVariable('DEV_ID', false),
+        createVariable('MODE', false),
+    ]
 
-    if(!Validator.isEnvValueDefined(CHAT_ID)) {
-        console.error('undefined chat id')
-        return false
+    for (const variable of variables) {
+        if(!Validator.isEnvVariableDefined(env[variable.name])) {
+            const message = `undefined ${variable.name}`
+
+            if(!variable.isMustDefined) {
+                console.warn(message)
+            }
+            else {
+                console.error(message)
+                return false
+            }
+        }
     }
 
     return true
@@ -116,7 +126,7 @@ const launchBot = async (bot: Bot) => {
         new UnmuteCommand(),
         new BanCommand(),
         new UnbanCommand(),
-        new HelloCommand(),
+        new PingCommand(),
         new CubeCommand(),
         new UpdateCommand(),
         new RuleCommand(),

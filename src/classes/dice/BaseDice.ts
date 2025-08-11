@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { DiceValues } from '../../utils/types'
+import { DiceContext, DiceValues } from '../../utils/types'
 import BaseAction from '../actions/base/BaseAction'
 
 export default abstract class BaseDice extends BaseAction {
@@ -10,5 +10,5 @@ export default abstract class BaseDice extends BaseAction {
         this._name = '🎲'
     }
 
-    abstract execute(ctx: Context, value: number): Promise<void>
+    abstract execute(ctx: DiceContext, value: number): Promise<void>
 }

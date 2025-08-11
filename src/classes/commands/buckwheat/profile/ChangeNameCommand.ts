@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString } from '../../../../utils/types'
+import { MaybeString, TextContext } from '../../../../utils/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import ContextUtils from '../../../../utils/ContextUtils'
 import { DEFAULT_USER_NAME, MAX_NAME_LENGTH } from '../../../../utils/consts'
@@ -13,7 +13,7 @@ export default class ChangeNameCommand extends BuckwheatCommand {
         this._name = 'ник'
     }
 
-    async execute(ctx: Context, other: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         const link = ContextUtils.getLinkUrl(ctx.from?.id ?? 0)
 
         if(!other) {

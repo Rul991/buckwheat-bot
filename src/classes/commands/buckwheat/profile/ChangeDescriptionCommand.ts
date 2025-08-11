@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString } from '../../../../utils/types'
+import { MaybeString, TextContext } from '../../../../utils/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import ContextUtils from '../../../../utils/ContextUtils'
 import { MAX_DESCRIPTION_LENGTH } from '../../../../utils/consts'
@@ -12,7 +12,7 @@ export default class ChangeDescriptionCommand extends BuckwheatCommand {
         this._name = 'описание'
     }
 
-    async execute(ctx: Context, other: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         if(other) {
             let description = other ?? ''
 

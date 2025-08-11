@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString } from '../../../utils/types'
+import { MaybeString, TextContext } from '../../../utils/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
@@ -10,7 +10,7 @@ export default class EchoCommand extends BuckwheatCommand {
         this._name = 'эхо'
     }
 
-    async execute(ctx: Context, other: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         if(typeof other == 'string' && other.length) {
             await MessageUtils.answerMessageFromResource(
                 ctx, 

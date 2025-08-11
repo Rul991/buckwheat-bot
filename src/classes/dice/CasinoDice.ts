@@ -1,4 +1,3 @@
-import { Context } from 'telegraf'
 import BaseDice from './BaseDice'
 import ContextUtils from '../../utils/ContextUtils'
 import UserProfileService from '../db/services/user/UserProfileService'
@@ -7,6 +6,7 @@ import CasinoAccountService from '../db/services/casino/CasinoAccountService'
 import CasinoAddService from '../db/services/casino/CasinoAddService'
 import Casino from '../../interfaces/schemas/Casino'
 import MessageUtils from '../../utils/MessageUtils'
+import { DiceContext } from '../../utils/types'
 
 type ChangeValues = { name: string, link: string }
 
@@ -20,7 +20,7 @@ export default class CasinoDice extends BaseDice {
     }
 
     private async _sendMessageAndUpdateCasino(
-        ctx: Context,
+        ctx: DiceContext,
         id: number,
         filename: string,
         count: number,
@@ -41,11 +41,11 @@ export default class CasinoDice extends BaseDice {
         })
     }
 
-    private async _handleCasinoAccount(ctx: Context, id: number): Promise<Casino | null> {
+    private async _handleCasinoAccount(ctx: DiceContext, id: number): Promise<Casino | null> {
         return await CasinoAccountService.create(id)
     }
 
-    private async _checkAndHandleCasinoMoney(ctx: Context, casino: Casino): Promise<boolean> {
+    private async _checkAndHandleCasinoMoney(ctx: DiceContext, casino: Casino): Promise<boolean> {
         if (casino.money! <= 0) {
             await ctx.deleteMessage()
             return false
@@ -54,7 +54,7 @@ export default class CasinoDice extends BaseDice {
     }
 
     private async _handleGameResult(
-        ctx: Context,
+        ctx: DiceContext,
         id: number,
         value: number,
         values: ChangeValues
@@ -72,7 +72,7 @@ export default class CasinoDice extends BaseDice {
         }
     }
 
-    private async _checkAndNotifyEndGame(ctx: Context, id: number, values: ChangeValues): Promise<void> {
+    private async _checkAndNotifyEndGame(ctx: DiceContext, id: number, values: ChangeValues): Promise<void> {
         const newCasino = await CasinoAccountService.get(id)
 
         if (newCasino && newCasino.money! <= 0) {
@@ -80,7 +80,7 @@ export default class CasinoDice extends BaseDice {
         }
     }
 
-    async execute(ctx: Context, value: number): Promise<void> {
+    async execute(ctx: DiceContext, value: number): Promise<void> {
         const id = ctx.from?.id ?? 0
         const user = await UserProfileService.get(id)
         const name = user?.name ?? DEFAULT_USER_NAME

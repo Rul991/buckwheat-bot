@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString } from '../../../utils/types'
+import { MaybeString, TextContext } from '../../../utils/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 import { DEV_ID } from '../../../utils/consts'
 import { exec } from 'node:child_process'
@@ -11,8 +11,8 @@ export default class UpdateCommand extends BuckwheatCommand {
         this._name = 'обновись'
     }
 
-    async execute(ctx: Context, _: MaybeString): Promise<void> {
-        if(ctx.from?.id == DEV_ID) {
+    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
+        if(ctx.from.id == +DEV_ID!) {
             exec('git pull', async (_, stdout) => {
                 await MessageUtils.answerMessageFromResource(
                     ctx,

@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString } from '../../../../utils/types'
+import { MaybeString, TextContext } from '../../../../utils/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import StringUtils from '../../../../utils/StringUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
@@ -12,27 +12,88 @@ type RuleSubCommand = {
     needAdmin: boolean
     name: string
     execute: (data: string) => Promise<boolean>
-    sendMessage: (path: string, changeValues: Record<string, any>) => Promise<void>
+    sendMessage: (options: {ctx: Context, changeValues: Record<string, any>}) => Promise<void>
+    title: string,
+    description: string
 }
 
 export default class RuleCommand extends BuckwheatCommand {
-    // private _subCommands: RuleSubCommand[] = [
-    //     {
-    //         needData: false,
-    //         needAdmin: false,
-    //         name: 'список',
-    //         execute: async data => {
-    //             return true
-    //         },
-    //         sendMessage: async (path, changeValues) => {
+    private _subCommands: RuleSubCommand[] = [
+        {
+            title: 'Для удаления правила',
+            description: 'баквит правила удалить <1-99999> (возможно, вы написали)',
+            name: 'удалить',
 
-    //         }
-    //     }
-    // ]
+            needData: true,
+            needAdmin: true,
+
+            execute: async data => {
+                return await this._deleteRule(data)
+            },
+            sendMessage: async ({ctx, changeValues}) => {
+                await MessageUtils.answerMessageFromResource(
+                    ctx,
+                    'text/commands/rules/done/delete.pug',
+                    {
+                        changeValues: {
+                            number: +changeValues.data
+                        }
+                    }
+                )
+            }
+        },
+
+        {
+            title: 'Для добавление нового правила',
+            description: 'баквит правила добавить <текст>',
+            name: 'добавить',
+
+            needAdmin: true,
+            needData: true,
+
+            execute: async data => {
+                return await this._addRule(data)
+            },
+            sendMessage: async ({ctx}) => {
+                await MessageUtils.answerMessageFromResource(
+                    ctx,
+                    'text/commands/rules/done/add.pug'
+                )
+            }
+        },
+
+        {
+            title: 'Для вызова списка',
+            description: 'баквит правила список',
+            name: 'список',
+
+            needData: false,
+            needAdmin: false,
+
+            execute: async _ => {
+                return true
+            },
+            sendMessage: async ({ctx, changeValues}) => {
+                await MessageUtils.answerMessageFromResource(
+                    ctx,
+                    'text/commands/rules/list.pug',
+                    { changeValues }
+                )
+            }
+        }
+    ]
 
     constructor() {
         super()
         this._name = 'правила'
+    }
+
+    private async _sendHelpMessage(ctx: TextContext): Promise<void> {
+        await MessageUtils.answerMessageFromResource(
+            ctx,
+            'text/commands/rules/help.pug',
+            {changeValues: {subCommands: this._subCommands}}
+        )
     }
 
     private async _deleteRule(data: string): Promise<boolean> {
@@ -52,7 +113,7 @@ export default class RuleCommand extends BuckwheatCommand {
         return true
     }
 
-    async execute(ctx: Context, other: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         const id = ctx.from?.id ?? 0
 
         if(!other) {
@@ -70,74 +131,56 @@ export default class RuleCommand extends BuckwheatCommand {
         }
         else {
             const rank = await UserRankService.get(id)
-            const [command, ...nonSplittedData] = StringUtils.splitBySpace(other)
+            const [command, ...nonSplittedData] = other.split(' ')
             const data = nonSplittedData.join(' ')
+            const rules = await RulesService.get()
 
-            if(rank < RankUtils.adminRank) {
-                await MessageUtils.answerMessageFromResource(
-                    ctx,
-                    'text/commands/rules/noAdmin.pug'
-                )
-                return
-            }
+            const isAdminRank = rank >= RankUtils.adminRank
+            const hasData = Boolean(data)
 
-            if(!data && command != 'список') {
-                await MessageUtils.answerMessageFromResource(
-                    ctx,
-                    'text/commands/rules/help.html'
-                )
-                return
-            }
-
-            switch (command) {
-                case 'добавить':
-                    await this._addRule(data)
-                    await MessageUtils.answerMessageFromResource(
-                        ctx,
-                        'text/commands/rules/done/add.pug'
-                    )
-                    return
-
-                case 'список':
-                    await MessageUtils.answerMessageFromResource(
-                        ctx,
-                        'text/commands/rules/list.pug',
-                        {
-                            changeValues: {
-                                rules: await RulesService.get()
-                            }
-                        }
-                    )
-                    return
-
-                case 'удалить':
-                    const isDeleted = await this._deleteRule(data)
-                    if(isDeleted) {
+            for(const {
+                name, 
+                needAdmin, 
+                needData, 
+                execute, 
+                sendMessage, 
+                title, 
+                description
+            } of this._subCommands) {
+                if(command == name) {
+                    if(needAdmin && !isAdminRank) {
                         await MessageUtils.answerMessageFromResource(
                             ctx,
-                            'text/commands/rules/done/delete.pug',
-                            {
-                                changeValues: {
-                                    number: +data
-                                }
-                            }
+                            'text/commands/rules/noAdmin.pug'
                         )
+                        return
+                    }
+
+                    if(needData && !hasData) {
+                        this._sendHelpMessage(ctx)
+                        return
+                    }
+
+                    const isExecuted = await execute(data)
+                    if(isExecuted) {
+                        await sendMessage({ctx, changeValues: {rules, data}})
                     }
                     else {
                         await MessageUtils.answerMessageFromResource(
                             ctx,
-                            'text/commands/rules/help/delete.html'
+                            'text/commands/rules/sub-command-help.pug',
+                            {
+                                changeValues: {title, description},
+                                isParseToHtmlEntities: false
+                            }
                         )
                     }
+
                     return
-            
-                default:
-                    await MessageUtils.answerMessageFromResource(
-                        ctx,
-                        'text/commands/rules/help.html'
-                    )
-                    return
+                }
             }
+
+            this._sendHelpMessage(ctx)
         }
     }
 }

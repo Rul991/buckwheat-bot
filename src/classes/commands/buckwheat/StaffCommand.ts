@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString } from '../../../utils/types'
+import { MaybeString, TextContext } from '../../../utils/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 import ContextUtils from '../../../utils/ContextUtils'
 import UserRankService from '../../db/services/user/UserRankService'
@@ -13,7 +13,7 @@ export default class StaffCommand extends BuckwheatCommand {
         this._name = 'топ'
     }
 
-    async execute(ctx: Context, _: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
         type Player = {id: number, name: string}
         type Rating = {emoji: string, rankName: string, players: Player[]}
         let ratings: Rating[] = []

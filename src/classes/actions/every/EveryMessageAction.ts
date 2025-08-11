@@ -1,6 +1,6 @@
-import { Context } from 'telegraf'
 import BaseAction from '../base/BaseAction'
+import { MessageContext } from '../../../utils/types'
 
 export default abstract class EveryMessageAction extends BaseAction {
-    abstract execute(ctx: Context): Promise<void | true>
+    abstract execute(ctx: MessageContext): Promise<void | true>
 }

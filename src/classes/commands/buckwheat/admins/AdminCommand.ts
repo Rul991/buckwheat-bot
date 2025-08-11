@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString } from '../../../../utils/types'
+import { MaybeString, TextContext } from '../../../../utils/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import AdminUtils from '../../../../utils/AdminUtils'
 import { DEFAULT_USER_NAME } from '../../../../utils/consts'
@@ -22,9 +22,9 @@ export default abstract class AdminCommand extends BuckwheatCommand {
         this._minimumRank = RankUtils.adminRank
     }
 
-    protected abstract _do(ctx: Context, replyId: number, time: number): Promise<boolean>
+    protected abstract _do(ctx: TextContext, replyId: number, time: number): Promise<boolean>
 
-    async execute(ctx: Context, other: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         if(ctx.message && 'reply_to_message' in ctx.message) {
             const replyMessage = ctx.message.reply_to_message!
             const replyId = replyMessage.from?.id
@@ -37,7 +37,7 @@ export default abstract class AdminCommand extends BuckwheatCommand {
             const replyRank = await UserRankService.get(replyId)
 
             const isCreator = await ContextUtils.isCreator(ctx)
-            const time = TimeUtils.getTime(other ?? 'навсегда')
+            const time = TimeUtils.parseTimeToMilliseconds(other ?? 'навсегда')
 
             if(!(RankUtils.canUse(adminRank, replyRank, this._minimumRank) || isCreator) 
                 || replyId == adminId
@@ -71,7 +71,7 @@ export default abstract class AdminCommand extends BuckwheatCommand {
                         adminLink: ContextUtils.getLinkUrl(adminId),
                         admName: adminName ?? DEFAULT_USER_NAME,
                         nameReply: replyName ?? DEFAULT_USER_NAME,
-                        time: TimeUtils.getTimeName(time)
+                        time: TimeUtils.formatMillisecondsToTime(time)
                     }
                 }
             )

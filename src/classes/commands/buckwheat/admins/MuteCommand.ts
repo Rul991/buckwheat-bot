@@ -1,6 +1,7 @@
 import { Context } from 'telegraf'
 import AdminCommand from './AdminCommand'
 import AdminUtils from '../../../../utils/AdminUtils'
+import { TextContext } from '../../../../utils/types'
 
 export default class MuteCommand extends AdminCommand {
     constructor() {
@@ -11,7 +12,7 @@ export default class MuteCommand extends AdminCommand {
         this._minimumRank = 3
     }
 
-    protected async _do(ctx: Context, replyId: number, time: number): Promise<boolean> {
+    protected async _do(ctx: TextContext, replyId: number, time: number): Promise<boolean> {
         try {
             await AdminUtils.mute(ctx, replyId, time)
             return true

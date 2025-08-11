@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString } from '../../../../utils/types'
+import { MaybeString, TextContext } from '../../../../utils/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
@@ -80,7 +80,7 @@ export default class RankCommand extends BuckwheatCommand {
         this._name = 'ранг'
     }
 
-    async execute(ctx: Context, data: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, data: MaybeString): Promise<void> {
         if(!ctx.message || !ctx.from || !ctx.chat) return
 
         if('reply_to_message' in ctx.message && data) {

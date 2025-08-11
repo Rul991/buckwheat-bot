@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString } from '../../../../utils/types'
+import { MaybeString, TextContext } from '../../../../utils/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
@@ -12,7 +12,7 @@ export default class CreatorCommand extends BuckwheatCommand {
         this._name = 'создатель'
     }
 
-    async execute(ctx: Context, _: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
         let member = await ctx.telegram.getChatMember(ctx.chat?.id ?? '', ctx.from?.id ?? 0)
 
         if(member.status == 'creator') {

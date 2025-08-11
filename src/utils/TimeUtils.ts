@@ -11,7 +11,7 @@ export default class TimeUtils {
     private static _minTime = 30_000
     private static _maxTime = 366 * this._nameToNumber['д']
 
-    static getTime(time: string): number {
+    static parseTimeToMilliseconds(time: string): number {
         if(time == 'навсегда') return 0
 
         let date = ''
@@ -40,14 +40,14 @@ export default class TimeUtils {
             return additionalTime
     }
 
-    static getTimeName(time: number): string {
-        if(time <= 0 || isNaN(time)) return '∞'
+    static formatMillisecondsToTime(ms: number): string {
+        if(ms <= 0 || isNaN(ms)) return '∞'
 
         let timeValue = this._nameToNumber['с']
         let timeName = 'с'
 
         for (const [key, value] of Object.entries(this._nameToNumber)) {
-            if(time >= value) {
+            if(ms >= value) {
                 timeValue = value
                 timeName = key
             }
@@ -56,7 +56,22 @@ export default class TimeUtils {
             }
         }
 
-        return `${Math.floor(time / timeValue * 100) / 100}${timeName}`
+        return `${Math.floor(ms / timeValue * 100) / 100}${timeName}`
+    }
+
+    private static _padWithLeadingZero(time: number): string {
+        const MAX_NUMBER_IN_TIME = 2
+        return time.toString().padStart(MAX_NUMBER_IN_TIME, '0');
+    }
+
+    static toHHMMSS(ms: number): string {
+        const seconds = Math.floor((ms / MILLISECONDS_IN_SECOND) % SECONDS_IN_MINUTE)
+        const minutes = Math.floor((ms / (MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE)) % MINUTES_IN_HOUR)
+        const hours = Math.floor((ms / (MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR)))
+
+        return (
+            `${this._padWithLeadingZero(hours)}:${this._padWithLeadingZero(minutes)}:${this._padWithLeadingZero(seconds)}`
+        )
     }
 
     static getUntilDate(ms: number): number {

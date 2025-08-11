@@ -1,12 +1,10 @@
-import { Context } from 'telegraf'
-import { MaybeString } from '../../../utils/types'
+import { MaybeString, TextContext } from '../../../utils/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 import ContextUtils from '../../../utils/ContextUtils'
 import CasinoGetService from '../../db/services/casino/CasinoGetService'
 import CasinoAddService from '../../db/services/casino/CasinoAddService'
 import UserNameService from '../../db/services/user/UserNameService'
 import MessageUtils from '../../../utils/MessageUtils'
-import CasinoAccountService from '../../db/services/casino/CasinoAccountService'
 
 export default class TransferCommand extends BuckwheatCommand {
     private static _filenames = ['no-receiver', 'self', 'empty', 'wrong', 'negative']
@@ -15,7 +13,7 @@ export default class TransferCommand extends BuckwheatCommand {
         return (await UserNameService.get(id)) ?? undefined
     }
 
-    private static _getIdByCondition(ctx: Context, other: MaybeString): number {
+    private static _getIdByCondition(ctx: TextContext, other: MaybeString): number {
         const conditions = [
             !('reply_to_message' in ctx.message!),
             //@ts-ignore
@@ -32,7 +30,7 @@ export default class TransferCommand extends BuckwheatCommand {
         return -1
     }
 
-    private static async _sendMessage(ctx: Context, filename: string) {
+    private static async _sendMessage(ctx: TextContext, filename: string) {
         await MessageUtils.answerMessageFromResource(
             ctx,
             `text/commands/transfer/${filename}.html`
@@ -44,7 +42,7 @@ export default class TransferCommand extends BuckwheatCommand {
         this._name = 'переведи'
     }
 
-    async execute(ctx: Context, other: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         if(!ctx.from) return
         if(!ctx.message) return
 

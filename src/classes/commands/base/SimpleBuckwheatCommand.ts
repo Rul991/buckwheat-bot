@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString } from '../../../utils/types'
+import { MaybeString, TextContext } from '../../../utils/types'
 import BuckwheatCommand from './BuckwheatCommand'
 import FileUtils from '../../../utils/FileUtils'
 import SimpleCommand from '../../../interfaces/other/SimpleComand'
@@ -27,7 +27,7 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
     private _src?: string
     private _text?: string
 
-    async execute(ctx: Context, _: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
         if(typeof this._src == 'string') {
             await MessageUtils.answerMessageFromResource(ctx, this._src)
         }

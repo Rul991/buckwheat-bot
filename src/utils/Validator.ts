@@ -1,5 +1,5 @@
 export default class Validator {
-    static isEnvValueDefined(value: string | undefined): boolean {
+    static isEnvVariableDefined(value?: string): boolean {
         return typeof value == 'string'
     }
 }

@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString } from '../../../utils/types'
+import { MaybeString, TextContext } from '../../../utils/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 import MessageUtils from '../../../utils/MessageUtils'
 import CasinoRepository from '../../db/repositories/CasinoRepository'
@@ -11,15 +11,15 @@ export default class TestCommand extends BuckwheatCommand {
         this._name = 'тест'
     }
 
-    private async _secretFunction(ctx: Context, other: MaybeString) {
+    private async _secretFunction(ctx: TextContext, other: MaybeString) {
         for (const casino of await CasinoRepository.findMany()) {
             console.log(casino.id)
             CasinoRepository.updateOne(casino.id, {loses: 0, money: 0, wins: 0})
         }
     }
 
-    async execute(ctx: Context, other: MaybeString): Promise<void> {
-        if(ctx.from?.id == DEV_ID) {
+    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+        if(ctx.from.id == +(DEV_ID ?? 0)) {
             this._secretFunction(ctx, other)
         }
 

@@ -5,6 +5,7 @@ import CasinoAccountService from '../../db/services/casino/CasinoAccountService'
 import { User } from 'telegraf/types'
 import StringUtils from '../../../utils/StringUtils'
 import WorkService from '../../db/services/work/WorkService'
+import { MessageContext } from '../../../utils/types'
 
 export default class CreateProfileAction extends EveryMessageAction {
     private async _createProfile(user?: User) {
@@ -17,7 +18,7 @@ export default class CreateProfileAction extends EveryMessageAction {
         WorkService.get(id)
     }
 
-    async execute(ctx: Context): Promise<void> {
+    async execute(ctx: MessageContext): Promise<void> {
         if(!ctx.from) return
         await this._createProfile(ctx.from)
 

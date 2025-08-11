@@ -1,6 +1,6 @@
 import { WORK_TIME } from './../../../utils/consts'
 import { Context } from 'telegraf'
-import { MaybeString } from '../../../utils/types'
+import { MaybeString, TextContext } from '../../../utils/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 import UserRankService from '../../db/services/user/UserRankService'
 import { DEFAULT_USER_NAME, MAX_WORK, MIN_WORK } from '../../../utils/consts'
@@ -18,7 +18,7 @@ export default class WorkCommand extends BuckwheatCommand {
         this._name = 'работа'
     }
     
-    async execute(ctx: Context, _: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
         const id = ctx.from?.id ?? 0
         const rank = await UserRankService.get(id)
 
@@ -46,7 +46,7 @@ export default class WorkCommand extends BuckwheatCommand {
                 'text/commands/work/cant.pug',
                 {
                     changeValues: {
-                        time: TimeUtils.getTimeName(WORK_TIME - elapsed)
+                        time: TimeUtils.toHHMMSS(WORK_TIME - elapsed)
                     }
                 }
             )
