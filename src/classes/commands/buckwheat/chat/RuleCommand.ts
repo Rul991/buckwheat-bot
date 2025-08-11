@@ -153,7 +153,7 @@ export default class RuleCommand extends BuckwheatCommand {
             const [command, ...nonSplittedData] = other.split(' ')
             const data = nonSplittedData
                 .join(' ')
-                .replaceAll('%', '\n')
+                .replaceAll('%', '\n       ')
             const rules = await RulesService.get()
 
             const isAdminRank = rank >= RankUtils.adminRank
