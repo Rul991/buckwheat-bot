@@ -44,6 +44,7 @@ export default class CubeCommand extends BuckwheatCommand {
             }
 
             const userMoney = await CasinoGetService.getMoney(userId)
+            const replyMoney = await CasinoGetService.getMoney(replyId)
             const needMoney = Math.ceil(other && !isNaN(+other) ? +other : 0)
 
             if(needMoney < 0) {
@@ -58,6 +59,14 @@ export default class CubeCommand extends BuckwheatCommand {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/cubes/not-enough.html'
+                )
+                return
+            }
+
+            if(replyMoney <= 0 && needMoney > 0) {
+                await MessageUtils.answerMessageFromResource(
+                    ctx, 
+                    'text/commands/cubes/zero-money.pug'
                 )
                 return
             }

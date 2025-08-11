@@ -5,6 +5,7 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
 import RulesService from '../../../db/services/chat/RulesService'
+import { TAB_NEW_LINE } from '../../../../utils/consts'
 
 type RuleSubCommand = {
     needData: boolean
@@ -43,8 +44,8 @@ export default class RuleCommand extends BuckwheatCommand {
         },
 
         {
-            title: 'Для добавление нового правила (для того, чтобы ввести текст в несколько строк, вводи через %)',
-            description: 'баквит правила добавить <текст>',
+            title: 'Для добавление нового правила',
+            description: 'баквит правила добавить <текст>\n(для того, чтобы ввести текст в несколько строк, вводи через %)',
             name: 'добавить',
 
             needAdmin: true,
@@ -153,7 +154,7 @@ export default class RuleCommand extends BuckwheatCommand {
             const [command, ...nonSplittedData] = other.split(' ')
             const data = nonSplittedData
                 .join(' ')
-                .replaceAll('%', '\n       ')
+                .replaceAll('%', TAB_NEW_LINE)
             const rules = await RulesService.get()
 
             const isAdminRank = rank >= RankUtils.adminRank
@@ -169,7 +170,10 @@ export default class RuleCommand extends BuckwheatCommand {
                 description
             } of this._subCommands) {
                 if(command == name) {
-                    const changeValues = {title, description}
+                    const changeValues = {
+                        title, 
+                        description
+                    }
 
                     if(needAdmin && !isAdminRank) {
                         await MessageUtils.answerMessageFromResource(

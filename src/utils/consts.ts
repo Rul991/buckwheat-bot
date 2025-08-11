@@ -36,6 +36,7 @@ export const MIN_WORK = 5
 export const MAX_WORK = 15
 
 export const WORK_TIME = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * 3
+export const RUBLE_TO_COIN = 1.5
 
 export const DEFAULT_USER_NAME = 'игрок'
 export const DEFAULT_USER_NAME_CAPITAL = DEFAULT_USER_NAME
@@ -46,3 +47,4 @@ export const DEFAULT_USER_NAME_CAPITAL = DEFAULT_USER_NAME
 
 export const MAX_MESSAGES_PER_TIME = 15
 export const NOT_SPAM_TIME = MILLISECONDS_IN_SECOND * MAX_MESSAGES_PER_TIME * 2
+export const TAB_NEW_LINE = '\n       '

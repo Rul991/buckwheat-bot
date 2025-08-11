@@ -37,6 +37,7 @@ import RuleChangeAction from '../classes/callback-button/RuleChangeAction'
 import WorkCommand from '../classes/commands/buckwheat/WorkCommand'
 import { env } from 'process'
 import CommandsCommand from '../classes/commands/CommandsCommand'
+import DonateCommand from '../classes/commands/DonateCommand'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -133,6 +134,7 @@ const launchBot = async (bot: Bot) => {
         new UpdateCommand(),
         new RuleCommand(),
         new WorkCommand(),
+        new DonateCommand(),
         ...await getSimpleCommands()
     )
 
