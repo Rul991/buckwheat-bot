@@ -6,6 +6,7 @@ export default class PingCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'прием'
+        this._description = 'прием-прием'
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {

@@ -6,7 +6,13 @@ import { TextContext } from '../../../../utils/types'
 export default class MuteCommand extends AdminCommand {
     constructor() {
         super()
+
         this._name = 'бан'
+        this._description = 'выгоняю игрока на время или навсегда'
+        this._needData = true
+        this._replySupport = true
+        this._argumentText = 'время'
+
         this._folder = 'ban'
         this._isUndoCommand = false
     }

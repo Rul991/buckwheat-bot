@@ -9,6 +9,7 @@ export default class CasinoCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'казино'
+        this._description = 'показываю вашу статистику в казино'
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {

@@ -11,6 +11,7 @@ export default class StaffCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'топ'
+        this._description = 'показываю иерархию чата'
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {

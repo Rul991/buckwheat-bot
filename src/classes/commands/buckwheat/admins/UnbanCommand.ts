@@ -6,7 +6,11 @@ import { TextContext } from '../../../../utils/types'
 export default class UnbanCommand extends AdminCommand {
     constructor() {
         super()
+
         this._name = 'разбан'
+        this._description = 'разрешаю игроку войти в чат'
+        this._replySupport = true
+
         this._folder = 'ban'
     }
 

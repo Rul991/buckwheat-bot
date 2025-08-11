@@ -6,6 +6,7 @@ import BuckwheatCommand from '../../../commands/base/BuckwheatCommand'
 import ConditionalCommand from '../../../commands/base/ConditionalCommand'
 import { CommandStrings, TextContext } from '../../../../utils/types'
 import WrongCommand from '../../../commands/buckwheat/WrongCommand'
+import CommandDescriptionUtils from '../../../../utils/CommandDescriptionUtils'
 
 export default class CommandHandler extends BaseHandler<BuckwheatCommand, ConditionalCommand[]> {
     private static _botNames: string[] = ['баквит', 'гречка']
@@ -19,6 +20,7 @@ export default class CommandHandler extends BaseHandler<BuckwheatCommand, Condit
     }
 
     protected _add(value: BuckwheatCommand): void {
+        CommandDescriptionUtils.add(value.commandDescription)
         if(value instanceof ConditionalCommand) {
             super._add(value)
         }

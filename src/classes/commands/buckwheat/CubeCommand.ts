@@ -11,6 +11,10 @@ export default class CubeCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'кубы'
+        this._description = 'предлагает другому игроку сыграть в кубики на деньги или на интерес'
+        this._replySupport = true
+        this._needData = true
+        this._argumentText = 'деньги'
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {

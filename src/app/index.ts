@@ -36,6 +36,7 @@ import RuleCommand from '../classes/commands/buckwheat/chat/RuleCommand'
 import RuleChangeAction from '../classes/callback-button/RuleChangeAction'
 import WorkCommand from '../classes/commands/buckwheat/WorkCommand'
 import { env } from 'process'
+import CommandsCommand from '../classes/commands/CommandsCommand'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -112,6 +113,7 @@ const launchBot = async (bot: Bot) => {
     
     // buckwheat
     bot.addCommands(
+        new CommandsCommand(),
         new ProfileCommand(),
         new CasinoCommand(),
         new ChangeNameCommand(),

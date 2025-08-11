@@ -3,6 +3,11 @@ import { CommandStrings, MaybeString, TextContext } from '../../../utils/types'
 import BuckwheatCommand from './BuckwheatCommand'
 
 export default abstract class ConditionalCommand extends BuckwheatCommand {
+    constructor() {
+        super()
+        this._isShow = false
+    }
+
     abstract condition(ctx: TextContext, [firstWord, command, other]: CommandStrings): boolean | Promise<boolean>
 
     async executeIfCondition(ctx: TextContext, message: CommandStrings): Promise<boolean> {

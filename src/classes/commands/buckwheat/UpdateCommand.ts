@@ -9,6 +9,7 @@ export default class UpdateCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'обновись'
+        this._isShow = false
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {

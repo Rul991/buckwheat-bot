@@ -3,6 +3,14 @@ import { CallbackQuery, Message, Update } from 'telegraf/types'
 
 export type MaybeString = string | undefined
 export type CommandStrings = [string, MaybeString, MaybeString]
+export type CommandDescription = {
+    needData: boolean, 
+    argumentText?: string,
+    replySupport: boolean, 
+    isShow: boolean, 
+    description: string, 
+    name: string
+}
 
 export type TextContext = Context<{
     message: Update.New & Update.NonChannel & Message.TextMessage;
@@ -21,5 +29,6 @@ export type MessageContext = NarrowedContext<Context<Update>, Update.MessageUpda
 
 export type DiceValues = '🎲' | '🎯' | '🏀' | '⚽' | '🎳' | '🎰'
 export type ModeTypes = 'prod' | 'dev'
+
 export type Constructor<T> = any
 export type AsyncOrSync<T = void> = Promise<T> | T

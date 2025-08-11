@@ -38,8 +38,11 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
 
     constructor({name, src, text}: SimpleCommand) {
         super()
+
         this._name = name
         this._src = src
         this._text = text
+
+        this._isShow = false
     }
 }

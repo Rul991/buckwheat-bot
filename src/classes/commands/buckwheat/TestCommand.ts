@@ -9,11 +9,11 @@ export default class TestCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'тест'
+        this._isShow = false
     }
 
     private async _secretFunction(ctx: TextContext, other: MaybeString) {
         for (const casino of await CasinoRepository.findMany()) {
-            console.log(casino.id)
             CasinoRepository.updateOne(casino.id, {loses: 0, money: 0, wins: 0})
         }
     }

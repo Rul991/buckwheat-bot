@@ -8,6 +8,9 @@ export default class EchoCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'эхо'
+        this._description = 'повторяю текст'
+        this._needData = true
+        this._argumentText = 'текст'
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {

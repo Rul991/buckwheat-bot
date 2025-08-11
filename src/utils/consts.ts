@@ -14,6 +14,7 @@ export const MODE: ModeTypes = env.MODE as ModeTypes ?? 'dev'
 
 export const MAX_NAME_LENGTH = 48
 export const MAX_DESCRIPTION_LENGTH = 256
+export const MAX_MESSAGE_LENGTH = 4096
 
 export const START_MONEY = 0
 export const JACKPOT_PRIZE = 12

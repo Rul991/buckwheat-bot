@@ -40,6 +40,10 @@ export default class TransferCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'переведи'
+        this._description = 'перевожу монеты с твоего кошелька на кошелек игрока, на сообщение которого ты ответил'
+        this._needData = true
+        this._replySupport = true
+        this._argumentText = 'деньги'
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {

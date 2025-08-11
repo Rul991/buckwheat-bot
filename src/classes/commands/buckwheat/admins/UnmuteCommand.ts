@@ -6,7 +6,11 @@ import { TextContext } from '../../../../utils/types'
 export default class UnmuteCommand extends AdminCommand {
     constructor() {
         super()
+
         this._name = 'размут'
+        this._description = 'разрешаю говорить игроку'
+        this._replySupport = true
+
         this._folder = 'mute'
         this._minimumRank = 3
     }

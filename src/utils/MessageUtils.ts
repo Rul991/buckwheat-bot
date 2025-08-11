@@ -1,7 +1,7 @@
 import { Message } from 'telegraf/types'
 import { Context } from 'telegraf'
 import InlineKeyboardManager from '../classes/main/InlineKeyboardManager'
-import { PARSE_MODE } from './consts'
+import { MAX_MESSAGE_LENGTH, PARSE_MODE } from './consts'
 import FileUtils from './FileUtils'
 import Logging from './Logging'
 import AnswerOptions from '../interfaces/options/AnswerOptions'
@@ -13,7 +13,18 @@ export default class MessageUtils {
         text: string, 
         {inlineKeyboard = ['empty', '']}: AnswerOptions = {}
     ): Promise<Message.TextMessage> {
-        if(!text.length) return {text: '', message_id: -1, date: -1, chat: {first_name: '', type: 'private', 'id': -1}}
+        const emptyMessage: Message.TextMessage = {
+            text: '', 
+            message_id: -1, 
+            date: -1, 
+            chat: {
+                first_name: '', 
+                type: 'private', 
+                id: -1
+            }
+        }
+        
+        if(!text.length) return emptyMessage
 
         const messageOptions = {
             reply_parameters: {'message_id': ctx.message?.message_id ?? 0},
@@ -22,16 +33,24 @@ export default class MessageUtils {
             }
         }
 
-        try {
-            return await ctx.reply(text, {
-                ...messageOptions, 
-                parse_mode: PARSE_MODE
-            })
+        let lastMessage: Message.TextMessage = emptyMessage
+
+        for (let i = 0; i < text.length; i += MAX_MESSAGE_LENGTH) {
+            const partText = text.substring(i, i + MAX_MESSAGE_LENGTH)
+
+            try {
+                lastMessage = await ctx.reply(partText, {
+                    ...messageOptions, 
+                    parse_mode: PARSE_MODE
+                })
+            }
+            catch(e) {
+                Logging.error(e)
+                lastMessage = await ctx.reply(partText, messageOptions)
+            }
         }
-        catch(e) {
-            Logging.error(e)
-            return await ctx.reply(text, messageOptions)
-        }
+
+        return lastMessage
     }
 
     static async answerMessageFromResource(

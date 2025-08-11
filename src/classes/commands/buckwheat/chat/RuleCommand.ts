@@ -1,7 +1,6 @@
 import { Context } from 'telegraf'
 import { MaybeString, TextContext } from '../../../../utils/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
-import StringUtils from '../../../../utils/StringUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
@@ -21,7 +20,7 @@ export default class RuleCommand extends BuckwheatCommand {
     private _subCommands: RuleSubCommand[] = [
         {
             title: 'Для удаления правила',
-            description: 'баквит правила удалить <1-99999> (возможно, вы написали)',
+            description: 'баквит правила удалить <1-9999>\n(возможно, вы ввели неверный номер)',
             name: 'удалить',
 
             needData: true,
@@ -44,7 +43,7 @@ export default class RuleCommand extends BuckwheatCommand {
         },
 
         {
-            title: 'Для добавление нового правила',
+            title: 'Для добавление нового правила (для того, чтобы ввести текст в несколько строк, вводи через %)',
             description: 'баквит правила добавить <текст>',
             name: 'добавить',
 
@@ -86,6 +85,15 @@ export default class RuleCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'правила'
+        this._description = 'показываю или редактирую правила'
+        this._needData = true
+
+        const commands = this._subCommands
+            .reduce((prev, curr, i) => 
+                `${prev}${curr.name}${i < this._subCommands.length - 1 ? ' | ' : ''}`, 
+            ''
+        )
+        this._argumentText = `(${commands}) [аргументы]`
     }
 
     private async _sendHelpMessage(ctx: TextContext): Promise<void> {
@@ -93,6 +101,17 @@ export default class RuleCommand extends BuckwheatCommand {
             ctx,
             'text/commands/rules/help.pug',
             {changeValues: {subCommands: this._subCommands}}
+        )
+    }
+
+    private async _sendHelpSubCommandMessage(ctx: TextContext, changeValues: Record<string, any>) {
+        await MessageUtils.answerMessageFromResource(
+            ctx,
+            'text/commands/rules/sub-command-help.pug',
+            {
+                changeValues,
+                isParseToHtmlEntities: false
+            }
         )
     }
 
@@ -132,7 +151,9 @@ export default class RuleCommand extends BuckwheatCommand {
         else {
             const rank = await UserRankService.get(id)
             const [command, ...nonSplittedData] = other.split(' ')
-            const data = nonSplittedData.join(' ')
+            const data = nonSplittedData
+                .join(' ')
+                .replaceAll('%', '\n')
             const rules = await RulesService.get()
 
             const isAdminRank = rank >= RankUtils.adminRank
@@ -148,6 +169,8 @@ export default class RuleCommand extends BuckwheatCommand {
                 description
             } of this._subCommands) {
                 if(command == name) {
+                    const changeValues = {title, description}
+
                     if(needAdmin && !isAdminRank) {
                         await MessageUtils.answerMessageFromResource(
                             ctx,
@@ -157,7 +180,10 @@ export default class RuleCommand extends BuckwheatCommand {
                     }
 
                     if(needData && !hasData) {
-                        this._sendHelpMessage(ctx)
+                        await this._sendHelpSubCommandMessage(
+                            ctx,
+                            changeValues
+                        )
                         return
                     }
 
@@ -166,13 +192,9 @@ export default class RuleCommand extends BuckwheatCommand {
                         await sendMessage({ctx, changeValues: {rules, data}})
                     }
                     else {
-                        await MessageUtils.answerMessageFromResource(
+                        await this._sendHelpSubCommandMessage(
                             ctx,
-                            'text/commands/rules/sub-command-help.pug',
-                            {
-                                changeValues: {title, description},
-                                isParseToHtmlEntities: false
-                            }
+                            changeValues
                         )
                     }
 

@@ -10,6 +10,9 @@ export default class ChangeDescriptionCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'описание'
+        this._description = 'меняю вам описание профиля в беседе'
+        this._needData = true
+        this._argumentText = 'описание'
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {

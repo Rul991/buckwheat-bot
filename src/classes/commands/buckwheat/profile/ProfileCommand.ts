@@ -13,6 +13,8 @@ export default class ProfileCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'профиль'
+        this._description = 'я показываю ваш профиль'
+        this._replySupport = true
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {

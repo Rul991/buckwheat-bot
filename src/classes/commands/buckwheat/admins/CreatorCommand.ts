@@ -10,6 +10,7 @@ export default class CreatorCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'создатель'
+        this._description = 'повышаю твой ранг до Гниды, если ты являешься создателем беседы.'
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
