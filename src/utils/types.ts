@@ -25,6 +25,11 @@ export type DiceContext = NarrowedContext<Context<Update>, {
     update_id: number;
 }>
 
+export type NewMemberContext = NarrowedContext<Context<Update>, {
+    message: Update.New & Update.NonChannel & Message.NewChatMembersMessage;
+    update_id: number;
+}>
+
 export type MessageContext = NarrowedContext<Context<Update>, Update.MessageUpdate<Message>>
 
 export type DiceValues = '🎲' | '🎯' | '🏀' | '⚽' | '🎳' | '🎰'

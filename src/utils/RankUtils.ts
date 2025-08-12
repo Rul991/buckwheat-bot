@@ -29,6 +29,8 @@ export default class RankUtils {
     ]
 
     static adminRank = 4
+    static moderatorRank = 3
+    
     static minRank = 0
     static maxRank = this._rankNames.length - 1
 

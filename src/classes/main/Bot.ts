@@ -19,6 +19,8 @@ import CommandHandler from './handlers/commands/CommandHandler'
 import EveryMessageHandler from './handlers/EveryMessageHandler'
 import CallbackButtonActionHandler from './handlers/CallbackButtonActionHandler'
 import DiceHandler from './handlers/DiceHandler'
+import NewMemberHandler from './handlers/NewMemberHandler'
+import NewMemberAction from '../actions/new-member/NewMemberAction'
 
 export default class Bot {    
     private _bot: Telegraf
@@ -29,6 +31,7 @@ export default class Bot {
     private _everyMessageHandler: EveryMessageHandler
     private _callbackButtonHandler: CallbackButtonActionHandler
     private _diceHandler: DiceHandler
+    private _newMemberHandler: NewMemberHandler
 
     constructor(token: string) {
         this._bot = new Telegraf(token)
@@ -37,14 +40,16 @@ export default class Bot {
         this._telegramCommandHandler = new TelegramCommandHandler
         this._commandHandler = new CommandHandler
         this._callbackButtonHandler = new CallbackButtonActionHandler
-        this._diceHandler = new DiceHandler()
+        this._diceHandler = new DiceHandler
+        this._newMemberHandler = new NewMemberHandler
 
         this._handlers = [
             this._everyMessageHandler,
             this._telegramCommandHandler,
             this._commandHandler,
             this._callbackButtonHandler,
-            this._diceHandler
+            this._diceHandler,
+            this._newMemberHandler
         ]
     }
 
@@ -54,6 +59,10 @@ export default class Bot {
 
     private _addCommand(command: BuckwheatCommand): void {
         this._commandHandler.add(command)
+    }
+
+    addNewMemberAction(...actions: NewMemberAction[]): void {
+        this._newMemberHandler.add(...actions)
     }
 
     addCallbackButtonAction(...actions: CallbackButtonAction[]): void {

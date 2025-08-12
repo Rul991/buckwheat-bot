@@ -38,6 +38,8 @@ import WorkCommand from '../classes/commands/buckwheat/WorkCommand'
 import { env } from 'process'
 import CommandsCommand from '../classes/commands/CommandsCommand'
 import DonateCommand from '../classes/commands/DonateCommand'
+import HelloCommand from '../classes/commands/buckwheat/chat/HelloCommand'
+import HelloMemberAction from '../classes/actions/new-member/HelloMemberAction'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -106,6 +108,10 @@ const launchBot = async (bot: Bot) => {
         new CasinoDice()
     )
 
+    bot.addNewMemberAction(
+        new HelloMemberAction()
+    )
+
     // conditional
     bot.addCommands(
         new CapsCommand(),
@@ -135,6 +141,7 @@ const launchBot = async (bot: Bot) => {
         new RuleCommand(),
         new WorkCommand(),
         new DonateCommand(),
+        new HelloCommand(),
         ...await getSimpleCommands()
     )
 
