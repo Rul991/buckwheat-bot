@@ -33,6 +33,6 @@ export default class CasinoGetService {
             .sort((a, b) => {
                 return b.money! - a.money!
             })
-            .filter(casino => casino.money! > 0)
+            .filter((casino, i) => casino.money! > 0 && i <= 10)
     }
 }
