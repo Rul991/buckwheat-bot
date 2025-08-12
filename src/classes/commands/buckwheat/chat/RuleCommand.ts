@@ -6,6 +6,7 @@ import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
 import RulesService from '../../../db/services/chat/RulesService'
 import { TAB_NEW_LINE } from '../../../../utils/consts'
+import StringUtils from '../../../../utils/StringUtils'
 
 type RuleSubCommand = {
     needData: boolean
@@ -152,9 +153,12 @@ export default class RuleCommand extends BuckwheatCommand {
         else {
             const rank = await UserRankService.get(id)
             const [command, ...nonSplittedData] = other.split(' ')
-            const data = nonSplittedData
-                .join(' ')
-                .replaceAll('%', TAB_NEW_LINE)
+            const data = StringUtils
+                .replaceToNewLine(
+                nonSplittedData
+                    .join(' '),
+                    true
+                )
             const rules = await RulesService.get()
 
             const isAdminRank = rank >= RankUtils.adminRank

@@ -17,9 +17,9 @@ export const MAX_DESCRIPTION_LENGTH = 256
 export const MAX_MESSAGE_LENGTH = 4096
 
 export const START_MONEY = 0
-export const JACKPOT_PRIZE = 12
-export const WIN_PRIZE = 6
-export const LOSE_PRIZE = -2
+export const JACKPOT_PRIZE = 10
+export const WIN_PRIZE = 5
+export const LOSE_PRIZE = -1
 
 export const MILLISECONDS_IN_SECOND = 1000
 export const SECONDS_IN_MINUTE = 60
@@ -33,7 +33,7 @@ export const CASINO_TIME = 1750
 export const DICE_TIME = 3500
 
 export const MIN_WORK = 5
-export const MAX_WORK = 15
+export const MAX_WORK = 20
 
 export const WORK_TIME = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * 3
 export const RUBLE_TO_COIN = 1.5

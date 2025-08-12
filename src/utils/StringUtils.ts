@@ -1,4 +1,5 @@
 import ReplaceOptions from '../interfaces/options/ReplaceOptions'
+import { TAB_NEW_LINE } from './consts'
 
 export default class StringUtils {
     static splitBySpace(text: string): string[] {
@@ -21,6 +22,10 @@ export default class StringUtils {
         }
 
         return text
+    }
+
+    static replaceToNewLine(text: string, withTab: boolean = false): string {
+        return text.replaceAll('%', withTab ? TAB_NEW_LINE : '\n')
     }
 
     static toHtmlEntitiesIfNeed(text: any, need = true): string {

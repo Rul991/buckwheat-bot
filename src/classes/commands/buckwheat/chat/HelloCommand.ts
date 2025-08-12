@@ -1,5 +1,6 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import RankUtils from '../../../../utils/RankUtils'
+import StringUtils from '../../../../utils/StringUtils'
 import { TextContext, MaybeString } from '../../../../utils/types'
 import HelloService from '../../../db/services/chat/HelloService'
 import UserRankService from '../../../db/services/user/UserRankService'
@@ -39,7 +40,7 @@ export default class HelloCommand extends BuckwheatCommand {
             return
         }
         
-        await HelloService.edit(other.replaceAll('%', '\n'))
+        await HelloService.edit(StringUtils.replaceToNewLine(other))
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/hello/done.pug',
