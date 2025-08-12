@@ -27,9 +27,9 @@ import PingCommand from '../classes/commands/buckwheat/PingCommand'
 import UnmuteCommand from '../classes/commands/buckwheat/admins/UnmuteCommand'
 import BanCommand from '../classes/commands/buckwheat/admins/BanCommand'
 import UnbanCommand from '../classes/commands/buckwheat/admins/UnbanCommand'
-import CubeYesAction from '../classes/callback-button/CubeYesAction'
+import CubeYesAction from '../classes/callback-button/cube/CubeYesAction'
 import CubeCommand from '../classes/commands/buckwheat/money/CubeCommand'
-import CubeNoAction from '../classes/callback-button/CubeNoAction'
+import CubeNoAction from '../classes/callback-button/cube/CubeNoAction'
 import UpdateCommand from '../classes/commands/buckwheat/UpdateCommand'
 import AntiSpamAction from '../classes/actions/every/AntiSpamAction'
 import RuleCommand from '../classes/commands/buckwheat/chat/RuleCommand'
@@ -42,6 +42,9 @@ import HelloCommand from '../classes/commands/buckwheat/chat/HelloCommand'
 import HelloMemberAction from '../classes/actions/new-member/HelloMemberAction'
 import MoneyTopCommand from '../classes/commands/buckwheat/top/MoneyTopCommand'
 import ImageProfileAction from '../classes/actions/photo/ImageProfileAction'
+import ShopCommand from '../classes/commands/buckwheat/money/ShopCommand'
+import ItemChangeAction from '../classes/callback-button/shop/ItemChangeAction'
+import BuyAction from '../classes/callback-button/shop/BuyAction'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -107,7 +110,9 @@ const launchBot = async (bot: Bot) => {
     bot.addCallbackButtonAction(
         new CubeYesAction(),
         new CubeNoAction(),
-        new RuleChangeAction()
+        new RuleChangeAction(),
+        new ItemChangeAction(),
+        new BuyAction()
     )
 
     bot.addDiceActions(
@@ -149,6 +154,7 @@ const launchBot = async (bot: Bot) => {
         new DonateCommand(),
         new HelloCommand(),
         new MoneyTopCommand(),
+        new ShopCommand(),
         ...await getSimpleCommands()
     )
 

@@ -1,7 +1,7 @@
-import ContextUtils from '../../utils/ContextUtils'
-import MessageUtils from '../../utils/MessageUtils'
-import { CallbackButtonContext } from '../../utils/types'
-import CallbackButtonAction from './CallbackButtonAction'
+import ContextUtils from '../../../utils/ContextUtils'
+import MessageUtils from '../../../utils/MessageUtils'
+import { CallbackButtonContext } from '../../../utils/types'
+import CallbackButtonAction from '../CallbackButtonAction'
 
 export default class CubeNoAction extends CallbackButtonAction {
     constructor() {

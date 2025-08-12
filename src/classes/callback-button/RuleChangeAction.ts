@@ -1,6 +1,7 @@
 import { PARSE_MODE } from '../../utils/consts'
 import FileUtils from '../../utils/FileUtils'
 import Logging from '../../utils/Logging'
+import Pager from '../../utils/Pager'
 import { CallbackButtonContext } from '../../utils/types'
 import RulesService from '../db/services/chat/RulesService'
 import InlineKeyboardManager from '../main/InlineKeyboardManager'
@@ -13,22 +14,10 @@ export default class RuleChangeAction extends CallbackButtonAction {
     }
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<void> {
-        const [prevPage, addedValue] = data
-            .split('_')
-            .map(val => +val)
         const rules = await RulesService.get()
-        
-        const newPage = prevPage + addedValue
-        let currentPage = newPage
+        const currentPage = Pager.clampPages(data, rules.length)
 
-        if(currentPage < 0) {
-            currentPage = Math.max(0, rules.length - 1)
-        }
-        else if(currentPage >= rules.length) {
-            currentPage = 0
-        }
-
-        if(prevPage == currentPage) return
+        if(currentPage === -1) return
 
         try {
             await ctx.editMessageText(

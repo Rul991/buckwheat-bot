@@ -1,0 +1,20 @@
+[
+    [
+        {
+            "text": "<<",
+            "callback_data": "itemchange_-1_@"
+        },
+
+        {
+            "text": ">>",
+            "callback_data": "itemchange_1_@"
+        }
+    ],
+
+    [
+        {
+            "text": "Купить",
+            "callback_data": "buy_@"
+        }
+    ]
+]

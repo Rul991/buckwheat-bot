@@ -2,12 +2,12 @@
     [
         {
             "text": "<<",
-            "callback_data": "rulechange_@_-1"
+            "callback_data": "rulechange_-1_@"
         },
 
         {
             "text": ">>",
-            "callback_data": "rulechange_@_1"
+            "callback_data": "rulechange_1_@"
         }
     ]
 ]
