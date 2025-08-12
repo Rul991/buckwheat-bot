@@ -41,6 +41,7 @@ import DonateCommand from '../classes/commands/DonateCommand'
 import HelloCommand from '../classes/commands/buckwheat/chat/HelloCommand'
 import HelloMemberAction from '../classes/actions/new-member/HelloMemberAction'
 import MoneyTopCommand from '../classes/commands/buckwheat/top/MoneyTopCommand'
+import ImageProfileAction from '../classes/actions/photo/ImageProfileAction'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -97,6 +98,10 @@ const launchBot = async (bot: Bot) => {
         new CreateProfileAction(),
         new AntiSpamAction(), 
         new AddMessagesAction(),
+    )
+
+    bot.addPhotoActions(
+        new ImageProfileAction()
     )
 
     bot.addCallbackButtonAction(

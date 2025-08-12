@@ -1,8 +1,6 @@
-import { Context } from 'telegraf'
 import { MaybeString, TextContext } from '../../../utils/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 import MessageUtils from '../../../utils/MessageUtils'
-import CasinoRepository from '../../db/repositories/CasinoRepository'
 import { DEV_ID } from '../../../utils/consts'
 
 export default class TestCommand extends BuckwheatCommand {
@@ -13,13 +11,7 @@ export default class TestCommand extends BuckwheatCommand {
     }
 
     private async _secretFunction(ctx: TextContext, other: MaybeString) {
-        const casinos = await CasinoRepository.findMany()
-        const sortedCasinos = casinos.sort((a, b) => {
-            return b.money! - a.money!
-        })
-        for (const casino of sortedCasinos) {
-            console.log(casino.id, casino.money)
-        }
+        
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {

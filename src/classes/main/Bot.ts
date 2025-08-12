@@ -21,6 +21,8 @@ import CallbackButtonActionHandler from './handlers/CallbackButtonActionHandler'
 import DiceHandler from './handlers/DiceHandler'
 import NewMemberHandler from './handlers/NewMemberHandler'
 import NewMemberAction from '../actions/new-member/NewMemberAction'
+import PhotoHandler from './handlers/PhotoHandler'
+import PhotoAction from '../actions/photo/PhotoAction'
 
 export default class Bot {    
     private _bot: Telegraf
@@ -32,6 +34,7 @@ export default class Bot {
     private _callbackButtonHandler: CallbackButtonActionHandler
     private _diceHandler: DiceHandler
     private _newMemberHandler: NewMemberHandler
+    private _photoHandler: PhotoHandler
 
     constructor(token: string) {
         this._bot = new Telegraf(token)
@@ -42,6 +45,7 @@ export default class Bot {
         this._callbackButtonHandler = new CallbackButtonActionHandler
         this._diceHandler = new DiceHandler
         this._newMemberHandler = new NewMemberHandler
+        this._photoHandler = new PhotoHandler()
 
         this._handlers = [
             this._everyMessageHandler,
@@ -49,7 +53,8 @@ export default class Bot {
             this._commandHandler,
             this._callbackButtonHandler,
             this._diceHandler,
-            this._newMemberHandler
+            this._newMemberHandler,
+            this._photoHandler
         ]
     }
 
@@ -59,6 +64,10 @@ export default class Bot {
 
     private _addCommand(command: BuckwheatCommand): void {
         this._commandHandler.add(command)
+    }
+
+    addPhotoActions(...actions: PhotoAction[]): void {
+        this._photoHandler.add(...actions)
     }
 
     addNewMemberAction(...actions: NewMemberAction[]): void {

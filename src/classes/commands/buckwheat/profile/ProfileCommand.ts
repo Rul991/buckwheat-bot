@@ -8,12 +8,13 @@ import { DEFAULT_USER_NAME, EMPTY_PROFILE_IMAGE as EMPTY_PROFILE_IMAGE_ID, PARSE
 import RankUtils from '../../../../utils/RankUtils'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import MessageUtils from '../../../../utils/MessageUtils'
+import UserImageService from '../../../db/services/user/UserImageService'
 
 export default class ProfileCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'профиль'
-        this._description = 'я показываю ваш профиль'
+        this._description = 'я показываю профиль\nесли скинуть изображение, то поменяю вашу аватарку'
         this._replySupport = true
     }
 
@@ -43,8 +44,7 @@ export default class ProfileCommand extends BuckwheatCommand {
         }
 
         let profilePhotos = await ctx.telegram.getUserProfilePhotos(id, 0, 1)
-        let photoId: string
-
+        let photoId: string = await UserImageService.get(id)
         
         const rank = user?.rank ?? -1
         const devStatus = RankUtils.getDevStatusByNumber(rank)
@@ -60,7 +60,8 @@ export default class ProfileCommand extends BuckwheatCommand {
             description: user?.description?.toUpperCase() || '...'
         }
 
-        if(profilePhotos.total_count > 0) {
+        if(photoId.length) {}
+        else if(profilePhotos.total_count > 0) {
             photoId = profilePhotos.photos[0][0].file_id
         }
         else if(EMPTY_PROFILE_IMAGE_ID) {

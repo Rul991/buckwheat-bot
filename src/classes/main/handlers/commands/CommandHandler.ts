@@ -7,6 +7,7 @@ import ConditionalCommand from '../../../commands/base/ConditionalCommand'
 import { CommandStrings, TextContext } from '../../../../utils/types'
 import WrongCommand from '../../../commands/buckwheat/WrongCommand'
 import CommandDescriptionUtils from '../../../../utils/CommandDescriptionUtils'
+import CommandUtils from '../../../../utils/CommandUtils'
 
 export default class CommandHandler extends BaseHandler<BuckwheatCommand, ConditionalCommand[]> {
     private static _botNames: string[] = ['баквит', 'гречка']
@@ -60,22 +61,10 @@ export default class CommandHandler extends BaseHandler<BuckwheatCommand, Condit
 
     setup(bot: Telegraf): void {
         bot.on('text', async ctx => {
-            let isCommand = false
+            const [firstWord, command, other] = CommandUtils.getCommandStrings(ctx.text)
 
-            const splittedText = StringUtils.splitBySpace(ctx.text)
-
-            const [firstWord, command, ...other] = splittedText
-            const lowerFirstWord = firstWord.toLowerCase()
-
-            for (const name of CommandHandler._botNames) {
-                if(lowerFirstWord.startsWith(name)) {
-                    isCommand = true
-                    break
-                }
-            }
-
-            if(isCommand) {
-                await this._onCommand(ctx, [firstWord, command, other.join(' ')])
+            if(CommandUtils.isCommand(firstWord)) {
+                await this._onCommand(ctx, [firstWord, command, other])
             }
         })
     }

@@ -3,4 +3,5 @@ export default interface User {
     name: string
     rank?: number
     description?: string
+    imageId?: string
 }
