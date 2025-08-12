@@ -13,8 +13,12 @@ export default class TestCommand extends BuckwheatCommand {
     }
 
     private async _secretFunction(ctx: TextContext, other: MaybeString) {
-        for (const casino of await CasinoRepository.findMany()) {
-            CasinoRepository.updateOne(casino.id, {loses: 0, money: 0, wins: 0})
+        const casinos = await CasinoRepository.findMany()
+        const sortedCasinos = casinos.sort((a, b) => {
+            return b.money! - a.money!
+        })
+        for (const casino of sortedCasinos) {
+            console.log(casino.id, casino.money)
         }
     }
 

@@ -26,4 +26,13 @@ export default class CasinoGetService {
     static async getWins(id: number): Promise<number> {
         return await this._get(id, 'wins')
     }
+
+    static async getSortedCasinos(): Promise<Casino[]> {
+        const casinos = await CasinoRepository.findMany()
+        return casinos
+            .sort((a, b) => {
+                return b.money! - a.money!
+            })
+            .filter(casino => casino.money! > 0)
+    }
 }

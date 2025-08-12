@@ -1,10 +1,10 @@
-import { MaybeString, TextContext } from '../../../utils/types'
-import BuckwheatCommand from '../base/BuckwheatCommand'
-import ContextUtils from '../../../utils/ContextUtils'
-import CasinoGetService from '../../db/services/casino/CasinoGetService'
-import CasinoAddService from '../../db/services/casino/CasinoAddService'
-import UserNameService from '../../db/services/user/UserNameService'
-import MessageUtils from '../../../utils/MessageUtils'
+import { MaybeString, TextContext } from '../../../../utils/types'
+import BuckwheatCommand from '../../base/BuckwheatCommand'
+import ContextUtils from '../../../../utils/ContextUtils'
+import CasinoGetService from '../../../db/services/casino/CasinoGetService'
+import CasinoAddService from '../../../db/services/casino/CasinoAddService'
+import UserNameService from '../../../db/services/user/UserNameService'
+import MessageUtils from '../../../../utils/MessageUtils'
 
 export default class TransferCommand extends BuckwheatCommand {
     private static _filenames = ['no-receiver', 'self', 'empty', 'wrong', 'negative']

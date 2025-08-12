@@ -15,10 +15,10 @@ import CasinoDice from '../classes/dice/CasinoDice'
 import CreateProfileAction from '../classes/actions/every/CreateProfileAction'
 import AddMessagesAction from '../classes/actions/every/AddMessagesAction'
 import WrongChatAction from '../classes/actions/every/WrongChatAction'
-import CasinoCommand from '../classes/commands/buckwheat/CasinoCommand'
-import TransferCommand from '../classes/commands/buckwheat/TransferCommand'
+import CasinoCommand from '../classes/commands/buckwheat/money/CasinoCommand'
+import TransferCommand from '../classes/commands/buckwheat/money/TransferCommand'
 import ChangeDescriptionCommand from '../classes/commands/buckwheat/profile/ChangeDescriptionCommand'
-import StaffCommand from '../classes/commands/buckwheat/StaffCommand'
+import StaffCommand from '../classes/commands/buckwheat/top/StaffCommand'
 import CreatorCommand from '../classes/commands/buckwheat/admins/CreatorCommand'
 import RankCommand from '../classes/commands/buckwheat/admins/RankCommand'
 import { readdir } from 'fs/promises'
@@ -28,18 +28,19 @@ import UnmuteCommand from '../classes/commands/buckwheat/admins/UnmuteCommand'
 import BanCommand from '../classes/commands/buckwheat/admins/BanCommand'
 import UnbanCommand from '../classes/commands/buckwheat/admins/UnbanCommand'
 import CubeYesAction from '../classes/callback-button/CubeYesAction'
-import CubeCommand from '../classes/commands/buckwheat/CubeCommand'
+import CubeCommand from '../classes/commands/buckwheat/money/CubeCommand'
 import CubeNoAction from '../classes/callback-button/CubeNoAction'
 import UpdateCommand from '../classes/commands/buckwheat/UpdateCommand'
 import AntiSpamAction from '../classes/actions/every/AntiSpamAction'
 import RuleCommand from '../classes/commands/buckwheat/chat/RuleCommand'
 import RuleChangeAction from '../classes/callback-button/RuleChangeAction'
-import WorkCommand from '../classes/commands/buckwheat/WorkCommand'
+import WorkCommand from '../classes/commands/buckwheat/money/WorkCommand'
 import { env } from 'process'
 import CommandsCommand from '../classes/commands/CommandsCommand'
 import DonateCommand from '../classes/commands/DonateCommand'
 import HelloCommand from '../classes/commands/buckwheat/chat/HelloCommand'
 import HelloMemberAction from '../classes/actions/new-member/HelloMemberAction'
+import MoneyTopCommand from '../classes/commands/buckwheat/top/MoneyTopCommand'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -142,6 +143,7 @@ const launchBot = async (bot: Bot) => {
         new WorkCommand(),
         new DonateCommand(),
         new HelloCommand(),
+        new MoneyTopCommand(),
         ...await getSimpleCommands()
     )
 

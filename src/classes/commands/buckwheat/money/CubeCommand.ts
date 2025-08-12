@@ -1,11 +1,11 @@
 import { Context } from 'telegraf'
-import { MaybeString, TextContext } from '../../../utils/types'
-import BuckwheatCommand from '../base/BuckwheatCommand'
-import CasinoGetService from '../../db/services/casino/CasinoGetService'
-import ContextUtils from '../../../utils/ContextUtils'
-import UserNameService from '../../db/services/user/UserNameService'
-import { DEFAULT_USER_NAME } from '../../../utils/consts'
-import MessageUtils from '../../../utils/MessageUtils'
+import { MaybeString, TextContext } from '../../../../utils/types'
+import BuckwheatCommand from '../../base/BuckwheatCommand'
+import CasinoGetService from '../../../db/services/casino/CasinoGetService'
+import ContextUtils from '../../../../utils/ContextUtils'
+import UserNameService from '../../../db/services/user/UserNameService'
+import { DEFAULT_USER_NAME } from '../../../../utils/consts'
+import MessageUtils from '../../../../utils/MessageUtils'
 
 export default class CubeCommand extends BuckwheatCommand {
     constructor() {

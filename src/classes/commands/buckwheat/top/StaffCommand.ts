@@ -1,11 +1,11 @@
 import { Context } from 'telegraf'
-import { MaybeString, TextContext } from '../../../utils/types'
-import BuckwheatCommand from '../base/BuckwheatCommand'
-import ContextUtils from '../../../utils/ContextUtils'
-import UserRankService from '../../db/services/user/UserRankService'
-import RankUtils from '../../../utils/RankUtils'
-import MessageUtils from '../../../utils/MessageUtils'
-import UserProfileService from '../../db/services/user/UserProfileService'
+import { MaybeString, TextContext } from '../../../../utils/types'
+import BuckwheatCommand from '../../base/BuckwheatCommand'
+import ContextUtils from '../../../../utils/ContextUtils'
+import UserRankService from '../../../db/services/user/UserRankService'
+import RankUtils from '../../../../utils/RankUtils'
+import MessageUtils from '../../../../utils/MessageUtils'
+import UserProfileService from '../../../db/services/user/UserProfileService'
 
 export default class StaffCommand extends BuckwheatCommand {
     constructor() {
