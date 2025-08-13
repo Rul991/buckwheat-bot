@@ -1,4 +1,5 @@
 {
     "name": "баквит",
-    "src": "text/commands/buckwheat.html"
+    "src": "text/commands/buckwheat.html",
+    "avoidOther": true
 }

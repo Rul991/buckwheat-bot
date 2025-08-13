@@ -1,18 +1,19 @@
 import BaseDice from './BaseDice'
 import ContextUtils from '../../utils/ContextUtils'
 import UserProfileService from '../db/services/user/UserProfileService'
-import { DEFAULT_USER_NAME, CASINO_TIME, JACKPOT_PRIZE, LOSE_PRIZE, WIN_PRIZE } from '../../utils/consts'
+import { DEFAULT_USER_NAME, CASINO_TIME, JACKPOT_PRIZE, LOSE_PRIZE, WIN_PRIZE, CASINO_BOOST } from '../../utils/consts'
 import CasinoAccountService from '../db/services/casino/CasinoAccountService'
 import CasinoAddService from '../db/services/casino/CasinoAddService'
 import Casino from '../../interfaces/schemas/Casino'
 import MessageUtils from '../../utils/MessageUtils'
 import { DiceContext } from '../../utils/types'
+import InventoryItemService from '../db/services/items/InventoryItemService'
 
 type ChangeValues = { name: string, link: string }
 
 export default class CasinoDice extends BaseDice {
     private static _winCombinations = [1, 22, 43]
-    private static _jackpotNumber = 64
+    private static _jackpotCombination = 64
 
     constructor() {
         super()
@@ -41,7 +42,7 @@ export default class CasinoDice extends BaseDice {
         })
     }
 
-    private async _handleCasinoAccount(ctx: DiceContext, id: number): Promise<Casino | null> {
+    private async _handleCasinoAccount(id: number): Promise<Casino | null> {
         return await CasinoAccountService.create(id)
     }
 
@@ -59,16 +60,39 @@ export default class CasinoDice extends BaseDice {
         value: number,
         values: ChangeValues
     ): Promise<void> {
-        if (value === CasinoDice._jackpotNumber) {
-            await this._sendMessageAndUpdateCasino(ctx, id, 'jackpot', JACKPOT_PRIZE, values, true)
+        const boost = await InventoryItemService.use(id, 'manyCasino') ? CASINO_BOOST : 0
+        if (value === CasinoDice._jackpotCombination) {
+            await this._sendMessageAndUpdateCasino(
+                ctx, 
+                id, 
+                'jackpot', 
+                JACKPOT_PRIZE + boost, 
+                values, 
+                true
+            )
         } 
 
         else if (CasinoDice._winCombinations.includes(value)) {
-            await this._sendMessageAndUpdateCasino(ctx, id, 'win', WIN_PRIZE, values, true)
+            await this._sendMessageAndUpdateCasino(
+                ctx, 
+                id, 
+                'win', 
+                WIN_PRIZE + boost, 
+                values, 
+                true
+            )
         } 
 
         else {
-            await this._sendMessageAndUpdateCasino(ctx, id, 'lose', LOSE_PRIZE, values, false)
+            const boost = await InventoryItemService.use(id, 'infinityCasino') ? 0 : 1
+            await this._sendMessageAndUpdateCasino(
+                ctx, 
+                id, 
+                'lose', 
+                LOSE_PRIZE * boost, 
+                values, 
+                false
+            )
         }
     }
 
@@ -82,15 +106,13 @@ export default class CasinoDice extends BaseDice {
 
     async execute(ctx: DiceContext, value: number): Promise<void> {
         const id = ctx.from?.id ?? 0
-        const user = await UserProfileService.get(id)
-        const name = user?.name ?? DEFAULT_USER_NAME
-        const values = { name, link: ContextUtils.getLinkUrl(id) }
+        const values = await ContextUtils.getUser(id, ctx.from.first_name)
 
         if (ctx.message && 'forward_date' in ctx.message) {
             return
         }
 
-        const casino = await this._handleCasinoAccount(ctx, id)
+        const casino = await this._handleCasinoAccount(id)
         if (!casino || !(await this._checkAndHandleCasinoMoney(ctx, casino))) {
             return
         }

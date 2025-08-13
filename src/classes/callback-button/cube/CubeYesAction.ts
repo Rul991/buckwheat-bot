@@ -20,17 +20,13 @@ export default class CubeYesAction extends CallbackButtonAction {
     }
 
     private static async _sendDice(ctx: CallbackButtonContext, id: number): Promise<number> {
-        const name = await UserNameService.get(id) ?? DEFAULT_USER_NAME
-        const link = ContextUtils.getLinkUrl(id)
+        const user = await ContextUtils.getUser(ctx.from.id, ctx.from.first_name)
 
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/cubes/drop.html',
             {
-                changeValues: {
-                    name,
-                    link
-                }
+                changeValues: user
             }
         )
 
@@ -85,8 +81,7 @@ export default class CubeYesAction extends CallbackButtonAction {
                     const prize = money > loserMoney ? loserMoney : money
 
                     const changeValues = {
-                        link: ContextUtils.getLinkUrl(winnerId),
-                        name: await UserNameService.get(winnerId) ?? DEFAULT_USER_NAME,
+                        ...await ContextUtils.getUser(winnerId),
                         cost: prize
                     }
 
@@ -116,8 +111,7 @@ export default class CubeYesAction extends CallbackButtonAction {
                                 {
                                     changeValues: {
                                         ...changeValues, 
-                                        link: ContextUtils.getLinkUrl(loserId),
-                                        name: await UserNameService.get(loserId),
+                                        ...await ContextUtils.getUser(loserId)
                                     }
                                 }
                             )

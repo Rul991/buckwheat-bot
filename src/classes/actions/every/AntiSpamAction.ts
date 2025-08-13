@@ -21,10 +21,7 @@ export default class AntiSpamAction extends EveryMessageAction {
                 ctx,
                 'text/commands/spam.pug',
                 {
-                    changeValues: {
-                        name: await UserNameService.get(id) ?? DEFAULT_USER_NAME,
-                        link: ContextUtils.getLinkUrl(id)
-                    }
+                    changeValues: await ContextUtils.getUser(id)
                 }
             )
             return true

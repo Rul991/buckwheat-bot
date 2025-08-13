@@ -40,5 +40,11 @@ export type MessageContext = NarrowedContext<Context<Update>, Update.MessageUpda
 export type DiceValues = '🎲' | '🎯' | '🏀' | '⚽' | '🎳' | '🎰'
 export type ModeTypes = 'prod' | 'dev'
 
+export type InventoryItemDescription = {
+    name: string,
+    type: InventoryItemType
+}
+export type InventoryItemType = 'consumable' | 'oneInfinity' | 'manyInfinity'
+
 export type Constructor<T> = any
 export type AsyncOrSync<T = void> = Promise<T> | T

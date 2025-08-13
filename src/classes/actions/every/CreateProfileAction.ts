@@ -1,4 +1,3 @@
-import { Context } from 'telegraf'
 import EveryMessageAction from './EveryMessageAction'
 import UserProfileService from '../../db/services/user/UserProfileService'
 import CasinoAccountService from '../../db/services/casino/CasinoAccountService'
@@ -6,6 +5,7 @@ import { User } from 'telegraf/types'
 import StringUtils from '../../../utils/StringUtils'
 import WorkService from '../../db/services/work/WorkService'
 import { MessageContext } from '../../../utils/types'
+import ItemsService from '../../db/services/items/ItemsService'
 
 export default class CreateProfileAction extends EveryMessageAction {
     private async _createProfile(user?: User) {
@@ -16,6 +16,7 @@ export default class CreateProfileAction extends EveryMessageAction {
         UserProfileService.create(id, StringUtils.validate(first_name) || 'игрок')
         CasinoAccountService.create(id)
         WorkService.get(id)
+        ItemsService.get(id)
     }
 
     async execute(ctx: MessageContext): Promise<void> {

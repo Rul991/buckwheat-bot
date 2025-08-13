@@ -16,7 +16,9 @@ export const MAX_NAME_LENGTH = 48
 export const MAX_DESCRIPTION_LENGTH = 256
 export const MAX_MESSAGE_LENGTH = 4096
 
-export const START_MONEY = 0
+export const START_MONEY = 20
+export const CASINO_BOOST = 2
+
 export const JACKPOT_PRIZE = 10
 export const WIN_PRIZE = 5
 export const LOSE_PRIZE = -1
@@ -28,6 +30,7 @@ export const HOURS_IN_DAY = 24
 export const MILLISECONDS_IN_DAY = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY
 
 export const PARSE_MODE = 'HTML'
+export const INFINITY_SYMB = '♾️'
 
 export const CASINO_TIME = 1750
 export const DICE_TIME = 3500

@@ -80,22 +80,13 @@ export default class TransferCommand extends BuckwheatCommand {
             await CasinoAddService.addMoney(sender, -diffMoney)
             await CasinoAddService.addMoney(receiver, diffMoney)
 
-            const senderName = await TransferCommand._getName(sender)
-            const receiverName = await TransferCommand._getName(receiver)
-
             MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/transfer/positive.pug',
                 {
                     changeValues: {
-                        sender: {
-                            link: ContextUtils.getLinkUrl(sender),
-                            name: senderName
-                        },
-                        receiver: {
-                            link: ContextUtils.getLinkUrl(receiver),
-                            name: receiverName
-                        },
+                        sender: await ContextUtils.getUser(sender),
+                        receiver: await ContextUtils.getUser(receiver),
                         count: diffMoney
                     },
                     isParseToHtmlEntities: true

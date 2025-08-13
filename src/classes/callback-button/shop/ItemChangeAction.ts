@@ -1,7 +1,7 @@
 import { PARSE_MODE } from '../../../utils/consts'
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
-import Items from '../../../utils/Items'
+import ShopItems from '../../../utils/ShopItems'
 import MessageUtils from '../../../utils/MessageUtils'
 import Pager from '../../../utils/Pager'
 import { CallbackButtonContext } from '../../../utils/types'
@@ -15,7 +15,7 @@ export default class ItemChangeAction extends CallbackButtonAction {
     }
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<void> {
-        const length = Items.len()
+        const length = ShopItems.len()
         const index = Pager.clampPages(data, length)
         const userId = +data.split('_')[2]
 
@@ -25,7 +25,7 @@ export default class ItemChangeAction extends CallbackButtonAction {
             return
         }
         
-        const item = Items.getWithLength(index, length)!
+        const item = ShopItems.getWithLength(index, length)!
 
         await ctx.editMessageText(
             await FileUtils.readTextFromResource(

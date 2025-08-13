@@ -53,6 +53,10 @@ export default class MessageUtils {
         return lastMessage
     }
 
+    static async todo(ctx: Context): Promise<Message.TextMessage> {
+        return this.answer(ctx, 'Я еще не сделал это!')
+    }
+
     static async answerMessageFromResource(
         ctx: Context, 
         path: string,

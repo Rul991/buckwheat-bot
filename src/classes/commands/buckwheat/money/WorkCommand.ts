@@ -33,8 +33,7 @@ export default class WorkCommand extends BuckwheatCommand {
                 'text/commands/work/work.pug',
                 {
                     changeValues: {
-                        link: ContextUtils.getLinkUrl(id),
-                        name: await UserNameService.get(id) ?? DEFAULT_USER_NAME,
+                        ...await ContextUtils.getUser(id),
                         money
                     }
                 }

@@ -59,18 +59,18 @@ export default abstract class AdminCommand extends BuckwheatCommand {
                 return
             }
 
-            const adminName = await UserNameService.get(adminId)
-            const replyName = await UserNameService.get(replyId)
+            const admin = await ContextUtils.getUser(adminId)
+            const reply = await ContextUtils.getUser(replyId)
 
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 `text/commands/${this._folder}/${this._isUndoCommand ? 'undo' : 'done'}.html`,
                 {
                     changeValues: {
-                        replyLink: ContextUtils.getLinkUrl(replyId),
-                        adminLink: ContextUtils.getLinkUrl(adminId),
-                        admName: adminName ?? DEFAULT_USER_NAME,
-                        nameReply: replyName ?? DEFAULT_USER_NAME,
+                        replyLink: reply.link,
+                        adminLink: admin.link,
+                        admName: admin.name,
+                        nameReply: reply.name,
                         time: TimeUtils.formatMillisecondsToTime(time)
                     }
                 }

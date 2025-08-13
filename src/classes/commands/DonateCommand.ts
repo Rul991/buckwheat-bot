@@ -55,10 +55,7 @@ export default class DonateCommand extends BuckwheatCommand {
 
         const replyId = ctx.message.reply_to_message.from?.id ?? 0
         const replyRank = await UserRankService.get(replyId)
-        const replyValues = {
-            link: ContextUtils.getLinkUrl(replyId),
-            name: await UserNameService.get(replyId) ?? DEFAULT_USER_NAME
-        }
+        const replyValues = await ContextUtils.getUser(replyId)
 
         if(replyRank >= RankUtils.adminRank) {
             await MessageUtils.answerMessageFromResource(

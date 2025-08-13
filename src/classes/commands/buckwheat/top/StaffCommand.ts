@@ -6,6 +6,7 @@ import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import UserProfileService from '../../../db/services/user/UserProfileService'
+import AdminUtils from '../../../../utils/AdminUtils'
 
 export default class StaffCommand extends BuckwheatCommand {
     constructor() {
@@ -17,7 +18,9 @@ export default class StaffCommand extends BuckwheatCommand {
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
         type Player = {id: number, name: string}
         type Rating = {emoji: string, rankName: string, players: Player[]}
+
         let ratings: Rating[] = []
+        const isModerator = await UserRankService.get(ctx.from.id) >= RankUtils.moderatorRank
 
         for (let rank = RankUtils.maxRank; rank >= 0; rank--) {
             const users = await UserRankService.findByRank(rank)
@@ -26,8 +29,7 @@ export default class StaffCommand extends BuckwheatCommand {
             const players: Player[] = []
 
             for await (const {id, name} of users) {
-
-                players.push({id: rank >= RankUtils.adminRank ? id : 0, name})
+                players.push({id: (rank >= RankUtils.adminRank || isModerator) ? id : 0, name})
             }
 
             ratings.push({
@@ -44,7 +46,7 @@ export default class StaffCommand extends BuckwheatCommand {
                 changeValues: {
                     ratings,
                     members: await UserProfileService.getMembersCount(),
-                    maxMembers: await ctx.telegram.getChatMembersCount(ctx.chat?.id ?? 0)
+                    maxMembers: await ctx.telegram.getChatMembersCount(ctx.chat?.id ?? 0),
                 }
             }
         )

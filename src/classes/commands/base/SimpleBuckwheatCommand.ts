@@ -1,9 +1,7 @@
-import { Context } from 'telegraf'
 import { MaybeString, TextContext } from '../../../utils/types'
 import BuckwheatCommand from './BuckwheatCommand'
 import FileUtils from '../../../utils/FileUtils'
 import SimpleCommand from '../../../interfaces/other/SimpleComand'
-import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 
 export default class SimpleBuckwheatCommand extends BuckwheatCommand {
@@ -14,8 +12,12 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
         if(!json) {
             isWrong = true
         }
-        else if(!(typeof json.name == 'string' && (typeof json.src == 'string' || typeof json.text == 'string'))) {
-            isWrong = true
+        else {
+            isWrong = !(
+                typeof json.name == 'string' && 
+                (typeof json.src == 'string' || typeof json.text == 'string') &&
+                (typeof json.avoidOther === 'boolean' || typeof json.avoidOther == 'undefined')
+            )
         }
 
         if(isWrong)
@@ -26,8 +28,14 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
 
     private _src?: string
     private _text?: string
+    private _avoidOther?: boolean
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+        if(other && this._avoidOther) {
+            await MessageUtils.answerMessageFromResource(ctx, 'text/commands/wrongCommand.html')
+            return
+        }
+
         if(typeof this._src == 'string') {
             await MessageUtils.answerMessageFromResource(ctx, this._src)
         }
@@ -36,12 +44,13 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
         }
     }
 
-    constructor({name, src, text}: SimpleCommand) {
+    constructor({name, src, text, avoidOther}: SimpleCommand) {
         super()
 
         this._name = name
         this._src = src
         this._text = text
+        this._avoidOther = avoidOther
 
         this._isShow = false
     }

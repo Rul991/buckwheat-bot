@@ -105,7 +105,6 @@ export default class RankCommand extends BuckwheatCommand {
                 if(await RankCommand._answerIfNotAdmin(ctx, myRank)) return
                 if(await RankCommand._answerIfLowRank(ctx, myRank, rank, replyRank)) return
 
-                const replyName = await UserNameService.get(replyId) ?? DEFAULT_USER_NAME
                 const mode = replyRank <= rank ? 'up' : 'down'
                 
                 await UserRankService.update(replyId, rank)
@@ -116,8 +115,7 @@ export default class RankCommand extends BuckwheatCommand {
                         changeValues: {
                             rank: RankUtils.getRankByNumber(rank),
                             emoji: RankUtils.getEmojiByRank(rank),
-                            name: replyName,
-                            link: ContextUtils.getLinkUrl(replyId)
+                            ...ContextUtils.getUser(replyId)
                         }
                     }
                 )

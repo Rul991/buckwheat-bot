@@ -1,4 +1,4 @@
-import Items from '../../../../utils/Items'
+import ShopItems from '../../../../utils/ShopItems'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { TextContext, MaybeString } from '../../../../utils/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
@@ -12,8 +12,8 @@ export default class ShopCommand extends BuckwheatCommand {
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
         const index = 0
-        const length = Items.len()
-        const changeValues = Items.get(index)
+        const length = ShopItems.len()
+        const changeValues = ShopItems.get(index)
 
         await MessageUtils.answerMessageFromResource(
             ctx,

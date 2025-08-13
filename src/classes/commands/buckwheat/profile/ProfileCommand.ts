@@ -35,7 +35,6 @@ export default class ProfileCommand extends BuckwheatCommand {
         else return
 
         let user = await UserProfileService.get(id)
-        
         if(!user) {
             user = await UserProfileService.create(
                 id, 
@@ -51,8 +50,7 @@ export default class ProfileCommand extends BuckwheatCommand {
         
         const path = 'text/commands/profile.html'
         const changeValues = {
-            name: user?.name || DEFAULT_USER_NAME,
-            link: ContextUtils.getLinkUrl(user?.id ?? 0),
+            ...await ContextUtils.getUser(id),
             rank: rank.toString(),
             emoji: RankUtils.getEmojiByRank(rank),
             userNameRank: RankUtils.getRankByNumber(rank),

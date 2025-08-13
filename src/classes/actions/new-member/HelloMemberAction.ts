@@ -14,8 +14,7 @@ export default class HelloMemberAction extends NewMemberAction {
             'text/commands/hello/hello.pug',
             {
                 changeValues: {
-                    link: ContextUtils.getLinkUrl(ctx.from.id),
-                    name: await UserNameService.get(ctx.from.id) ?? ctx.from.first_name,
+                    ...await ContextUtils.getUser(ctx.from.id, ctx.from.first_name),
                     botName,
                     chatName: 'title' in ctx.chat ? ctx.chat.title : botName,
                     chatId: ctx.chat.id,

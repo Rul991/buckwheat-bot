@@ -1,18 +1,20 @@
 import { Context } from 'telegraf'
-import FileUtils from './FileUtils'
-import { Message } from 'telegraf/types'
-import { MaybeString } from './types'
-import { DEFAULT_USER_NAME, PARSE_MODE } from './consts'
-import Logging from './Logging'
-import InlineKeyboardManager from '../classes/main/InlineKeyboardManager'
+import { DEFAULT_USER_NAME } from './consts'
+import UserNameService from '../classes/db/services/user/UserNameService'
 
 export default class ContextUtils {
-    static getLinkUrl(id: number): string {
-        return `tg://user?id=${id}`
+    static async getUser(id?: number, firstName?: string) {
+        const usedId = id ?? 0
+        const name = await UserNameService.get(usedId) ?? firstName ?? DEFAULT_USER_NAME
+
+        return {
+            name,
+            link: this.getLinkUrl(usedId)
+        }
     }
 
-    static getLink(name: MaybeString, id: number): string {
-        return `<a href="${this.getLinkUrl(id)}">${name ?? DEFAULT_USER_NAME}</a>`
+    static getLinkUrl(id: number): string {
+        return `tg://user?id=${id}`
     }
 
     static async showAlert(ctx: Context) {

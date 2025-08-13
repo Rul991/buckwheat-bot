@@ -45,6 +45,7 @@ import ImageProfileAction from '../classes/actions/photo/ImageProfileAction'
 import ShopCommand from '../classes/commands/buckwheat/money/ShopCommand'
 import ItemChangeAction from '../classes/callback-button/shop/ItemChangeAction'
 import BuyAction from '../classes/callback-button/shop/BuyAction'
+import InventoryCommand from '../classes/commands/buckwheat/InventoryCommand'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -155,6 +156,7 @@ const launchBot = async (bot: Bot) => {
         new HelloCommand(),
         new MoneyTopCommand(),
         new ShopCommand(),
+        new InventoryCommand(),
         ...await getSimpleCommands()
     )
 

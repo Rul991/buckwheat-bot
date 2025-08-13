@@ -17,10 +17,11 @@ export default class ChangeNameCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const link = ContextUtils.getLinkUrl(ctx.from?.id ?? 0)
+        const {id} = ctx.from
+        const link = ContextUtils.getLinkUrl(id)
 
         if(!other) {
-            const name = await UserNameService.get(ctx.from?.id!) ?? DEFAULT_USER_NAME
+            const name = await UserNameService.get(id) ?? DEFAULT_USER_NAME
 
             await MessageUtils.answerMessageFromResource(
                 ctx, 
@@ -30,7 +31,7 @@ export default class ChangeNameCommand extends BuckwheatCommand {
         }
 
         else {
-            let name = StringUtils.validate(other ?? '')
+            const name = StringUtils.validate(other)
 
             if(name.length > MAX_NAME_LENGTH) {
                 await MessageUtils.answerMessageFromResource(
@@ -40,16 +41,15 @@ export default class ChangeNameCommand extends BuckwheatCommand {
                 )
                 return
             }
-
-            if(await UserNameService.update(ctx.from?.id ?? 0, name)) {
-                await MessageUtils.answerMessageFromResource(
-                    ctx, 
-                    'text/commands/change-name/changed.html', 
-                    {
-                        changeValues: {link, name}
-                    }
-                )
-            }
+            
+            await UserNameService.update(id, name)
+            await MessageUtils.answerMessageFromResource(
+                ctx, 
+                'text/commands/change-name/changed.html', 
+                {
+                    changeValues: {link, name}
+                }
+            )
         }
     }
 }

@@ -1,4 +1,4 @@
-import { HOURS_IN_DAY, MILLISECONDS_IN_SECOND, MINUTES_IN_HOUR, SECONDS_IN_MINUTE } from './consts'
+import { HOURS_IN_DAY, INFINITY_SYMB, MILLISECONDS_IN_SECOND, MINUTES_IN_HOUR, SECONDS_IN_MINUTE } from './consts'
 
 export default class TimeUtils {
     private static _nameToNumber = {
@@ -41,7 +41,7 @@ export default class TimeUtils {
     }
 
     static formatMillisecondsToTime(ms: number): string {
-        if(ms <= 0 || isNaN(ms)) return '∞'
+        if(ms <= 0 || isNaN(ms)) return INFINITY_SYMB
 
         let timeValue = this._nameToNumber['с']
         let timeName = 'с'

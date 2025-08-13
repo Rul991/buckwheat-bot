@@ -71,15 +71,18 @@ export default class CubeCommand extends BuckwheatCommand {
                 return
             }
 
+            const user = await ContextUtils.getUser(userId)
+            const reply = await ContextUtils.getUser(replyId)
+
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/cubes/done.html',
                 {
                     changeValues: {
-                        replyUrl: ContextUtils.getLinkUrl(replyId),
-                        userUrl: ContextUtils.getLinkUrl(userId),
-                        replyName: await UserNameService.get(replyId) ?? DEFAULT_USER_NAME,
-                        userName: await UserNameService.get(userId) ?? DEFAULT_USER_NAME,
+                        replyUrl: reply.link,
+                        userUrl: user.link,
+                        replyName: reply.name,
+                        userName: user.name,
                         cost: needMoney > 0 ? `${needMoney} монет` : 'интерес'
                     },
                     inlineKeyboard: ['cubes', `${replyId}_${userId}_${needMoney}`]

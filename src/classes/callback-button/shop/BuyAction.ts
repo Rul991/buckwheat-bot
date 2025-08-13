@@ -1,6 +1,6 @@
 import { DEFAULT_USER_NAME } from '../../../utils/consts'
 import ContextUtils from '../../../utils/ContextUtils'
-import Items from '../../../utils/Items'
+import ShopItems from '../../../utils/ShopItems'
 import MessageUtils from '../../../utils/MessageUtils'
 import Pager from '../../../utils/Pager'
 import { CallbackButtonContext } from '../../../utils/types'
@@ -16,7 +16,7 @@ export default class BuyAction extends CallbackButtonAction {
     }
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<void> {
-        const length = Items.len()
+        const length = ShopItems.len()
         const [index, userId] = data
             .split('_')
             .map(val => +val)
@@ -27,8 +27,9 @@ export default class BuyAction extends CallbackButtonAction {
             return
         }
         
-        const item = Items.getWithLength(index, length)!
+        const item = ShopItems.getWithLength(index, length)!
         const money = await CasinoGetService.getMoney(userId)
+        const user = await ContextUtils.getUser(userId)
 
         if(item.price > money) {
             await MessageUtils.answerMessageFromResource(
@@ -38,17 +39,29 @@ export default class BuyAction extends CallbackButtonAction {
                     changeValues: {
                         ...item, 
                         elapsedMoney: item.price - money,
-                        user: {
-                            name: await UserNameService.get(userId) ?? DEFAULT_USER_NAME,
-                            link: ContextUtils.getLinkUrl(userId)
-                        }
+                        user
                     }
                 }
             )
             return
         }
 
-        await CasinoAddService.addMoney(userId, -item.price)
-        await item.execute(ctx)
+        const isBought = await item.execute(ctx, user)
+
+        if(isBought) {
+            await CasinoAddService.addMoney(userId, -item.price)
+        }
+        else {
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/shop/return.pug',
+                {
+                    changeValues: {
+                        ...item, 
+                        user
+                    }
+                }
+            )
+        }
     }
 }
