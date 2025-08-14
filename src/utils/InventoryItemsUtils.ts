@@ -17,6 +17,10 @@ export default class InventoryItemsUtils {
             name: 'Шкатулка жадности',
             type: 'manyInfinity'
         },
+        cookie: {
+            name: 'Печенье',
+            type: 'consumable'
+        }
     }
 
     static getCountString(count: number, type?: InventoryItemType): string {

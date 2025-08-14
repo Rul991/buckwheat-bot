@@ -28,7 +28,7 @@ export default class AdminUtils {
                     can_send_other_messages: true,
                     can_invite_users: true,
                     can_send_polls: true,
-                    can_add_web_page_previews: true
+                    can_add_web_page_previews: true,
                 },
                 until_date: 0
             })

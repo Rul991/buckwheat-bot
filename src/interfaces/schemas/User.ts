@@ -7,4 +7,5 @@ export default interface User {
     description?: string
     imageId?: string
     className?: ClassTypes
+    isOld?: boolean
 }

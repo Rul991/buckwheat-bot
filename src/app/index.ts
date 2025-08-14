@@ -54,6 +54,7 @@ import ClassAction from '../classes/callback-button/ClassAction'
 import ClassCommand from '../classes/commands/buckwheat/profile/ClassCommand'
 import GreadBoxCommand from '../classes/commands/buckwheat/GreadBoxCommand'
 import StringUtils from '../utils/StringUtils'
+import CookieCommand from '../classes/commands/CookieCommand'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -172,6 +173,7 @@ const launchBot = async (bot: Bot) => {
         new InventoryCommand(),
         new ClassCommand(),
         new GreadBoxCommand(),
+        new CookieCommand(),
         ...await getSimpleCommands()
     )
 

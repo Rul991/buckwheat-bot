@@ -20,7 +20,7 @@ export default class ShopItems {
             name: 'Повышение ранга',
             description: 'Да-да покупай, это не обман, уверяю тебя!',
             emoji: '🤥',
-            price: 1000,
+            price: 999,
             execute: async (ctx, user) => {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
@@ -166,7 +166,10 @@ export default class ShopItems {
 
         {
             name: 'Платный размут',
-            description: 'Вы находитесь в муте? Считаете, что права говорить это то, что положено вам по конституции?\n\nПокупайте данный размут и вы сможете говорить вопреки всему!',
+            description: 
+            `Вы находитесь в муте? Считаете, что права говорить это то, что положено вам по конституции?
+            
+Покупайте данный размут и вы сможете говорить вопреки всему!`,
             emoji: '🙊',
             price: 1000,
             execute: async (ctx, user) => {
@@ -183,6 +186,26 @@ export default class ShopItems {
                 }
                 
                 return unMuted
+            },
+        },
+
+        {
+            name: 'Печенье',
+            description: 'Вкусные печеньки',
+            emoji: '🍪',
+            price: 10,
+            execute: async (ctx, user) => {
+                await InventoryItemService.add(ctx.from.id, 'cookie')
+
+                await MessageUtils.answerMessageFromResource(
+                    ctx,
+                    'text/commands/items/cookie.pug',
+                    {
+                        changeValues: user
+                    }
+                )
+
+                return true
             }
         },
     ]
