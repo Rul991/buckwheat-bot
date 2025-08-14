@@ -52,6 +52,8 @@ import NewMessagesAction from '../classes/actions/every/NewMessagesAction'
 import WhereMarriageAction from '../classes/actions/every/WhereMarriageAction'
 import ClassAction from '../classes/callback-button/ClassAction'
 import ClassCommand from '../classes/commands/buckwheat/profile/ClassCommand'
+import GreadBoxCommand from '../classes/commands/buckwheat/GreadBoxCommand'
+import StringUtils from '../utils/StringUtils'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -169,6 +171,7 @@ const launchBot = async (bot: Bot) => {
         new ShopCommand(),
         new InventoryCommand(),
         new ClassCommand(),
+        new GreadBoxCommand(),
         ...await getSimpleCommands()
     )
 

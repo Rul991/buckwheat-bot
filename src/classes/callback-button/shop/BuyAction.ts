@@ -8,6 +8,7 @@ import CasinoAddService from '../../db/services/casino/CasinoAddService'
 import CasinoGetService from '../../db/services/casino/CasinoGetService'
 import UserNameService from '../../db/services/user/UserNameService'
 import CallbackButtonAction from '../CallbackButtonAction'
+import StringUtils from '../../../utils/StringUtils'
 
 export default class BuyAction extends CallbackButtonAction {
     constructor() {
@@ -17,19 +18,17 @@ export default class BuyAction extends CallbackButtonAction {
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<void> {
         const length = ShopItems.len()
-        const [index, userId] = data
-            .split('_')
+        const [index] = data
+            .split('_', 1)
             .map(val => +val)
 
         if(index === -1) return
-        if(userId != ctx.from.id) {
-            ContextUtils.showAlert(ctx)
-            return
-        }
         
         const item = ShopItems.getWithLength(index, length)!
-        const money = await CasinoGetService.getMoney(userId)
-        const user = await ContextUtils.getUser(userId)
+        const money = await CasinoGetService.getMoney(ctx.from.id)
+        const user = await ContextUtils.getUser(ctx.from.id)
+
+        let priceString = StringUtils.toFormattedNumber(item.price)
 
         if(item.price > money) {
             await MessageUtils.answerMessageFromResource(
@@ -39,7 +38,8 @@ export default class BuyAction extends CallbackButtonAction {
                     changeValues: {
                         ...item, 
                         elapsedMoney: item.price - money,
-                        user
+                        user,
+                        price: priceString
                     }
                 }
             )
@@ -49,7 +49,8 @@ export default class BuyAction extends CallbackButtonAction {
         const isBought = await item.execute(ctx, user)
 
         if(isBought) {
-            await CasinoAddService.addMoney(userId, -item.price)
+            await CasinoAddService.addMoney(ctx.from.id, -item.price)
+            await CasinoAddService.addMoney(ctx.botInfo.id, item.price)
         }
         else {
             await MessageUtils.answerMessageFromResource(

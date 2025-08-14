@@ -8,4 +8,8 @@ export default class ItemsService {
         if(!foundItems) return await ItemsRepository.create({id})
         else return foundItems
     }
+
+    static async getAll(): Promise<Items[]> {
+        return await ItemsRepository.findMany()
+    }
 }

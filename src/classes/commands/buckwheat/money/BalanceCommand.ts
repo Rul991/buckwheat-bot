@@ -20,11 +20,14 @@ export default class BalanceCommand extends BuckwheatCommand {
         const casino = await CasinoAccountService.create(ctx.from.id)
         const items = await ItemsService.get(ctx.from.id)
 
-        const uniqueItemsLength = items.items?.length ?? 0
+        const uniqueItemsLength = items
+            .items
+            ?.reduce((prev, curr) => ((curr.count ?? 0) > 0 ? prev + 1 : prev), 0) 
+            ?? 0
+        
         const itemsLength = items
             .items
-            ?.reduce((prev, curr) => (prev + (curr.count ?? 0)), 0) ??
-            0
+            ?.reduce((prev, curr) => (prev + (curr.count ?? 0)), 0) ?? 0
 
         await MessageUtils.answerMessageFromResource(
             ctx, 

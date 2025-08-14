@@ -37,6 +37,10 @@ export const DICE_TIME = 3500
 export const RESTART_TIME = 5 * MILLISECONDS_IN_SECOND
 
 export const RANDOM_PRIZE_CHANCE = 0.01
+export const MIN_RANDOM_PRIZE = 0
+export const MAX_RANDOM_PRIZE = 50
+export const EXTRA_RANDOM_PRIZE = 100
+export const EXTRA_RANDOM_NUMBER = 1
 
 export const WHERE_MARRIAGE_TIME = 10000
 export const WHERE_MARRIAGE_MESSAGES = 3

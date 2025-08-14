@@ -12,7 +12,11 @@ export default class InventoryItemsUtils {
         manyCasino: {
             name: 'Улучшение на казино',
             type: 'oneInfinity'
-        }
+        },
+        greedBox: {
+            name: 'Шкатулка жадности',
+            type: 'manyInfinity'
+        },
     }
 
     static getCountString(count: number, type?: InventoryItemType): string {
@@ -53,7 +57,7 @@ export default class InventoryItemsUtils {
         const result = [...items, ...newItem]
             .map(({count, itemId}) => ({count, itemId}))
         
-        Logging.log(`(${itemId})new items: `,result)
+        Logging.log(`(${itemId}) new items: `,result)
         return result
     }
 

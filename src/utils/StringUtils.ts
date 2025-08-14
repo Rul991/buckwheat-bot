@@ -44,4 +44,20 @@ export default class StringUtils {
         return string
             .replaceAll(/[&<>]/g, '')
     }
+
+    static toFormattedNumber(number: number): string {
+        return number
+            .toString()
+            .split('')
+            .reverse()
+            .reduce((prev, curr, i, arr) => {
+                console.log(prev, curr)
+                let newSegment: string = curr
+                if(i > 0 && (i + 1) % 3 == 0 && i != arr.length - 1) {
+                    newSegment = ' ' + newSegment
+                }
+
+                return newSegment + prev
+            }, '')
+    }
 }

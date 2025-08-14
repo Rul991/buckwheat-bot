@@ -28,11 +28,6 @@ export default class StaffCommand extends BuckwheatCommand {
             const players: Player[] = []
 
             for await (const {id, name} of users) {
-                const member = await ContextUtils.getChatMember(ctx, id)
-
-                if(member && (member.status == 'left' || member.status == 'kicked'))
-                    continue
-
                 players.push({
                     id: (rank >= RankUtils.adminRank || isModerator) ? id : 0, 
                     name

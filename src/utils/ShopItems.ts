@@ -131,6 +131,60 @@ export default class ShopItems {
                 return isUpdated
             }
         },
+
+        {
+            name: 'Шкатулка жадности',
+            description: 'Дает деньги, стоит дорого, ничего не берет взамен',
+            emoji: '🪙',
+            price: 150000,
+            execute: async (ctx, user) => {
+                if(await InventoryItemService.anyHas('greedBox')) {
+                    await MessageUtils.answerMessageFromResource(
+                        ctx,
+                        'text/commands/items/greedBox/empty.pug',
+                        {
+                            changeValues: user
+                        }
+                    )
+                    return false
+                }
+
+                const isUpdated = await InventoryItemService.add(ctx.from.id, 'greedBox')
+
+                if(isUpdated)
+                    await MessageUtils.answerMessageFromResource(
+                        ctx,
+                        'text/commands/items/greedBox/greedBox.pug',
+                        {
+                            changeValues: user
+                        }
+                    )
+
+                return isUpdated
+            }
+        },
+
+        {
+            name: 'Платный размут',
+            description: 'Вы находитесь в муте? Считаете, что права говорить это то, что положено вам по конституции?\n\nПокупайте данный размут и вы сможете говорить вопреки всему!',
+            emoji: '🙊',
+            price: 1000,
+            execute: async (ctx, user) => {
+                const unMuted = await AdminUtils.unmute(ctx, ctx.from.id)
+
+                if(unMuted) {
+                    await MessageUtils.answerMessageFromResource(
+                        ctx,
+                        'text/commands/items/default.pug',
+                        {
+                            changeValues: user
+                        }
+                    )
+                }
+                
+                return unMuted
+            }
+        },
     ]
 
     static get(id: number): ShopItem | null {

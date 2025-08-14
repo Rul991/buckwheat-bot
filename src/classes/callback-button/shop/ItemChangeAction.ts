@@ -7,6 +7,7 @@ import Pager from '../../../utils/Pager'
 import { CallbackButtonContext } from '../../../utils/types'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import CallbackButtonAction from '../CallbackButtonAction'
+import StringUtils from '../../../utils/StringUtils'
 
 export default class ItemChangeAction extends CallbackButtonAction {
     constructor() {
@@ -32,7 +33,10 @@ export default class ItemChangeAction extends CallbackButtonAction {
             await FileUtils.readTextFromResource(
                 'text/commands/shop/shop.pug',
                 {
-                    changeValues: item
+                    changeValues: {
+                        ...item,
+                        price: StringUtils.toFormattedNumber(item.price)
+                    }
                 }
             ),
             {

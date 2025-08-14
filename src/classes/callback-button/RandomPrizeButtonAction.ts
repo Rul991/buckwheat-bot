@@ -1,3 +1,4 @@
+import { EXTRA_RANDOM_NUMBER, EXTRA_RANDOM_PRIZE, MAX_RANDOM_PRIZE, MIN_RANDOM_PRIZE } from '../../utils/consts'
 import ContextUtils from '../../utils/ContextUtils'
 import Logging from '../../utils/Logging'
 import MessageUtils from '../../utils/MessageUtils'
@@ -13,8 +14,8 @@ export default class RandomPrizeButtonAction extends CallbackButtonAction {
     }
 
     async execute(ctx: CallbackButtonContext, _: string): Promise<void> {
-        const randomMoney = RandomUtils.range(0, 100)
-        const money = randomMoney == 1 ? 200 : randomMoney
+        const randomMoney = RandomUtils.range(MIN_RANDOM_PRIZE, MAX_RANDOM_PRIZE)
+        const money = randomMoney == EXTRA_RANDOM_NUMBER ? EXTRA_RANDOM_PRIZE : randomMoney
 
         try {
             await MessageUtils.editMarkup(ctx)

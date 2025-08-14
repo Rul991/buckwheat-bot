@@ -73,4 +73,17 @@ export default class InventoryItemService {
             }
         })
     }
+
+    static async anyHas(itemId: string): Promise<boolean> {
+        const users = await ItemsService.getAll()
+
+        for (const {items} of users) {
+            const item = InventoryItemsUtils.find(items ?? [], itemId)
+            if(item && item.count! > 0) {
+                return true
+            }
+        }
+
+        return false
+    }
 }
