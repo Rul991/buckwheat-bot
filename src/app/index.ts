@@ -55,6 +55,7 @@ import ClassCommand from '../classes/commands/buckwheat/profile/ClassCommand'
 import GreadBoxCommand from '../classes/commands/buckwheat/GreadBoxCommand'
 import StringUtils from '../utils/StringUtils'
 import CookieCommand from '../classes/commands/CookieCommand'
+import Logging from '../utils/Logging'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -193,4 +194,9 @@ const main = async () => {
     await launchBot(bot)
 }
 
-main()
+try {
+    main()
+}
+catch(e) {
+    Logging.error(e)
+}
