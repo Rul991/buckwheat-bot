@@ -13,9 +13,8 @@ import ProfileCommand from '../classes/commands/buckwheat/profile/ProfileCommand
 import ChangeNameCommand from '../classes/commands/buckwheat/profile/ChangeNameCommand'
 import CasinoDice from '../classes/dice/CasinoDice'
 import CreateProfileAction from '../classes/actions/every/CreateProfileAction'
-import AddMessagesAction from '../classes/actions/every/AddMessagesAction'
 import WrongChatAction from '../classes/actions/every/WrongChatAction'
-import CasinoCommand from '../classes/commands/buckwheat/money/CasinoCommand'
+import BalanceCommand from '../classes/commands/buckwheat/money/BalanceCommand'
 import TransferCommand from '../classes/commands/buckwheat/money/TransferCommand'
 import ChangeDescriptionCommand from '../classes/commands/buckwheat/profile/ChangeDescriptionCommand'
 import StaffCommand from '../classes/commands/buckwheat/top/StaffCommand'
@@ -46,6 +45,13 @@ import ShopCommand from '../classes/commands/buckwheat/money/ShopCommand'
 import ItemChangeAction from '../classes/callback-button/shop/ItemChangeAction'
 import BuyAction from '../classes/callback-button/shop/BuyAction'
 import InventoryCommand from '../classes/commands/buckwheat/InventoryCommand'
+import VerificationAction from '../classes/callback-button/VerificationAction'
+import RandomPrizeMessageAction from '../classes/actions/every/RandomPrizeMessageAction'
+import RandomPrizeButtonAction from '../classes/callback-button/RandomPrizeButtonAction'
+import NewMessagesAction from '../classes/actions/every/NewMessagesAction'
+import WhereMarriageAction from '../classes/actions/every/WhereMarriageAction'
+import ClassAction from '../classes/callback-button/ClassAction'
+import ClassCommand from '../classes/commands/buckwheat/profile/ClassCommand'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -101,7 +107,9 @@ const launchBot = async (bot: Bot) => {
         new WrongChatAction(), // it should be first
         new CreateProfileAction(),
         new AntiSpamAction(), 
-        new AddMessagesAction(),
+        new NewMessagesAction(),
+        new WhereMarriageAction(),
+        new RandomPrizeMessageAction(),
     )
 
     bot.addPhotoActions(
@@ -113,7 +121,10 @@ const launchBot = async (bot: Bot) => {
         new CubeNoAction(),
         new RuleChangeAction(),
         new ItemChangeAction(),
-        new BuyAction()
+        new BuyAction(),
+        new VerificationAction(),
+        new RandomPrizeButtonAction(),
+        new ClassAction()
     )
 
     bot.addDiceActions(
@@ -134,7 +145,7 @@ const launchBot = async (bot: Bot) => {
     bot.addCommands(
         new CommandsCommand(),
         new ProfileCommand(),
-        new CasinoCommand(),
+        new BalanceCommand(),
         new ChangeNameCommand(),
         new ChangeDescriptionCommand(),
         new StaffCommand(),
@@ -157,6 +168,7 @@ const launchBot = async (bot: Bot) => {
         new MoneyTopCommand(),
         new ShopCommand(),
         new InventoryCommand(),
+        new ClassCommand(),
         ...await getSimpleCommands()
     )
 

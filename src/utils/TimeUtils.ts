@@ -64,13 +64,19 @@ export default class TimeUtils {
         return time.toString().padStart(MAX_NUMBER_IN_TIME, '0');
     }
 
-    static toHHMMSS(ms: number): string {
+    static toHHMMSS(ms: number, isFloorHours = false): string {
         const seconds = Math.floor((ms / MILLISECONDS_IN_SECOND) % SECONDS_IN_MINUTE)
         const minutes = Math.floor((ms / (MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE)) % MINUTES_IN_HOUR)
         const hours = Math.floor((ms / (MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR)))
 
         return (
-            `${this._padWithLeadingZero(hours)}:${this._padWithLeadingZero(minutes)}:${this._padWithLeadingZero(seconds)}`
+            `${
+                this._padWithLeadingZero(isFloorHours ? hours % 24 : hours)
+            }:${
+                this._padWithLeadingZero(minutes)
+            }:${this._padWithLeadingZero(
+                seconds
+            )}`
         )
     }
 

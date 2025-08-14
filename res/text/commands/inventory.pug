@@ -4,11 +4,12 @@ b Твой инвентарь:
 |
 if items.length
     each item in items
-        code 📍 #{item.name}
-        |  - 
-        b #{item.count}
-        |
-        |
+        if item.count != 'x0'
+            code 📍 #{item.name}
+            |  - 
+            b #{item.count}
+            |
+            |
     |
 else 
     | (пусто)

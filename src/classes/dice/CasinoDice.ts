@@ -1,7 +1,7 @@
 import BaseDice from './BaseDice'
 import ContextUtils from '../../utils/ContextUtils'
 import UserProfileService from '../db/services/user/UserProfileService'
-import { DEFAULT_USER_NAME, CASINO_TIME, JACKPOT_PRIZE, LOSE_PRIZE, WIN_PRIZE, CASINO_BOOST } from '../../utils/consts'
+import { DEFAULT_USER_NAME, CASINO_TIME, JACKPOT_PRIZE, LOSE_PRIZE, WIN_PRIZE, CASINO_PLUS_BOOST } from '../../utils/consts'
 import CasinoAccountService from '../db/services/casino/CasinoAccountService'
 import CasinoAddService from '../db/services/casino/CasinoAddService'
 import Casino from '../../interfaces/schemas/Casino'
@@ -60,7 +60,7 @@ export default class CasinoDice extends BaseDice {
         value: number,
         values: ChangeValues
     ): Promise<void> {
-        const boost = await InventoryItemService.use(id, 'manyCasino') ? CASINO_BOOST : 0
+        const boost = await InventoryItemService.use(id, 'manyCasino') ? CASINO_PLUS_BOOST : 0
         if (value === CasinoDice._jackpotCombination) {
             await this._sendMessageAndUpdateCasino(
                 ctx, 

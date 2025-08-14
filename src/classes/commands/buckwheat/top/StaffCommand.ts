@@ -1,12 +1,9 @@
-import { Context } from 'telegraf'
 import { MaybeString, TextContext } from '../../../../utils/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
-import ContextUtils from '../../../../utils/ContextUtils'
 import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import UserProfileService from '../../../db/services/user/UserProfileService'
-import AdminUtils from '../../../../utils/AdminUtils'
 
 export default class StaffCommand extends BuckwheatCommand {
     constructor() {
@@ -20,6 +17,7 @@ export default class StaffCommand extends BuckwheatCommand {
         type Rating = {emoji: string, rankName: string, players: Player[]}
 
         let ratings: Rating[] = []
+        let members = 0
         const isModerator = await UserRankService.get(ctx.from.id) >= RankUtils.moderatorRank
 
         for (let rank = RankUtils.maxRank; rank >= 0; rank--) {
@@ -29,7 +27,16 @@ export default class StaffCommand extends BuckwheatCommand {
             const players: Player[] = []
 
             for await (const {id, name} of users) {
-                players.push({id: (rank >= RankUtils.adminRank || isModerator) ? id : 0, name})
+                const member = await ctx.telegram.getChatMember(ctx.chat.id, id)
+
+                if(member.status == 'left' || member.status == 'kicked')
+                    continue
+
+                players.push({
+                    id: (rank >= RankUtils.adminRank || isModerator) ? id : 0, 
+                    name
+                })
+                members++
             }
 
             ratings.push({
@@ -45,7 +52,7 @@ export default class StaffCommand extends BuckwheatCommand {
             {
                 changeValues: {
                     ratings,
-                    members: await UserProfileService.getMembersCount(),
+                    members,
                     maxMembers: await ctx.telegram.getChatMembersCount(ctx.chat?.id ?? 0),
                 }
             }

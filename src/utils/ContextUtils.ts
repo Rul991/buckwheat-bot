@@ -1,6 +1,9 @@
 import { Context } from 'telegraf'
 import { DEFAULT_USER_NAME } from './consts'
 import UserNameService from '../classes/db/services/user/UserNameService'
+import MessageUtils from './MessageUtils'
+import { CallbackButtonContext } from './types'
+import FileUtils from './FileUtils'
 
 export default class ContextUtils {
     static async getUser(id?: number, firstName?: string) {
@@ -13,12 +16,33 @@ export default class ContextUtils {
         }
     }
 
+    static async sendDice(ctx: CallbackButtonContext, id: number): Promise<number> {
+        const user = await ContextUtils.getUser(id)
+
+        await MessageUtils.answerMessageFromResource(
+            ctx,
+            'text/commands/cubes/drop.html',
+            {
+                changeValues: user
+            }
+        )
+
+        const {dice: {value: dice}} = await ctx.replyWithDice({
+            emoji: '🎲'
+        })
+
+        return dice
+    }
+
     static getLinkUrl(id: number): string {
         return `tg://user?id=${id}`
     }
 
-    static async showAlert(ctx: Context) {
-        await ctx.answerCbQuery('Убери свои шалавливые ручки!', {show_alert: true})
+    static async showAlert(ctx: Context, path = 'text/alerts/alert.pug') {
+        await ctx.answerCbQuery(
+            await FileUtils.readTextFromResource(path), 
+            { show_alert: true }
+        )
     }
 
     static async isCreator(ctx: Context): Promise<boolean> {

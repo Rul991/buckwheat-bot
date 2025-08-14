@@ -11,7 +11,10 @@ export default class MessageUtils {
     static async answer(
         ctx: Context, 
         text: string, 
-        {inlineKeyboard = ['empty', '']}: AnswerOptions = {}
+        {
+            inlineKeyboard = ['empty', ''],
+            disableNotification
+        }: AnswerOptions = {}
     ): Promise<Message.TextMessage> {
         const emptyMessage: Message.TextMessage = {
             text: '', 
@@ -30,7 +33,8 @@ export default class MessageUtils {
             reply_parameters: {'message_id': ctx.message?.message_id ?? 0},
             reply_markup: {
                 inline_keyboard: await InlineKeyboardManager.get(...inlineKeyboard)
-            }
+            },
+            disable_notification: disableNotification
         }
 
         let lastMessage: Message.TextMessage = emptyMessage

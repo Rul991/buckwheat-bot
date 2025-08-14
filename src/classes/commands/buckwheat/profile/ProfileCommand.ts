@@ -9,6 +9,9 @@ import RankUtils from '../../../../utils/RankUtils'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import MessageUtils from '../../../../utils/MessageUtils'
 import UserImageService from '../../../db/services/user/UserImageService'
+import ClassUtils from '../../../../utils/ClassUtils'
+import UserClassService from '../../../db/services/user/UserClassService'
+import MessagesService from '../../../db/services/messages/MessagesService'
 
 export default class ProfileCommand extends BuckwheatCommand {
     constructor() {
@@ -47,6 +50,7 @@ export default class ProfileCommand extends BuckwheatCommand {
         
         const rank = user?.rank ?? -1
         const devStatus = RankUtils.getDevStatusByNumber(rank)
+        const classType = user?.className ?? 'unknown'
         
         const path = 'text/commands/profile.html'
         const changeValues = {
@@ -55,7 +59,10 @@ export default class ProfileCommand extends BuckwheatCommand {
             emoji: RankUtils.getEmojiByRank(rank),
             userNameRank: RankUtils.getRankByNumber(rank),
             devStatus,
-            description: user?.description?.toUpperCase() || '...'
+            description: user?.description?.toUpperCase() || '...',
+            className: ClassUtils.getName(classType),
+            classEmoji: ClassUtils.getEmoji(classType),
+            messages: (await MessagesService.get(id)).total ?? 0
         }
 
         if(photoId.length) {}

@@ -1,0 +1,8 @@
+[
+    [
+        {
+            "text": "Посвящение",
+            "callback_data": "verify_@"
+        }
+    ]
+]

@@ -9,7 +9,8 @@ const userSchema = new Schema<Type>(
         description: {type: String, default: ''},
         name: {type: String, required: true},
         rank: {type: Number, default: 0},
-        imageId: {type: String, default: ''}
+        imageId: {type: String, default: ''},
+        className: { type: String, default: 'unknown'}
     }
 )
 

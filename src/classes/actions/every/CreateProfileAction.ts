@@ -6,6 +6,7 @@ import StringUtils from '../../../utils/StringUtils'
 import WorkService from '../../db/services/work/WorkService'
 import { MessageContext } from '../../../utils/types'
 import ItemsService from '../../db/services/items/ItemsService'
+import MessagesService from '../../db/services/messages/MessagesService'
 
 export default class CreateProfileAction extends EveryMessageAction {
     private async _createProfile(user?: User) {
@@ -17,6 +18,7 @@ export default class CreateProfileAction extends EveryMessageAction {
         CasinoAccountService.create(id)
         WorkService.get(id)
         ItemsService.get(id)
+        MessagesService.get(id)
     }
 
     async execute(ctx: MessageContext): Promise<void> {

@@ -1,0 +1,8 @@
+[
+    [
+        {
+            "text": "Получить",
+            "callback_data": "randomprize_@"
+        }
+    ]
+]

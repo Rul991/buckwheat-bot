@@ -17,7 +17,7 @@ export const MAX_DESCRIPTION_LENGTH = 256
 export const MAX_MESSAGE_LENGTH = 4096
 
 export const START_MONEY = 20
-export const CASINO_BOOST = 2
+export const CASINO_PLUS_BOOST = 5
 
 export const JACKPOT_PRIZE = 10
 export const WIN_PRIZE = 5
@@ -34,6 +34,12 @@ export const INFINITY_SYMB = '♾️'
 
 export const CASINO_TIME = 1750
 export const DICE_TIME = 3500
+export const RESTART_TIME = 5 * MILLISECONDS_IN_SECOND
+
+export const RANDOM_PRIZE_CHANCE = 0.01
+
+export const WHERE_MARRIAGE_TIME = 10000
+export const WHERE_MARRIAGE_MESSAGES = 3
 
 export const MIN_WORK = 5
 export const MAX_WORK = 20

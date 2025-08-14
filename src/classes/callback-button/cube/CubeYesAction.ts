@@ -20,21 +20,7 @@ export default class CubeYesAction extends CallbackButtonAction {
     }
 
     private static async _sendDice(ctx: CallbackButtonContext, id: number): Promise<number> {
-        const user = await ContextUtils.getUser(ctx.from.id, ctx.from.first_name)
-
-        await MessageUtils.answerMessageFromResource(
-            ctx,
-            'text/commands/cubes/drop.html',
-            {
-                changeValues: user
-            }
-        )
-
-        const {dice: {value: dice}} = await ctx.replyWithDice({
-            emoji: '🎲'
-        })
-
-        return dice
+        return await ContextUtils.sendDice(ctx, id)
     }
 
     private static async _getWinner(

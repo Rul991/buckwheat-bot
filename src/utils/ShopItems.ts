@@ -1,7 +1,7 @@
 import InventoryItemService from '../classes/db/services/items/InventoryItemService'
 import UserNameService from '../classes/db/services/user/UserNameService'
 import AdminUtils from './AdminUtils'
-import { DEFAULT_USER_NAME, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './consts'
+import { CASINO_PLUS_BOOST, DEFAULT_USER_NAME, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './consts'
 import ContextUtils from './ContextUtils'
 import MessageUtils from './MessageUtils'
 import { AsyncOrSync, CallbackButtonContext } from './types'
@@ -100,7 +100,10 @@ export default class ShopItems {
                         ctx,
                         'text/commands/items/casino/many.pug',
                         {
-                            changeValues: user
+                            changeValues: {
+                                ...user,
+                                money: CASINO_PLUS_BOOST
+                            }
                         }
                     )
 
