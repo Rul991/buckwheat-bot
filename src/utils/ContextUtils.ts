@@ -4,6 +4,8 @@ import UserNameService from '../classes/db/services/user/UserNameService'
 import MessageUtils from './MessageUtils'
 import { CallbackButtonContext } from './types'
 import FileUtils from './FileUtils'
+import { ChatMember } from 'telegraf/types'
+import Logging from './Logging'
 
 export default class ContextUtils {
     static async getUser(id?: number, firstName?: string) {
@@ -46,7 +48,18 @@ export default class ContextUtils {
     }
 
     static async isCreator(ctx: Context): Promise<boolean> {
-        const user = await ctx.telegram.getChatMember(ctx.chat?.id!, ctx.from?.id!)
-        return user.status == 'creator'
+        const user = await this.getChatMember(ctx, ctx.from?.id ?? 0)
+        return user?.status == 'creator'
+    }
+
+    static async getChatMember(ctx: Context, id: number): Promise<ChatMember | null> {
+        try {
+            const user = await ctx.telegram.getChatMember(ctx.chat?.id ?? 0, id)
+            return user
+        }
+        catch(e) {
+            Logging.error(e)
+            return null
+        }
     }
 }

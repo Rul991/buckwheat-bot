@@ -1,5 +1,5 @@
 import { Context, NarrowedContext } from 'telegraf'
-import { CallbackQuery, Message, Update } from 'telegraf/types'
+import { CallbackQuery, InlineKeyboardMarkup, LinkPreviewOptions, Message, MessageEntity, ParseMode, Update } from 'telegraf/types'
 
 export type MaybeString = string | undefined
 export type CommandStrings = [string, MaybeString, MaybeString]
@@ -51,3 +51,10 @@ export type AsyncOrSync<T = void> = Promise<T> | T
 
 export type ClassTypes = 'knight' | 'thief' | 'sorcerer' | 'engineer' | 'bard' | 'unknown'
 export type ClassRecord = Record<ClassTypes, string>
+
+export type ExtraEditMessageText = {
+    reply_markup?: InlineKeyboardMarkup
+    entities?: MessageEntity[],
+    link_preview_options?: LinkPreviewOptions,
+    parse_mode?: ParseMode
+}

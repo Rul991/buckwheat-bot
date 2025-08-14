@@ -1,4 +1,4 @@
-import { Message } from 'telegraf/types'
+import { InlineKeyboardMarkup, Message, ParseMode } from 'telegraf/types'
 import { Context } from 'telegraf'
 import InlineKeyboardManager from '../classes/main/InlineKeyboardManager'
 import { MAX_MESSAGE_LENGTH, PARSE_MODE } from './consts'
@@ -6,6 +6,7 @@ import FileUtils from './FileUtils'
 import Logging from './Logging'
 import AnswerOptions from '../interfaces/options/AnswerOptions'
 import FileAnswerOptions from '../interfaces/options/FileAnswerOptions'
+import { ExtraEditMessageText } from './types'
 
 export default class MessageUtils {
     static async answer(
@@ -73,5 +74,27 @@ export default class MessageUtils {
             text, 
             options
         )
+    }
+
+    static async editMarkup(ctx: Context, markup?: InlineKeyboardMarkup): Promise<boolean> {
+        try {
+            await ctx.editMessageReplyMarkup(markup)
+            return true
+        }
+        catch(e) {
+            Logging.warn(e)
+            return false
+        }
+    }
+
+    static async editText(ctx: Context, text: string, options?: ExtraEditMessageText): Promise<boolean> {
+        try {
+            await ctx.editMessageText(text, options)
+            return true
+        }
+        catch(e) {
+            Logging.warn(e)
+            return false
+        }
     }
 }

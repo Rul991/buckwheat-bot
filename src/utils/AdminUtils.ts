@@ -1,6 +1,7 @@
 import { Context } from 'telegraf'
 import TimeUtils from './TimeUtils'
 import Logging from './Logging'
+import { ChatMember } from 'telegraf/types'
 
 export default class AdminUtils {
     static async mute(ctx: Context, id: number, ms: number) {

@@ -13,7 +13,7 @@ export default class CubeNoAction extends CallbackButtonAction {
         const replyId = +data.split('_')[0]
         
         if(ctx.from.id == replyId) {
-            await ctx.editMessageReplyMarkup(undefined)
+            await MessageUtils.editMarkup(ctx)
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/cubes/cancel.html',

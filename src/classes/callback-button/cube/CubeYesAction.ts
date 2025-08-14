@@ -46,7 +46,7 @@ export default class CubeYesAction extends CallbackButtonAction {
         const [replyId, userId, cost] = data.split('_').map(val => +val)
 
         if(ctx.from.id == replyId) {
-            await ctx.editMessageReplyMarkup(undefined)
+            await MessageUtils.editMarkup(ctx)
 
             const userDice = await CubeYesAction._sendDice(ctx, userId)
             const replyDice = await CubeYesAction._sendDice(ctx, replyId)

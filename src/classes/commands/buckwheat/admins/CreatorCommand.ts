@@ -14,9 +14,9 @@ export default class CreatorCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        let member = await ctx.telegram.getChatMember(ctx.chat?.id ?? '', ctx.from?.id ?? 0)
+        let member = await ContextUtils.getChatMember(ctx, ctx.from.id)
 
-        if(member.status == 'creator') {
+        if(member?.status == 'creator') {
             await UserRankService.update(ctx.from?.id ?? 0, RankUtils.maxRank)
             await MessageUtils.answerMessageFromResource(
                 ctx,

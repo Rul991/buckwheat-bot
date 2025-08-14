@@ -1,6 +1,7 @@
 import { PARSE_MODE } from '../../utils/consts'
 import FileUtils from '../../utils/FileUtils'
 import Logging from '../../utils/Logging'
+import MessageUtils from '../../utils/MessageUtils'
 import Pager from '../../utils/Pager'
 import { CallbackButtonContext } from '../../utils/types'
 import RulesService from '../db/services/chat/RulesService'
@@ -20,7 +21,8 @@ export default class RuleChangeAction extends CallbackButtonAction {
         if(currentPage === -1) return
 
         try {
-            await ctx.editMessageText(
+            await MessageUtils.editText(
+                ctx,
                 await FileUtils.readTextFromResource(
                     'text/commands/rules/rule.pug',
                     {

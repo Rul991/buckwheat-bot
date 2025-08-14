@@ -20,7 +20,8 @@ export default class VerificationAction extends CallbackButtonAction {
     }
 
     private static async _restartButton(ctx: CallbackButtonContext, data: string) {
-        await ctx.editMessageReplyMarkup(
+        await MessageUtils.editMarkup(
+            ctx,
             {
                 inline_keyboard: await InlineKeyboardManager.get('verify', data)
             }
@@ -55,7 +56,7 @@ export default class VerificationAction extends CallbackButtonAction {
 
         if(ctx.from.id == dataId) {
             await VerificationAction._sendAlert(ctx)
-            await ctx.editMessageReplyMarkup(undefined)
+            await MessageUtils.editMarkup(ctx)
             const isWin = await VerificationAction._isWin(ctx, dataId)
 
             setTimeout(async () => {

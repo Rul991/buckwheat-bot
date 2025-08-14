@@ -27,7 +27,8 @@ export default class ItemChangeAction extends CallbackButtonAction {
         
         const item = ShopItems.getWithLength(index, length)!
 
-        await ctx.editMessageText(
+        await MessageUtils.editText(
+            ctx,
             await FileUtils.readTextFromResource(
                 'text/commands/shop/shop.pug',
                 {

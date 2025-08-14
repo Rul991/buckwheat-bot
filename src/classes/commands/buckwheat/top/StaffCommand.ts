@@ -4,6 +4,7 @@ import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import UserProfileService from '../../../db/services/user/UserProfileService'
+import ContextUtils from '../../../../utils/ContextUtils'
 
 export default class StaffCommand extends BuckwheatCommand {
     constructor() {
@@ -27,9 +28,9 @@ export default class StaffCommand extends BuckwheatCommand {
             const players: Player[] = []
 
             for await (const {id, name} of users) {
-                const member = await ctx.telegram.getChatMember(ctx.chat.id, id)
+                const member = await ContextUtils.getChatMember(ctx, id)
 
-                if(member.status == 'left' || member.status == 'kicked')
+                if(member && (member.status == 'left' || member.status == 'kicked'))
                     continue
 
                 players.push({

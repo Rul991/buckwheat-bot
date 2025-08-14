@@ -1,4 +1,5 @@
 import ContextUtils from '../../utils/ContextUtils'
+import Logging from '../../utils/Logging'
 import MessageUtils from '../../utils/MessageUtils'
 import RandomUtils from '../../utils/RandomUtils'
 import { CallbackButtonContext } from '../../utils/types'
@@ -13,9 +14,15 @@ export default class RandomPrizeButtonAction extends CallbackButtonAction {
 
     async execute(ctx: CallbackButtonContext, _: string): Promise<void> {
         const randomMoney = RandomUtils.range(0, 100)
-        const money = randomMoney == 1 ? 1000 : randomMoney
+        const money = randomMoney == 1 ? 200 : randomMoney
 
-        await ctx.editMessageReplyMarkup(undefined)
+        try {
+            await MessageUtils.editMarkup(ctx)
+        }
+        catch(e) {
+            Logging.warn(e)
+            return
+        }
         await CasinoAddService.addMoney(ctx.from.id, money)
         await MessageUtils.answerMessageFromResource(
             ctx,
