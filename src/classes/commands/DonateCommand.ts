@@ -45,7 +45,7 @@ export default class DonateCommand extends BuckwheatCommand {
             return
         }
         
-        if(isNaN(+other) || +other < 0) {
+        if(isNaN(+other)) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/donate/wrong-other.pug'

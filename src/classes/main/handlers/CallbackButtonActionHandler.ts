@@ -1,9 +1,6 @@
 import { Telegraf } from 'telegraf'
-import EveryMessageAction from '../../actions/every/EveryMessageAction'
 import BaseHandler from './BaseHandler'
 import Logging from '../../../utils/Logging'
-import BaseDice from '../../dice/BaseDice'
-import WrongDice from '../../dice/WrongDice'
 import CallbackButtonAction from '../../callback-button/CallbackButtonAction'
 
 export default class CallbackButtonActionHandler extends BaseHandler<CallbackButtonAction, Record<string, CallbackButtonAction>> {
@@ -21,7 +18,7 @@ export default class CallbackButtonActionHandler extends BaseHandler<CallbackBut
             const action = this._instances[name]
             if(!action) return
 
-            await action.execute(ctx, data ?? '')
+            await ctx.answerCbQuery(await action.execute(ctx, data ?? '') ?? undefined)
         })
     }
 }

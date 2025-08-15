@@ -1,5 +1,5 @@
 import { WORK_TIME } from '../../../../utils/consts'
-import { MaybeString, TextContext } from '../../../../utils/types'
+import { ClassTypes, MaybeString, TextContext } from '../../../../utils/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserRankService from '../../../db/services/user/UserRankService'
 import { MAX_WORK, MIN_WORK } from '../../../../utils/consts'
@@ -11,6 +11,7 @@ import TimeUtils from '../../../../utils/TimeUtils'
 import RandomUtils from '../../../../utils/RandomUtils'
 import FileUtils from '../../../../utils/FileUtils'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
+import UserClassService from '../../../db/services/user/UserClassService'
 
 export default class WorkCommand extends BuckwheatCommand {
     constructor() {
@@ -19,8 +20,15 @@ export default class WorkCommand extends BuckwheatCommand {
         this._description = 'даю тебе деньги за твою работу\nчем выше ранг, тем больше денег ты получаешь'
     }
 
-    private static async _getWorkTypes(): Promise<string[]> {
-        return await FileUtils.readJsonFromResource<string[]>('json/other/work_types.json') ?? []
+    private static async _getWorkTypes(): Promise<Record<ClassTypes, string[]>> {
+        return await FileUtils.readJsonFromResource<Record<ClassTypes, string[]>>('json/other/work_types.json') ?? {
+            knight: [],
+            thief: [],
+            sorcerer: [],
+            engineer: [],
+            bard: [],
+            unknown: []
+        }
     }
     
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
@@ -32,6 +40,13 @@ export default class WorkCommand extends BuckwheatCommand {
 
         const money = RandomUtils.range(MIN_WORK, MAX_WORK) * (rank + 1)
         const elapsed = await WorkTimeService.getElapsedTime(id, workTime)
+
+        const workTypes = await WorkCommand._getWorkTypes()
+        const isUnknown = RandomUtils.chance(0.5)
+
+        const userClass = await UserClassService.get(id)
+        const quests = workTypes[isUnknown ? 'unknown' : userClass]
+        const quest = RandomUtils.choose(quests) ?? 'Неизвестный квест'
 
         if(!elapsed) {
             const hasPassive = await InventoryItemService.use(id, 'workUp')
@@ -45,7 +60,7 @@ export default class WorkCommand extends BuckwheatCommand {
                     changeValues: {
                         ...await ContextUtils.getUser(id),
                         money: totalMoney,
-                        quest: RandomUtils.choose(await WorkCommand._getWorkTypes())
+                        quest
                     }
                 }
             )

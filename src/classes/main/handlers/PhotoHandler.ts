@@ -2,7 +2,6 @@ import { Telegraf } from 'telegraf'
 import PhotoAction from '../../actions/photo/PhotoAction'
 import BaseHandler from './BaseHandler'
 import CommandUtils from '../../../utils/CommandUtils'
-import Logging from '../../../utils/Logging'
 
 export default class PhotoHandler extends BaseHandler<PhotoAction, Record<string, PhotoAction>> {
     constructor() {

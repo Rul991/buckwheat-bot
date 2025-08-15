@@ -56,6 +56,7 @@ import GreadBoxCommand from '../classes/commands/buckwheat/GreadBoxCommand'
 import StringUtils from '../utils/StringUtils'
 import CookieCommand from '../classes/commands/CookieCommand'
 import Logging from '../utils/Logging'
+import RoleplayCommand from '../classes/commands/base/RoleplayCommand'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -90,20 +91,30 @@ const isEnvVarsValidate = () => {
     return true
 }
 
-const getSimpleCommands = async () => {
-    let result: SimpleBuckwheatCommand[] = []
+const getCommands = async <
+    T extends typeof SimpleBuckwheatCommand
+>(folderPath: string, CommandClass: T): Promise<InstanceType<T>[]> => {
+    let result: InstanceType<T>[] = []
     const resourceSource = './res'
-    const parentSource = 'json/simple_commands'
+    const parentSource = `json/${folderPath}`
 
     for await (const src of await readdir(join(resourceSource, parentSource))) {
         result.push(
-            await SimpleBuckwheatCommand.loadFromJsonResource(
+            await CommandClass.loadFromJsonResource(
                 join(parentSource, src)
-            )
+            ) as InstanceType<T>
         )
     }
 
     return result
+}
+
+const getRoleplayCommands = async () => {
+    return await getCommands('rp', RoleplayCommand)
+}
+
+const getSimpleCommands = async () => {
+    return await getCommands('simple_commands', SimpleBuckwheatCommand)
 }
 
 const launchBot = async (bot: Bot) => {
@@ -175,7 +186,8 @@ const launchBot = async (bot: Bot) => {
         new ClassCommand(),
         new GreadBoxCommand(),
         new CookieCommand(),
-        ...await getSimpleCommands()
+        ...await getSimpleCommands(),
+        ...await getRoleplayCommands()
     )
 
     // tg

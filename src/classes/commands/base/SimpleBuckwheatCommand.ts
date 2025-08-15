@@ -21,14 +21,22 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
         }
 
         if(isWrong)
-            return new SimpleBuckwheatCommand({name: 'ошибки', text: 'Имеются'})
+            return new this({name: 'ошибки', text: 'Имеются'})
         else
-            return new SimpleBuckwheatCommand(json!)
+            return new this(json!)
     }
 
-    private _src?: string
-    private _text?: string
-    private _avoidOther?: boolean
+    protected _src?: string
+    protected _text?: string
+    protected _avoidOther?: boolean
+
+    protected async _sendMessageBySrc(ctx: TextContext, src: string) {
+        await MessageUtils.answerMessageFromResource(ctx, src)
+    }
+
+    protected async _sendMessageByText(ctx: TextContext, text: string) {
+        await MessageUtils.answer(ctx, text)
+    }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         if(other && this._avoidOther) {
@@ -37,10 +45,10 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
         }
 
         if(typeof this._src == 'string') {
-            await MessageUtils.answerMessageFromResource(ctx, this._src)
+            this._sendMessageBySrc(ctx, this._src)
         }
         else if(typeof this._text == 'string') {
-            await MessageUtils.answer(ctx, this._text)
+            this._sendMessageByText(ctx, this._text)
         }
     }
 

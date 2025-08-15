@@ -1,8 +1,10 @@
+- let hasItems = items.length && items.reduce((prev, curr) => prev + (curr.count ?? 0), 0)
+
 b Твой инвентарь:
 |
 |
 |
-if items.length
+if hasItems
     each item in items
         if item.count != 'x0'
             code 📍 #{item.name}

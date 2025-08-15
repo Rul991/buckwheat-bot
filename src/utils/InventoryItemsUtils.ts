@@ -21,7 +21,7 @@ export default class InventoryItemsUtils {
         },
 
         cookie: {
-            name: 'Печенье',
+            name: '🍪',
             type: 'consumable'
         },
 

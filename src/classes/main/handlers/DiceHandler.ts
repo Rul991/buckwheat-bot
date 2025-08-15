@@ -1,7 +1,5 @@
 import { Telegraf } from 'telegraf'
-import EveryMessageAction from '../../actions/every/EveryMessageAction'
 import BaseHandler from './BaseHandler'
-import Logging from '../../../utils/Logging'
 import BaseDice from '../../dice/BaseDice'
 import WrongDice from '../../dice/WrongDice'
 
