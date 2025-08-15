@@ -50,8 +50,16 @@ export default class MessageUtils {
                 })
             }
             catch(e) {
-                Logging.error(e)
-                lastMessage = await ctx.reply(partText, messageOptions)
+                try {
+                    lastMessage = await ctx.reply(partText, messageOptions)
+                }
+                catch(e) {
+                    Logging.error(e)
+                    lastMessage = await ctx.reply(partText, {
+                        ...messageOptions,
+                        reply_parameters: undefined
+                    })
+                }
             }
         }
 

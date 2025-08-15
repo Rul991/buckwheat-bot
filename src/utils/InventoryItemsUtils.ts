@@ -20,6 +20,10 @@ export default class InventoryItemsUtils {
         cookie: {
             name: 'Печенье',
             type: 'consumable'
+        },
+        workUp: {
+            name: 'Повышение',
+            type: 'oneInfinity'
         }
     }
 

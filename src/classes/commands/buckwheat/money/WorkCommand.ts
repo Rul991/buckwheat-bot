@@ -10,6 +10,7 @@ import ContextUtils from '../../../../utils/ContextUtils'
 import TimeUtils from '../../../../utils/TimeUtils'
 import RandomUtils from '../../../../utils/RandomUtils'
 import FileUtils from '../../../../utils/FileUtils'
+import InventoryItemService from '../../../db/services/items/InventoryItemService'
 
 export default class WorkCommand extends BuckwheatCommand {
     constructor() {
@@ -30,14 +31,17 @@ export default class WorkCommand extends BuckwheatCommand {
         const elapsed = await WorkTimeService.getElapsedTime(id)
 
         if(!elapsed) {
-            await CasinoAddService.addMoney(id, money)
+            const hasPassive = await InventoryItemService.use(id, 'workUp')
+            const totalMoney = Math.ceil((+hasPassive * 0.15 + 1) * money)
+
+            await CasinoAddService.addMoney(id, totalMoney)
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/work/work.pug',
                 {
                     changeValues: {
                         ...await ContextUtils.getUser(id),
-                        money,
+                        money: totalMoney,
                         quest: RandomUtils.choose(await WorkCommand._getWorkTypes())
                     }
                 }

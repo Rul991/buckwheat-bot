@@ -208,6 +208,28 @@ export default class ShopItems {
                 return true
             }
         },
+
+        {
+            name: 'Повышение',
+            description: 'Увеличивает доход с квестов на 15%',
+            emoji: '🪙',
+            price: 400,
+            execute: async (ctx, user) => {
+                const isAdded = await InventoryItemService.add(ctx.from.id, 'workUp')
+
+                if(isAdded) {
+                    await MessageUtils.answerMessageFromResource(
+                        ctx,
+                        'text/commands/items/workUp.pug',
+                        {
+                            changeValues: user
+                        }
+                    )
+                }
+
+                return isAdded
+            }
+        },
     ]
 
     static get(id: number): ShopItem | null {
