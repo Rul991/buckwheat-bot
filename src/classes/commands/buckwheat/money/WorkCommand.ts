@@ -26,9 +26,12 @@ export default class WorkCommand extends BuckwheatCommand {
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
         const id = ctx.from.id
         const rank = await UserRankService.get(id)
+        
+        const hasCatalog = await InventoryItemService.use(id, 'workCatalog')
+        const workTime = WORK_TIME / (1 + +hasCatalog)
 
         const money = RandomUtils.range(MIN_WORK, MAX_WORK) * (rank + 1)
-        const elapsed = await WorkTimeService.getElapsedTime(id)
+        const elapsed = await WorkTimeService.getElapsedTime(id, workTime)
 
         if(!elapsed) {
             const hasPassive = await InventoryItemService.use(id, 'workUp')
@@ -53,7 +56,7 @@ export default class WorkCommand extends BuckwheatCommand {
                 'text/commands/work/cant.pug',
                 {
                     changeValues: {
-                        time: TimeUtils.toHHMMSS(WORK_TIME - elapsed)
+                        time: TimeUtils.toHHMMSS(workTime - elapsed)
                     }
                 }
             )

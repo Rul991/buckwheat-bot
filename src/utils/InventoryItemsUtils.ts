@@ -9,20 +9,29 @@ export default class InventoryItemsUtils {
             name: 'Беспроигрышное казино',
             type: 'oneInfinity'
         },
+
         manyCasino: {
             name: 'Улучшение на казино',
             type: 'oneInfinity'
         },
+
         greedBox: {
             name: 'Шкатулка жадности',
             type: 'manyInfinity'
         },
+
         cookie: {
             name: 'Печенье',
             type: 'consumable'
         },
+
         workUp: {
             name: 'Повышение',
+            type: 'oneInfinity'
+        },
+
+        workCatalog: {
+            name: 'Каталог с квестами',
             type: 'oneInfinity'
         }
     }

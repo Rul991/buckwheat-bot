@@ -1,17 +1,17 @@
 import Work from '../../../../interfaces/schemas/Work'
 import { WORK_TIME } from '../../../../utils/consts'
 import WorkRepository from '../../repositories/WorkRepository'
+import InventoryItemService from '../items/InventoryItemService'
 import WorkService from './WorkService'
 
 export default class WorkTimeService {
-    static async getElapsedTime(id: number): Promise<number> {
-        const work = await WorkService.get(id)
-        const time = work.lastWork ?? 0
+    static async getElapsedTime(id: number, workTime = WORK_TIME): Promise<number> {
+        const time = await this.get(id)
 
         const now = Date.now()
         const elapsed = now - time
 
-        if (elapsed >= WORK_TIME) {
+        if (elapsed >= workTime) {
             this.set(id, now)
             return 0
         }
@@ -22,9 +22,7 @@ export default class WorkTimeService {
 
     static async get(id: number): Promise<number> {
         const work = await WorkService.get(id)
-
-        if(!work) return 0
-        else return work.lastWork ?? 0
+        return work?.lastWork ?? 0
     }
 
     static async set(id: number, time: number): Promise<number> {

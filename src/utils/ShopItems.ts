@@ -211,7 +211,7 @@ export default class ShopItems {
 
         {
             name: 'Повышение',
-            description: 'Увеличивает доход с квестов на 15%',
+            description: 'Увеличивает доход с квестов',
             emoji: '🪙',
             price: 400,
             execute: async (ctx, user) => {
@@ -220,7 +220,29 @@ export default class ShopItems {
                 if(isAdded) {
                     await MessageUtils.answerMessageFromResource(
                         ctx,
-                        'text/commands/items/workUp.pug',
+                        'text/commands/items/work/workUp.pug',
+                        {
+                            changeValues: user
+                        }
+                    )
+                }
+
+                return isAdded
+            }
+        },
+
+        {
+            name: 'Каталог с квестами',
+            description: 'Больше квестов - меньше ожидание!',
+            emoji: '🪙',
+            price: 800,
+            execute: async (ctx, user) => {
+                const isAdded = await InventoryItemService.add(ctx.from.id, 'workCatalog')
+
+                if(isAdded) {
+                    await MessageUtils.answerMessageFromResource(
+                        ctx,
+                        'text/commands/items/work/workCatalog.pug',
                         {
                             changeValues: user
                         }
