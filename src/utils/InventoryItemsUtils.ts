@@ -33,6 +33,11 @@ export default class InventoryItemsUtils {
         workCatalog: {
             name: 'Каталог с квестами',
             type: 'oneInfinity'
+        },
+
+        rankUp: {
+            name: 'Повышение ранга',
+            type: 'oneInfinity'
         }
     }
 

@@ -16,8 +16,8 @@ export const MAX_NAME_LENGTH = 48
 export const MAX_DESCRIPTION_LENGTH = 256
 export const MAX_MESSAGE_LENGTH = 4096
 
-export const START_MONEY = 20
-export const CASINO_PLUS_BOOST = 5
+export const START_MONEY = 1
+export const CASINO_PLUS_BOOST = 2
 
 export const JACKPOT_PRIZE = 10
 export const WIN_PRIZE = 5
@@ -47,6 +47,7 @@ export const WHERE_MARRIAGE_MESSAGES = 3
 
 export const MIN_WORK = 5
 export const MAX_WORK = 20
+export const CATALOG_BOOST = 3
 
 export const WORK_TIME = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * 3
 export const RUBLE_TO_COIN = 1.5

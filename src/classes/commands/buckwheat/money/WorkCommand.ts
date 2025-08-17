@@ -1,4 +1,4 @@
-import { WORK_TIME } from '../../../../utils/consts'
+import { CATALOG_BOOST, WORK_TIME } from '../../../../utils/consts'
 import { ClassTypes, MaybeString, TextContext } from '../../../../utils/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserRankService from '../../../db/services/user/UserRankService'
@@ -36,7 +36,7 @@ export default class WorkCommand extends BuckwheatCommand {
         const rank = await UserRankService.get(id)
         
         const hasCatalog = await InventoryItemService.use(id, 'workCatalog')
-        const workTime = WORK_TIME / (1 + +hasCatalog)
+        const workTime = WORK_TIME / (hasCatalog ? CATALOG_BOOST : 1)
 
         const money = RandomUtils.range(MIN_WORK, MAX_WORK) * (rank + 1)
         const elapsed = await WorkTimeService.getElapsedTime(id, workTime)

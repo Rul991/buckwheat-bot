@@ -60,13 +60,13 @@ export default class CasinoDice extends BaseDice {
         value: number,
         values: ChangeValues
     ): Promise<void> {
-        const boost = await InventoryItemService.use(id, 'manyCasino') ? CASINO_PLUS_BOOST : 0
+        const boost = await InventoryItemService.use(id, 'manyCasino') ? CASINO_PLUS_BOOST : 1
         if (value === CasinoDice._jackpotCombination) {
             await this._sendMessageAndUpdateCasino(
                 ctx, 
                 id, 
                 'jackpot', 
-                JACKPOT_PRIZE + boost, 
+                JACKPOT_PRIZE * boost, 
                 values, 
                 true
             )
@@ -77,7 +77,7 @@ export default class CasinoDice extends BaseDice {
                 ctx, 
                 id, 
                 'win', 
-                WIN_PRIZE + boost, 
+                WIN_PRIZE * boost, 
                 values, 
                 true
             )

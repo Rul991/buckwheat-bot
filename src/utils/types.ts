@@ -58,3 +58,9 @@ export type ExtraEditMessageText = {
     link_preview_options?: LinkPreviewOptions,
     parse_mode?: ParseMode
 }
+
+export type SubCommandOptions = {
+    withTab?: boolean
+}
+
+export type NameObject = {name: string}

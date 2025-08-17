@@ -1,4 +1,5 @@
 import Casino from '../../../../interfaces/schemas/Casino'
+import ArrayUtils from '../../../../utils/ArrayUtils'
 import CasinoRepository from '../../repositories/CasinoRepository'
 
 type T = Casino
@@ -27,12 +28,8 @@ export default class CasinoGetService {
         return await this._get(id, 'wins')
     }
 
-    static async getSortedCasinos(): Promise<Casino[]> {
+    static async getSortedCasinos(maxCount = 10): Promise<Casino[]> {
         const casinos = await CasinoRepository.findMany()
-        return casinos
-            .sort((a, b) => {
-                return b.money! - a.money!
-            })
-            .filter((casino, i) => casino.money! > 0 && i < 10)
+        return ArrayUtils.filterAndSort(casinos, 'money', maxCount)
     }
 }

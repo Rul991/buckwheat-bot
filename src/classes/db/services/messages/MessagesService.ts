@@ -9,6 +9,10 @@ export default class MessagesService {
         else return await MessagesRepository.create({id})
     }
 
+    static async getAll(): Promise<Messages[]> {
+        return await MessagesRepository.findMany()
+    }
+
     static async add(id: number, addValue = 1): Promise<number> {
         const messages = await this.get(id)
         const newCount = (messages.total ?? 0) + addValue

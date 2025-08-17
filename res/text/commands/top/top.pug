@@ -1,0 +1,11 @@
+b 📌 Топ самый #{title} игроков:
+|
+|
+|
+- for(let i = 0; i < sorted.length; i++) {
+    - let user = users.find(user => user.id == sorted[i].id)
+    | #{i + 1}. 
+    a(href=`tg://user?id=${useId ? user.id : 0}`)=user.name
+    |  - #{sorted[i][key]}#{emoji}
+    |
+- }

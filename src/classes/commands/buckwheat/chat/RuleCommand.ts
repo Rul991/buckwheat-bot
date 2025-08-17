@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString, TextContext } from '../../../../utils/types'
+import { MaybeString, NameObject, TextContext } from '../../../../utils/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import MessageUtils from '../../../../utils/MessageUtils'
 import UserRankService from '../../../db/services/user/UserRankService'
@@ -7,16 +7,16 @@ import RankUtils from '../../../../utils/RankUtils'
 import RulesService from '../../../db/services/chat/RulesService'
 import { TAB_NEW_LINE } from '../../../../utils/consts'
 import StringUtils from '../../../../utils/StringUtils'
+import SubCommandUtils from '../../../../utils/SubCommandUtils'
 
 type RuleSubCommand = {
     needData: boolean
     needAdmin: boolean
-    name: string
     execute: (data: string) => Promise<boolean>
     sendMessage: (options: {ctx: Context, changeValues: Record<string, any>}) => Promise<void>
     title: string,
     description: string
-}
+} & NameObject
 
 export default class RuleCommand extends BuckwheatCommand {
     private _subCommands: RuleSubCommand[] = [
@@ -90,11 +90,7 @@ export default class RuleCommand extends BuckwheatCommand {
         this._description = 'показываю или редактирую правила'
         this._needData = true
 
-        const commands = this._subCommands
-            .reduce((prev, curr, i) => 
-                `${prev}${curr.name}${i < this._subCommands.length - 1 ? ' | ' : ''}`, 
-            ''
-        )
+        const commands = SubCommandUtils.getArgumentText(this._subCommands)
         this._argumentText = `(${commands}) [аргументы]`
     }
 
@@ -135,10 +131,15 @@ export default class RuleCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const id = ctx.from?.id ?? 0
+        const id = ctx.from.id
+        const commandAndData = SubCommandUtils.getSubCommandAndData(
+            other, 
+            this._subCommands
+        )
 
-        if(!other) {
+        if(commandAndData == 'no-text') {
             const rules = await RulesService.get()
+
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/rules/start.pug',
@@ -150,67 +151,62 @@ export default class RuleCommand extends BuckwheatCommand {
                 }
             )
         }
+        else if(commandAndData === 'not-exist') {
+            this._sendHelpMessage(ctx)
+        }
         else {
             const rank = await UserRankService.get(id)
-            const [command, ...nonSplittedData] = other.split(' ')
-            const data = StringUtils
-                .replaceToNewLine(
-                nonSplittedData
-                    .join(' '),
-                    true
-                )
+            const isAdminRank = rank >= RankUtils.adminRank
             const rules = await RulesService.get()
 
-            const isAdminRank = rank >= RankUtils.adminRank
+            const [
+                {
+                    name, 
+                    needAdmin, 
+                    needData, 
+                    execute, 
+                    sendMessage, 
+                    title, 
+                    description
+                }, 
+                data
+            ] = commandAndData
+
             const hasData = Boolean(data)
 
-            for(const {
-                name, 
-                needAdmin, 
-                needData, 
-                execute, 
-                sendMessage, 
+            const changeValues = {
                 title, 
                 description
-            } of this._subCommands) {
-                if(command == name) {
-                    const changeValues = {
-                        title, 
-                        description
-                    }
-
-                    if(needAdmin && !isAdminRank) {
-                        await MessageUtils.answerMessageFromResource(
-                            ctx,
-                            'text/commands/rules/noAdmin.pug'
-                        )
-                        return
-                    }
-
-                    if(needData && !hasData) {
-                        await this._sendHelpSubCommandMessage(
-                            ctx,
-                            changeValues
-                        )
-                        return
-                    }
-
-                    const isExecuted = await execute(data)
-                    if(isExecuted) {
-                        await sendMessage({ctx, changeValues: {rules, data}})
-                    }
-                    else {
-                        await this._sendHelpSubCommandMessage(
-                            ctx,
-                            changeValues
-                        )
-                    }
-
-                    return
-                }
             }
 
-            this._sendHelpMessage(ctx)
+            if(needAdmin && !isAdminRank) {
+                await MessageUtils.answerMessageFromResource(
+                    ctx,
+                    'text/commands/rules/noAdmin.pug'
+                )
+                return
+            }
+
+            if(needData && !hasData) {
+                await this._sendHelpSubCommandMessage(
+                    ctx,
+                    changeValues
+                )
+                return
+            }
+
+            const isExecuted = await execute(data)
+            if(isExecuted) {
+                await sendMessage({ctx, changeValues: {rules, data}})
+            }
+            else {
+                await this._sendHelpSubCommandMessage(
+                    ctx,
+                    changeValues
+                )
+            }
+
+            return
         }
     }
 }

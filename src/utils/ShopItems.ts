@@ -1,9 +1,9 @@
 import InventoryItemService from '../classes/db/services/items/InventoryItemService'
-import UserNameService from '../classes/db/services/user/UserNameService'
+import UserRankService from '../classes/db/services/user/UserRankService'
 import AdminUtils from './AdminUtils'
-import { CASINO_PLUS_BOOST, DEFAULT_USER_NAME, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './consts'
-import ContextUtils from './ContextUtils'
+import { CASINO_PLUS_BOOST, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './consts'
 import MessageUtils from './MessageUtils'
+import RankUtils from './RankUtils'
 import { AsyncOrSync, CallbackButtonContext } from './types'
 
 type ShopItem = {
@@ -22,15 +22,22 @@ export default class ShopItems {
             emoji: '🤥',
             price: 999,
             execute: async (ctx, user) => {
-                await MessageUtils.answerMessageFromResource(
-                    ctx,
-                    'text/commands/items/mamont.pug',
-                    {
-                        changeValues: user
-                    }
-                )
+                const rank = await UserRankService.get(ctx.from.id)
+                if(rank >= RankUtils.moderatorRank) return false
 
-                return true
+                const isBought = await InventoryItemService.add(ctx.from.id, 'rankUp')
+                await UserRankService.update(ctx.from.id, rank + 1)
+
+                if(isBought) 
+                    await MessageUtils.answerMessageFromResource(
+                        ctx,
+                        'text/commands/items/default.pug',
+                        {
+                            changeValues: user
+                        }
+                    )
+
+                return isBought
             }
         },
 

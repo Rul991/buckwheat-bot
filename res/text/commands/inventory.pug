@@ -1,4 +1,4 @@
-- let hasItems = items.length && items.reduce((prev, curr) => prev + (curr.count ?? 0), 0)
+- let hasItems = items.length && !items.every(v => v.count == 'x0')
 
 b Твой инвентарь:
 |

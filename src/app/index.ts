@@ -17,7 +17,6 @@ import WrongChatAction from '../classes/actions/every/WrongChatAction'
 import BalanceCommand from '../classes/commands/buckwheat/money/BalanceCommand'
 import TransferCommand from '../classes/commands/buckwheat/money/TransferCommand'
 import ChangeDescriptionCommand from '../classes/commands/buckwheat/profile/ChangeDescriptionCommand'
-import StaffCommand from '../classes/commands/buckwheat/top/StaffCommand'
 import CreatorCommand from '../classes/commands/buckwheat/admins/CreatorCommand'
 import RankCommand from '../classes/commands/buckwheat/admins/RankCommand'
 import { readdir } from 'fs/promises'
@@ -39,7 +38,7 @@ import CommandsCommand from '../classes/commands/CommandsCommand'
 import DonateCommand from '../classes/commands/DonateCommand'
 import HelloCommand from '../classes/commands/buckwheat/chat/HelloCommand'
 import HelloMemberAction from '../classes/actions/new-member/HelloMemberAction'
-import MoneyTopCommand from '../classes/commands/buckwheat/top/MoneyTopCommand'
+import TopCommand from '../classes/commands/buckwheat/top/TopCommand'
 import ImageProfileAction from '../classes/actions/photo/ImageProfileAction'
 import ShopCommand from '../classes/commands/buckwheat/money/ShopCommand'
 import ItemChangeAction from '../classes/callback-button/shop/ItemChangeAction'
@@ -53,7 +52,6 @@ import WhereMarriageAction from '../classes/actions/every/WhereMarriageAction'
 import ClassAction from '../classes/callback-button/ClassAction'
 import ClassCommand from '../classes/commands/buckwheat/profile/ClassCommand'
 import GreadBoxCommand from '../classes/commands/buckwheat/GreadBoxCommand'
-import StringUtils from '../utils/StringUtils'
 import CookieCommand from '../classes/commands/CookieCommand'
 import Logging from '../utils/Logging'
 import RoleplayCommand from '../classes/commands/base/RoleplayCommand'
@@ -163,7 +161,6 @@ const launchBot = async (bot: Bot) => {
         new BalanceCommand(),
         new ChangeNameCommand(),
         new ChangeDescriptionCommand(),
-        new StaffCommand(),
         new TestCommand(),
         new EchoCommand(),
         new TransferCommand(),
@@ -180,7 +177,7 @@ const launchBot = async (bot: Bot) => {
         new WorkCommand(),
         new DonateCommand(),
         new HelloCommand(),
-        new MoneyTopCommand(),
+        new TopCommand(),
         new ShopCommand(),
         new InventoryCommand(),
         new ClassCommand(),
