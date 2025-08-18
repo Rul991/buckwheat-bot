@@ -5,9 +5,7 @@ export default class CommandUtils {
     private static _botNames: string[] = ['баквит', 'гречка']
 
     static getCommandStrings(text: string): CommandStrings {
-        const [firstWord, command, ...other] = StringUtils.splitBySpace(text)
-
-        return [firstWord, command, other?.join(' ')]
+        return StringUtils.splitByCommands(text, 2) as CommandStrings
     }
 
     static isCommand(firstWord: string): boolean {

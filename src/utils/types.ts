@@ -59,8 +59,4 @@ export type ExtraEditMessageText = {
     parse_mode?: ParseMode
 }
 
-export type SubCommandOptions = {
-    withTab?: boolean
-}
-
 export type NameObject = {name: string}

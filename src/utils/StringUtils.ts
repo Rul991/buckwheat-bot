@@ -1,10 +1,30 @@
 import ReplaceOptions from '../interfaces/options/ReplaceOptions'
-import { TAB_NEW_LINE } from './consts'
 
 export default class StringUtils {
+    private static _spaceRegexp = /\s+/
+
     static splitBySpace(text: string): string[] {
         return text
-            .split(/\s+/)
+            .split(this._spaceRegexp)
+    }
+
+    static splitByCommands(text: string, spaces: number): string[] {
+        let strings: string[] = ['']
+        let spaceCount = 0
+
+        for (const symb of text.trim()) {
+            if(symb.match(this._spaceRegexp)) {
+                spaceCount++
+                if(spaceCount <= spaces) {
+                    strings.push('')
+                    continue
+                }
+            }
+
+            strings[strings.length - 1] += symb
+        }
+
+        return strings
     }
 
     static replaceLocalsInText(
@@ -22,10 +42,6 @@ export default class StringUtils {
         }
 
         return text
-    }
-
-    static replaceToNewLine(text: string, withTab: boolean = false): string {
-        return text.replaceAll('%', withTab ? TAB_NEW_LINE : '\n')
     }
 
     static toHtmlEntitiesIfNeed(text: any, need = true): string {

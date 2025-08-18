@@ -19,23 +19,45 @@ export default class ProfileCommand extends BuckwheatCommand {
         this._name = 'профиль'
         this._description = 'я показываю профиль\nесли скинуть изображение, то поменяю вашу аватарку'
         this._replySupport = true
+        this._needData = true
+        this._argumentText = 'ник'
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         let id: number
         let name: string
 
-        if('reply_to_message' in ctx.message!) {
+        if(other) {
+            const user = await UserProfileService.findByName(other)
+
+            if(!user) {
+                await MessageUtils.answerMessageFromResource(
+                    ctx,
+                    'text/commands/profile/no-user.pug',
+                    {
+                        changeValues: {
+                            name: other
+                        }
+                    }
+                )
+                return
+            }
+
+            else {
+                id = user.id
+                name = user.name
+            }
+        }
+        else if('reply_to_message' in ctx.message!) {
             const {id: replyId, first_name} = ctx.message.reply_to_message?.from!
 
             id = replyId
             name = first_name
         }
-        else if(ctx.from) {
+        else {
             id = ctx.from.id
             name = ctx.from.first_name
         }
-        else return
 
         let user = await UserProfileService.get(id)
         if(!user) {
@@ -52,7 +74,7 @@ export default class ProfileCommand extends BuckwheatCommand {
         const devStatus = RankUtils.getDevStatusByNumber(rank)
         const classType = user?.className ?? 'unknown'
         
-        const path = 'text/commands/profile.html'
+        const path = 'text/commands/profile/profile.pug'
         const changeValues = {
             ...await ContextUtils.getUser(id),
             rank: rank.toString(),

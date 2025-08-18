@@ -33,6 +33,10 @@ export default class UserProfileService {
         return await UserRepository.findOne(id)
     }
 
+    static async findByName(name: string): Promise<User | null> {
+        return (await UserRepository.findMany({name}))[0]
+    }
+
     static async getAll(): Promise<User[]> {
         return await UserRepository.findMany()
     }

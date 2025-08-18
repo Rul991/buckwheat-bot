@@ -17,7 +17,7 @@ export default class ImageProfileAction extends PhotoAction {
 
         await MessageUtils.answerMessageFromResource(
             ctx,
-            'text/commands/photo-profile.pug'
+            'text/commands/profile/photo-profile.pug'
         )
     }
 }

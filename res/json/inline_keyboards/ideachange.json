@@ -1,0 +1,32 @@
+[
+    [
+        {
+            "text": "<<",
+            "callback_data": "ideachange_-1_@"
+        },
+
+        {
+            "text": ">>",
+            "callback_data": "ideachange_1_@"
+        }
+    ],
+
+    [
+        {
+            "text": "👍",
+            "callback_data": "vote_coolVote_@"
+        },
+
+        {
+            "text": "👎",
+            "callback_data": "vote_badVote_@"
+        }
+    ],
+
+    [
+        {
+            "text": "Удалить",
+            "callback_data": "deleteidea_@"
+        }
+    ]
+]

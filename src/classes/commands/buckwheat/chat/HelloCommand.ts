@@ -40,7 +40,7 @@ export default class HelloCommand extends BuckwheatCommand {
             return
         }
         
-        await HelloService.edit(StringUtils.replaceToNewLine(other))
+        await HelloService.edit(other)
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/hello/done.pug',

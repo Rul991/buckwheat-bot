@@ -55,6 +55,11 @@ import GreadBoxCommand from '../classes/commands/buckwheat/GreadBoxCommand'
 import CookieCommand from '../classes/commands/CookieCommand'
 import Logging from '../utils/Logging'
 import RoleplayCommand from '../classes/commands/base/RoleplayCommand'
+import IdeasService from '../classes/db/services/ideas/IdeasService'
+import IdeaCommand from '../classes/commands/IdeaCommand'
+import IdeaChangeAction from '../classes/callback-button/ideas/IdeaChangeAction'
+import DeleteIdeaAction from '../classes/callback-button/ideas/DeleteIdeaAction'
+import VoteAction from '../classes/callback-button/ideas/VoteAction'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -137,7 +142,10 @@ const launchBot = async (bot: Bot) => {
         new BuyAction(),
         new VerificationAction(),
         new RandomPrizeButtonAction(),
-        new ClassAction()
+        new ClassAction(),
+        new IdeaChangeAction(),
+        new VoteAction(),
+        new DeleteIdeaAction(),
     )
 
     bot.addDiceActions(
@@ -183,6 +191,7 @@ const launchBot = async (bot: Bot) => {
         new ClassCommand(),
         new GreadBoxCommand(),
         new CookieCommand(),
+        new IdeaCommand(),
         ...await getSimpleCommands(),
         ...await getRoleplayCommands()
     )

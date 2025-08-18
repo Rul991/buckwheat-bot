@@ -15,7 +15,7 @@ import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 type SubTopCommand = {
     filename: string,
-    execute: (ctx: TextContext, data: string) => AsyncOrSync<Record<string, any>>
+    execute: (ctx: TextContext, data: string) => AsyncOrSync<Record<string, any> & {id: number}>
 } & NameObject
 
 type TopMessageLocals<T> = {
@@ -23,7 +23,7 @@ type TopMessageLocals<T> = {
     users: User[],
     sorted: T[],
     key: keyof T,
-    useId?: boolean
+    id: number
 }
 
 export default class MoneyTopCommand extends BuckwheatCommand {
@@ -31,7 +31,7 @@ export default class MoneyTopCommand extends BuckwheatCommand {
         {
             name: 'стафф',
             filename: 'staff',
-            execute: async (ctx) => {
+            execute: async ctx => {
                 type Player = string
                 type Rating = {emoji: string, rankName: string, players: Player[]}
 
@@ -63,7 +63,8 @@ export default class MoneyTopCommand extends BuckwheatCommand {
                     members,
                     maxMembers: await ctx
                         .telegram
-                        .getChatMembersCount(ctx.chat.id)
+                        .getChatMembersCount(ctx.chat.id),
+                    id: ctx.botInfo.id
                 }
             }
         },
@@ -71,12 +72,13 @@ export default class MoneyTopCommand extends BuckwheatCommand {
         {
             name: 'богачи',
             filename: 'top',
-            execute: async () => {
+            execute: async ctx => {
                 return {
                     sorted: await CasinoGetService.getSortedCasinos(),
                     users: await UserProfileService.getAll(),
                     title: 'богатых',
-                    key: 'money'
+                    key: 'money',
+                    id: ctx.botInfo.id
                 } as TopMessageLocals<Casino>
             }
         },
@@ -84,14 +86,15 @@ export default class MoneyTopCommand extends BuckwheatCommand {
         {
             name: 'чат',
             filename: 'top',
-            execute: async () => {
+            execute: async ctx => {
                 const messages = await MessagesService.getAll()
 
                 return {
                     sorted: ArrayUtils.filterAndSort(messages, 'total', 10),
                     users: await UserProfileService.getAll(),
                     title: 'общительных',
-                    key: 'total'
+                    key: 'total',
+                    id: ctx.botInfo.id
                 } as TopMessageLocals<Messages>
             }
         },
@@ -99,7 +102,7 @@ export default class MoneyTopCommand extends BuckwheatCommand {
         {
             name: 'классы',
             filename: 'class',
-            execute: async () => {
+            execute: async ctx => {
                 const classMembers: Record<ClassTypes, string[]> = {
                     knight: [],
                     thief: [],
@@ -119,6 +122,7 @@ export default class MoneyTopCommand extends BuckwheatCommand {
 
                 return {
                     classMembers,
+                    id: ctx.botInfo.id,
                     emojies: Object.entries(classMembers).reduce(
                         (prev, [key]) => {
                             return {...prev, [key]: ClassUtils.getEmoji(key as ClassTypes)}

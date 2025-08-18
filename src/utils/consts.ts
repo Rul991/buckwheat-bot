@@ -9,7 +9,7 @@ export const DB_NAME = env.DB_NAME!
 export const DB_URL = env.DB_URL!
 export const CHAT_ID = env.CHAT_ID!
 export const EMPTY_PROFILE_IMAGE = env.EMPTY_PROFILE_IMAGE
-export const DEV_ID = env.DEV_ID
+export const DEV_ID = isNaN(+(env.DEV_ID ?? 0)) ? undefined : +env.DEV_ID!
 export const MODE: ModeTypes = env.MODE as ModeTypes ?? 'dev'
 
 export const MAX_NAME_LENGTH = 48

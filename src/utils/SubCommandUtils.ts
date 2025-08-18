@@ -1,17 +1,15 @@
+import { TAB_NEW_LINE } from './consts'
 import StringUtils from './StringUtils'
-import { NameObject, SubCommandOptions } from './types'
+import { NameObject } from './types'
 
 export default class SubCommandUtils {
     static getSubCommandAndData<Command extends NameObject>(
         text?: string, 
-        availableCommands: Command[] = [], 
-        {
-            withTab = false
-        }: SubCommandOptions = {}
+        availableCommands: Command[] = []
     ): [Command, string] | ('no-text' | 'not-exist') {
         if(!text) return 'no-text'
         
-        const [command, data] = this.splitCommandOther(text, withTab)
+        const [command, data] = this.splitCommandOther(text)
         const lowerCommand = command.toLowerCase()
 
         for (const command of availableCommands) {
@@ -23,15 +21,8 @@ export default class SubCommandUtils {
         return 'not-exist'
     }
 
-    static splitCommandOther(text: string, withTab: boolean): [string, string] {
-        const [command, ...nonSplittedData] = text.split(' ')
-        const data = StringUtils
-            .replaceToNewLine(
-            nonSplittedData
-                .join(' '),
-                withTab
-            )
-
+    static splitCommandOther(text: string): [string, string] {
+        const [command, data] = StringUtils.splitByCommands(text, 1)
         return [command, data]
     }
 

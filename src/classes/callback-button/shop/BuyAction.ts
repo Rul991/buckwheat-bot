@@ -16,7 +16,7 @@ export default class BuyAction extends CallbackButtonAction {
         this._name = 'buy'
     }
 
-    async execute(ctx: CallbackButtonContext, data: string): Promise<void> {
+    async execute(ctx: CallbackButtonContext, data: string): Promise<string | void> {
         const length = ShopItems.len()
         const [index] = data
             .split('_', 1)
@@ -51,6 +51,7 @@ export default class BuyAction extends CallbackButtonAction {
         if(isBought) {
             await CasinoAddService.addMoney(ctx.from.id, -item.price)
             await CasinoAddService.addMoney(ctx.botInfo.id, item.price)
+            return `Товар "${item.name}" куплен!`
         }
         else {
             await MessageUtils.answerMessageFromResource(
