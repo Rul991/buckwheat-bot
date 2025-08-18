@@ -164,7 +164,7 @@ export default class MoneyTopCommand extends BuckwheatCommand {
             ctx,
             `text/commands/top/${path}.pug`,
             {
-                changeValues: await execute(ctx, data.toString())
+                changeValues: await execute(ctx, data?.toString() ?? '')
             }
         )
     }
