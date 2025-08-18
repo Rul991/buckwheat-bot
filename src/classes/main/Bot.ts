@@ -97,15 +97,20 @@ export default class Bot {
             handler.setup(this._bot)
         )
 
-        this._bot.launch(async () => {
-            console.log(`Listened at https://t.me/${this._bot.botInfo?.username} (!)`)
-            if(MODE == 'prod') {
-                this._bot.telegram.sendMessage(
-                    CHAT_ID, 
-                    await FileUtils.readTextFromResource('text/commands/update/after_restart.html')
-                )
-            }
-        })
+        try {
+            this._bot.launch(async () => {
+                console.log(`Listened at https://t.me/${this._bot.botInfo?.username} (!)`)
+                if(MODE == 'prod') {
+                    this._bot.telegram.sendMessage(
+                        CHAT_ID, 
+                        await FileUtils.readTextFromResource('text/commands/update/after_restart.html')
+                    )
+                }
+            })
+        }
+        catch(e) {
+            Logging.error(e)
+        }
     }
 
     stop(reason?: string) {

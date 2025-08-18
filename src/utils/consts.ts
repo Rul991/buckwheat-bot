@@ -31,6 +31,7 @@ export const MILLISECONDS_IN_DAY = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * 
 
 export const PARSE_MODE = 'HTML'
 export const INFINITY_SYMB = '♾️'
+export const KICK_TIME = 31_000
 
 export const CASINO_TIME = 1750
 export const DICE_TIME = 3500

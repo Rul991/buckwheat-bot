@@ -60,6 +60,7 @@ import IdeaCommand from '../classes/commands/IdeaCommand'
 import IdeaChangeAction from '../classes/callback-button/ideas/IdeaChangeAction'
 import DeleteIdeaAction from '../classes/callback-button/ideas/DeleteIdeaAction'
 import VoteAction from '../classes/callback-button/ideas/VoteAction'
+import SaveCommand from '../classes/commands/SaveCommand'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -192,6 +193,7 @@ const launchBot = async (bot: Bot) => {
         new GreadBoxCommand(),
         new CookieCommand(),
         new IdeaCommand(),
+        new SaveCommand(),
         ...await getSimpleCommands(),
         ...await getRoleplayCommands()
     )
@@ -212,9 +214,4 @@ const main = async () => {
     await launchBot(bot)
 }
 
-try {
-    main()
-}
-catch(e) {
-    Logging.error(e)
-}
+main()

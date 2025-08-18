@@ -4,6 +4,7 @@ import ContextUtils from '../../utils/ContextUtils'
 import FileUtils from '../../utils/FileUtils'
 import MessageUtils from '../../utils/MessageUtils'
 import { CallbackButtonContext } from '../../utils/types'
+import UserOldService from '../db/services/user/UserOldService'
 import InlineKeyboardManager from '../main/InlineKeyboardManager'
 import CallbackButtonAction from './CallbackButtonAction'
 
@@ -61,6 +62,7 @@ export default class VerificationAction extends CallbackButtonAction {
 
             setTimeout(async () => {
                 if(isWin) {
+                    await UserOldService.update(ctx.from.id, true)
                     await AdminUtils.unmute(ctx, ctx.from.id)
                     await VerificationAction._sendAfterDiceMessage(ctx, 'yes')
                 }

@@ -2,6 +2,7 @@ import { Context } from 'telegraf'
 import TimeUtils from './TimeUtils'
 import Logging from './Logging'
 import { ChatMember } from 'telegraf/types'
+import { KICK_TIME } from './consts'
 
 export default class AdminUtils {
     static async mute(ctx: Context, id: number, ms: number) {
@@ -47,6 +48,10 @@ export default class AdminUtils {
             Logging.error('cant ban', e)
             return false
         }
+    }
+
+    static async kick(ctx: Context, id: number): Promise<boolean> {
+        return await this.ban(ctx, id, KICK_TIME)
     }
 
     static async unban(ctx: Context, id: number) {
