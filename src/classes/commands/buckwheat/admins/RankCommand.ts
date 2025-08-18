@@ -99,7 +99,6 @@ export default class RankCommand extends BuckwheatCommand {
                 if(await RankCommand._answerIfRankOutBounds(ctx, rank)) return
                 
                 const myRank = await UserRankService.get(myId)
-
                 const replyRank = await UserRankService.get(replyId)
 
                 if(await RankCommand._answerIfNotAdmin(ctx, myRank)) return
@@ -113,9 +112,9 @@ export default class RankCommand extends BuckwheatCommand {
                     `text/commands/rank/${mode}.html`,
                     {
                         changeValues: {
+                            ...await ContextUtils.getUser(replyId),
                             rank: RankUtils.getRankByNumber(rank),
                             emoji: RankUtils.getEmojiByRank(rank),
-                            ...ContextUtils.getUser(replyId)
                         }
                     }
                 )

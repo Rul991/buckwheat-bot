@@ -2,10 +2,11 @@ import Casino from '../../../../interfaces/schemas/Casino'
 import Messages from '../../../../interfaces/schemas/Messages'
 import User from '../../../../interfaces/schemas/User'
 import ArrayUtils from '../../../../utils/ArrayUtils'
+import ClassUtils from '../../../../utils/ClassUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import RankUtils from '../../../../utils/RankUtils'
 import SubCommandUtils from '../../../../utils/SubCommandUtils'
-import { TextContext, MaybeString, AsyncOrSync, NameObject } from '../../../../utils/types'
+import { TextContext, MaybeString, AsyncOrSync, NameObject, ClassTypes } from '../../../../utils/types'
 import CasinoGetService from '../../../db/services/casino/CasinoGetService'
 import MessagesService from '../../../db/services/messages/MessagesService'
 import UserProfileService from '../../../db/services/user/UserProfileService'
@@ -31,7 +32,7 @@ export default class MoneyTopCommand extends BuckwheatCommand {
             name: 'стафф',
             filename: 'staff',
             execute: async (ctx) => {
-                type Player = {id: number, name: string}
+                type Player = string
                 type Rating = {emoji: string, rankName: string, players: Player[]}
 
                 let ratings: Rating[] = []
@@ -42,11 +43,8 @@ export default class MoneyTopCommand extends BuckwheatCommand {
 
                     const players: Player[] = []
 
-                    for await (const {id, name} of users) {
-                        players.push({
-                            id: 0, 
-                            name
-                        })
+                    for await (const {name} of users) {
+                        players.push(name)
                     }
 
                     ratings.push({
@@ -90,13 +88,54 @@ export default class MoneyTopCommand extends BuckwheatCommand {
                 const messages = await MessagesService.getAll()
 
                 return {
-                    sorted: ArrayUtils.filterAndSort(messages, 'total'),
+                    sorted: ArrayUtils.filterAndSort(messages, 'total', 10),
                     users: await UserProfileService.getAll(),
                     title: 'общительных',
                     key: 'total'
                 } as TopMessageLocals<Messages>
             }
         },
+
+        {
+            name: 'классы',
+            filename: 'class',
+            execute: async () => {
+                const classMembers: Record<ClassTypes, string[]> = {
+                    knight: [],
+                    thief: [],
+                    sorcerer: [],
+                    engineer: [],
+                    bard: [],
+                    unknown: []
+                }
+
+                const users = await UserProfileService.getAll()
+
+                for (const {className, name} of users) {
+                    if(!className) continue
+
+                    classMembers[className].push(name)
+                }
+
+                return {
+                    classMembers,
+                    emojies: Object.entries(classMembers).reduce(
+                        (prev, [key]) => {
+                            return {...prev, [key]: ClassUtils.getEmoji(key as ClassTypes)}
+                        },
+                        {}
+                    ),
+                    classTitles: {
+                        knight: 'Рыцари',
+                        thief: 'Воры',
+                        sorcerer: 'Маги',
+                        engineer: 'Инженеры',
+                        bard: 'Барды',
+                        unknown: 'Не выбрали'
+                    }
+                }
+            }
+        }
     ]
 
     constructor() {
