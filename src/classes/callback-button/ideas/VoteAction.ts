@@ -13,6 +13,7 @@ export default class VoteAction extends CallbackButtonAction {
         const splittedData = data.split('_')
         const key = splittedData[0] as 'coolVote' | 'badVote'
         const page = +splittedData[1]
+        const userId = +splittedData[2]
 
         const ideas = await IdeasService.getIdeas()
         const idea = ideas[page]
@@ -38,7 +39,8 @@ export default class VoteAction extends CallbackButtonAction {
                 ctx,
                 newIdea,
                 ideas.length,
-                page
+                page,
+                userId
             )
         }
 

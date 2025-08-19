@@ -14,7 +14,7 @@ export default class DeleteIdeaAction extends CallbackButtonAction {
     async execute(ctx: CallbackButtonContext, data: string): Promise<string | void> {
         if(ctx.from.id !== DEV_ID) return 'Ты не разработчик!'
 
-        const page = +(data.split('_')[0])
+        const [page, userId] = data.split('_').map(v => +v)
         const ideas = await IdeasService.getIdeas()
         
         if(!ideas[page]) return 'Такой идеи нет!'
@@ -29,8 +29,12 @@ export default class DeleteIdeaAction extends CallbackButtonAction {
                     ctx,
                     newIdeas[newPage],
                     newIdeas.length,
-                    newPage
+                    newPage,
+                    userId
                 )
+            }
+            else {
+                await ctx.deleteMessage()
             }
             
             return `Идея #${page + 1} удалена!`

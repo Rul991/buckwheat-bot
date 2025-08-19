@@ -15,7 +15,7 @@ export default class IdeaChangeAction extends CallbackButtonAction {
         this._name = 'ideachange'
     }
 
-    static async editMessage(ctx: CallbackButtonContext, {name, text, coolVote, badVote}: Idea, pagesLength: number, newPage: number) {
+    static async editMessage(ctx: CallbackButtonContext, {name, text, coolVote, badVote}: Idea, pagesLength: number, newPage: number, id: number) {
         await MessageUtils.editText(
             ctx,
             await FileUtils.readTextFromResource(
@@ -33,7 +33,7 @@ export default class IdeaChangeAction extends CallbackButtonAction {
             ),
             {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get('ideachange', `${newPage}_${ctx.from.id}`)
+                    inline_keyboard: await InlineKeyboardManager.get('ideachange', `${newPage}_${id}`)
                 },
                 parse_mode: PARSE_MODE
             }
@@ -56,7 +56,8 @@ export default class IdeaChangeAction extends CallbackButtonAction {
             ctx,
             idea,
             ideas.length,
-            newPage
+            newPage,
+            userId
         )
     }
 }
