@@ -22,7 +22,7 @@ export default class ChangeDescriptionCommand extends BuckwheatCommand {
             if(description.length > MAX_DESCRIPTION_LENGTH) {
                 await MessageUtils.answerMessageFromResource(
                     ctx, 
-                    'text/commands/change-description/big.html', 
+                    'text/commands/change-description/big.pug', 
                     {changeValues: {max: MAX_DESCRIPTION_LENGTH.toString()}}
                 )
                 return
@@ -31,7 +31,7 @@ export default class ChangeDescriptionCommand extends BuckwheatCommand {
             await UserDescriptionService.update(ctx.from?.id ?? 0, description)
             await MessageUtils.answerMessageFromResource(
                 ctx, 
-                'text/commands/change-description/changed.html'
+                'text/commands/change-description/changed.pug'
             )
         }
     }

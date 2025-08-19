@@ -10,7 +10,7 @@ export default class RoleplayCommand extends SimpleBuckwheatCommand {
     }
 
     protected async _sendMessageBySrc(ctx: TextContext, src: string): Promise<void> {
-        const text = await FileUtils.readTextFromResource(src)
+        const text = await FileUtils.readPugFromResource(src)
         await this._sendMessageByText(ctx, text)
     }
 
@@ -28,7 +28,7 @@ export default class RoleplayCommand extends SimpleBuckwheatCommand {
 
         await MessageUtils.answerMessageFromResource(
             ctx,
-            'text/commands/rp.pug',
+            'text/commands/other/rp.pug',
             {
                 changeValues: {
                     text,

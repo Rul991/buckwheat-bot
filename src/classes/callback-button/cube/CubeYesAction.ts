@@ -58,7 +58,7 @@ export default class CubeYesAction extends CallbackButtonAction {
                 )
 
                 if(!win) {
-                    await MessageUtils.answerMessageFromResource(ctx, 'text/commands/cubes/win/tie.html')
+                    await MessageUtils.answerMessageFromResource(ctx, 'text/commands/cubes/win/tie.pug')
                 }
                 else {
                     const [winnerId, loserId, boost] = win
@@ -74,14 +74,14 @@ export default class CubeYesAction extends CallbackButtonAction {
                     if(boost == 1) {
                         await MessageUtils.answerMessageFromResource(
                             ctx, 
-                            'text/commands/cubes/win/win.html',
+                            'text/commands/cubes/win/win.pug',
                             {changeValues}
                         )
                     }
                     else {
                         await MessageUtils.answerMessageFromResource(
                             ctx, 
-                            'text/commands/cubes/win/x2.html',
+                            'text/commands/cubes/win/x2.pug',
                             {changeValues}
                         )
                     }
@@ -93,7 +93,7 @@ export default class CubeYesAction extends CallbackButtonAction {
                         if(loserMoney < money) {
                             await MessageUtils.answerMessageFromResource(
                                 ctx, 
-                                'text/commands/cubes/debt.html',
+                                'text/commands/cubes/debt.pug',
                                 {
                                     changeValues: {
                                         ...changeValues, 

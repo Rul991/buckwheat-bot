@@ -24,7 +24,7 @@ export default class ChangeNameCommand extends BuckwheatCommand {
 
             await MessageUtils.answerMessageFromResource(
                 ctx, 
-                'text/commands/change-name/name.html', 
+                'text/commands/change-name/name.pug', 
                 {changeValues: {link, name}}
             )
         }
@@ -49,7 +49,7 @@ export default class ChangeNameCommand extends BuckwheatCommand {
             if(name.length > MAX_NAME_LENGTH) {
                 await MessageUtils.answerMessageFromResource(
                     ctx, 
-                    'text/commands/change-name/big-name.html', 
+                    'text/commands/change-name/big-name.pug', 
                     {changeValues: {max: MAX_NAME_LENGTH.toString()}}
                 )
                 return
@@ -58,7 +58,7 @@ export default class ChangeNameCommand extends BuckwheatCommand {
             await UserNameService.update(id, name)
             await MessageUtils.answerMessageFromResource(
                 ctx, 
-                'text/commands/change-name/changed.html', 
+                'text/commands/change-name/changed.pug', 
                 {
                     changeValues: {link, name}
                 }

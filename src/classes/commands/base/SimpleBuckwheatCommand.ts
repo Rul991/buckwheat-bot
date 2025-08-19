@@ -40,7 +40,7 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         if(other && this._avoidOther) {
-            await MessageUtils.answerMessageFromResource(ctx, 'text/commands/wrongCommand.html')
+            await MessageUtils.answerMessageFromResource(ctx, 'text/commands/other/wrong-command.pug')
             return
         }
 

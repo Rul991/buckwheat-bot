@@ -31,7 +31,7 @@ export default class BalanceCommand extends BuckwheatCommand {
 
         await MessageUtils.answerMessageFromResource(
             ctx, 
-            'text/commands/casino.html', 
+            'text/commands/balance/balance.pug', 
             {
                 changeValues: {
                     money: BalanceCommand._getCasinoValue(casino, 'money'),

@@ -20,7 +20,7 @@ export default class CreatorCommand extends BuckwheatCommand {
             await UserRankService.update(ctx.from?.id ?? 0, RankUtils.maxRank)
             await MessageUtils.answerMessageFromResource(
                 ctx,
-                'text/commands/creator/done.html',
+                'text/commands/creator/done.pug',
                 {
                     changeValues: {
                         rank: RankUtils.getRankByNumber(RankUtils.maxRank)
@@ -32,7 +32,7 @@ export default class CreatorCommand extends BuckwheatCommand {
 
         await MessageUtils.answerMessageFromResource(
             ctx,
-            'text/commands/creator/error.html',
+            'text/commands/creator/error.pug',
             {
                 changeValues: {
                     dev: RankUtils.getDevStatusByNumber(RankUtils.maxRank)

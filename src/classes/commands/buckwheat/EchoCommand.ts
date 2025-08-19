@@ -17,13 +17,13 @@ export default class EchoCommand extends BuckwheatCommand {
         if(typeof other == 'string' && other.length) {
             await MessageUtils.answerMessageFromResource(
                 ctx, 
-                'text/commands/echo/echo.html',
+                'text/commands/echo/echo.pug',
                 {changeValues: {other}}
             )
             await ctx.deleteMessage()
         }
         else {
-            MessageUtils.answerMessageFromResource(ctx, 'text/commands/echo/echoError.html')
+            MessageUtils.answerMessageFromResource(ctx, 'text/commands/echo/echoError.pug')
         }
     }
 }

@@ -17,7 +17,7 @@ export default class UpdateCommand extends BuckwheatCommand {
             exec('git pull', async (_, stdout) => {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
-                    'text/commands/update/stdout.html',
+                    'text/commands/update/stdout.pug',
                     {changeValues: {stdout}}
                 )
             })
@@ -25,7 +25,7 @@ export default class UpdateCommand extends BuckwheatCommand {
         else {
             await MessageUtils.answerMessageFromResource(
                 ctx,
-                'text/commands/wrongCommand.html',
+                'text/commands/other/wrong-command.pug',
             )
         }
     }

@@ -30,7 +30,7 @@ export default class ItemChangeAction extends CallbackButtonAction {
 
         await MessageUtils.editText(
             ctx,
-            await FileUtils.readTextFromResource(
+            await FileUtils.readPugFromResource(
                 'text/commands/shop/shop.pug',
                 {
                     changeValues: {

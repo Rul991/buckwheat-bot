@@ -33,7 +33,7 @@ export default class TransferCommand extends BuckwheatCommand {
     private static async _sendMessage(ctx: TextContext, filename: string) {
         await MessageUtils.answerMessageFromResource(
             ctx,
-            `text/commands/transfer/${filename}.html`
+            `text/commands/transfer/${filename}.pug`
         )
     }
 

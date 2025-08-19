@@ -1,5 +1,5 @@
 {
     "name": "гречка",
-    "src": "text/commands/buckwheat.html",
+    "src": "text/simple/buckwheat.pug",
     "avoidOther": true
 }

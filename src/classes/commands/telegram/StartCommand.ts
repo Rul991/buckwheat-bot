@@ -16,7 +16,7 @@ export default class StartCommand extends TelegramCommand {
 
         await MessageUtils.answerMessageFromResource(
             ctx, 
-            'text/commands/start.html',
+            'text/commands/other/start.pug',
             {changeValues: {title}}
         )
     }

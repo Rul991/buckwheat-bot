@@ -1,4 +1,3 @@
-import { Context } from 'telegraf'
 import EveryMessageAction from './EveryMessageAction'
 import { CHAT_ID } from '../../../utils/consts'
 import { MessageContext } from '../../../utils/types'

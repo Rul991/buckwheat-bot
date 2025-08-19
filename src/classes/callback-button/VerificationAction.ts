@@ -16,7 +16,7 @@ export default class VerificationAction extends CallbackButtonAction {
 
     private static async _sendAlert(ctx: CallbackButtonContext): Promise<void> {
         await ctx.answerCbQuery(
-            await FileUtils.readTextFromResource('text/alerts/hello.pug')
+            await FileUtils.readPugFromResource('text/alerts/hello.pug')
         )
     }
 

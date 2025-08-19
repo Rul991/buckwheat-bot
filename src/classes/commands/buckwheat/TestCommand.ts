@@ -20,7 +20,7 @@ export default class TestCommand extends BuckwheatCommand {
         }
 
         await MessageUtils.answerMessageFromResource(ctx, 
-            'text/commands/test.html',
+            'text/commands/other/test.pug',
             {
                 changeValues: {other: other ?? ''}
             }

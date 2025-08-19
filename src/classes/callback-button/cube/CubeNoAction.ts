@@ -16,7 +16,7 @@ export default class CubeNoAction extends CallbackButtonAction {
             await MessageUtils.editMarkup(ctx)
             await MessageUtils.answerMessageFromResource(
                 ctx,
-                'text/commands/cubes/cancel.html',
+                'text/commands/cubes/cancel.pug',
                 {
                     changeValues: {
                         link: ContextUtils.getLinkUrl(replyId)

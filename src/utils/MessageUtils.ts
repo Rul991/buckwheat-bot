@@ -75,7 +75,7 @@ export default class MessageUtils {
         path: string,
         options: FileAnswerOptions = {}
     ): Promise<Message.TextMessage> {
-        const text = await FileUtils.readTextFromResource(path, options)
+        const text = await FileUtils.readPugFromResource(path, options)
 
         return await this.answer(
             ctx, 

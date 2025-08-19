@@ -33,7 +33,7 @@ export default class CasinoDice extends BaseDice {
 
         await MessageUtils.answerMessageFromResource(
             ctx, 
-            `text/dice/${filename}.html`, 
+            `text/dice/${filename}.pug`, 
             {
             changeValues: {
                 ...values,
@@ -100,7 +100,7 @@ export default class CasinoDice extends BaseDice {
         const newCasino = await CasinoAccountService.get(id)
 
         if (newCasino && newCasino.money! <= 0) {
-            await MessageUtils.answerMessageFromResource(ctx, `text/dice/end.html`, {changeValues: values})
+            await MessageUtils.answerMessageFromResource(ctx, `text/dice/end.pug`, {changeValues: values})
         }
     }
 

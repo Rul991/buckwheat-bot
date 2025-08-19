@@ -15,12 +15,6 @@ export default class UnbanCommand extends AdminCommand {
     }
 
     protected async _do(ctx: TextContext, replyId: number, _: number): Promise<boolean> {
-        try {
-            await AdminUtils.unban(ctx, replyId)
-            return true
-        }
-        catch(e) {
-            return false
-        }
+        return await AdminUtils.unban(ctx, replyId)
     }
 }

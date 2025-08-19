@@ -5,6 +5,6 @@ import MessageUtils from '../../../utils/MessageUtils'
 
 export default class WrongCommand extends BuckwheatCommand {
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        await MessageUtils.answerMessageFromResource(ctx, 'text/commands/wrongCommand.html')
+        await MessageUtils.answerMessageFromResource(ctx, 'text/commands/other/wrong-command.pug')
     }
 }

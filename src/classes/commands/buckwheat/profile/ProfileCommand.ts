@@ -104,7 +104,7 @@ export default class ProfileCommand extends BuckwheatCommand {
             return
         }
 
-        const messageText = await FileUtils.readTextFromResource(
+        const messageText = await FileUtils.readPugFromResource(
             path,
             {changeValues}
         )

@@ -15,7 +15,7 @@ export default class RankCommand extends BuckwheatCommand {
 
         await MessageUtils.answerMessageFromResource(
             ctx,
-            'text/commands/rank/my.html',
+            'text/commands/rank/my.pug',
             {
                 changeValues: {
                     rank: rank.toString(),
@@ -29,7 +29,7 @@ export default class RankCommand extends BuckwheatCommand {
         if(isNaN(+data)) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
-                'text/commands/rank/wrong.html'
+                'text/commands/rank/wrong.pug'
             )
             return true
         }
@@ -41,7 +41,7 @@ export default class RankCommand extends BuckwheatCommand {
         if(!RankUtils.isRankInBounds(rank)) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
-                'text/commands/rank/out-bounds.html'
+                'text/commands/rank/out-bounds.pug'
             )
             return true
         }
@@ -53,7 +53,7 @@ export default class RankCommand extends BuckwheatCommand {
         if(rank < RankUtils.adminRank) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
-                'text/commands/rank/not-admin.html'
+                'text/commands/rank/not-admin.pug'
             )
             return true
         }
@@ -67,7 +67,7 @@ export default class RankCommand extends BuckwheatCommand {
         if((myRank < rank || myRank <= replyRank) && !isCreator) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
-                'text/commands/rank/low-rank.html'
+                'text/commands/rank/low-rank.pug'
             )
             return true
         }
@@ -109,7 +109,7 @@ export default class RankCommand extends BuckwheatCommand {
                 await UserRankService.update(replyId, rank)
                 await MessageUtils.answerMessageFromResource(
                     ctx,
-                    `text/commands/rank/${mode}.html`,
+                    `text/commands/rank/${mode}.pug`,
                     {
                         changeValues: {
                             ...await ContextUtils.getUser(replyId),

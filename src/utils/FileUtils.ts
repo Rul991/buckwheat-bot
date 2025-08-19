@@ -78,38 +78,32 @@ export default class FileUtils {
         }
     }
 
-    static async readTextFromResource(
+    static async readPugFromResource(
         path: string, 
         options: ReplaceOptions = {}
     ): Promise<string> {
         let text = await this.readToString(join(this._resourceFolder, path))
-        const isPug = path.endsWith('.pug')
-
-        if(!isPug) {
-            return StringUtils.replaceLocalsInText(text, options)
-        }
-        else {
-            try {
-                return render(
-                    text, 
-                    Object.entries(options.changeValues ?? {})
-                        .reduce((prev, [key, value]) => 
-                            ({
-                                ...prev, 
-                                [key]: StringUtils.toHtmlEntitiesIfNeed(
-                                    value, 
-                                    options.isParseToHtmlEntities
-                                )
-                            })
-                        , 
-                        {}
-                    )
+        
+        try {
+            return render(
+                text, 
+                Object.entries(options.changeValues ?? {})
+                    .reduce((prev, [key, value]) => 
+                        ({
+                            ...prev, 
+                            [key]: StringUtils.toHtmlEntitiesIfNeed(
+                                value, 
+                                options.isParseToHtmlEntities
+                            )
+                        })
+                    , 
+                    {}
                 )
-            }
-            catch(e) {
-                Logging.error('pug parsing error:', e)
-                return ''
-            }
+            )
+        }
+        catch(e) {
+            Logging.error('pug parsing error:', e)
+            return ''
         }
     }
 

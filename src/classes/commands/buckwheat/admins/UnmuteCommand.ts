@@ -17,12 +17,6 @@ export default class UnmuteCommand extends AdminCommand {
     }
 
     protected async _do(ctx: TextContext, replyId: number, _: number): Promise<boolean> {
-        try {
-            await AdminUtils.unmute(ctx, replyId)
-            return true
-        }
-        catch(e) {
-            return false
-        }
+        return await AdminUtils.unmute(ctx, replyId)
     }
 }

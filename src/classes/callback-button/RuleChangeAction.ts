@@ -23,7 +23,7 @@ export default class RuleChangeAction extends CallbackButtonAction {
         try {
             await MessageUtils.editText(
                 ctx,
-                await FileUtils.readTextFromResource(
+                await FileUtils.readPugFromResource(
                     'text/commands/rules/rule.pug',
                     {
                         changeValues: {

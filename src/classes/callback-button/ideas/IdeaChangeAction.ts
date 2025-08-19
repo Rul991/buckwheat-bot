@@ -18,7 +18,7 @@ export default class IdeaChangeAction extends CallbackButtonAction {
     static async editMessage(ctx: CallbackButtonContext, {name, text, coolVote, badVote}: Idea, pagesLength: number, newPage: number, id: number) {
         await MessageUtils.editText(
             ctx,
-            await FileUtils.readTextFromResource(
+            await FileUtils.readPugFromResource(
                 'text/commands/ideas/idea.pug',
                 {
                     changeValues: {

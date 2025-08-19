@@ -23,7 +23,7 @@ export default class ContextUtils {
 
         await MessageUtils.answerMessageFromResource(
             ctx,
-            'text/commands/cubes/drop.html',
+            'text/commands/cubes/drop.pug',
             {
                 changeValues: user
             }
@@ -42,7 +42,7 @@ export default class ContextUtils {
 
     static async showAlert(ctx: Context, path = 'text/alerts/alert.pug') {
         await ctx.answerCbQuery(
-            await FileUtils.readTextFromResource(path), 
+            await FileUtils.readPugFromResource(path), 
             { show_alert: true }
         )
     }

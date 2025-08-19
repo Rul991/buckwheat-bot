@@ -10,6 +10,6 @@ export default class CapsCommand extends ConditionalCommand {
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        await MessageUtils.answerMessageFromResource(ctx, 'text/commands/caps.html')
+        await MessageUtils.answerMessageFromResource(ctx, 'text/commands/conditional/caps.pug')
     }
 }

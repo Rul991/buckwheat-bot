@@ -22,7 +22,7 @@ export default class CubeCommand extends BuckwheatCommand {
             if(ctx.message.reply_to_message?.from?.is_bot) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
-                    'text/commands/cubes/bot.html',
+                    'text/commands/cubes/bot.pug',
                     {
                         changeValues: {
                             name: ctx.message.reply_to_message.from.first_name
@@ -38,7 +38,7 @@ export default class CubeCommand extends BuckwheatCommand {
             if(userId == replyId) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
-                    'text/commands/cubes/no-reply.html'
+                    'text/commands/cubes/no-reply.pug'
                 )
                 return
             }
@@ -50,7 +50,7 @@ export default class CubeCommand extends BuckwheatCommand {
             if(needMoney < 0) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
-                    'text/commands/cubes/negative.html'
+                    'text/commands/cubes/negative.pug'
                 )
                 return
             }
@@ -58,7 +58,7 @@ export default class CubeCommand extends BuckwheatCommand {
             if(userMoney < needMoney) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
-                    'text/commands/cubes/not-enough.html'
+                    'text/commands/cubes/not-enough.pug'
                 )
                 return
             }
@@ -76,7 +76,7 @@ export default class CubeCommand extends BuckwheatCommand {
 
             await MessageUtils.answerMessageFromResource(
                 ctx,
-                'text/commands/cubes/done.html',
+                'text/commands/cubes/done.pug',
                 {
                     changeValues: {
                         replyUrl: reply.link,
@@ -92,7 +92,7 @@ export default class CubeCommand extends BuckwheatCommand {
         else {
             await MessageUtils.answerMessageFromResource(
                 ctx,
-                'text/commands/cubes/no-reply.html'
+                'text/commands/cubes/no-reply.pug'
             )
         }
     }

@@ -18,12 +18,6 @@ export default class MuteCommand extends AdminCommand {
     }
 
     protected async _do(ctx: TextContext, replyId: number, time: number): Promise<boolean> {
-        try {
-            await AdminUtils.ban(ctx, replyId, time)
-            return true
-        }
-        catch(e) {
-            return false
-        }
+        return await AdminUtils.ban(ctx, replyId, time)
     }
 }

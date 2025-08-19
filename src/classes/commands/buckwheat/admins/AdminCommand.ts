@@ -26,13 +26,9 @@ export default abstract class AdminCommand extends BuckwheatCommand {
     protected abstract _do(ctx: TextContext, replyId: number, time: number): Promise<boolean>
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        if(ctx.message && 'reply_to_message' in ctx.message) {
-            const replyMessage = ctx.message.reply_to_message!
-            const replyId = replyMessage.from?.id
-            
-            if(!replyId) return
-
-            const adminId = ctx.from?.id ?? 0
+        if(ctx.message.reply_to_message && ctx.message.reply_to_message.from) {
+            const replyId = ctx.message.reply_to_message.from.id
+            const adminId = ctx.from.id
 
             const adminRank = await UserRankService.get(adminId)
             const replyRank = await UserRankService.get(replyId)
@@ -46,7 +42,7 @@ export default abstract class AdminCommand extends BuckwheatCommand {
             ) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
-                    `text/commands/${this._folder}/cancel.html`
+                    `text/commands/${this._folder}/cancel.pug`
                 )
                 return
             }
@@ -56,7 +52,7 @@ export default abstract class AdminCommand extends BuckwheatCommand {
             if(!isDone) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
-                    `text/commands/${this._folder}/error.html`
+                    `text/commands/${this._folder}/error.pug`
                 )
                 return
             }
@@ -66,7 +62,7 @@ export default abstract class AdminCommand extends BuckwheatCommand {
 
             await MessageUtils.answerMessageFromResource(
                 ctx,
-                `text/commands/${this._folder}/${this._isUndoCommand ? 'undo' : 'done'}.html`,
+                `text/commands/${this._folder}/${this._isUndoCommand ? 'undo' : 'done'}.pug`,
                 {
                     changeValues: {
                         replyLink: reply.link,
@@ -83,7 +79,7 @@ export default abstract class AdminCommand extends BuckwheatCommand {
         else {
             await MessageUtils.answerMessageFromResource(
                 ctx,
-                `text/commands/${this._folder}/no-reply.html`
+                `text/commands/${this._folder}/no-reply.pug`
             )
         }
     }

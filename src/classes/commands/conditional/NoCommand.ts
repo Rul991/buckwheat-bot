@@ -10,6 +10,6 @@ export default class NoCommand extends ConditionalCommand {
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        await MessageUtils.answerMessageFromResource(ctx, 'text/commands/no.html')
+        await MessageUtils.answerMessageFromResource(ctx, 'text/commands/conditional/no.pug')
     }
 }
