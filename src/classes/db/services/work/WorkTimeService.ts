@@ -29,4 +29,9 @@ export default class WorkTimeService {
         await WorkRepository.updateOne(id, {lastWork: time})
         return time
     }
+
+    static async add(id: number, time: number): Promise<number> {
+        const currentTime = await this.get(id)
+        return await this.set(id, currentTime + time)
+    }
 }

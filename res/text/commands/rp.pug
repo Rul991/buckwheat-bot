@@ -1,5 +1,6 @@
+- let replyYourself = user.link == reply.link || !hasReply
 | Игрок 
 a(href=user.link) #{user.name}
-|  #{text} #{hasReply ? 'игрока ' : ''}
-a(href=reply.link) #{reply.name}
+|  #{text} #{!replyYourself ? 'игрока ' : ''}
+a(href=reply.link) #{replyYourself ? 'себя' : reply.name}
 | !

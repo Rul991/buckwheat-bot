@@ -20,7 +20,7 @@ export default class RoleplayCommand extends SimpleBuckwheatCommand {
         const reply = ctx.message.reply_to_message?.from ?? 
             {
                 ...ctx.from,
-                first_name: 'себя',
+                first_name: '',
                 id: dummyId
             }
 

@@ -61,6 +61,7 @@ import IdeaChangeAction from '../classes/callback-button/ideas/IdeaChangeAction'
 import DeleteIdeaAction from '../classes/callback-button/ideas/DeleteIdeaAction'
 import VoteAction from '../classes/callback-button/ideas/VoteAction'
 import SaveCommand from '../classes/commands/SaveCommand'
+import InfoCommand from '../classes/commands/InfoCommand'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -194,6 +195,7 @@ const launchBot = async (bot: Bot) => {
         new CookieCommand(),
         new IdeaCommand(),
         new SaveCommand(),
+        new InfoCommand(),
         ...await getSimpleCommands(),
         ...await getRoleplayCommands()
     )

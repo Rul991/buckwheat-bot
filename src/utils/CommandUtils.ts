@@ -13,7 +13,7 @@ export default class CommandUtils {
         const lowerFirstWord = firstWord.toLowerCase()
 
         for (const name of this._botNames) {
-            if(lowerFirstWord.startsWith(name)) {
+            if(lowerFirstWord == name || lowerFirstWord == `${name},`) {
                 isCommand = true
                 break
             }

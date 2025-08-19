@@ -20,7 +20,7 @@ export default class IdeaCommand extends BuckwheatCommand {
                 ctx,
                 'text/commands/ideas/start.pug',
                 {
-                    inlineKeyboard: ['start_ideas', '@'],
+                    inlineKeyboard: ['start_ideas', `${ctx.from.id}`],
                     changeValues: {
                         length: (await IdeasService.getIdeas()).length
                     }

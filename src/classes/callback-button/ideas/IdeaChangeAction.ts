@@ -1,5 +1,6 @@
 import Idea from '../../../interfaces/schemas/Idea'
 import { PARSE_MODE } from '../../../utils/consts'
+import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import Pager from '../../../utils/Pager'
@@ -32,7 +33,7 @@ export default class IdeaChangeAction extends CallbackButtonAction {
             ),
             {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get('ideachange', `${newPage}`)
+                    inline_keyboard: await InlineKeyboardManager.get('ideachange', `${newPage}_${ctx.from.id}`)
                 },
                 parse_mode: PARSE_MODE
             }
@@ -42,7 +43,12 @@ export default class IdeaChangeAction extends CallbackButtonAction {
     async execute(ctx: CallbackButtonContext, data: string): Promise<string | void> {
         const ideas = await IdeasService.getIdeas()
         const newPage = Pager.clampPages(data, ideas.length)
+        const userId = +(data.split('_')[2])
 
+        if(userId !== ctx.from.id) {
+            await ContextUtils.showAlert(ctx)
+            return
+        }
         if(!ideas[newPage]) return 'Идей нет!'
         const idea = ideas[newPage]
 

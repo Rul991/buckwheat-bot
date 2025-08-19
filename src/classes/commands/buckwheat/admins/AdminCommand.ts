@@ -9,6 +9,7 @@ import RankUtils from '../../../../utils/RankUtils'
 import TimeUtils from '../../../../utils/TimeUtils'
 import UserNameService from '../../../db/services/user/UserNameService'
 import UserRankService from '../../../db/services/user/UserRankService'
+import StringUtils from '../../../../utils/StringUtils'
 
 export default abstract class AdminCommand extends BuckwheatCommand {
     protected _folder: string
@@ -37,7 +38,8 @@ export default abstract class AdminCommand extends BuckwheatCommand {
             const replyRank = await UserRankService.get(replyId)
 
             const isCreator = await ContextUtils.isCreator(ctx)
-            const time = TimeUtils.parseTimeToMilliseconds(other ?? 'навсегда')
+            const [textTime, reason] = other ? StringUtils.splitByCommands(other, 1) : ['навсегда', '']
+            const time = TimeUtils.parseTimeToMilliseconds(textTime)
 
             if(!(RankUtils.canUse(adminRank, replyRank, this._minimumRank) || isCreator) 
                 || replyId == adminId
@@ -71,7 +73,8 @@ export default abstract class AdminCommand extends BuckwheatCommand {
                         adminLink: admin.link,
                         admName: admin.name,
                         nameReply: reply.name,
-                        time: TimeUtils.formatMillisecondsToTime(time)
+                        time: TimeUtils.formatMillisecondsToTime(time),
+                        reason: reason ? `Причина: ${reason}` : ''
                     }
                 }
             )

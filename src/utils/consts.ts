@@ -51,6 +51,7 @@ export const MAX_WORK = 20
 export const CATALOG_BOOST = 3
 
 export const WORK_TIME = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * 3
+export const COOKIE_WORK_TIME = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * -10
 export const RUBLE_TO_COIN = 1.5
 
 export const DEFAULT_USER_NAME = 'игрок'

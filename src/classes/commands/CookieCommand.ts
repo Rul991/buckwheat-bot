@@ -1,6 +1,8 @@
+import { COOKIE_WORK_TIME } from '../../utils/consts'
 import MessageUtils from '../../utils/MessageUtils'
 import { TextContext, MaybeString } from '../../utils/types'
 import InventoryItemService from '../db/services/items/InventoryItemService'
+import WorkTimeService from '../db/services/work/WorkTimeService'
 import BuckwheatCommand from './base/BuckwheatCommand'
 
 export default class CookieCommand extends BuckwheatCommand {
@@ -40,6 +42,7 @@ export default class CookieCommand extends BuckwheatCommand {
             )
         }
         else {
+            await WorkTimeService.add(userId, COOKIE_WORK_TIME)
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/cookie/eat.pug'
