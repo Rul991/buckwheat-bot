@@ -1,4 +1,3 @@
-import { Context } from 'telegraf'
 import { MaybeString, TextContext } from '../../../../utils/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import ContextUtils from '../../../../utils/ContextUtils'
@@ -32,6 +31,20 @@ export default class ChangeNameCommand extends BuckwheatCommand {
 
         else {
             const name = StringUtils.validate(other)
+            const names = await UserNameService.getAll()
+
+            if(names.includes(name)) {
+                await MessageUtils.answerMessageFromResource(
+                    ctx, 
+                    'text/commands/change-name/exist.pug', 
+                    {
+                        changeValues: {
+                            name
+                        }
+                    }
+                )
+                return
+            }
 
             if(name.length > MAX_NAME_LENGTH) {
                 await MessageUtils.answerMessageFromResource(
