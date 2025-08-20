@@ -7,6 +7,7 @@ export default class ClassUtils {
         sorcerer: 'Маг',
         engineer: 'Инженер',
         bard: 'Бард',
+        boss: 'Финальный босс',
         unknown: 'Не выбрано'
     }
 
@@ -16,6 +17,7 @@ export default class ClassUtils {
         sorcerer: '🪄',
         engineer: '🧤',
         bard: '🎸',
+        boss: '🤡',
         unknown: '🤷‍♂️'
     }
 

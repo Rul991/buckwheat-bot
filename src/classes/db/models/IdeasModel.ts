@@ -10,7 +10,8 @@ const ideaSchema = new Schema<SubType>({
     text: { type: String, required: true },
     voters: { type: [Number], default: [] },
     coolVote: { type: Number, default: 0 },
-    badVote: { type: Number, default: 0}
+    badVote: { type: Number, default: 0},
+    createdAtTime: { type: Number, default: 0},
 })
 
 const ideasSchema = new Schema<Type>(

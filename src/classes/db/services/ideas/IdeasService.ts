@@ -28,6 +28,7 @@ export default class IdeasService {
 
     static async add(idea: Idea): Promise<Ideas | null> {
         return await this._update(ideas => {
+            idea.createdAtTime = Date.now()
             ideas.push(idea)
             return ideas
         })

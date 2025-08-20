@@ -109,6 +109,7 @@ export default class MoneyTopCommand extends BuckwheatCommand {
                     sorcerer: [],
                     engineer: [],
                     bard: [],
+                    boss: [],
                     unknown: []
                 }
 

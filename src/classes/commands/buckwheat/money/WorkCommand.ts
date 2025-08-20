@@ -22,6 +22,7 @@ export default class WorkCommand extends BuckwheatCommand {
 
     private static async _getWorkTypes(): Promise<Record<ClassTypes, string[]>> {
         return await FileUtils.readJsonFromResource<Record<ClassTypes, string[]>>('json/other/work_types.json') ?? {
+            boss: [],
             knight: [],
             thief: [],
             sorcerer: [],

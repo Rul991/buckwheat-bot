@@ -44,7 +44,7 @@ export const EXTRA_RANDOM_PRIZE = 100
 export const EXTRA_RANDOM_NUMBER = 1
 
 export const WHERE_MARRIAGE_TIME = 10000
-export const WHERE_MARRIAGE_MESSAGES = 3
+export const WHERE_MARRIAGE_MESSAGES = 1
 
 export const MIN_WORK = 5
 export const MAX_WORK = 20
@@ -61,6 +61,8 @@ export const DEFAULT_USER_NAME_CAPITAL = DEFAULT_USER_NAME
         DEFAULT_USER_NAME[0].toUpperCase()
     )
 
-export const MAX_MESSAGES_PER_TIME = 15
+export const MAX_MESSAGES_PER_TIME = 7
 export const NOT_SPAM_TIME = MILLISECONDS_IN_SECOND * MAX_MESSAGES_PER_TIME * 2
 export const TAB_NEW_LINE = '\n       '
+
+export const VOTE_TIME = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY * 3

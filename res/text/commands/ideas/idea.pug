@@ -1,7 +1,12 @@
+- let title = `📌 Идея от ${name}`
 code [#{currentPage + 1} \ #{pagesLength}] 
-b 📌 Идея от #{name}
+b 
+    if canVote
+        | #{title}
+    else 
+        s #{title}
 | 
 |
 | #{text}
 |
-| 👍 - #{coolVote}                                      👎 - #{badVote} 
+| 👍 - #{coolVote}                                      👎 - #{badVote}

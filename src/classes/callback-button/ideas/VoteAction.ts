@@ -1,3 +1,5 @@
+import { VOTE_TIME } from '../../../utils/consts'
+import IdeaUtils from '../../../utils/IdeaUtils'
 import { CallbackButtonContext } from '../../../utils/types'
 import IdeasService from '../../db/services/ideas/IdeasService'
 import CallbackButtonAction from '../CallbackButtonAction'
@@ -20,6 +22,10 @@ export default class VoteAction extends CallbackButtonAction {
 
         if(!idea) {
             return 'Такой идеи нет!'
+        }
+
+        if(!IdeaUtils.canVote(idea.createdAtTime!)) {
+            return 'Время голосование прошло!'
         }
         
         for (const voter of idea.voters!) {

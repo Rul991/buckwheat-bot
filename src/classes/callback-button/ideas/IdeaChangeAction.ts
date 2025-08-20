@@ -2,6 +2,7 @@ import Idea from '../../../interfaces/schemas/Idea'
 import { PARSE_MODE } from '../../../utils/consts'
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
+import IdeaUtils from '../../../utils/IdeaUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import Pager from '../../../utils/Pager'
 import { CallbackButtonContext } from '../../../utils/types'
@@ -15,7 +16,7 @@ export default class IdeaChangeAction extends CallbackButtonAction {
         this._name = 'ideachange'
     }
 
-    static async editMessage(ctx: CallbackButtonContext, {name, text, coolVote, badVote}: Idea, pagesLength: number, newPage: number, id: number) {
+    static async editMessage(ctx: CallbackButtonContext, {name, text, coolVote, badVote, createdAtTime}: Idea, pagesLength: number, newPage: number, id: number) {
         await MessageUtils.editText(
             ctx,
             await FileUtils.readPugFromResource(
@@ -27,7 +28,8 @@ export default class IdeaChangeAction extends CallbackButtonAction {
                         currentPage: newPage,
                         pagesLength,
                         coolVote,
-                        badVote
+                        badVote,
+                        canVote: IdeaUtils.canVote(createdAtTime!)
                     }
                 }
             ),

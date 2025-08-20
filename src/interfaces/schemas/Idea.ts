@@ -4,4 +4,5 @@ export default interface Idea {
     voters?: number[]
     coolVote?: number
     badVote?: number
+    createdAtTime?: number
 }

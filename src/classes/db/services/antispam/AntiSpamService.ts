@@ -40,6 +40,6 @@ export default class AntiSpamService {
         await this.updateTimeIfNeed(id)
         const count = await AntiSpamService.get(id, 'lastMessagesCount')
 
-        return count > MAX_MESSAGES_PER_TIME
+        return count >= MAX_MESSAGES_PER_TIME
     }
 }

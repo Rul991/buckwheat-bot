@@ -49,7 +49,7 @@ export type InventoryItemType = 'consumable' | 'oneInfinity' | 'manyInfinity'
 export type Constructor<T> = any
 export type AsyncOrSync<T = void> = Promise<T> | T
 
-export type ClassTypes = 'knight' | 'thief' | 'sorcerer' | 'engineer' | 'bard' | 'unknown'
+export type ClassTypes = 'knight' | 'thief' | 'sorcerer' | 'engineer' | 'bard' | 'unknown' | 'boss'
 export type ClassRecord = Record<ClassTypes, string>
 
 export type ExtraEditMessageText = {
