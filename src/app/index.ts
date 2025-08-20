@@ -60,6 +60,7 @@ import DeleteIdeaAction from '../classes/callback-button/ideas/DeleteIdeaAction'
 import VoteAction from '../classes/callback-button/ideas/VoteAction'
 import SaveCommand from '../classes/commands/SaveCommand'
 import InfoCommand from '../classes/commands/InfoCommand'
+import MoneyDropCommand from '../classes/commands/buckwheat/MoneyDropCommand'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -194,10 +195,11 @@ const launchBot = async (bot: Bot) => {
         new IdeaCommand(),
         new SaveCommand(),
         new InfoCommand(),
+        new MoneyDropCommand(),
         ...await getSimpleCommands(),
         ...await getRoleplayCommands()
     )
-
+    
     // tg
     bot.addCommands(
         new StartCommand()
