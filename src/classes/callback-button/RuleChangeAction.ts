@@ -1,9 +1,9 @@
-import { PARSE_MODE } from '../../utils/consts'
+import { PARSE_MODE } from '../../utils/values/consts'
 import FileUtils from '../../utils/FileUtils'
 import Logging from '../../utils/Logging'
 import MessageUtils from '../../utils/MessageUtils'
 import Pager from '../../utils/Pager'
-import { CallbackButtonContext } from '../../utils/types'
+import { CallbackButtonContext } from '../../utils/values/types'
 import RulesService from '../db/services/chat/RulesService'
 import InlineKeyboardManager from '../main/InlineKeyboardManager'
 import CallbackButtonAction from './CallbackButtonAction'
@@ -16,7 +16,7 @@ export default class RuleChangeAction extends CallbackButtonAction {
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<void> {
         const rules = await RulesService.get()
-        const currentPage = Pager.clampPages(data, rules.length)
+        const currentPage = Pager.wrapPages(data, rules.length)
 
         if(currentPage === -1) return
 

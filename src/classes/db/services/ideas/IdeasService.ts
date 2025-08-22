@@ -1,7 +1,7 @@
 import IdeasRepository from '../../repositories/IdeasRepository'
 import Ideas from '../../../../interfaces/schemas/Ideas'
 import Idea from '../../../../interfaces/schemas/Idea'
-import { AsyncOrSync } from '../../../../utils/types'
+import { AsyncOrSync } from '../../../../utils/values/types'
 
 export default class IdeasService {
     private static async _update(callback: (ideas: Idea[]) => AsyncOrSync<Idea[]>): Promise<Ideas | null> {

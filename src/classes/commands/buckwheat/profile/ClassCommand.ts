@@ -1,5 +1,5 @@
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../../utils/types'
+import { TextContext, MaybeString } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class ClassCommand extends BuckwheatCommand {

@@ -1,6 +1,9 @@
-import { DEFAULT_USER_NAME, DEFAULT_USER_NAME_CAPITAL } from './consts'
+import { DEFAULT_USER_NAME_CAPITAL } from './values/consts'
 
 export default class RankUtils {
+    private static _wrongRankName = 'HH'
+    private static _wrongRankEmoji = '❓'
+
     private static _rankNames = [
         'Гнида',
         'Гадина',
@@ -28,34 +31,34 @@ export default class RankUtils {
         'Шалунишки'
     ]
 
-    static adminRank = 4
-    static moderatorRank = 3
-    
-    static minRank = 0
-    static maxRank = this._rankNames.length - 1
+    static min = 0
+    static max = this._rankNames.length - 1
 
+    static admin = this.max - 1
+    static moderator = this.max - 2
+    
     static isRankInBounds(rank: number): boolean {
-        return rank <= RankUtils.maxRank && rank >= RankUtils.minRank
+        return rank <= RankUtils.max && rank >= RankUtils.min
     }
 
     static getDevStatusByNumber(rank: number): string {
-        if(rank >= this.adminRank) return 'Разработчик'
+        if(rank >= this.admin) return 'Разработчик'
         else return DEFAULT_USER_NAME_CAPITAL
     }
 
     static getRankByNumber(rank: number): string {
-        return this._rankNames[this._rankNames.length - rank - 1] ?? 'НН'
+        return this._rankNames[this._rankNames.length - rank - 1] ?? this._wrongRankName
     }
 
     static getRanksByNumber(rank: number): string {
-        return this._ranksNames[this._ranksNames.length - rank - 1] ?? 'НН'
+        return this._ranksNames[this._ranksNames.length - rank - 1] ?? this._wrongRankName
     }
 
     static getEmojiByRank(rank: number): string {
-        return this._rankEmoji[this._rankEmoji.length - rank - 1] ?? ''
+        return this._rankEmoji[this._rankEmoji.length - rank - 1] ?? this._wrongRankEmoji
     }
 
-    static canUse(userRank: number, replyRank: number, adminRank: number = this.adminRank): boolean {
+    static canUse(userRank: number, replyRank: number, adminRank: number = this.admin): boolean {
         return (userRank >= adminRank && replyRank < userRank)
     }
 }

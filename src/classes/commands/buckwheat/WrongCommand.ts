@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString, TextContext } from '../../../utils/types'
+import { MaybeString, TextContext } from '../../../utils/values/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 import MessageUtils from '../../../utils/MessageUtils'
 

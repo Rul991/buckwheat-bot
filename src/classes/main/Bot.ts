@@ -5,7 +5,7 @@ import BaseDice from '../dice/BaseDice'
 import EveryMessageAction from '../actions/every/EveryMessageAction'
 import CallbackButtonAction from '../callback-button/CallbackButtonAction'
 import Logging from '../../utils/Logging'
-import { CHAT_ID, MODE } from '../../utils/consts'
+import { CHAT_ID, MODE } from '../../utils/values/consts'
 import FileUtils from '../../utils/FileUtils'
 import BaseHandler from './handlers/BaseHandler'
 import TelegramCommandHandler from './handlers/commands/TelegramCommandHandler'
@@ -51,6 +51,10 @@ export default class Bot {
             this._newMemberHandler,
             this._photoHandler
         ]
+    }
+
+    get bot(): Telegraf {
+        return this._bot
     }
 
     private _addTelegramCommand(command: TelegramCommand): void {
@@ -103,7 +107,7 @@ export default class Bot {
         }
     }
 
-    launch(): void {
+    async launch(callback = async () => {}): Promise<void> {
         this._handlers.forEach(handler => 
             handler.setup(this._bot)
         )
@@ -122,8 +126,9 @@ export default class Bot {
         })
 
         try {
-            this._bot.launch(async () => {
+            await this._bot.launch(async () => {
                 this._launchCallback()
+                await callback()
             })
         }
         catch(e) {

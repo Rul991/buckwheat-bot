@@ -1,5 +1,5 @@
 import Work from '../../../../interfaces/schemas/Work'
-import { WORK_TIME } from '../../../../utils/consts'
+import { WORK_TIME } from '../../../../utils/values/consts'
 import WorkRepository from '../../repositories/WorkRepository'
 import InventoryItemService from '../items/InventoryItemService'
 import WorkService from './WorkService'

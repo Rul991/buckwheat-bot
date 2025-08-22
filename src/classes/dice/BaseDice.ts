@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { DiceContext, DiceValues } from '../../utils/types'
+import { DiceContext, DiceValues } from '../../utils/values/types'
 import BaseAction from '../actions/base/BaseAction'
 
 export default abstract class BaseDice extends BaseAction {

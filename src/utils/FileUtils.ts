@@ -40,7 +40,7 @@ export default class FileUtils {
             return result
         }
         catch(e) {
-            Logging.error(`cant read text from ${path}: ${e}`)
+            Logging.error(`Cant read text from ${path}: ${e}`)
             return ``
         }
     }
@@ -73,7 +73,7 @@ export default class FileUtils {
             return JSON.parse(text)
         }
         catch(e) {
-            Logging.warn(`cant read json from ${path}: ${e}`)
+            Logging.warn(`Cant read json from ${path}: ${e}`)
             return null
         }
     }
@@ -87,22 +87,11 @@ export default class FileUtils {
         try {
             return render(
                 text, 
-                Object.entries(options.changeValues ?? {})
-                    .reduce((prev, [key, value]) => 
-                        ({
-                            ...prev, 
-                            [key]: StringUtils.toHtmlEntitiesIfNeed(
-                                value, 
-                                options.isParseToHtmlEntities
-                            )
-                        })
-                    , 
-                    {}
-                )
+                options.changeValues ?? {}
             )
         }
         catch(e) {
-            Logging.error('pug parsing error:', e)
+            Logging.error('Pug parsing error:', e)
             return ''
         }
     }

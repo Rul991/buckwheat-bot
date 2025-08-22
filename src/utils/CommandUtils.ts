@@ -1,5 +1,5 @@
 import StringUtils from './StringUtils'
-import { CommandStrings } from './types'
+import { CommandStrings } from './values/types'
 
 export default class CommandUtils {
     private static _botNames: string[] = ['баквит', 'гречка']

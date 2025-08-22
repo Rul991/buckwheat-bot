@@ -1,4 +1,4 @@
-import { HOURS_IN_DAY, INFINITY_SYMB, MILLISECONDS_IN_SECOND, MINUTES_IN_HOUR, SECONDS_IN_MINUTE } from './consts'
+import { HOURS_IN_DAY, INFINITY_SYMB, MILLISECONDS_IN_SECOND, MINUTES_IN_HOUR, SECONDS_IN_MINUTE } from './values/consts'
 
 export default class TimeUtils {
     private static _nameToNumber = {

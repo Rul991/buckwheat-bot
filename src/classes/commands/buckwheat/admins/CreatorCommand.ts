@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString, TextContext } from '../../../../utils/types'
+import { MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
@@ -17,13 +17,13 @@ export default class CreatorCommand extends BuckwheatCommand {
         let member = await ContextUtils.getChatMember(ctx, ctx.from.id)
 
         if(member?.status == 'creator') {
-            await UserRankService.update(ctx.from?.id ?? 0, RankUtils.maxRank)
+            await UserRankService.update(ctx.from?.id ?? 0, RankUtils.max)
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/creator/done.pug',
                 {
                     changeValues: {
-                        rank: RankUtils.getRankByNumber(RankUtils.maxRank)
+                        rank: RankUtils.getRankByNumber(RankUtils.max)
                     }
                 }
             )
@@ -35,7 +35,7 @@ export default class CreatorCommand extends BuckwheatCommand {
             'text/commands/creator/error.pug',
             {
                 changeValues: {
-                    dev: RankUtils.getDevStatusByNumber(RankUtils.maxRank)
+                    dev: RankUtils.getDevStatusByNumber(RankUtils.max)
                 }
             }
         )

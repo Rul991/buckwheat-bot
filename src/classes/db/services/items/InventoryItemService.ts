@@ -1,7 +1,7 @@
 import InventoryItem from '../../../../interfaces/schemas/InventoryItem'
 import Items from '../../../../interfaces/schemas/Items'
 import InventoryItemsUtils from '../../../../utils/InventoryItemsUtils'
-import { AsyncOrSync, InventoryItemDescription, InventoryItemType } from '../../../../utils/types'
+import { AsyncOrSync, InventoryItemDescription, InventoryItemType } from '../../../../utils/values/types'
 import ItemsRepository from '../../repositories/ItemsRepository'
 import ItemsService from './ItemsService'
 

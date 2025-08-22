@@ -1,8 +1,8 @@
-import AdminUtils from '../../utils/AdminUtils'
-import ContextUtils from '../../utils/ContextUtils'
-import MessageUtils from '../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../utils/types'
-import BuckwheatCommand from './base/BuckwheatCommand'
+import AdminUtils from '../../../utils/AdminUtils'
+import ContextUtils from '../../../utils/ContextUtils'
+import MessageUtils from '../../../utils/MessageUtils'
+import { TextContext, MaybeString } from '../../../utils/values/types'
+import BuckwheatCommand from '../base/BuckwheatCommand'
 
 export default class SaveCommand extends BuckwheatCommand {
     constructor() {
@@ -12,7 +12,7 @@ export default class SaveCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        if(other != 'и выйти') {
+        if(other?.toLowerCase() != 'и выйти') {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/wrongCommand.pug'

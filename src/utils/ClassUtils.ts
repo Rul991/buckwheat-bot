@@ -1,6 +1,8 @@
-import { ClassTypes, ClassRecord } from './types'
+import { ClassTypes, ClassRecord } from './values/types'
 
 export default class ClassUtils {
+    static defaultClassName: 'unknown' = 'unknown'
+
     private static _classNames: ClassRecord = {
         knight: 'Рыцарь',
         thief: 'Вор',
@@ -8,7 +10,7 @@ export default class ClassUtils {
         engineer: 'Инженер',
         bard: 'Бард',
         boss: 'Финальный босс',
-        unknown: 'Не выбрано'
+        [this.defaultClassName]: 'Не выбрано'
     }
 
     private static _classEmojies: ClassRecord = {
@@ -18,14 +20,27 @@ export default class ClassUtils {
         engineer: '🧤',
         bard: '🎸',
         boss: '🤡',
-        unknown: '🤷‍♂️'
+        [this.defaultClassName]: '🤷‍♂️'
     }
-
+    
     static getEmoji(type: ClassTypes): string {
         return this._classEmojies[type]
     }
 
     static getName(type: ClassTypes): string {
         return this._classNames[type]
+    }
+
+    static getNames(): ClassRecord {
+        return this._classNames
+    }
+
+    static getArray(): Record<ClassTypes, string[]> {
+        return Object.entries(this._classNames).reduce(
+            (obj, [key]) => {
+                return {...obj, [key as ClassTypes]: []}
+            }, 
+            {} as Record<ClassTypes, string[]>
+        )
     }
 }

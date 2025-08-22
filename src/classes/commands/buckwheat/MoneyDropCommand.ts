@@ -1,7 +1,8 @@
-import { MONEY_DROP_TIME } from '../../../utils/consts'
+import { MONEY_DROP_TIME } from '../../../utils/values/consts'
 import MessageUtils from '../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../utils/types'
+import { TextContext, MaybeString } from '../../../utils/values/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
+import CasinoGetService from '../../db/services/casino/CasinoGetService'
 
 export default class MoneyDropCommand extends BuckwheatCommand {
     constructor() {
@@ -11,6 +12,14 @@ export default class MoneyDropCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+        if(await CasinoGetService.getMoney(ctx.from.id) <= 0) {
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/money-drop/no-money.pug'
+            )
+            return
+        }
+
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/money-drop/money.pug'

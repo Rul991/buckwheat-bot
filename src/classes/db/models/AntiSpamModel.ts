@@ -1,16 +1,21 @@
-import { model, Schema } from 'mongoose'
 import AntiSpam from '../../../interfaces/schemas/AntiSpam'
+import { createModel } from './modelCreators'
 
-type Type = AntiSpam
-
-const spamSchema = new Schema<Type>(
-    {
-        id: {type: Number, required: true, unique: true},
-        lastMessagesCount: {type: Number, default: 0},
-        lastMessageGroupTime: {type: Number, default: 0}
+export default createModel<AntiSpam>({
+    name: 'AntiSpam',
+    definition: {
+        id: { 
+            type: Number, 
+            required: true, 
+            unique: true 
+        },
+        lastMessagesCount: {
+            type: Number,
+            default: 0
+        },
+        lastMessageGroupTime: {
+            type: Number,
+            default: 0,
+        }
     }
-)
-
-const AntiSpamModel = model<Type>('AntiSpam', spamSchema)
-
-export default AntiSpamModel
+})

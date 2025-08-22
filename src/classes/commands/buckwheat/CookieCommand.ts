@@ -1,9 +1,10 @@
-import { COOKIE_WORK_TIME } from '../../utils/consts'
-import MessageUtils from '../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../utils/types'
-import InventoryItemService from '../db/services/items/InventoryItemService'
-import WorkTimeService from '../db/services/work/WorkTimeService'
-import BuckwheatCommand from './base/BuckwheatCommand'
+import { COOKIE_WORK_TIME } from '../../../utils/values/consts'
+import ContextUtils from '../../../utils/ContextUtils'
+import MessageUtils from '../../../utils/MessageUtils'
+import { TextContext, MaybeString } from '../../../utils/values/types'
+import InventoryItemService from '../../db/services/items/InventoryItemService'
+import WorkTimeService from '../../db/services/work/WorkTimeService'
+import BuckwheatCommand from '../base/BuckwheatCommand'
 
 export default class CookieCommand extends BuckwheatCommand {
     constructor() {
@@ -38,7 +39,10 @@ export default class CookieCommand extends BuckwheatCommand {
 
             await MessageUtils.answerMessageFromResource(
                 ctx,
-                'text/commands/cookie/share.pug'
+                'text/commands/cookie/share.pug',
+                {
+                    changeValues: await ContextUtils.getUser(reply.from.id)
+                }
             )
         }
         else {

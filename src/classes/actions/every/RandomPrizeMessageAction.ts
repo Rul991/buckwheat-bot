@@ -1,7 +1,7 @@
-import { RANDOM_PRIZE_CHANCE } from '../../../utils/consts'
+import { RANDOM_PRIZE_CHANCE } from '../../../utils/values/consts'
 import MessageUtils from '../../../utils/MessageUtils'
 import RandomUtils from '../../../utils/RandomUtils'
-import { MessageContext } from '../../../utils/types'
+import { MessageContext } from '../../../utils/values/types'
 import EveryMessageAction from './EveryMessageAction'
 
 export default class RandomPrizeMessageAction extends EveryMessageAction {

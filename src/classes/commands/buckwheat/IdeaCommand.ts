@@ -1,7 +1,7 @@
-import MessageUtils from '../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../utils/types'
-import IdeasService from '../db/services/ideas/IdeasService'
-import BuckwheatCommand from './base/BuckwheatCommand'
+import MessageUtils from '../../../utils/MessageUtils'
+import { TextContext, MaybeString } from '../../../utils/values/types'
+import IdeasService from '../../db/services/ideas/IdeasService'
+import BuckwheatCommand from '../base/BuckwheatCommand'
 
 export default class IdeaCommand extends BuckwheatCommand {
     constructor() {

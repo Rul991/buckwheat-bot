@@ -1,11 +1,11 @@
 import Idea from '../../../interfaces/schemas/Idea'
-import { PARSE_MODE } from '../../../utils/consts'
+import { PARSE_MODE } from '../../../utils/values/consts'
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
 import IdeaUtils from '../../../utils/IdeaUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import Pager from '../../../utils/Pager'
-import { CallbackButtonContext } from '../../../utils/types'
+import { CallbackButtonContext } from '../../../utils/values/types'
 import IdeasService from '../../db/services/ideas/IdeasService'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import CallbackButtonAction from '../CallbackButtonAction'
@@ -44,7 +44,7 @@ export default class IdeaChangeAction extends CallbackButtonAction {
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<string | void> {
         const ideas = await IdeasService.getIdeas()
-        const newPage = Pager.clampPages(data, ideas.length)
+        const newPage = Pager.wrapPages(data, ideas.length)
         const userId = +(data.split('_')[2])
 
         if(userId !== ctx.from.id) {

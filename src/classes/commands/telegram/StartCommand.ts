@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MaybeString, TextContext } from '../../../utils/types'
+import { MaybeString, TextContext } from '../../../utils/values/types'
 import ContextUtils from '../../../utils/ContextUtils'
 import TelegramCommand from '../base/TelegramCommand'
 import MessageUtils from '../../../utils/MessageUtils'

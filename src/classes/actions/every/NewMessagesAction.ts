@@ -1,4 +1,4 @@
-import { MessageContext } from '../../../utils/types'
+import { MessageContext } from '../../../utils/values/types'
 import MessagesService from '../../db/services/messages/MessagesService'
 import EveryMessageAction from './EveryMessageAction'
 

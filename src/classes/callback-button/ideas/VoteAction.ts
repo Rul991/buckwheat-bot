@@ -1,6 +1,6 @@
-import { VOTE_TIME } from '../../../utils/consts'
+import { VOTE_TIME } from '../../../utils/values/consts'
 import IdeaUtils from '../../../utils/IdeaUtils'
-import { CallbackButtonContext } from '../../../utils/types'
+import { CallbackButtonContext } from '../../../utils/values/types'
 import IdeasService from '../../db/services/ideas/IdeasService'
 import CallbackButtonAction from '../CallbackButtonAction'
 import IdeaChangeAction from './IdeaChangeAction'

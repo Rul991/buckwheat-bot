@@ -1,7 +1,7 @@
-import MessageUtils from '../../utils/MessageUtils'
-import RandomUtils from '../../utils/RandomUtils'
-import { TextContext, MaybeString } from '../../utils/types'
-import BuckwheatCommand from './base/BuckwheatCommand'
+import MessageUtils from '../../../utils/MessageUtils'
+import RandomUtils from '../../../utils/RandomUtils'
+import { TextContext, MaybeString } from '../../../utils/values/types'
+import BuckwheatCommand from '../base/BuckwheatCommand'
 
 export default class InfoCommand extends BuckwheatCommand {
     private static _descriptions: {chance: number, texts: string[]}[] = [

@@ -1,7 +1,7 @@
-import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
 import MessageUtils from '../../../utils/MessageUtils'
-import { MaybeString, TextContext } from '../../../utils/types'
+import RoleplayUtils from '../../../utils/RoleplayUtils'
+import { MaybeString, TextContext } from '../../../utils/values/types'
 import SimpleBuckwheatCommand from './SimpleBuckwheatCommand'
 
 export default class RoleplayCommand extends SimpleBuckwheatCommand {
@@ -15,34 +15,9 @@ export default class RoleplayCommand extends SimpleBuckwheatCommand {
     }
 
     protected async _sendMessageByText(ctx: TextContext, text: string): Promise<void> {
-        const dummyId = 0
-
-        const reply = ctx.message.reply_to_message?.from ?? 
-            {
-                ...ctx.from,
-                first_name: '',
-                id: dummyId
-            }
-
-        const hasReply = reply.id != dummyId
-
-        await MessageUtils.answerMessageFromResource(
+        await MessageUtils.answer(
             ctx,
-            'text/commands/other/rp.pug',
-            {
-                changeValues: {
-                    text,
-                    user: await ContextUtils.getUser(
-                        ctx.from.id, 
-                        ctx.from.first_name
-                    ),
-                    reply: await ContextUtils.getUser(
-                        reply.id, 
-                        reply.first_name
-                    ),
-                    hasReply
-                }
-            }
+            await RoleplayUtils.getMessage(ctx, text)
         )
     }
 

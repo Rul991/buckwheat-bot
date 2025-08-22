@@ -1,5 +1,5 @@
 import BaseAction from '../actions/base/BaseAction'
-import { CallbackButtonContext } from '../../utils/types'
+import { CallbackButtonContext } from '../../utils/values/types'
 
 export default abstract class CallbackButtonAction extends BaseAction {
     abstract execute(ctx: CallbackButtonContext, data: string): Promise<string | void>

@@ -1,12 +1,12 @@
 import { InlineKeyboardMarkup, Message, ParseMode } from 'telegraf/types'
 import { Context } from 'telegraf'
 import InlineKeyboardManager from '../classes/main/InlineKeyboardManager'
-import { MAX_MESSAGE_LENGTH, PARSE_MODE } from './consts'
+import { MAX_MESSAGE_LENGTH, PARSE_MODE } from './values/consts'
 import FileUtils from './FileUtils'
 import Logging from './Logging'
 import AnswerOptions from '../interfaces/options/AnswerOptions'
 import FileAnswerOptions from '../interfaces/options/FileAnswerOptions'
-import { ExtraEditMessageText } from './types'
+import { ExtraEditMessageText } from './values/types'
 
 export default class MessageUtils {
     static async answer(
@@ -68,6 +68,13 @@ export default class MessageUtils {
 
     static async todo(ctx: Context): Promise<Message.TextMessage> {
         return this.answer(ctx, 'Я еще не сделал это!')
+    }
+
+    static async sendWrongCommandMessage(ctx: Context): Promise<void> {
+        await this.answerMessageFromResource(
+            ctx,
+            'text/commands/other/wrong-command.pug'
+        )
     }
 
     static async answerMessageFromResource(

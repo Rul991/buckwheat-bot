@@ -1,8 +1,8 @@
 import { Context } from 'telegraf'
-import { MaybeString, TextContext } from '../../../../utils/types'
+import { MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import ContextUtils from '../../../../utils/ContextUtils'
-import { MAX_DESCRIPTION_LENGTH } from '../../../../utils/consts'
+import { MAX_DESCRIPTION_LENGTH } from '../../../../utils/values/consts'
 import UserDescriptionService from '../../../db/services/user/UserDescriptionService'
 import MessageUtils from '../../../../utils/MessageUtils'
 

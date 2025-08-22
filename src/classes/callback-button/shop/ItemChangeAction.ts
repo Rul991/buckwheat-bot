@@ -1,10 +1,10 @@
-import { PARSE_MODE } from '../../../utils/consts'
+import { PARSE_MODE } from '../../../utils/values/consts'
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
 import ShopItems from '../../../utils/ShopItems'
 import MessageUtils from '../../../utils/MessageUtils'
 import Pager from '../../../utils/Pager'
-import { CallbackButtonContext } from '../../../utils/types'
+import { CallbackButtonContext } from '../../../utils/values/types'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import CallbackButtonAction from '../CallbackButtonAction'
 import StringUtils from '../../../utils/StringUtils'
@@ -17,7 +17,7 @@ export default class ItemChangeAction extends CallbackButtonAction {
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<void> {
         const length = ShopItems.len()
-        const index = Pager.clampPages(data, length)
+        const index = Pager.wrapPages(data, length)
         const userId = +data.split('_')[2]
 
         if(index === -1) return

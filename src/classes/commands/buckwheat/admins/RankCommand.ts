@@ -1,11 +1,11 @@
 import { Context } from 'telegraf'
-import { MaybeString, TextContext } from '../../../../utils/types'
+import { MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
 import ContextUtils from '../../../../utils/ContextUtils'
 import UserNameService from '../../../db/services/user/UserNameService'
-import { DEFAULT_USER_NAME } from '../../../../utils/consts'
+import { DEFAULT_USER_NAME } from '../../../../utils/values/consts'
 import MessageUtils from '../../../../utils/MessageUtils'
 import CasinoAccountService from '../../../db/services/casino/CasinoAccountService'
 
@@ -50,7 +50,7 @@ export default class RankCommand extends BuckwheatCommand {
     }
 
     private static async _answerIfNotAdmin(ctx: Context, rank: number): Promise<boolean> {
-        if(rank < RankUtils.adminRank) {
+        if(rank < RankUtils.admin) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/rank/not-admin.pug'

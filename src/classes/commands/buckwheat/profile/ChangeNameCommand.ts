@@ -1,7 +1,7 @@
-import { MaybeString, TextContext } from '../../../../utils/types'
+import { MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import ContextUtils from '../../../../utils/ContextUtils'
-import { DEFAULT_USER_NAME, MAX_NAME_LENGTH } from '../../../../utils/consts'
+import { DEFAULT_USER_NAME, MAX_NAME_LENGTH } from '../../../../utils/values/consts'
 import UserNameService from '../../../db/services/user/UserNameService'
 import StringUtils from '../../../../utils/StringUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
@@ -30,7 +30,7 @@ export default class ChangeNameCommand extends BuckwheatCommand {
         }
 
         else {
-            const name = StringUtils.validate(other)
+            const name = other
             const names = await UserNameService.getAll()
 
             if(names.includes(name)) {

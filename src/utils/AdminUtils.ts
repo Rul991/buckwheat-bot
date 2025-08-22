@@ -2,7 +2,7 @@ import { Context } from 'telegraf'
 import TimeUtils from './TimeUtils'
 import Logging from './Logging'
 import { ChatMember } from 'telegraf/types'
-import { KICK_TIME } from './consts'
+import { KICK_TIME } from './values/consts'
 
 export default class AdminUtils {
     static async mute(ctx: Context, id: number, ms: number) {

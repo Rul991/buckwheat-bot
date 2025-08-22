@@ -1,6 +1,6 @@
 import { Context } from 'telegraf'
 import BaseAction from '../base/BaseAction'
-import { NewMemberContext } from '../../../utils/types'
+import { NewMemberContext } from '../../../utils/values/types'
 
 export default abstract class NewMemberAction extends BaseAction {
     constructor() {

@@ -1,12 +1,12 @@
-import { DEFAULT_USER_NAME, RUBLE_TO_COIN } from '../../utils/consts'
-import ContextUtils from '../../utils/ContextUtils'
-import MessageUtils from '../../utils/MessageUtils'
-import RankUtils from '../../utils/RankUtils'
-import { TextContext, MaybeString } from '../../utils/types'
-import CasinoAddService from '../db/services/casino/CasinoAddService'
-import UserNameService from '../db/services/user/UserNameService'
-import UserRankService from '../db/services/user/UserRankService'
-import BuckwheatCommand from './base/BuckwheatCommand'
+import { DEFAULT_USER_NAME, RUBLE_TO_COIN } from '../../../utils/values/consts'
+import ContextUtils from '../../../utils/ContextUtils'
+import MessageUtils from '../../../utils/MessageUtils'
+import RankUtils from '../../../utils/RankUtils'
+import { TextContext, MaybeString } from '../../../utils/values/types'
+import CasinoAddService from '../../db/services/casino/CasinoAddService'
+import UserNameService from '../../db/services/user/UserNameService'
+import UserRankService from '../../db/services/user/UserRankService'
+import BuckwheatCommand from '../base/BuckwheatCommand'
 
 export default class DonateCommand extends BuckwheatCommand {
     constructor() {
@@ -21,7 +21,7 @@ export default class DonateCommand extends BuckwheatCommand {
         const userId = ctx.from.id
         const userRank = await UserRankService.get(userId)
 
-        if(userRank < RankUtils.adminRank) {
+        if(userRank < RankUtils.admin) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/donate/no-admin.pug'
@@ -57,7 +57,7 @@ export default class DonateCommand extends BuckwheatCommand {
         const replyRank = await UserRankService.get(replyId)
         const replyValues = await ContextUtils.getUser(replyId)
 
-        if(replyRank >= RankUtils.adminRank) {
+        if(replyRank >= RankUtils.admin) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/donate/high-rank.pug',

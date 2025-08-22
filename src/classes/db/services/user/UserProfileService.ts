@@ -1,11 +1,11 @@
 import User from '../../../../interfaces/schemas/User'
-import StringUtils from '../../../../utils/StringUtils'
+import { DEFAULT_USER_NAME } from '../../../../utils/values/consts'
 import UserRepository from '../../repositories/UserRepository'
 
 export default class UserProfileService {
-    static async create(id: number, name: string): Promise<User | null> {
+    static async create(id: number, name: string): Promise<User> {
         const foundUser = await UserRepository.findOne(id)
-        if(foundUser) return null
+        if(foundUser) return foundUser
 
         const user = await UserRepository.create({
             id,
@@ -16,16 +16,7 @@ export default class UserProfileService {
     }
 
     static async update(id: number, profile: Partial<User>): Promise<User | null> {
-        await this.create(id, '')
-
-        for (const key in profile) {
-            //@ts-ignore
-            if(typeof profile[key] == 'string') {
-                //@ts-ignore
-                profile[key] = StringUtils.validate(profile[key])
-            }
-        }
-
+        await this.create(id, DEFAULT_USER_NAME)
         return await UserRepository.updateOne(id, profile)
     }
 

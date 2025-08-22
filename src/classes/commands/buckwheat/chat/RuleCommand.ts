@@ -1,12 +1,10 @@
 import { Context } from 'telegraf'
-import { MaybeString, NameObject, TextContext } from '../../../../utils/types'
+import { MaybeString, NameObject, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import MessageUtils from '../../../../utils/MessageUtils'
 import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
 import RulesService from '../../../db/services/chat/RulesService'
-import { TAB_NEW_LINE } from '../../../../utils/consts'
-import StringUtils from '../../../../utils/StringUtils'
 import SubCommandUtils from '../../../../utils/SubCommandUtils'
 
 type RuleSubCommand = {
@@ -107,8 +105,7 @@ export default class RuleCommand extends BuckwheatCommand {
             ctx,
             'text/commands/rules/sub-command-help.pug',
             {
-                changeValues,
-                isParseToHtmlEntities: false
+                changeValues
             }
         )
     }
@@ -156,7 +153,7 @@ export default class RuleCommand extends BuckwheatCommand {
         }
         else {
             const rank = await UserRankService.get(id)
-            const isAdminRank = rank >= RankUtils.adminRank
+            const isAdminRank = rank >= RankUtils.admin
             const rules = await RulesService.get()
 
             const [

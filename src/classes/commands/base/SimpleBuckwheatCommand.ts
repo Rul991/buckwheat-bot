@@ -1,4 +1,4 @@
-import { MaybeString, TextContext } from '../../../utils/types'
+import { MaybeString, TextContext } from '../../../utils/values/types'
 import BuckwheatCommand from './BuckwheatCommand'
 import FileUtils from '../../../utils/FileUtils'
 import SimpleCommand from '../../../interfaces/other/SimpleComand'

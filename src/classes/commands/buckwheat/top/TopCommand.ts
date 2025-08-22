@@ -1,4 +1,5 @@
 import Casino from '../../../../interfaces/schemas/Casino'
+import Level from '../../../../interfaces/schemas/Level'
 import Messages from '../../../../interfaces/schemas/Messages'
 import User from '../../../../interfaces/schemas/User'
 import ArrayUtils from '../../../../utils/ArrayUtils'
@@ -6,8 +7,9 @@ import ClassUtils from '../../../../utils/ClassUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import RankUtils from '../../../../utils/RankUtils'
 import SubCommandUtils from '../../../../utils/SubCommandUtils'
-import { TextContext, MaybeString, AsyncOrSync, NameObject, ClassTypes } from '../../../../utils/types'
+import { TextContext, MaybeString, AsyncOrSync, NameObject, ClassTypes, TopLevelObject } from '../../../../utils/values/types'
 import CasinoGetService from '../../../db/services/casino/CasinoGetService'
+import LevelService from '../../../db/services/level/LevelService'
 import MessagesService from '../../../db/services/messages/MessagesService'
 import UserProfileService from '../../../db/services/user/UserProfileService'
 import UserRankService from '../../../db/services/user/UserRankService'
@@ -37,7 +39,7 @@ export default class MoneyTopCommand extends BuckwheatCommand {
 
                 let ratings: Rating[] = []
 
-                for (let rank = RankUtils.maxRank; rank >= 0; rank--) {
+                for (let rank = RankUtils.max; rank >= 0; rank--) {
                     const users = await UserRankService.findByRank(rank)
                     if(!users.length) continue
 
@@ -103,15 +105,7 @@ export default class MoneyTopCommand extends BuckwheatCommand {
             name: 'классы',
             filename: 'class',
             execute: async ctx => {
-                const classMembers: Record<ClassTypes, string[]> = {
-                    knight: [],
-                    thief: [],
-                    sorcerer: [],
-                    engineer: [],
-                    bard: [],
-                    boss: [],
-                    unknown: []
-                }
+                const classMembers: Record<ClassTypes, string[]> = ClassUtils.getArray()
 
                 const users = await UserProfileService.getAll()
 
@@ -130,17 +124,24 @@ export default class MoneyTopCommand extends BuckwheatCommand {
                         },
                         {}
                     ),
-                    classTitles: {
-                        knight: 'Рыцари',
-                        thief: 'Воры',
-                        sorcerer: 'Маги',
-                        engineer: 'Инженеры',
-                        bard: 'Барды',
-                        unknown: 'Не выбрали'
-                    }
+                    classTitles: ClassUtils.getNames()
                 }
             }
-        }
+        },
+
+        {
+            name: 'уровни',
+            filename: 'top',
+            execute: async ctx => {
+                return {
+                    sorted: await LevelService.getAllSorted(),
+                    users: await UserProfileService.getAll(),
+                    title: 'прокаченных',
+                    key: 'level',
+                    id: ctx.botInfo.id
+                } as TopMessageLocals<TopLevelObject>
+            }
+        },
     ]
 
     constructor() {

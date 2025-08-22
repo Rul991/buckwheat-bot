@@ -1,7 +1,7 @@
 import ClassUtils from '../../utils/ClassUtils'
 import ContextUtils from '../../utils/ContextUtils'
 import MessageUtils from '../../utils/MessageUtils'
-import { CallbackButtonContext, ClassTypes } from '../../utils/types'
+import { CallbackButtonContext, ClassTypes } from '../../utils/values/types'
 import UserClassService from '../db/services/user/UserClassService'
 import CallbackButtonAction from './CallbackButtonAction'
 

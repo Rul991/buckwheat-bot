@@ -1,7 +1,7 @@
 import AdminUtils from '../../../utils/AdminUtils'
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
-import { NewMemberContext } from '../../../utils/types'
+import { NewMemberContext } from '../../../utils/values/types'
 import HelloService from '../../db/services/chat/HelloService'
 import UserOldService from '../../db/services/user/UserOldService'
 import NewMemberAction from './NewMemberAction'

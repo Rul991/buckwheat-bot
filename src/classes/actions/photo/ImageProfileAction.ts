@@ -1,5 +1,5 @@
 import MessageUtils from '../../../utils/MessageUtils'
-import { PhotoContext, MaybeString } from '../../../utils/types'
+import { PhotoContext, MaybeString } from '../../../utils/values/types'
 import UserImageService from '../../db/services/user/UserImageService'
 import PhotoAction from './PhotoAction'
 

@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { CommandStrings, MaybeString, TextContext } from '../../../utils/types'
+import { CommandStrings, MaybeString, TextContext } from '../../../utils/values/types'
 import BuckwheatCommand from './BuckwheatCommand'
 
 export default abstract class ConditionalCommand extends BuckwheatCommand {

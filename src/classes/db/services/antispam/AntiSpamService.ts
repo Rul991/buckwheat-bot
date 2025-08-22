@@ -1,5 +1,5 @@
 import AntiSpam from '../../../../interfaces/schemas/AntiSpam'
-import { MAX_MESSAGES_PER_TIME, NOT_SPAM_TIME } from '../../../../utils/consts'
+import { MAX_MESSAGES_PER_TIME, NOT_SPAM_TIME } from '../../../../utils/values/consts'
 import AntiSpamRepository from '../../repositories/AntiSpamRepository'
 
 export default class AntiSpamService {

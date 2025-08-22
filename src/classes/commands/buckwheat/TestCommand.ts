@@ -1,7 +1,7 @@
-import { MaybeString, TextContext } from '../../../utils/types'
+import { MaybeString, TextContext } from '../../../utils/values/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 import MessageUtils from '../../../utils/MessageUtils'
-import { DEV_ID } from '../../../utils/consts'
+import { DEV_ID } from '../../../utils/values/consts'
 
 export default class TestCommand extends BuckwheatCommand {
     constructor() {

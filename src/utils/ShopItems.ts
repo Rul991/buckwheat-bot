@@ -1,10 +1,10 @@
 import InventoryItemService from '../classes/db/services/items/InventoryItemService'
 import UserRankService from '../classes/db/services/user/UserRankService'
 import AdminUtils from './AdminUtils'
-import { CASINO_PLUS_BOOST, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './consts'
+import { CASINO_PLUS_BOOST, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './values/consts'
 import MessageUtils from './MessageUtils'
 import RankUtils from './RankUtils'
-import { AsyncOrSync, CallbackButtonContext } from './types'
+import { AsyncOrSync, CallbackButtonContext } from './values/types'
 
 type ShopItem = {
     name: string,
@@ -23,7 +23,7 @@ export default class ShopItems {
             price: 999,
             execute: async (ctx, user) => {
                 const rank = await UserRankService.get(ctx.from.id)
-                if(rank >= RankUtils.moderatorRank) return false
+                if(rank >= RankUtils.moderator) return false
 
                 const isBought = await InventoryItemService.add(ctx.from.id, 'rankUp')
                 await UserRankService.update(ctx.from.id, rank + 1)

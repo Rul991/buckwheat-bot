@@ -1,15 +1,10 @@
-import { model, Schema } from 'mongoose'
 import Work from '../../../interfaces/schemas/Work'
+import { createModel } from './modelCreators'
 
-type Type = Work
-
-const schema = new Schema<Type>(
-    {
+export default createModel<Work>({
+    name: 'Work',
+    definition: {
         id: {type: Number, required: true, unique: true},
         lastWork: {type: Number, default: 0}
     }
-)
-
-const WorkModel = model<Type>('Work', schema)
-
-export default WorkModel
+})

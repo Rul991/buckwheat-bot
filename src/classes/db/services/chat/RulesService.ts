@@ -11,7 +11,7 @@ export default class RulesService {
     }
 
     static async get(): Promise<string[]> {
-        return (await ChatRepository.get()).rules ?? []
+        return (await ChatRepository.findOne())?.rules ?? []
     }
 
     static async add(data: string): Promise<void> {

@@ -2,17 +2,16 @@ import Bot from '../classes/main/Bot'
 import CapsCommand from '../classes/commands/conditional/CapsCommand'
 import NoCommand from '../classes/commands/conditional/NoCommand'
 import TestCommand from '../classes/commands/buckwheat/TestCommand'
-import { TOKEN } from '../utils/consts'
+import { MODE, TOKEN } from '../utils/values/consts'
 import Validator from '../utils/Validator'
 import StartCommand from '../classes/commands/telegram/StartCommand'
 import EchoCommand from '../classes/commands/buckwheat/EchoCommand'
 import SimpleBuckwheatCommand from '../classes/commands/base/SimpleBuckwheatCommand'
-import connectDatabase from './db'
+import { connectDatabase } from './db'
 import { join } from 'path'
 import ProfileCommand from '../classes/commands/buckwheat/profile/ProfileCommand'
 import ChangeNameCommand from '../classes/commands/buckwheat/profile/ChangeNameCommand'
 import CasinoDice from '../classes/dice/CasinoDice'
-import CreateProfileAction from '../classes/actions/every/CreateProfileAction'
 import WrongChatAction from '../classes/actions/every/WrongChatAction'
 import BalanceCommand from '../classes/commands/buckwheat/money/BalanceCommand'
 import TransferCommand from '../classes/commands/buckwheat/money/TransferCommand'
@@ -34,8 +33,8 @@ import RuleCommand from '../classes/commands/buckwheat/chat/RuleCommand'
 import RuleChangeAction from '../classes/callback-button/RuleChangeAction'
 import WorkCommand from '../classes/commands/buckwheat/money/WorkCommand'
 import { env } from 'process'
-import CommandsCommand from '../classes/commands/CommandsCommand'
-import DonateCommand from '../classes/commands/DonateCommand'
+import CommandsCommand from '../classes/commands/buckwheat/CommandsCommand'
+import DonateCommand from '../classes/commands/buckwheat/DonateCommand'
 import HelloCommand from '../classes/commands/buckwheat/chat/HelloCommand'
 import HelloMemberAction from '../classes/actions/new-member/HelloMemberAction'
 import TopCommand from '../classes/commands/buckwheat/top/TopCommand'
@@ -52,15 +51,27 @@ import WhereMarriageAction from '../classes/actions/every/WhereMarriageAction'
 import ClassAction from '../classes/callback-button/ClassAction'
 import ClassCommand from '../classes/commands/buckwheat/profile/ClassCommand'
 import GreadBoxCommand from '../classes/commands/buckwheat/GreadBoxCommand'
-import CookieCommand from '../classes/commands/CookieCommand'
+import CookieCommand from '../classes/commands/buckwheat/CookieCommand'
 import RoleplayCommand from '../classes/commands/base/RoleplayCommand'
-import IdeaCommand from '../classes/commands/IdeaCommand'
+import IdeaCommand from '../classes/commands/buckwheat/IdeaCommand'
 import IdeaChangeAction from '../classes/callback-button/ideas/IdeaChangeAction'
 import DeleteIdeaAction from '../classes/callback-button/ideas/DeleteIdeaAction'
 import VoteAction from '../classes/callback-button/ideas/VoteAction'
-import SaveCommand from '../classes/commands/SaveCommand'
-import InfoCommand from '../classes/commands/InfoCommand'
+import SaveCommand from '../classes/commands/buckwheat/SaveCommand'
+import InfoCommand from '../classes/commands/buckwheat/InfoCommand'
 import MoneyDropCommand from '../classes/commands/buckwheat/MoneyDropCommand'
+import AddRoleplayCommand from '../classes/commands/buckwheat/AddRoleplayCommand'
+import CustomRoleplayCommand from '../classes/commands/conditional/CustomRoleplayCommand'
+import { Telegraf } from 'telegraf'
+import ExperienceService from '../classes/db/services/level/ExperienceService'
+import UserClassService from '../classes/db/services/user/UserClassService'
+import UserDescriptionService from '../classes/db/services/user/UserDescriptionService'
+import UserNameService from '../classes/db/services/user/UserNameService'
+import UserRankService from '../classes/db/services/user/UserRankService'
+import RankUtils from '../utils/RankUtils'
+import ExperienceUtils from '../utils/level/ExperienceUtils'
+import LevelUtils from '../utils/level/LevelUtils'
+import ExperienceCommand from '../classes/commands/buckwheat/level/ExperienceCommand'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -124,7 +135,6 @@ const getSimpleCommands = async () => {
 const launchBot = async (bot: Bot) => {
     bot.addEveryMessageActions(
         new WrongChatAction(), // it should be first
-        new CreateProfileAction(),
         new AntiSpamAction(), 
         new NewMessagesAction(),
         new WhereMarriageAction(),
@@ -161,6 +171,7 @@ const launchBot = async (bot: Bot) => {
     bot.addCommands(
         new CapsCommand(),
         new NoCommand(),
+        new CustomRoleplayCommand()
     )
     
     // buckwheat
@@ -196,6 +207,8 @@ const launchBot = async (bot: Bot) => {
         new SaveCommand(),
         new InfoCommand(),
         new MoneyDropCommand(),
+        new AddRoleplayCommand(),
+        new ExperienceCommand(),
         ...await getSimpleCommands(),
         ...await getRoleplayCommands()
     )
@@ -205,10 +218,34 @@ const launchBot = async (bot: Bot) => {
         new StartCommand()
     )
 
-    bot.launch()
+    await bot.launch(async () => setBotParameters(bot))
+}
+
+const setBotParameters = async (bot: Bot) => {
+    const { botInfo } = bot.bot
+    if(!botInfo) return 
+
+    const { id } = botInfo
+
+    const currentName = await UserNameService.get(id)
+    const needName = 'Баквит'
+
+    if(currentName === needName) return
+
+    await UserNameService.update(id, needName)
+    await UserDescriptionService.update(id, 'Я ваш проводник в данном чате')
+    await UserRankService.update(id, RankUtils.admin)
+    await UserClassService.update(id, 'boss')
+}
+
+const test = async (): Promise<void> => {
+    
 }
 
 const main = async () => {
+    if(MODE == 'dev')
+        await test()
+    
     if(!isEnvVarsValidate()) return
     await connectDatabase()
 

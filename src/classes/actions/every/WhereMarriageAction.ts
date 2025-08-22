@@ -1,7 +1,7 @@
-import { WHERE_MARRIAGE_MESSAGES, WHERE_MARRIAGE_TIME } from '../../../utils/consts'
+import { WHERE_MARRIAGE_MESSAGES, WHERE_MARRIAGE_TIME } from '../../../utils/values/consts'
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
-import { MessageContext } from '../../../utils/types'
+import { MessageContext } from '../../../utils/values/types'
 import EveryMessageAction from './EveryMessageAction'
 
 export default class WhereMarriageAction extends EveryMessageAction {

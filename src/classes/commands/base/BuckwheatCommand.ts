@@ -1,4 +1,4 @@
-import { CommandDescription, MaybeString, TextContext } from '../../../utils/types'
+import { CommandDescription, MaybeString, TextContext } from '../../../utils/values/types'
 import BaseAction from '../../actions/base/BaseAction'
 
 export default abstract class BuckwheatCommand extends BaseAction {

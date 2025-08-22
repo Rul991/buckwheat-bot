@@ -1,4 +1,4 @@
-import { MaybeString, TextContext } from '../../../../utils/types'
+import { MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import ContextUtils from '../../../../utils/ContextUtils'
 import CasinoGetService from '../../../db/services/casino/CasinoGetService'
@@ -88,8 +88,7 @@ export default class TransferCommand extends BuckwheatCommand {
                         sender: await ContextUtils.getUser(sender),
                         receiver: await ContextUtils.getUser(receiver),
                         count: diffMoney
-                    },
-                    isParseToHtmlEntities: true
+                    }
                 }
             )
         }

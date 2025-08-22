@@ -1,7 +1,7 @@
-import { MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from '../../../utils/consts';
-import { DEFAULT_USER_NAME, DICE_TIME } from '../../../utils/consts'
+import { MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from '../../../utils/values/consts';
+import { DEFAULT_USER_NAME, DICE_TIME } from '../../../utils/values/consts'
 import ContextUtils from '../../../utils/ContextUtils'
-import { CallbackButtonContext } from '../../../utils/types'
+import { CallbackButtonContext } from '../../../utils/values/types'
 import UserNameService from '../../db/services/user/UserNameService'
 import CallbackButtonAction from '../CallbackButtonAction'
 import MessageUtils from '../../../utils/MessageUtils'

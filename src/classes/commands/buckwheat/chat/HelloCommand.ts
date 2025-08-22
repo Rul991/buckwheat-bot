@@ -1,7 +1,7 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import RankUtils from '../../../../utils/RankUtils'
 import StringUtils from '../../../../utils/StringUtils'
-import { TextContext, MaybeString } from '../../../../utils/types'
+import { TextContext, MaybeString } from '../../../../utils/values/types'
 import HelloService from '../../../db/services/chat/HelloService'
 import UserRankService from '../../../db/services/user/UserRankService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
@@ -32,7 +32,7 @@ export default class HelloCommand extends BuckwheatCommand {
             return
         }
 
-        if(rank < RankUtils.moderatorRank) {
+        if(rank < RankUtils.moderator) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/hello/low-rank.pug',

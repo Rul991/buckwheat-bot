@@ -1,9 +1,9 @@
-import { EXTRA_RANDOM_NUMBER, EXTRA_RANDOM_PRIZE, MAX_RANDOM_PRIZE, MIN_RANDOM_PRIZE } from '../../utils/consts'
+import { EXTRA_RANDOM_NUMBER, EXTRA_RANDOM_PRIZE, MAX_RANDOM_PRIZE, MIN_RANDOM_PRIZE } from '../../utils/values/consts'
 import ContextUtils from '../../utils/ContextUtils'
 import Logging from '../../utils/Logging'
 import MessageUtils from '../../utils/MessageUtils'
 import RandomUtils from '../../utils/RandomUtils'
-import { CallbackButtonContext } from '../../utils/types'
+import { CallbackButtonContext } from '../../utils/values/types'
 import CasinoAddService from '../db/services/casino/CasinoAddService'
 import CallbackButtonAction from './CallbackButtonAction'
 

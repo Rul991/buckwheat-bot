@@ -1,7 +1,7 @@
 import { Context } from 'telegraf'
 import AdminCommand from './AdminCommand'
 import AdminUtils from '../../../../utils/AdminUtils'
-import { TextContext } from '../../../../utils/types'
+import { TextContext } from '../../../../utils/values/types'
 import RankUtils from '../../../../utils/RankUtils'
 
 export default class UnmuteCommand extends AdminCommand {
@@ -13,7 +13,7 @@ export default class UnmuteCommand extends AdminCommand {
         this._replySupport = true
 
         this._folder = 'mute'
-        this._minimumRank = RankUtils.moderatorRank
+        this._minimumRank = RankUtils.moderator
     }
 
     protected async _do(ctx: TextContext, replyId: number, _: number): Promise<boolean> {

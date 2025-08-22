@@ -1,5 +1,5 @@
 import MessageUtils from '../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../utils/types'
+import { TextContext, MaybeString } from '../../../utils/values/types'
 import CasinoAddService from '../../db/services/casino/CasinoAddService'
 import InventoryItemService from '../../db/services/items/InventoryItemService'
 import BuckwheatCommand from '../base/BuckwheatCommand'

@@ -1,17 +1,17 @@
-import { Context } from 'telegraf'
-import { MaybeString, TextContext } from '../../../../utils/types'
+import { MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserProfileService from '../../../db/services/user/UserProfileService'
 import ContextUtils from '../../../../utils/ContextUtils'
 import FileUtils from '../../../../utils/FileUtils'
-import { DEFAULT_USER_NAME, EMPTY_PROFILE_IMAGE as EMPTY_PROFILE_IMAGE_ID, PARSE_MODE } from '../../../../utils/consts'
+import { EMPTY_PROFILE_IMAGE as EMPTY_PROFILE_IMAGE_ID, PARSE_MODE } from '../../../../utils/values/consts'
 import RankUtils from '../../../../utils/RankUtils'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import MessageUtils from '../../../../utils/MessageUtils'
 import UserImageService from '../../../db/services/user/UserImageService'
 import ClassUtils from '../../../../utils/ClassUtils'
-import UserClassService from '../../../db/services/user/UserClassService'
 import MessagesService from '../../../db/services/messages/MessagesService'
+import LevelUtils from '../../../../utils/level/LevelUtils'
+import ExperienceUtils from '../../../../utils/level/ExperienceUtils'
+import ExperienceService from '../../../db/services/level/ExperienceService'
 
 export default class ProfileCommand extends BuckwheatCommand {
     constructor() {
@@ -23,7 +23,29 @@ export default class ProfileCommand extends BuckwheatCommand {
         this._argumentText = 'ник'
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+    private async _getPhotoId(ctx: TextContext, id: number): Promise<string | null> {
+        let photoId: string = await UserImageService.get(id)
+        if(photoId.length) {
+            return photoId
+        }
+        
+        let profilePhotos = await ctx
+            .telegram
+            .getUserProfilePhotos(id, 0, 1)
+        if(profilePhotos.total_count > 0) {
+            return profilePhotos.photos[0][0].file_id
+        }
+
+        else if(EMPTY_PROFILE_IMAGE_ID) {
+            return EMPTY_PROFILE_IMAGE_ID 
+        }
+
+        else {
+            return null
+        }
+    }
+
+    private async _getIdAndName(ctx: TextContext, other: MaybeString): Promise<{id: number, name: string} | null> {
         let id: number
         let name: string
 
@@ -31,16 +53,7 @@ export default class ProfileCommand extends BuckwheatCommand {
             const user = await UserProfileService.findByName(other)
 
             if(!user) {
-                await MessageUtils.answerMessageFromResource(
-                    ctx,
-                    'text/commands/profile/no-user.pug',
-                    {
-                        changeValues: {
-                            name: other
-                        }
-                    }
-                )
-                return
+                return null
             }
 
             else {
@@ -59,40 +72,59 @@ export default class ProfileCommand extends BuckwheatCommand {
             name = ctx.from.first_name
         }
 
-        let user = await UserProfileService.get(id)
-        if(!user) {
-            user = await UserProfileService.create(
-                id, 
-                name
+        return {id, name}
+    }
+
+    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+        let idAndName = await this._getIdAndName(ctx, other)
+
+        if(!idAndName) {
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/profile/no-user.pug',
+                {
+                    changeValues: {
+                        name: other
+                    }
+                }
             )
+            return
         }
 
-        let profilePhotos = await ctx.telegram.getUserProfilePhotos(id, 0, 1)
-        let photoId: string = await UserImageService.get(id)
+        const {id, name} = idAndName
+        const user = await UserProfileService.create(id, name)
+        const photoId = await this._getPhotoId(ctx, id)
         
-        const rank = user?.rank ?? -1
-        const devStatus = RankUtils.getDevStatusByNumber(rank)
-        const classType = user?.className ?? 'unknown'
+        const rank = user.rank ?? RankUtils.min
+        const classType = user.className ?? ClassUtils.defaultClassName
+        const experience = await ExperienceService.get(id)
         
         const path = 'text/commands/profile/profile.pug'
         const changeValues = {
+            rank,
+            maxLevel: LevelUtils.max,
+            level: LevelUtils.get(experience),
             ...await ContextUtils.getUser(id),
-            rank: rank.toString(),
             emoji: RankUtils.getEmojiByRank(rank),
             userNameRank: RankUtils.getRankByNumber(rank),
-            devStatus,
-            description: user?.description?.toUpperCase() || '...',
             className: ClassUtils.getName(classType),
+            devStatus: RankUtils.getDevStatusByNumber(rank),
             classEmoji: ClassUtils.getEmoji(classType),
-            messages: (await MessagesService.get(id)).total ?? 0
+            messages: (await MessagesService.get(id)).total ?? 0,
+            description: user.description?.toUpperCase() || '...',
+            experiencePrecents: ExperienceUtils.precents(experience),
         }
 
-        if(photoId.length) {}
-        else if(profilePhotos.total_count > 0) {
-            photoId = profilePhotos.photos[0][0].file_id
-        }
-        else if(EMPTY_PROFILE_IMAGE_ID) {
-            photoId = EMPTY_PROFILE_IMAGE_ID 
+        if(photoId) {
+            const messageText = await FileUtils.readPugFromResource(
+                path,
+                {changeValues}
+            )
+
+            await ctx.replyWithPhoto(photoId, {
+                caption: messageText,
+                parse_mode: PARSE_MODE
+            })
         }
         else {
             await MessageUtils.answerMessageFromResource(
@@ -100,19 +132,7 @@ export default class ProfileCommand extends BuckwheatCommand {
                 path,
                 {changeValues}
             )
-
-            return
         }
-
-        const messageText = await FileUtils.readPugFromResource(
-            path,
-            {changeValues}
-        )
-
-        await ctx.replyWithPhoto(photoId, {
-            caption: messageText,
-            parse_mode: PARSE_MODE
-        })
     }
 
 }

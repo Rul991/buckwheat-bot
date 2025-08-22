@@ -1,6 +1,6 @@
 import ArrayUtils from '../../../utils/ArrayUtils'
-import { DEV_ID } from '../../../utils/consts'
-import { CallbackButtonContext } from '../../../utils/types'
+import { DEV_ID } from '../../../utils/values/consts'
+import { CallbackButtonContext } from '../../../utils/values/types'
 import IdeasService from '../../db/services/ideas/IdeasService'
 import CallbackButtonAction from '../CallbackButtonAction'
 import IdeaChangeAction from './IdeaChangeAction'

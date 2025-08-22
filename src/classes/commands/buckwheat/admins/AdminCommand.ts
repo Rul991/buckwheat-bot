@@ -1,8 +1,8 @@
 import { Context } from 'telegraf'
-import { MaybeString, TextContext } from '../../../../utils/types'
+import { MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import AdminUtils from '../../../../utils/AdminUtils'
-import { DEFAULT_USER_NAME } from '../../../../utils/consts'
+import { DEFAULT_USER_NAME } from '../../../../utils/values/consts'
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import RankUtils from '../../../../utils/RankUtils'
@@ -20,7 +20,7 @@ export default abstract class AdminCommand extends BuckwheatCommand {
         super()
         this._folder = 'admin'
         this._isUndoCommand = true
-        this._minimumRank = RankUtils.adminRank
+        this._minimumRank = RankUtils.admin
     }
 
     protected abstract _do(ctx: TextContext, replyId: number, time: number): Promise<boolean>

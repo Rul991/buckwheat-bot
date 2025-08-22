@@ -1,6 +1,5 @@
-import { TAB_NEW_LINE } from './consts'
 import StringUtils from './StringUtils'
-import { NameObject } from './types'
+import { NameObject } from './values/types'
 
 export default class SubCommandUtils {
     static getSubCommandAndData<Command extends NameObject>(

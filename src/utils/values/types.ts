@@ -60,3 +60,4 @@ export type ExtraEditMessageText = {
 }
 
 export type NameObject = {name: string}
+export type TopLevelObject = {id: number, level: number}

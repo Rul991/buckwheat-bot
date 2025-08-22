@@ -1,7 +1,7 @@
 import InventoryItem from '../interfaces/schemas/InventoryItem'
-import { INFINITY_SYMB } from './consts'
+import { INFINITY_SYMB } from './values/consts'
 import Logging from './Logging'
-import { InventoryItemDescription, InventoryItemType } from './types'
+import { InventoryItemDescription, InventoryItemType } from './values/types'
 
 export default class InventoryItemsUtils {
     private static _items: Record<string, InventoryItemDescription> = {
