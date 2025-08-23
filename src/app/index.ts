@@ -86,6 +86,7 @@ const isEnvVarsValidate = () => {
         createVariable('DOMAIN', false),
         createVariable('HOOK_PORT', false),
         createVariable('SECRET_TOKEN', false),
+        createVariable('SECRET_PATH', false),
     ]
 
     for (const variable of variables) {

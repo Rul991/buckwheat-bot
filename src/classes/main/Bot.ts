@@ -5,7 +5,7 @@ import BaseDice from '../dice/BaseDice'
 import EveryMessageAction from '../actions/every/EveryMessageAction'
 import CallbackButtonAction from '../callback-button/CallbackButtonAction'
 import Logging from '../../utils/Logging'
-import { CHAT_ID, DOMAIN, HOOK_PORT, MODE, SECRET_TOKEN } from '../../utils/values/consts'
+import { CHAT_ID, DOMAIN, HOOK_PORT, MODE, SECRET_PATH, SECRET_TOKEN } from '../../utils/values/consts'
 import FileUtils from '../../utils/FileUtils'
 import BaseHandler from './handlers/BaseHandler'
 import TelegramCommandHandler from './handlers/commands/TelegramCommandHandler'
@@ -18,6 +18,7 @@ import NewMemberAction from '../actions/new-member/NewMemberAction'
 import PhotoHandler from './handlers/PhotoHandler'
 import PhotoAction from '../actions/photo/PhotoAction'
 import MessageUtils from '../../utils/MessageUtils'
+import express from 'express'
 
 export default class Bot {    
     private _bot: Telegraf
@@ -107,6 +108,19 @@ export default class Bot {
         }
     }
 
+    private async _startWebHook(callback = async () => {}) {
+        const app = express()
+
+        app.use(this._bot.webhookCallback(SECRET_PATH))
+        this._bot.telegram.setWebhook(`${DOMAIN}${SECRET_PATH}`)
+
+        app.listen(HOOK_PORT!, DOMAIN, 0, callback)
+    }
+
+    private async _startLongPolling(callback = async () => {}) {
+        await this._bot.launch(callback)
+    }
+
     async launch(isWebHook = false, callback = async () => {}): Promise<void> {
         this._handlers.forEach(handler => 
             handler.setup(this._bot)
@@ -130,16 +144,12 @@ export default class Bot {
             await callback()
         }
 
-        await this._bot.launch(
-            {
-                webhook: isWebHook ? {
-                    domain: DOMAIN,
-                    port: HOOK_PORT,
-                    secretToken: SECRET_TOKEN,
-                } : undefined
-            },
-            launchCallback
-        )
+        if(isWebHook) {
+            this._startWebHook(launchCallback)
+        }
+        else {
+            this._startLongPolling(launchCallback)
+        }
     }
 
     stop(reason?: string) {

@@ -17,6 +17,7 @@ export const MODE: ModeTypes = env.MODE as ModeTypes ?? 'dev'
 export const DOMAIN = env.DOMAIN!
 export const HOOK_PORT = fromEnvToNumber('HOOK_PORT')
 export const SECRET_TOKEN = env.SECRET_TOKEN
+export const SECRET_PATH = env.SECRET_PATH
 
 export const MAX_NAME_LENGTH = 48
 export const MAX_DESCRIPTION_LENGTH = 256
