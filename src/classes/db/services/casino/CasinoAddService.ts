@@ -1,13 +1,12 @@
 import Casino from '../../../../interfaces/schemas/Casino'
 import CasinoRepository from '../../repositories/CasinoRepository'
+import CasinoAccountService from './CasinoAccountService'
 
 type T = Casino
 
 export default class CasinoAddService {
     private static async _add(id: number, key: keyof T, value: number): Promise<number> {
-        const casino = await CasinoRepository.findOne(id)
-        if(!casino) return -1
-
+        const casino = await CasinoAccountService.create(id)
         const newCasino = await CasinoRepository.updateOne(id, {[key]: casino[key]! + value})
         if(!newCasino) return -1
 

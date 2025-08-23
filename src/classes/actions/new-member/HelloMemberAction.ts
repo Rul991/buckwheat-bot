@@ -19,7 +19,7 @@ export default class HelloMemberAction extends NewMemberAction {
             'text/commands/hello/hello.pug',
             {
                 changeValues: {
-                    ...await ContextUtils.getUser(ctx.from.id, ctx.from.first_name),
+                    ...await ContextUtils.getUserFromContext(ctx),
                     botName,
                     chatName: 'title' in ctx.chat ? ctx.chat.title : botName,
                     chatId: ctx.chat.id,

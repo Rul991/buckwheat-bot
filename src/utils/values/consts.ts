@@ -4,13 +4,19 @@ import { ModeTypes } from './types'
 
 configDotenv()
 
+const fromEnvToNumber = (key: string) => isNaN(+env[key]!) ? undefined : +env[key]!
+
 export const TOKEN = env.BOT_TOKEN!
 export const DB_NAME = env.DB_NAME!
 export const DB_URL = env.DB_URL!
 export const CHAT_ID = env.CHAT_ID!
 export const EMPTY_PROFILE_IMAGE = env.EMPTY_PROFILE_IMAGE
-export const DEV_ID = isNaN(+(env.DEV_ID ?? 0)) ? undefined : +env.DEV_ID!
+export const DEV_ID = fromEnvToNumber('DEV_ID')
 export const MODE: ModeTypes = env.MODE as ModeTypes ?? 'dev'
+
+export const DOMAIN = env.DOMAIN!
+export const HOOK_PORT = fromEnvToNumber('HOOK_PORT')
+export const SECRET_TOKEN = env.SECRET_TOKEN
 
 export const MAX_NAME_LENGTH = 48
 export const MAX_DESCRIPTION_LENGTH = 256
@@ -66,3 +72,4 @@ export const NOT_SPAM_TIME = MILLISECONDS_IN_SECOND * MAX_MESSAGES_PER_TIME * 2
 
 export const VOTE_TIME = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY * 3
 export const MONEY_DROP_TIME = 2500
+export const LEVEL_BOOST = 7.5

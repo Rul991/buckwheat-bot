@@ -5,6 +5,7 @@ import CasinoGetService from '../../../db/services/casino/CasinoGetService'
 import CasinoAddService from '../../../db/services/casino/CasinoAddService'
 import UserNameService from '../../../db/services/user/UserNameService'
 import MessageUtils from '../../../../utils/MessageUtils'
+import StringUtils from '../../../../utils/StringUtils'
 
 export default class TransferCommand extends BuckwheatCommand {
     private static _filenames = ['no-receiver', 'self', 'empty', 'wrong', 'negative']
@@ -87,7 +88,7 @@ export default class TransferCommand extends BuckwheatCommand {
                     changeValues: {
                         sender: await ContextUtils.getUser(sender),
                         receiver: await ContextUtils.getUser(receiver),
-                        count: diffMoney
+                        count: StringUtils.toFormattedNumber(diffMoney)
                     }
                 }
             )

@@ -60,7 +60,9 @@ export default class CasinoDice extends BaseDice {
         value: number,
         values: ChangeValues
     ): Promise<void> {
-        const boost = await InventoryItemService.use(id, 'manyCasino') ? CASINO_PLUS_BOOST : 1
+        const [hasBoost] = await InventoryItemService.use(id, 'manyCasino')
+        const boost = hasBoost ? CASINO_PLUS_BOOST : 1
+        
         if (value === CasinoDice._jackpotCombination) {
             await this._sendMessageAndUpdateCasino(
                 ctx, 
@@ -84,7 +86,9 @@ export default class CasinoDice extends BaseDice {
         } 
 
         else {
-            const boost = await InventoryItemService.use(id, 'infinityCasino') ? 0 : 1
+            const [hasBoost] = await InventoryItemService.use(id, 'infinityCasino')
+            const boost = hasBoost ? 0 : 1
+
             await this._sendMessageAndUpdateCasino(
                 ctx, 
                 id, 
@@ -97,7 +101,7 @@ export default class CasinoDice extends BaseDice {
     }
 
     private async _checkAndNotifyEndGame(ctx: DiceContext, id: number, values: ChangeValues): Promise<void> {
-        const newCasino = await CasinoAccountService.get(id)
+        const newCasino = await CasinoAccountService.create(id)
 
         if (newCasino && newCasino.money! <= 0) {
             await MessageUtils.answerMessageFromResource(ctx, `text/dice/end.pug`, {changeValues: values})
@@ -105,8 +109,8 @@ export default class CasinoDice extends BaseDice {
     }
 
     async execute(ctx: DiceContext, value: number): Promise<void> {
-        const id = ctx.from?.id ?? 0
-        const values = await ContextUtils.getUser(id, ctx.from.first_name)
+        const id = ctx.from.id
+        const values = await ContextUtils.getUserFromContext(ctx)
 
         if (ctx.message && 'forward_date' in ctx.message) {
             return

@@ -4,6 +4,7 @@ import CasinoAccountService from '../../../db/services/casino/CasinoAccountServi
 import MessageUtils from '../../../../utils/MessageUtils'
 import ItemsService from '../../../db/services/items/ItemsService'
 import Casino from '../../../../interfaces/schemas/Casino'
+import StringUtils from '../../../../utils/StringUtils'
 
 export default class BalanceCommand extends BuckwheatCommand {
     constructor() {
@@ -13,7 +14,7 @@ export default class BalanceCommand extends BuckwheatCommand {
     }
 
     private static _getCasinoValue(casino: Casino, key: keyof Casino): string {
-        return casino[key]?.toString() ?? ''
+        return casino[key] ? StringUtils.toFormattedNumber(casino[key]) : ''
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
@@ -37,8 +38,8 @@ export default class BalanceCommand extends BuckwheatCommand {
                     money: BalanceCommand._getCasinoValue(casino, 'money'),
                     wins: BalanceCommand._getCasinoValue(casino, 'wins'),
                     loses: BalanceCommand._getCasinoValue(casino, 'loses'),
-                    uniqueItemsLength,
-                    itemsLength
+                    uniqueItemsLength: StringUtils.toFormattedNumber(uniqueItemsLength),
+                    itemsLength: StringUtils.toFormattedNumber(itemsLength)
                 }
             }
         )

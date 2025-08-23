@@ -8,4 +8,5 @@ export default interface User {
     imageId?: string
     className?: ClassTypes
     isOld?: boolean
+    linkedChat?: number
 }

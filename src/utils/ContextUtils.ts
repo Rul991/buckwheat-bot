@@ -18,6 +18,10 @@ export default class ContextUtils {
         }
     }
 
+    static async getUserFromContext(ctx: Context) {
+        return await this.getUser(ctx.from?.id, ctx.from?.first_name)
+    }
+
     static async sendDice(ctx: CallbackButtonContext, id: number): Promise<number> {
         const user = await ContextUtils.getUser(id)
 

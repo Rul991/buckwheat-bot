@@ -27,10 +27,7 @@ export default class SaveCommand extends BuckwheatCommand {
             ctx,
             `text/commands/save/${filename}.pug`,
             {
-                changeValues: await ContextUtils.getUser(
-                    ctx.from.id, 
-                    ctx.from.first_name
-                )
+                changeValues: await ContextUtils.getUserFromContext(ctx)
             }
         )
     }

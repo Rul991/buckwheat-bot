@@ -38,6 +38,11 @@ export default class InventoryItemsUtils {
         rankUp: {
             name: 'Повышение ранга',
             type: 'oneInfinity'
+        },
+
+        levelBoost: {
+            name: 'Ускоритель опыта',
+            type: 'manyInfinity'
         }
     }
 

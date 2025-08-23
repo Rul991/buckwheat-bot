@@ -1,4 +1,4 @@
-import { CATALOG_BOOST, WORK_TIME } from '../../../../utils/values/consts'
+import { CATALOG_BOOST, LEVEL_BOOST, WORK_TIME } from '../../../../utils/values/consts'
 import { ClassTypes, MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserRankService from '../../../db/services/user/UserRankService'
@@ -32,7 +32,7 @@ export default class WorkCommand extends BuckwheatCommand {
         const id = ctx.from.id
         const rank = await UserRankService.get(id)
         
-        const hasCatalog = await InventoryItemService.use(id, 'workCatalog')
+        const [hasCatalog] = await InventoryItemService.use(id, 'workCatalog')
         const workTime = WORK_TIME / (hasCatalog ? CATALOG_BOOST : 1)
 
         const money = RandomUtils.range(MIN_WORK, MAX_WORK) * (rank + 1)
@@ -46,11 +46,14 @@ export default class WorkCommand extends BuckwheatCommand {
         const quest = RandomUtils.choose(quests) ?? 'Неизвестный квест'
 
         if(!elapsed) {
-            const hasUp = await InventoryItemService.use(id, 'workUp')
+            const [hasUp] = await InventoryItemService.use(id, 'workUp')
             const totalMoney = Math.ceil((+hasUp * 0.25 + 1) * money)
 
             const currentLevel = await LevelService.get(id)
-            const experience = RandomUtils.range(10, Math.min(100, 3 * currentLevel))
+            const rawExperience = RandomUtils.range(3, Math.min(100, 3 * currentLevel))
+            const [_, count] = await InventoryItemService.use(id, 'levelBoost')
+
+            const experience = Math.ceil(rawExperience * (1 + (count * LEVEL_BOOST / 100)))
             const newLevel = await ExperienceService.isLevelUpAfterAdding(id, experience)
 
             await CasinoAddService.addMoney(id, totalMoney)
@@ -59,7 +62,7 @@ export default class WorkCommand extends BuckwheatCommand {
                 'text/commands/work/work.pug',
                 {
                     changeValues: {
-                        ...await ContextUtils.getUser(id),
+                        ...await ContextUtils.getUserFromContext(ctx),
                         money: totalMoney,
                         quest,
                         experience

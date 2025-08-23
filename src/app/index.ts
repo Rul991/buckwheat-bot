@@ -2,7 +2,7 @@ import Bot from '../classes/main/Bot'
 import CapsCommand from '../classes/commands/conditional/CapsCommand'
 import NoCommand from '../classes/commands/conditional/NoCommand'
 import TestCommand from '../classes/commands/buckwheat/TestCommand'
-import { MODE, TOKEN } from '../utils/values/consts'
+import { DOMAIN, MODE, TOKEN } from '../utils/values/consts'
 import Validator from '../utils/Validator'
 import StartCommand from '../classes/commands/telegram/StartCommand'
 import EchoCommand from '../classes/commands/buckwheat/EchoCommand'
@@ -62,15 +62,11 @@ import InfoCommand from '../classes/commands/buckwheat/InfoCommand'
 import MoneyDropCommand from '../classes/commands/buckwheat/MoneyDropCommand'
 import AddRoleplayCommand from '../classes/commands/buckwheat/AddRoleplayCommand'
 import CustomRoleplayCommand from '../classes/commands/conditional/CustomRoleplayCommand'
-import { Telegraf } from 'telegraf'
-import ExperienceService from '../classes/db/services/level/ExperienceService'
 import UserClassService from '../classes/db/services/user/UserClassService'
 import UserDescriptionService from '../classes/db/services/user/UserDescriptionService'
 import UserNameService from '../classes/db/services/user/UserNameService'
 import UserRankService from '../classes/db/services/user/UserRankService'
 import RankUtils from '../utils/RankUtils'
-import ExperienceUtils from '../utils/level/ExperienceUtils'
-import LevelUtils from '../utils/level/LevelUtils'
 import ExperienceCommand from '../classes/commands/buckwheat/level/ExperienceCommand'
 
 const isEnvVarsValidate = () => {
@@ -84,9 +80,12 @@ const isEnvVarsValidate = () => {
         createVariable('DB_NAME'),
         createVariable('DB_URL'),
         createVariable('CHAT_ID'),
-        createVariable('EMPTY_PROFILE', false),
+        createVariable('EMPTY_PROFILE_IMAGE', false),
         createVariable('DEV_ID', false),
         createVariable('MODE', false),
+        createVariable('DOMAIN', false),
+        createVariable('HOOK_PORT', false),
+        createVariable('SECRET_TOKEN', false),
     ]
 
     for (const variable of variables) {
@@ -218,7 +217,7 @@ const launchBot = async (bot: Bot) => {
         new StartCommand()
     )
 
-    await bot.launch(async () => setBotParameters(bot))
+    await bot.launch(Boolean(DOMAIN), async () => setBotParameters(bot))
 }
 
 const setBotParameters = async (bot: Bot) => {

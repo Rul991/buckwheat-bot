@@ -6,6 +6,7 @@ import ContextUtils from '../../../../utils/ContextUtils'
 import UserNameService from '../../../db/services/user/UserNameService'
 import { DEFAULT_USER_NAME } from '../../../../utils/values/consts'
 import MessageUtils from '../../../../utils/MessageUtils'
+import StringUtils from '../../../../utils/StringUtils'
 
 export default class CubeCommand extends BuckwheatCommand {
     constructor() {
@@ -83,7 +84,7 @@ export default class CubeCommand extends BuckwheatCommand {
                         userUrl: user.link,
                         replyName: reply.name,
                         userName: user.name,
-                        cost: needMoney > 0 ? `${needMoney} монет` : 'интерес'
+                        cost: needMoney > 0 ? `${StringUtils.toFormattedNumber(needMoney)} монет` : 'интерес'
                     },
                     inlineKeyboard: ['cubes', `${replyId}_${userId}_${needMoney}`]
                 }

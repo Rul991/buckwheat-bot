@@ -29,17 +29,26 @@ export default class StringUtils {
     }
 
     static toFormattedNumber(number: number): string {
-        return number
-            .toString()
-            .split('')
-            .reverse()
-            .reduce((prev, curr, i, arr) => {
-                let newSegment: string = curr
-                if(i > 0 && (i + 1) % 3 == 0 && i != arr.length - 1) {
-                    newSegment = ' ' + newSegment
-                }
+        if(number >= 1e+21) {
+            const zeroCount = Math.floor(Math.log10(number))
+            const afterDot = 2
+            const firstNumberPart = Math.floor(number / (10 ** (zeroCount - afterDot))) / (10 ** afterDot)
 
-                return newSegment + prev
-            }, '')
+            return `${firstNumberPart} * 10^${zeroCount}`
+        }
+        else {
+            return number
+                .toString()
+                .split('')
+                .reverse()
+                .reduce((prev, curr, i, arr) => {
+                    let newSegment: string = curr
+                    if(i > 0 && (i + 1) % 3 == 0 && i != arr.length - 1) {
+                        newSegment = ' ' + newSegment
+                    }
+
+                    return newSegment + prev
+                }, '')
+        }
     }
 }

@@ -32,7 +32,7 @@ export default class WhereMarriageAction extends EveryMessageAction {
                     ctx,
                     'text/actions/other/marriage.pug',
                     {
-                        changeValues: await ContextUtils.getUser(ctx.from.id, ctx.from.first_name),
+                        changeValues: await ContextUtils.getUserFromContext(ctx),
                         disableNotification: true
                     }
                 )

@@ -10,6 +10,7 @@ import AdminUtils from '../../../utils/AdminUtils'
 import CasinoAddService from '../../db/services/casino/CasinoAddService'
 import UserProfileService from '../../db/services/user/UserProfileService'
 import CasinoAccountService from '../../db/services/casino/CasinoAccountService'
+import StringUtils from '../../../utils/StringUtils'
 
 type DiceAndId = {dice: number, id: number}
 
@@ -68,7 +69,7 @@ export default class CubeYesAction extends CallbackButtonAction {
 
                     const changeValues = {
                         ...await ContextUtils.getUser(winnerId),
-                        cost: prize
+                        cost: StringUtils.toFormattedNumber(prize)
                     }
 
                     if(boost == 1) {

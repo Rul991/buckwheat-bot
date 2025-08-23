@@ -12,6 +12,7 @@ import MessagesService from '../../../db/services/messages/MessagesService'
 import LevelUtils from '../../../../utils/level/LevelUtils'
 import ExperienceUtils from '../../../../utils/level/ExperienceUtils'
 import ExperienceService from '../../../db/services/level/ExperienceService'
+import StringUtils from '../../../../utils/StringUtils'
 
 export default class ProfileCommand extends BuckwheatCommand {
     constructor() {
@@ -110,9 +111,9 @@ export default class ProfileCommand extends BuckwheatCommand {
             className: ClassUtils.getName(classType),
             devStatus: RankUtils.getDevStatusByNumber(rank),
             classEmoji: ClassUtils.getEmoji(classType),
-            messages: (await MessagesService.get(id)).total ?? 0,
             description: user.description?.toUpperCase() || '...',
             experiencePrecents: ExperienceUtils.precents(experience),
+            messages: StringUtils.toFormattedNumber((await MessagesService.get(id)).total ?? 0),
         }
 
         if(photoId) {

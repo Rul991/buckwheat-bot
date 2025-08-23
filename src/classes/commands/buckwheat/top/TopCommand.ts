@@ -6,6 +6,7 @@ import ArrayUtils from '../../../../utils/ArrayUtils'
 import ClassUtils from '../../../../utils/ClassUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import RankUtils from '../../../../utils/RankUtils'
+import StringUtils from '../../../../utils/StringUtils'
 import SubCommandUtils from '../../../../utils/SubCommandUtils'
 import { TextContext, MaybeString, AsyncOrSync, NameObject, ClassTypes, TopLevelObject } from '../../../../utils/values/types'
 import CasinoGetService from '../../../db/services/casino/CasinoGetService'
@@ -26,6 +27,33 @@ type TopMessageLocals<T> = {
     sorted: T[],
     key: keyof T,
     id: number
+}
+
+const createTopChangeValues = async <Input, Output = Input>(
+    arr: Input[], 
+    callback: (arr: Input[]) => Output[],
+    options: {key: keyof Output, id?: number, title: string}
+): Promise<TopMessageLocals<Output>> => {
+    const sorted = callback(arr)
+
+    return {
+        ...options,
+        id: options.id ?? 0,
+        sorted,
+        users: await UserProfileService.getAll(),
+    } as TopMessageLocals<Output>
+}
+
+const formatAllNumbersInObjects = <
+    T extends Record<string, any> & {id: number}, 
+    Key extends keyof T
+>(arr: T[], key: Key) => {
+    return arr.map(obj => (
+        {
+            id: obj.id, 
+            [key]: StringUtils.toFormattedNumber(obj[key] ?? 0)
+        }
+    ))
 }
 
 export default class MoneyTopCommand extends BuckwheatCommand {
@@ -75,13 +103,17 @@ export default class MoneyTopCommand extends BuckwheatCommand {
             name: 'богачи',
             filename: 'top',
             execute: async ctx => {
-                return {
-                    sorted: await CasinoGetService.getSortedCasinos(),
-                    users: await UserProfileService.getAll(),
-                    title: 'богатых',
-                    key: 'money',
-                    id: ctx.botInfo.id
-                } as TopMessageLocals<Casino>
+                const key = 'money'
+
+                return createTopChangeValues(
+                    await CasinoGetService.getSortedCasinos(),
+                    arr => formatAllNumbersInObjects(arr, key),
+                    {
+                        key,
+                        id: ctx.botInfo.id,
+                        title: 'богатых'
+                    }
+                )
             }
         },
 
@@ -89,15 +121,17 @@ export default class MoneyTopCommand extends BuckwheatCommand {
             name: 'чат',
             filename: 'top',
             execute: async ctx => {
-                const messages = await MessagesService.getAll()
+                const key = 'total'
 
-                return {
-                    sorted: ArrayUtils.filterAndSort(messages, 'total', 10),
-                    users: await UserProfileService.getAll(),
-                    title: 'общительных',
-                    key: 'total',
-                    id: ctx.botInfo.id
-                } as TopMessageLocals<Messages>
+                return createTopChangeValues(
+                    ArrayUtils.filterAndSort(await MessagesService.getAll(), key, 10),
+                    arr => formatAllNumbersInObjects(arr, key),
+                    {
+                        key,
+                        id: ctx.botInfo.id,
+                        title: 'общительных'
+                    }
+                )
             }
         },
 
@@ -133,13 +167,17 @@ export default class MoneyTopCommand extends BuckwheatCommand {
             name: 'уровни',
             filename: 'top',
             execute: async ctx => {
-                return {
-                    sorted: await LevelService.getAllSorted(),
-                    users: await UserProfileService.getAll(),
-                    title: 'прокаченных',
-                    key: 'level',
-                    id: ctx.botInfo.id
-                } as TopMessageLocals<TopLevelObject>
+                const key = 'level'
+
+                return createTopChangeValues(
+                    await LevelService.getAllSorted(),
+                    arr => arr,
+                    {
+                        key,
+                        id: ctx.botInfo.id,
+                        title: 'прокаченных'
+                    }
+                )
             }
         },
     ]

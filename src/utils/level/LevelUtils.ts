@@ -21,10 +21,7 @@ export default class LevelUtils {
             'text/commands/level/level-up.pug',
             {
                 changeValues: {
-                    ...await ContextUtils.getUser(
-                        ctx.from?.id, 
-                        ctx.from?.first_name
-                    ),
+                    ...await ContextUtils.getUserFromContext(ctx),
                     lvl: newLevel
                 }
             }

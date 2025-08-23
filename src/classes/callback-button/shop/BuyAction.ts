@@ -26,7 +26,7 @@ export default class BuyAction extends CallbackButtonAction {
         
         const item = ShopItems.getWithLength(index, length)!
         const money = await CasinoGetService.getMoney(ctx.from.id)
-        const user = await ContextUtils.getUser(ctx.from.id)
+        const user = await ContextUtils.getUserFromContext(ctx)
 
         let priceString = StringUtils.toFormattedNumber(item.price)
 

@@ -18,7 +18,7 @@ export default class CookieCommand extends BuckwheatCommand {
         const reply = ctx.message.reply_to_message
         const userId = ctx.from.id
 
-        const hasCookie = await InventoryItemService.use(
+        const [hasCookie] = await InventoryItemService.use(
             userId, 
             'cookie'
         )

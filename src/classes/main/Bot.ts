@@ -5,7 +5,7 @@ import BaseDice from '../dice/BaseDice'
 import EveryMessageAction from '../actions/every/EveryMessageAction'
 import CallbackButtonAction from '../callback-button/CallbackButtonAction'
 import Logging from '../../utils/Logging'
-import { CHAT_ID, MODE } from '../../utils/values/consts'
+import { CHAT_ID, DOMAIN, HOOK_PORT, MODE, SECRET_TOKEN } from '../../utils/values/consts'
 import FileUtils from '../../utils/FileUtils'
 import BaseHandler from './handlers/BaseHandler'
 import TelegramCommandHandler from './handlers/commands/TelegramCommandHandler'
@@ -107,7 +107,7 @@ export default class Bot {
         }
     }
 
-    async launch(callback = async () => {}): Promise<void> {
+    async launch(isWebHook = false, callback = async () => {}): Promise<void> {
         this._handlers.forEach(handler => 
             handler.setup(this._bot)
         )
@@ -125,15 +125,21 @@ export default class Bot {
             )
         })
 
-        try {
-            await this._bot.launch(async () => {
-                this._launchCallback()
-                await callback()
-            })
+        const launchCallback = async () => {
+            this._launchCallback()
+            await callback()
         }
-        catch(e) {
-            Logging.error(e)
-        }
+
+        await this._bot.launch(
+            {
+                webhook: isWebHook ? {
+                    domain: DOMAIN,
+                    port: HOOK_PORT,
+                    secretToken: SECRET_TOKEN,
+                } : undefined
+            },
+            launchCallback
+        )
     }
 
     stop(reason?: string) {

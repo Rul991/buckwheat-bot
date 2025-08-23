@@ -1,12 +1,11 @@
 import User from '../../../../interfaces/schemas/User'
+import { DEFAULT_USER_NAME } from '../../../../utils/values/consts'
 import UserProfileService from './UserProfileService'
 
 export default class BaseUserService {
     static async get<T extends User[keyof User]>(id: number, key: keyof User): Promise<T | null> {
-        const user = await UserProfileService.get(id)
-
-        if(!user) return null
-        else return user[key] as T
+        const user = await UserProfileService.create(id, DEFAULT_USER_NAME)
+        return user[key] as T
     }
 
     static async update<T>(id: number, key: keyof User, data: T): Promise<T | null> {

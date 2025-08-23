@@ -3,8 +3,7 @@ b 📌 Список пользовательских рп-команд:
 |
 |
 each command in commands
-    - let name = command[0]
-    - let text = command[1]
+    - let [name, text] = command
     b 📍 #{name} 
-    | - "Игрок А #{text} игрока Б"
+    | - "Игрок #{text} игрока"
     |

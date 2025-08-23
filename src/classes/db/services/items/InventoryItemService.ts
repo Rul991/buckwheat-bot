@@ -16,11 +16,11 @@ type UpdateCallback = (
 ) => AsyncOrSync<UpdateResult>
 
 export default class InventoryItemService {
-    private static async _update(id: number, itemId: string, callback: UpdateCallback): Promise<boolean> {
+    private static async _update(id: number, itemId: string, callback: UpdateCallback): Promise<[boolean, number]> {
         const itemDescription = InventoryItemsUtils.getItemDescription(itemId)
 
         if(!itemDescription) {
-            return false
+            return [false, 0]
         }
 
         const items = await this.getAll(id) ?? []
@@ -33,7 +33,8 @@ export default class InventoryItemService {
         await ItemsRepository.updateOne(id, {
             items: InventoryItemsUtils.add(items, itemId, addValue)
         })
-        return isUpdated
+
+        return [isUpdated, userItem.count! + addValue]
     }
 
     static async get(id: number, itemId: string): Promise<InventoryItem | null> {
@@ -49,25 +50,30 @@ export default class InventoryItemService {
     }
 
     static async add(id: number, itemId: string): Promise<boolean> {
-        return this._update(id, itemId, (item, {type}) => {
+        const [isUpdated] = await this._update(id, itemId, (item, {type}) => {
             if(item.count! > 0 && type == 'oneInfinity') {
                 return {addValue: 0, isUpdated: false}
             }
             return {addValue: 1, isUpdated: true}
         })
+
+        return isUpdated
     }
 
-    static async use(id: number, itemId: string): Promise<boolean> {
-        return this._update(id, itemId, (item, {type}) => {
+    static async use(id: number, itemId: string): Promise<[boolean, number]> {
+        return await this._update(id, itemId, (item, {type}) => {
             const hasItem = (item.count ?? 0) > 0
+
             if(type == 'consumable') {
                 return hasItem ? 
                     {addValue: -1, isUpdated: true} : 
                     {addValue: 0, isUpdated: false}
             }
+
             else if(hasItem) {
                 return { addValue: 0, isUpdated: true }
             }
+            
             else {
                 return { addValue: 0, isUpdated: false }
             }

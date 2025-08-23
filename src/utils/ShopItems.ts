@@ -1,7 +1,7 @@
 import InventoryItemService from '../classes/db/services/items/InventoryItemService'
 import UserRankService from '../classes/db/services/user/UserRankService'
 import AdminUtils from './AdminUtils'
-import { CASINO_PLUS_BOOST, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './values/consts'
+import { CASINO_PLUS_BOOST, LEVEL_BOOST, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './values/consts'
 import MessageUtils from './MessageUtils'
 import RankUtils from './RankUtils'
 import { AsyncOrSync, CallbackButtonContext } from './values/types'
@@ -257,6 +257,26 @@ export default class ShopItems {
                 }
 
                 return isAdded
+            }
+        },
+
+        {
+            name: 'Ускоритель уровня',
+            description: `Позволяет увеличить получаемый опыт на ${LEVEL_BOOST}%`,
+            emoji: '📈',
+            price: 1000,
+            execute: async (ctx, user) => {
+                await InventoryItemService.add(ctx.from.id, 'levelBoost')
+
+                await MessageUtils.answerMessageFromResource(
+                    ctx,
+                    'text/commands/items/default.pug',
+                    {
+                        changeValues: user
+                    }
+                )
+
+                return true
             }
         },
     ]

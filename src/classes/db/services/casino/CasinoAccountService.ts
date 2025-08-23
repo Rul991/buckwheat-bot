@@ -12,7 +12,7 @@ export default class CasinoAccountService {
     }
 
     static async has(id: number): Promise<boolean> {
-        const obj = await CasinoRepository.findOne(id)
+        const obj = await this.get(id)
 
         return Boolean(obj)
     }

@@ -1,4 +1,5 @@
 import MessageUtils from '../../../utils/MessageUtils'
+import StringUtils from '../../../utils/StringUtils'
 import { TextContext, MaybeString } from '../../../utils/values/types'
 import CasinoAddService from '../../db/services/casino/CasinoAddService'
 import InventoryItemService from '../../db/services/items/InventoryItemService'
@@ -15,8 +16,9 @@ export default class GreadBoxCommand extends BuckwheatCommand {
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         const money = other && !isNaN(+other) ? Math.ceil(+other) : -1
+        const [hasBox] = await InventoryItemService.use(ctx.from.id, 'greedBox')
 
-        if(!await InventoryItemService.use(ctx.from.id, 'greedBox')) {
+        if(!hasBox) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/greedBox/cant.pug'
@@ -38,7 +40,7 @@ export default class GreadBoxCommand extends BuckwheatCommand {
             'text/commands/greedBox/done.pug',
             {
                 changeValues: {
-                    money
+                    money: StringUtils.toFormattedNumber(money)
                 }
             }
         )

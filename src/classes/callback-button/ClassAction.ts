@@ -24,7 +24,7 @@ export default class ClassAction extends CallbackButtonAction {
                 'text/actions/class/change.pug',
                 {
                     changeValues: {
-                        user: await ContextUtils.getUser(ctx.from.id, ctx.from.first_name),
+                        user: await ContextUtils.getUserFromContext(ctx),
                         className: ClassUtils.getName(classType)
                     }
                 }

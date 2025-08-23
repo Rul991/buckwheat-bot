@@ -3,9 +3,12 @@ b 📌 Топ самых #{title} игроков:
 |
 |
 - for(let i = 0; i < sorted.length; i++) {
-    - let user = users.find(user => user.id == sorted[i].id)
-    | #{i + 1}. 
-    a(href=`tg://user?id=${id}`)=user.name
-    |  - #{sorted[i][key]}#{emoji}
-    |
+    - let element = sorted[i]
+    - let user = users.find(user => user.id == element.id)
+
+    if user
+        | #{i + 1}. 
+        a(href=`tg://user?id=${id || user.id}`)=user.name
+        |  - #{element[key]}#{emoji}
+        |
 - }

@@ -11,7 +11,7 @@ export default class MoneyDropCommand extends BuckwheatCommand {
         this._description = 'кидаю монетку'
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
         if(await CasinoGetService.getMoney(ctx.from.id) <= 0) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
