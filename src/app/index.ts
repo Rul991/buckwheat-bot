@@ -166,9 +166,9 @@ const launchBot = async (bot: Bot) => {
     )
 
     bot.addNewMemberAction(
-        new HelloMemberAction(),
         new AddInDatabaseAction(),
         new BuckwheatEnterAction(),
+        new HelloMemberAction(),
     )
 
     // conditional
@@ -242,14 +242,15 @@ const setBotParameters = async (bot: Bot) => {
     await UserClassService.update(id, 'boss')
 }
 
-const test = async (): Promise<void> => {
+const test = async (): Promise<void | boolean> => {
     
 }
 
 const main = async () => {
-    if(MODE == 'dev')
-        await test()
-    
+    if(MODE == 'dev'){
+        if(await test()) return
+    }
+
     if(!isEnvVarsValidate()) return
     await connectDatabase()
 

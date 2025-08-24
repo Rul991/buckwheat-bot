@@ -1,7 +1,6 @@
 import BaseDice from './BaseDice'
 import ContextUtils from '../../utils/ContextUtils'
-import UserProfileService from '../db/services/user/UserProfileService'
-import { DEFAULT_USER_NAME, CASINO_TIME, JACKPOT_PRIZE, LOSE_PRIZE, WIN_PRIZE, CASINO_PLUS_BOOST } from '../../utils/values/consts'
+import { CASINO_TIME, JACKPOT_PRIZE, LOSE_PRIZE, WIN_PRIZE, CASINO_PLUS_BOOST } from '../../utils/values/consts'
 import CasinoAccountService from '../db/services/casino/CasinoAccountService'
 import CasinoAddService from '../db/services/casino/CasinoAddService'
 import Casino from '../../interfaces/schemas/Casino'

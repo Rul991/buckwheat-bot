@@ -1,15 +1,12 @@
 import { MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from '../../../utils/values/consts';
-import { DEFAULT_USER_NAME, DICE_TIME } from '../../../utils/values/consts'
+import { DICE_TIME } from '../../../utils/values/consts'
 import ContextUtils from '../../../utils/ContextUtils'
 import { CallbackButtonContext } from '../../../utils/values/types'
-import UserNameService from '../../db/services/user/UserNameService'
 import CallbackButtonAction from '../CallbackButtonAction'
 import MessageUtils from '../../../utils/MessageUtils'
 import CasinoGetService from '../../db/services/casino/CasinoGetService'
 import AdminUtils from '../../../utils/AdminUtils'
 import CasinoAddService from '../../db/services/casino/CasinoAddService'
-import UserProfileService from '../../db/services/user/UserProfileService'
-import CasinoAccountService from '../../db/services/casino/CasinoAccountService'
 import StringUtils from '../../../utils/StringUtils'
 
 type DiceAndId = {dice: number, id: number}
@@ -110,7 +107,7 @@ export default class CubeYesAction extends CallbackButtonAction {
             }, DICE_TIME)
         }
         else {
-            await ContextUtils.showAlert(ctx)
+            await ContextUtils.showCallbackMessageFromFile(ctx)
         }
     }
 }

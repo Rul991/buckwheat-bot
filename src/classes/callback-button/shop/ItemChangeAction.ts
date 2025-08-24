@@ -15,18 +15,19 @@ export default class ItemChangeAction extends CallbackButtonAction {
         this._name = 'itemchange'
     }
 
-    async execute(ctx: CallbackButtonContext, data: string): Promise<void> {
+    async execute(ctx: CallbackButtonContext, data: string): Promise<string | void> {
         const length = ShopItems.len()
         const index = Pager.wrapPages(data, length)
         const userId = +data.split('_')[2]
 
         if(index === -1) return
         if(userId != ctx.from.id) {
-            ContextUtils.showAlert(ctx)
+            ContextUtils.showCallbackMessageFromFile(ctx)
             return
         }
         
-        const item = ShopItems.getWithLength(index, length)!
+        const item = await ShopItems.getWithLength(index)
+        if(!item) return 'Что то пошло не так!'
 
         await MessageUtils.editText(
             ctx,

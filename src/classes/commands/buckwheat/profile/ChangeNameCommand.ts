@@ -3,7 +3,6 @@ import BuckwheatCommand from '../../base/BuckwheatCommand'
 import ContextUtils from '../../../../utils/ContextUtils'
 import { DEFAULT_USER_NAME, MAX_NAME_LENGTH } from '../../../../utils/values/consts'
 import UserNameService from '../../../db/services/user/UserNameService'
-import StringUtils from '../../../../utils/StringUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 
 export default class ChangeNameCommand extends BuckwheatCommand {

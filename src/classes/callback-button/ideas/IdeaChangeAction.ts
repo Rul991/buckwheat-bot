@@ -48,7 +48,7 @@ export default class IdeaChangeAction extends CallbackButtonAction {
         const userId = +(data.split('_')[2])
 
         if(userId !== ctx.from.id) {
-            await ContextUtils.showAlert(ctx)
+            await ContextUtils.showCallbackMessageFromFile(ctx)
             return
         }
         if(!ideas[newPage]) return 'Идей нет!'

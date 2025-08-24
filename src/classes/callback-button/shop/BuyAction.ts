@@ -1,14 +1,12 @@
-import { DEFAULT_USER_NAME } from '../../../utils/values/consts'
 import ContextUtils from '../../../utils/ContextUtils'
 import ShopItems from '../../../utils/ShopItems'
 import MessageUtils from '../../../utils/MessageUtils'
-import Pager from '../../../utils/Pager'
 import { CallbackButtonContext } from '../../../utils/values/types'
 import CasinoAddService from '../../db/services/casino/CasinoAddService'
 import CasinoGetService from '../../db/services/casino/CasinoGetService'
-import UserNameService from '../../db/services/user/UserNameService'
 import CallbackButtonAction from '../CallbackButtonAction'
 import StringUtils from '../../../utils/StringUtils'
+import FileUtils from '../../../utils/FileUtils'
 
 export default class BuyAction extends CallbackButtonAction {
     constructor() {
@@ -17,14 +15,15 @@ export default class BuyAction extends CallbackButtonAction {
     }
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<string | void> {
-        const length = ShopItems.len()
         const [index] = data
             .split('_', 1)
             .map(val => +val)
 
         if(index === -1) return
         
-        const item = ShopItems.getWithLength(index, length)!
+        const item = await ShopItems.getWithLength(index)
+        if(!item) return 'Что то пошло не так!'
+
         const money = await CasinoGetService.getMoney(ctx.from.id)
         const user = await ContextUtils.getUserFromContext(ctx)
 
@@ -46,7 +45,7 @@ export default class BuyAction extends CallbackButtonAction {
             return
         }
 
-        const isBought = await item.execute(ctx, user)
+        const isBought = await item.execute(ctx, user, item)
 
         if(isBought) {
             await CasinoAddService.addMoney(ctx.from.id, -item.price)
@@ -54,16 +53,7 @@ export default class BuyAction extends CallbackButtonAction {
             return `Товар "${item.name}" куплен!`
         }
         else {
-            await MessageUtils.answerMessageFromResource(
-                ctx,
-                'text/commands/shop/return.pug',
-                {
-                    changeValues: {
-                        ...item, 
-                        user
-                    }
-                }
-            )
+            return await FileUtils.readPugFromResource('text/commands/shop/return.pug')
         }
     }
 }

@@ -4,10 +4,7 @@ import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
 import ContextUtils from '../../../../utils/ContextUtils'
-import UserNameService from '../../../db/services/user/UserNameService'
-import { DEFAULT_USER_NAME } from '../../../../utils/values/consts'
 import MessageUtils from '../../../../utils/MessageUtils'
-import CasinoAccountService from '../../../db/services/casino/CasinoAccountService'
 
 export default class RankCommand extends BuckwheatCommand {
     private static async _answerMyRank(ctx: Context): Promise<void> {

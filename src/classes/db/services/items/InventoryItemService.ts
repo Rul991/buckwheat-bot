@@ -34,7 +34,7 @@ export default class InventoryItemService {
             items: InventoryItemsUtils.add(items, itemId, addValue)
         })
 
-        return [isUpdated, userItem.count! + addValue]
+        return [isUpdated, userItem.count!]
     }
 
     static async get(id: number, itemId: string): Promise<InventoryItem | null> {
@@ -49,15 +49,15 @@ export default class InventoryItemService {
         return items.items ?? []
     }
 
-    static async add(id: number, itemId: string): Promise<boolean> {
-        const [isUpdated] = await this._update(id, itemId, (item, {type}) => {
+    static async add(id: number, itemId: string): Promise<[boolean, number]> {
+        const result = await this._update(id, itemId, (item, {type}) => {
             if(item.count! > 0 && type == 'oneInfinity') {
                 return {addValue: 0, isUpdated: false}
             }
             return {addValue: 1, isUpdated: true}
         })
 
-        return isUpdated
+        return result
     }
 
     static async use(id: number, itemId: string): Promise<[boolean, number]> {

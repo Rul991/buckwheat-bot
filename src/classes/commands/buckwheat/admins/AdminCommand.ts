@@ -1,13 +1,9 @@
-import { Context } from 'telegraf'
 import { MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
-import AdminUtils from '../../../../utils/AdminUtils'
-import { DEFAULT_USER_NAME } from '../../../../utils/values/consts'
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import RankUtils from '../../../../utils/RankUtils'
 import TimeUtils from '../../../../utils/TimeUtils'
-import UserNameService from '../../../db/services/user/UserNameService'
 import UserRankService from '../../../db/services/user/UserRankService'
 import StringUtils from '../../../../utils/StringUtils'
 

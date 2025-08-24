@@ -44,11 +44,23 @@ export default class ContextUtils {
         return `tg://user?id=${id}`
     }
 
-    static async showAlert(ctx: Context, path = 'text/alerts/alert.pug') {
+    static async showCallbackMessage(ctx: Context, text: string, isAlert = false) {
         await ctx.answerCbQuery(
-            await FileUtils.readPugFromResource(path), 
-            { show_alert: true }
+            text, 
+            { show_alert: isAlert }
         )
+    }
+
+    static async showCallbackMessageFromFile(ctx: Context, path = 'text/alerts/alert.pug', isAlert = false) {
+        await this.showCallbackMessage(
+            ctx, 
+            await FileUtils.readPugFromResource(path), 
+            isAlert
+        )
+    }
+
+    static async showAlertFromFile(ctx: Context, path?: string) {
+        await this.showCallbackMessageFromFile(ctx, path, true)
     }
 
     static async isCreator(ctx: Context): Promise<boolean> {

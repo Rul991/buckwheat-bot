@@ -36,7 +36,7 @@ export default class VerificationAction extends CallbackButtonAction {
             await MessageUtils.editMarkup(ctx, undefined)
         }
         else {
-            await ContextUtils.showAlert(ctx)
+            await ContextUtils.showCallbackMessageFromFile(ctx)
         }
     }
 }

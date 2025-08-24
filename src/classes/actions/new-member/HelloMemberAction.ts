@@ -11,7 +11,7 @@ export default class HelloMemberAction extends NewMemberAction {
         const botName = ctx.botInfo.first_name
 
         for (const from of ctx.message.new_chat_members) {
-            if(from.is_bot) {
+            if(from.is_bot && from.id != ctx.botInfo.id) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/hello/bot.pug',
@@ -23,6 +23,7 @@ export default class HelloMemberAction extends NewMemberAction {
                 )
                 return
             }
+            else if(from.is_bot) return
 
             const isOld = await UserOldService.get(from.id)
             if(isOld) return

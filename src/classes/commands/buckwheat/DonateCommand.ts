@@ -1,10 +1,9 @@
-import { DEFAULT_USER_NAME, RUBLE_TO_COIN } from '../../../utils/values/consts'
+import { RUBLE_TO_COIN } from '../../../utils/values/consts'
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import RankUtils from '../../../utils/RankUtils'
 import { TextContext, MaybeString } from '../../../utils/values/types'
 import CasinoAddService from '../../db/services/casino/CasinoAddService'
-import UserNameService from '../../db/services/user/UserNameService'
 import UserRankService from '../../db/services/user/UserRankService'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 

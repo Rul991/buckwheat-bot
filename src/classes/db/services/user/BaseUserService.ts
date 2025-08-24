@@ -1,10 +1,9 @@
 import User from '../../../../interfaces/schemas/User'
-import { DEFAULT_USER_NAME } from '../../../../utils/values/consts'
 import UserProfileService from './UserProfileService'
 
 export default class BaseUserService {
     static async get<T extends User[keyof User]>(id: number, key: keyof User): Promise<T | null> {
-        const user = await UserProfileService.create(id, DEFAULT_USER_NAME)
+        const user = await UserProfileService.create(id)
         return user[key] as T
     }
 

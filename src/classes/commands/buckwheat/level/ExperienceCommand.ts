@@ -6,6 +6,7 @@ import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class ExperienceCommand extends BuckwheatCommand {
     private _commandOther = 'осталось до нового уровня'
+    private _keyWords = ['уровня', 'осталось']
 
     constructor() {
         super()
@@ -15,8 +16,19 @@ export default class ExperienceCommand extends BuckwheatCommand {
         this._argumentText = this._commandOther
     }
 
+    private _equalKeyWords(text?: string): boolean {
+        if(!text) return false
+        const lowerText = text.toLowerCase()
+
+        for (const word of this._keyWords) {
+            if(!lowerText.includes(word)) return false
+        }
+        
+        return true
+    }
+
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        if(other?.toLowerCase() !== this._commandOther) {
+        if(!this._equalKeyWords(other)) {
             await MessageUtils.sendWrongCommandMessage(ctx)
             return
         }

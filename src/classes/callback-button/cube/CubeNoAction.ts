@@ -25,7 +25,7 @@ export default class CubeNoAction extends CallbackButtonAction {
             )
         }
         else {
-            await ContextUtils.showAlert(ctx)
+            await ContextUtils.showCallbackMessageFromFile(ctx)
         }
     }
 }
