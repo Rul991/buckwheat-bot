@@ -10,6 +10,7 @@ export default class ClassUtils {
         engineer: 'Инженер',
         bard: 'Бард',
         boss: 'Финальный босс',
+        bot: 'НПС',
         [this.defaultClassName]: 'Не выбрано'
     }
 
@@ -20,6 +21,7 @@ export default class ClassUtils {
         engineer: '🧤',
         bard: '🎸',
         boss: '🤡',
+        bot: '🤖',
         [this.defaultClassName]: '🤷‍♂️'
     }
     

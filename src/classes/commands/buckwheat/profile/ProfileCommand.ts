@@ -30,15 +30,15 @@ export default class ProfileCommand extends BuckwheatCommand {
             return photoId
         }
         
-        let profilePhotos = await ctx
-            .telegram
-            .getUserProfilePhotos(id, 0, 1)
-        if(profilePhotos.total_count > 0) {
-            return profilePhotos.photos[0][0].file_id
-        }
 
-        else if(EMPTY_PROFILE_IMAGE_ID) {
-            return EMPTY_PROFILE_IMAGE_ID 
+        if(id != 0) {
+            let profilePhotos = await ctx
+                .telegram
+                .getUserProfilePhotos(id, 0, 1)
+
+            return profilePhotos.total_count > 0 ? 
+                profilePhotos.photos[0][0].file_id : 
+                EMPTY_PROFILE_IMAGE_ID ?? null
         }
 
         else {

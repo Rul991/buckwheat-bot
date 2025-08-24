@@ -68,6 +68,8 @@ import UserNameService from '../classes/db/services/user/UserNameService'
 import UserRankService from '../classes/db/services/user/UserRankService'
 import RankUtils from '../utils/RankUtils'
 import ExperienceCommand from '../classes/commands/buckwheat/level/ExperienceCommand'
+import AddInDatabaseAction from '../classes/actions/new-member/AddInDatabaseAction'
+import BuckwheatEnterAction from '../classes/actions/new-member/BuckwheatEnterAction'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -164,7 +166,9 @@ const launchBot = async (bot: Bot) => {
     )
 
     bot.addNewMemberAction(
-        new HelloMemberAction()
+        new HelloMemberAction(),
+        new AddInDatabaseAction(),
+        new BuckwheatEnterAction(),
     )
 
     // conditional

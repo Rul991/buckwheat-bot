@@ -37,9 +37,15 @@ export default abstract class AdminCommand extends BuckwheatCommand {
             const [textTime, reason] = other ? StringUtils.splitByCommands(other, 1) : ['навсегда', '']
             const time = TimeUtils.parseTimeToMilliseconds(textTime)
 
-            if(!(RankUtils.canUse(adminRank, replyRank, this._minimumRank) || isCreator) 
-                || replyId == adminId
-            ) {
+            if(!(RankUtils.canUse(adminRank, replyRank, this._minimumRank) || isCreator)) {
+                await MessageUtils.answerMessageFromResource(
+                    ctx,
+                    `text/commands/admin/rank-issue.pug`
+                )
+                return
+            }
+
+            if(replyId == adminId) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
                     `text/commands/${this._folder}/cancel.pug`

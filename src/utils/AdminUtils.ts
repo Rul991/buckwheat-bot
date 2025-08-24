@@ -5,7 +5,7 @@ import { ChatMember } from 'telegraf/types'
 import { KICK_TIME } from './values/consts'
 
 export default class AdminUtils {
-    static async mute(ctx: Context, id: number, ms: number) {
+    static async mute(ctx: Context, id: number, ms: number = 0) {
         try {
             return await ctx.restrictChatMember(id, {
                 permissions: {

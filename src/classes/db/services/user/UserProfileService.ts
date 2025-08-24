@@ -3,20 +3,24 @@ import { DEFAULT_USER_NAME } from '../../../../utils/values/consts'
 import UserRepository from '../../repositories/UserRepository'
 
 export default class UserProfileService {
-    static async create(id: number, name: string): Promise<User> {
+    static async create(id: number, name?: string): Promise<User> {
         const foundUser = await UserRepository.findOne(id)
         if(foundUser) return foundUser
 
         const user = await UserRepository.create({
             id,
-            name,
+            name: name || await this.getDefaultUserName(),
         })
 
         return user
     }
 
+    static async getDefaultUserName(): Promise<string> {
+        return `${DEFAULT_USER_NAME}${await this.getMembersCount()}`
+    }
+
     static async update(id: number, profile: Partial<User>): Promise<User | null> {
-        await this.create(id, DEFAULT_USER_NAME)
+        await this.create(id)
         return await UserRepository.updateOne(id, profile)
     }
 

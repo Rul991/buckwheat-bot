@@ -14,6 +14,8 @@ export default class StringUtils {
             const lastIndex = strings.length - 1
 
             if(symb.match(this.spaceRegexp)) {
+                if(!strings[lastIndex].length) continue
+                
                 spaceCount++
                 
                 if(spaceCount <= spaces) {
