@@ -1,17 +1,18 @@
 {
   "name": "buckwheat-bot",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "main": "src/app/index.ts",
   "scripts": {
+    "start": "npx tsx .",
     "dev": "npx nodemon --ext ts -w src --exec \"npm start\"",
     "build": "npm i",
-    "start": "npx tsx .",
-    "check": "npx tsc -b"
+    "check": "npx tsc -b",
+    "db": "npx tsx src/app/update-db.ts"
   },
   "keywords": [
     "telegraf",
     "mongoose",
-    "bakvit",
+    "buckwheat",
     "bot",
     "telegram"
   ],

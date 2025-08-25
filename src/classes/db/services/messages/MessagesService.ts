@@ -6,7 +6,7 @@ export default class MessagesService {
         const messages = await MessagesRepository.findOne(id)
 
         if(messages) return messages
-        else return await MessagesRepository.create({id})
+        else return await MessagesRepository.create({id, firstMessage: Date.now()})
     }
 
     static async getAll(): Promise<Messages[]> {
@@ -18,6 +18,6 @@ export default class MessagesService {
         const newCount = (messages.total ?? 0) + addValue
 
         await MessagesRepository.updateOne(id, {total: newCount})
-        return addValue
+        return newCount
     }
 }

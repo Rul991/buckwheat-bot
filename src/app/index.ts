@@ -50,7 +50,7 @@ import NewMessagesAction from '../classes/actions/every/NewMessagesAction'
 import WhereMarriageAction from '../classes/actions/every/WhereMarriageAction'
 import ClassAction from '../classes/callback-button/ClassAction'
 import ClassCommand from '../classes/commands/buckwheat/profile/ClassCommand'
-import GreadBoxCommand from '../classes/commands/buckwheat/GreadBoxCommand'
+import GreedBoxCommand from '../classes/commands/buckwheat/GreedBoxCommand'
 import CookieCommand from '../classes/commands/buckwheat/CookieCommand'
 import RoleplayCommand from '../classes/commands/base/RoleplayCommand'
 import IdeaCommand from '../classes/commands/buckwheat/IdeaCommand'
@@ -70,6 +70,8 @@ import RankUtils from '../utils/RankUtils'
 import ExperienceCommand from '../classes/commands/buckwheat/level/ExperienceCommand'
 import AddInDatabaseAction from '../classes/actions/new-member/AddInDatabaseAction'
 import BuckwheatEnterAction from '../classes/actions/new-member/BuckwheatEnterAction'
+import LinkCommand from '../classes/commands/buckwheat/LinkCommand'
+import StringUtils from '../utils/StringUtils'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = {name: string, isMustDefined: boolean}
@@ -205,7 +207,7 @@ const launchBot = async (bot: Bot) => {
         new ShopCommand(),
         new InventoryCommand(),
         new ClassCommand(),
-        new GreadBoxCommand(),
+        new GreedBoxCommand(),
         new CookieCommand(),
         new IdeaCommand(),
         new SaveCommand(),
@@ -213,6 +215,7 @@ const launchBot = async (bot: Bot) => {
         new MoneyDropCommand(),
         new AddRoleplayCommand(),
         new ExperienceCommand(),
+        new LinkCommand(),
         ...await getSimpleCommands(),
         ...await getRoleplayCommands()
     )
@@ -222,6 +225,7 @@ const launchBot = async (bot: Bot) => {
         new StartCommand()
     )
 
+    console.log('Start launching!')
     await bot.launch(Boolean(DOMAIN), async () => setBotParameters(bot))
 }
 

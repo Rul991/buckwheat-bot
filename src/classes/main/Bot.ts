@@ -102,7 +102,7 @@ export default class Bot {
         console.log(`Listened at https://t.me/${this._bot.botInfo?.username} (!)`)
         if(MODE == 'prod') {
             this._bot.telegram.sendMessage(
-                CHAT_ID, 
+                CHAT_ID!, 
                 await FileUtils.readPugFromResource('text/commands/update/after_restart.pug')
             )
         }
@@ -114,11 +114,16 @@ export default class Bot {
         app.use(this._bot.webhookCallback(SECRET_PATH))
         this._bot.telegram.setWebhook(`${DOMAIN}${SECRET_PATH}`)
 
-        app.listen(HOOK_PORT!, DOMAIN, 0, callback)
+        app.listen(HOOK_PORT!, '0.0.0.0', 0, callback)
     }
 
     private async _startLongPolling(callback = async () => {}) {
-        await this._bot.launch(callback)
+        await this._bot.launch(
+            {
+                dropPendingUpdates: true
+            }, 
+            callback
+        )
     }
 
     async launch(isWebHook = false, callback = async () => {}): Promise<void> {

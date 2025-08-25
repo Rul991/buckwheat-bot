@@ -1,3 +1,4 @@
+import { MILLISECONDS_IN_DAY } from './../../../../utils/values/consts';
 import { MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserProfileService from '../../../db/services/user/UserProfileService'
@@ -13,6 +14,8 @@ import LevelUtils from '../../../../utils/level/LevelUtils'
 import ExperienceUtils from '../../../../utils/level/ExperienceUtils'
 import ExperienceService from '../../../db/services/level/ExperienceService'
 import StringUtils from '../../../../utils/StringUtils'
+import TimeUtils from '../../../../utils/TimeUtils'
+import UserLinkedService from '../../../db/services/user/UserLinkedService'
 
 export default class ProfileCommand extends BuckwheatCommand {
     constructor() {
@@ -99,21 +102,29 @@ export default class ProfileCommand extends BuckwheatCommand {
         const rank = user.rank ?? RankUtils.min
         const classType = user.className ?? ClassUtils.defaultClassName
         const experience = await ExperienceService.get(id)
-        
+
+        const messages = await MessagesService.get(id)
+        const afterFirstMessage = Date.now() - (messages.firstMessage ?? 0)
+        const isLinked = (await UserLinkedService.get(id)) == ctx.chat.id
+
         const path = 'text/commands/profile/profile.pug'
         const changeValues = {
             rank,
             maxLevel: LevelUtils.max,
+            isLinked,
             level: LevelUtils.get(experience),
             ...await ContextUtils.getUser(id),
             emoji: RankUtils.getEmojiByRank(rank),
             userNameRank: RankUtils.getRankByNumber(rank),
             className: ClassUtils.getName(classType),
-            devStatus: RankUtils.getDevStatusByNumber(rank),
+            status: RankUtils.getAdminStatusByNumber(rank),
             classEmoji: ClassUtils.getEmoji(classType),
             description: user.description?.toUpperCase() || '...',
+            spawnDate: afterFirstMessage >= MILLISECONDS_IN_DAY ? 
+            TimeUtils.formatMillisecondsToTime(afterFirstMessage) :
+            TimeUtils.toHHMMSS(afterFirstMessage),
+            messages: StringUtils.toFormattedNumber(messages.total ?? 0),
             experiencePrecents: ExperienceUtils.precents(experience),
-            messages: StringUtils.toFormattedNumber((await MessagesService.get(id)).total ?? 0),
         }
 
         if(photoId) {

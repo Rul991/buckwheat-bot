@@ -1,4 +1,3 @@
-import { Context } from 'telegraf'
 import { MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserRankService from '../../../db/services/user/UserRankService'
@@ -32,12 +31,7 @@ export default class CreatorCommand extends BuckwheatCommand {
 
         await MessageUtils.answerMessageFromResource(
             ctx,
-            'text/commands/creator/error.pug',
-            {
-                changeValues: {
-                    dev: RankUtils.getDevStatusByNumber(RankUtils.max)
-                }
-            }
+            'text/commands/creator/error.pug'
         )
     }
 }

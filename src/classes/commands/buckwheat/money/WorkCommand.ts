@@ -35,7 +35,7 @@ export default class WorkCommand extends BuckwheatCommand {
         const [hasCatalog] = await InventoryItemService.use(id, 'workCatalog')
         const workTime = WORK_TIME / (hasCatalog ? CATALOG_BOOST : 1)
 
-        const money = RandomUtils.range(MIN_WORK, MAX_WORK) * (rank + 1)
+        const money = RandomUtils.range(MIN_WORK, MAX_WORK) * Math.max(rank + 1, 2)
         const elapsed = await WorkTimeService.getElapsedTime(id, workTime)
 
         const workTypes = await WorkCommand._getWorkTypes()

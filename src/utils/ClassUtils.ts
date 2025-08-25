@@ -20,7 +20,7 @@ export default class ClassUtils {
         sorcerer: '🪄',
         engineer: '🧤',
         bard: '🎸',
-        boss: '🤡',
+        boss: '💀',
         bot: '🤖',
         [this.defaultClassName]: '🤷‍♂️'
     }

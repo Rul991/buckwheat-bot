@@ -14,7 +14,9 @@ export default class MessageUtils {
         text: string, 
         {
             inlineKeyboard = ['empty', ''],
-            disableNotification
+            disableNotification,
+            chatId = ctx.chat?.id ?? -1,
+            isReply = true
         }: AnswerOptions = {}
     ): Promise<Message.TextMessage> {
         const emptyMessage: Message.TextMessage = {
@@ -24,14 +26,17 @@ export default class MessageUtils {
             chat: {
                 first_name: '', 
                 type: 'private', 
-                id: -1
+                id: chatId
             }
         }
         
         if(!text.length) return emptyMessage
+        if(chatId == -1) return emptyMessage
 
         const messageOptions = {
-            reply_parameters: {'message_id': ctx.message?.message_id ?? 0},
+            reply_parameters: isReply ? {
+                message_id: ctx.message?.message_id ?? 0
+            } : undefined,
             reply_markup: {
                 inline_keyboard: await InlineKeyboardManager.get(...inlineKeyboard)
             },
@@ -44,14 +49,22 @@ export default class MessageUtils {
             const partText = text.substring(i, i + MAX_MESSAGE_LENGTH)
 
             try {
-                lastMessage = await ctx.reply(partText, {
-                    ...messageOptions, 
-                    parse_mode: PARSE_MODE
-                })
+                lastMessage = await ctx.telegram.sendMessage(
+                    chatId,
+                    partText, 
+                    {
+                        ...messageOptions, 
+                        parse_mode: PARSE_MODE
+                    }
+                )
             }
             catch(e) {
                 try {
-                    lastMessage = await ctx.reply(partText, messageOptions)
+                    lastMessage = await ctx.telegram.sendMessage(
+                        chatId, 
+                        partText, 
+                        messageOptions
+                    )
                 }
                 catch(e) {
                     Logging.error(e)

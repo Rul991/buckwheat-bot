@@ -1,3 +1,4 @@
+import MathUtils from '../../../utils/MathUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import StringUtils from '../../../utils/StringUtils'
 import { TextContext, MaybeString } from '../../../utils/values/types'
@@ -5,7 +6,7 @@ import CasinoAddService from '../../db/services/casino/CasinoAddService'
 import InventoryItemService from '../../db/services/items/InventoryItemService'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 
-export default class GreadBoxCommand extends BuckwheatCommand {
+export default class GreedBoxCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'шкатулка'
@@ -15,7 +16,9 @@ export default class GreadBoxCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const money = other && !isNaN(+other) ? Math.ceil(+other) : -1
+        const money = other && !isNaN(+other) ? 
+            MathUtils.clamp(Math.ceil(+other), 1, Number.MAX_SAFE_INTEGER) : 
+            -1
         const [hasBox] = await InventoryItemService.use(ctx.from.id, 'greedBox')
 
         if(!hasBox) {

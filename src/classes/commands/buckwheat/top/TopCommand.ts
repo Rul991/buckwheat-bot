@@ -67,7 +67,7 @@ export default class MoneyTopCommand extends BuckwheatCommand {
 
                 let ratings: Rating[] = []
 
-                for (let rank = RankUtils.max; rank >= 0; rank--) {
+                for (let rank = RankUtils.max; rank >= 1; rank--) {
                     const users = await UserRankService.findByRank(rank)
                     if(!users.length) continue
 

@@ -9,7 +9,7 @@ const fromEnvToNumber = (key: string) => isNaN(+env[key]!) ? undefined : +env[ke
 export const TOKEN = env.BOT_TOKEN!
 export const DB_NAME = env.DB_NAME!
 export const DB_URL = env.DB_URL!
-export const CHAT_ID = env.CHAT_ID!
+export const CHAT_ID = fromEnvToNumber('CHAT_ID')
 export const EMPTY_PROFILE_IMAGE = env.EMPTY_PROFILE_IMAGE
 export const DEV_ID = fromEnvToNumber('DEV_ID')
 export const MODE: ModeTypes = env.MODE as ModeTypes ?? 'dev'

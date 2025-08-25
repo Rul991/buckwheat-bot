@@ -14,7 +14,7 @@ export default class BalanceCommand extends BuckwheatCommand {
     }
 
     private static _getCasinoValue(casino: Casino, key: keyof Casino): string {
-        return casino[key] ? StringUtils.toFormattedNumber(casino[key]) : ''
+        return casino[key] ? StringUtils.toFormattedNumber(casino[key]) : '0'
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
