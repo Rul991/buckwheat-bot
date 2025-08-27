@@ -5,10 +5,10 @@ each rating in ratings
     | #{rating.emoji} #{rating.rankName}:
     each player in rating.players
         |
-        | 📍 
-        a(href=`tg://user?id=${id}`)=player
+        | #{player.isLeft ? '✖️' : '📍'} 
+        a(href=`tg://user?id=${player.id || id}`) 
+            if player.isLeft
+                s #{player.name}
+            else
+                | #{player.name}
 |
-|
-|
-b 📌 Количество зарегистрированных пользователей: 
-    u #{members} / #{maxMembers}

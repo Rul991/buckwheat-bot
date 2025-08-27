@@ -1,3 +1,9 @@
+mixin user_mixin(user, text, i)
+    | #{i + 1}. 
+    a(href=`tg://user?id=${id || user.id}`)=user.name
+    |  - #{text}
+    |
+
 b 📌 Топ самых #{title} игроков:
 |
 |
@@ -5,10 +11,13 @@ b 📌 Топ самых #{title} игроков:
 - for(let i = 0; i < sorted.length; i++) {
     - let element = sorted[i]
     - let user = users.find(user => user.id == element.id)
+    - let text = `${element[key]} ${emoji || ''}`
 
     if user
-        | #{i + 1}. 
-        a(href=`tg://user?id=${id || user.id}`)=user.name
-        |  - #{element[key]}#{emoji}
+        if user.isLeft
+            s
+                +user_mixin(user, text, i)
+        else
+            +user_mixin(user, text, i)
         |
 - }

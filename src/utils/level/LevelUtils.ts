@@ -12,7 +12,7 @@ export default class LevelUtils {
     }
 
     static get(experience: number): number {
-        return Math.floor(((experience + 32) ** (1 / 1.5)) / 10)
+        return this.clamp(Math.floor(((experience + 32) ** (1 / 1.5)) / 10))
     }
 
     static async sendLevelUpMessage(ctx: Context, newLevel: number): Promise<void> {

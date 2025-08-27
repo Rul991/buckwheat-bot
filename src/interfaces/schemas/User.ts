@@ -9,4 +9,5 @@ export default interface User {
     className?: ClassTypes
     isOld?: boolean
     linkedChat?: number
+    isLeft?: boolean
 }

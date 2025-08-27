@@ -7,6 +7,7 @@ import CasinoGetService from '../../db/services/casino/CasinoGetService'
 import CallbackButtonAction from '../CallbackButtonAction'
 import StringUtils from '../../../utils/StringUtils'
 import FileUtils from '../../../utils/FileUtils'
+import InventoryItemService from '../../db/services/items/InventoryItemService'
 
 export default class BuyAction extends CallbackButtonAction {
     constructor() {
@@ -15,42 +16,62 @@ export default class BuyAction extends CallbackButtonAction {
     }
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<string | void> {
-        const [index] = data
-            .split('_', 1)
+        const [index, _id, count] = data
+            .split('_')
             .map(val => +val)
 
         if(index === -1) return
         
         const item = await ShopItems.getWithLength(index)
-        if(!item) return 'Что то пошло не так!'
+        if(!item) return await FileUtils.readPugFromResource('text/alerts/wrong-item.pug')
 
         const money = await CasinoGetService.getMoney(ctx.from.id)
         const user = await ContextUtils.getUserFromContext(ctx)
 
-        let priceString = StringUtils.toFormattedNumber(item.price)
+        const totalCount = ShopItems.getCount(item, count)
+        const totalPrice = totalCount * item.price
 
-        if(item.price > money) {
+        if(totalPrice > money) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/shop/no-money.pug',
                 {
                     changeValues: {
-                        ...item, 
-                        elapsedMoney: item.price - money,
-                        user,
-                        price: priceString
+                        name: item.name, 
+                        elapsedMoney: StringUtils.toFormattedNumber(totalPrice - money),
+                        user
                     }
                 }
             )
             return
         }
 
-        const isBought = await item.execute(ctx, user, item)
+        const isBought = await item.execute({
+            ctx, 
+            user, 
+            item, 
+            count: totalCount,
+        })
 
         if(isBought) {
-            await CasinoAddService.addMoney(ctx.from.id, -item.price)
-            await CasinoAddService.addMoney(ctx.botInfo.id, item.price)
-            return `Товар "${item.name}" куплен!`
+            const itemId = 'shopPrecent'
+            const owners = await InventoryItemService.getOwners(itemId)
+            let precents = 100
+
+            for await (const {id, count} of owners) {
+                precents -= count
+                await CasinoAddService.addMoney(id, Math.floor(totalPrice * (count / 100)))
+            }
+
+            await CasinoAddService.addMoney(ctx.botInfo.id, Math.ceil(totalPrice * (precents / 100)))
+            await CasinoAddService.addMoney(ctx.from.id, -totalPrice)
+
+            return await FileUtils.readPugFromResource(
+                'text/alerts/bought.pug',
+                {
+                    changeValues: item
+                }
+            )
         }
         else {
             return await FileUtils.readPugFromResource('text/commands/shop/return.pug')

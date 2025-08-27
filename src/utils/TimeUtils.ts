@@ -65,7 +65,7 @@ export default class TimeUtils {
     }
 
     static toHHMMSS(ms: number, isFloorHours = false): string {
-        const seconds = Math.floor((ms / MILLISECONDS_IN_SECOND) % SECONDS_IN_MINUTE)
+        const seconds = Math.ceil((ms / MILLISECONDS_IN_SECOND) % SECONDS_IN_MINUTE)
         const minutes = Math.floor((ms / (MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE)) % MINUTES_IN_HOUR)
         const hours = Math.floor((ms / (MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR)))
 

@@ -19,6 +19,8 @@ import PhotoHandler from './handlers/PhotoHandler'
 import PhotoAction from '../actions/photo/PhotoAction'
 import MessageUtils from '../../utils/MessageUtils'
 import express from 'express'
+import LeftMemberHandler from './handlers/LeftMemberHandler'
+import LeftMemberAction from '../actions/left-member/LeftMemberAction'
 
 export default class Bot {    
     private _bot: Telegraf
@@ -31,17 +33,19 @@ export default class Bot {
     private _diceHandler: DiceHandler
     private _newMemberHandler: NewMemberHandler
     private _photoHandler: PhotoHandler
+    private _leftMemberHandler: LeftMemberHandler
 
     constructor(token: string) {
         this._bot = new Telegraf(token)
 
-        this._everyMessageHandler = new EveryMessageHandler
-        this._telegramCommandHandler = new TelegramCommandHandler
-        this._commandHandler = new CommandHandler
-        this._callbackButtonHandler = new CallbackButtonActionHandler
-        this._diceHandler = new DiceHandler
-        this._newMemberHandler = new NewMemberHandler
+        this._everyMessageHandler = new EveryMessageHandler()
+        this._telegramCommandHandler = new TelegramCommandHandler()
+        this._commandHandler = new CommandHandler()
+        this._callbackButtonHandler = new CallbackButtonActionHandler()
+        this._diceHandler = new DiceHandler()
+        this._newMemberHandler = new NewMemberHandler()
         this._photoHandler = new PhotoHandler()
+        this._leftMemberHandler = new LeftMemberHandler()
 
         this._handlers = [
             this._everyMessageHandler,
@@ -50,7 +54,8 @@ export default class Bot {
             this._callbackButtonHandler,
             this._diceHandler,
             this._newMemberHandler,
-            this._photoHandler
+            this._photoHandler,
+            this._leftMemberHandler
         ]
     }
 
@@ -64,6 +69,10 @@ export default class Bot {
 
     private _addCommand(command: BuckwheatCommand): void {
         this._commandHandler.add(command)
+    }
+
+    addLeftMemberActions(...actions: LeftMemberAction[]): void {
+        this._leftMemberHandler.add(...actions)
     }
 
     addPhotoActions(...actions: PhotoAction[]): void {

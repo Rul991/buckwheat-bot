@@ -3,10 +3,10 @@ import LevelUtils from './LevelUtils'
 
 export default class ExperienceUtils {
     static min = this.get(LevelUtils.min)
-    static max = this.get(LevelUtils.max)
+    static max = this.get(LevelUtils.max + 1)
     
-    static clamp(level: number): number {
-        return MathUtils.clamp(level, this.min, this.max)
+    static clamp(exp: number): number {
+        return MathUtils.clamp(exp, this.min, this.max)
     }
 
     static get(level: number): number {

@@ -1,4 +1,3 @@
-import { PARSE_MODE } from '../../utils/values/consts'
 import FileUtils from '../../utils/FileUtils'
 import Logging from '../../utils/Logging'
 import MessageUtils from '../../utils/MessageUtils'
@@ -37,7 +36,6 @@ export default class RuleChangeAction extends CallbackButtonAction {
                     reply_markup: {
                         inline_keyboard: await InlineKeyboardManager.get('rules', `${currentPage}`)
                     },
-                    parse_mode: PARSE_MODE
                 }
             )
         }

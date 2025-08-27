@@ -1,18 +1,22 @@
 import InventoryItemService from '../classes/db/services/items/InventoryItemService'
 import UserRankService from '../classes/db/services/user/UserRankService'
 import AdminUtils from './AdminUtils'
-import { LEVEL_BOOST, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './values/consts'
+import { LEVEL_BOOST, MAX_SHOP_PRECENTS, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './values/consts'
 import MessageUtils from './MessageUtils'
 import RankUtils from './RankUtils'
 import { AsyncOrSync, CallbackButtonContext } from './values/types'
 import ContextUtils from './ContextUtils'
 import FileUtils from './FileUtils'
+import LevelService from '../classes/db/services/level/LevelService'
+import LevelUtils from './level/LevelUtils'
+import StringUtils from './StringUtils'
 
-type ItemExecuteCallback = (
+type ItemExecuteCallback = (options: {
     ctx: CallbackButtonContext, 
     user: {link: string, name: string},
-    item: RequiredShopItem
-) => AsyncOrSync<boolean>
+    item: RequiredShopItem,
+    count: number
+}) => AsyncOrSync<boolean>
 
 type ShopItem = 
     {
@@ -21,6 +25,7 @@ type ShopItem =
         description?: string,
         emoji?: string,
         price?: number,
+        maxCount?: number,
         execute: ItemExecuteCallback
     }
 
@@ -30,7 +35,7 @@ export default class ShopItems {
     private static _items: ShopItem[] = [
         {
             filename: "rankUp",
-            execute: async (ctx, user) => {
+            execute: async ({ctx}) => {
                 const rank = await UserRankService.get(ctx.from.id)
                 if(rank >= RankUtils.moderator) return false
 
@@ -40,7 +45,7 @@ export default class ShopItems {
                 if(isBought) 
                     await ContextUtils.showCallbackMessageFromFile(
                         ctx,
-                        'text/commands/items/default.pug'
+                        'text/commands/items/default/default-count.pug'
                     )
 
                 return isBought
@@ -49,7 +54,7 @@ export default class ShopItems {
 
         {
             filename: "thanks",
-            execute: async (ctx, user) => {
+            execute: async ({ctx, user}) => {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/items/thanks.pug',
@@ -64,7 +69,7 @@ export default class ShopItems {
 
         {
             filename: "ban",
-            execute: async (ctx, user) => {
+            execute: async ({ctx, user}) => {
                 const isKicked = await AdminUtils.ban(
                     ctx, 
                     ctx.from.id, 
@@ -94,7 +99,7 @@ export default class ShopItems {
 
         {
             filename: 'manyCasino',
-            execute: async (ctx, user) => {
+            execute: async ({ctx}) => {
                 const [isUpdated] = await InventoryItemService.add(ctx.from.id, 'manyCasino')
 
                 if(isUpdated)
@@ -109,7 +114,7 @@ export default class ShopItems {
 
         {
             filename: 'infinityCasino',
-            execute: async (ctx, user) => {
+            execute: async ({ctx}) => {
                 const [isUpdated] = await InventoryItemService.add(ctx.from.id, 'infinityCasino')
 
                 if(isUpdated)
@@ -124,7 +129,7 @@ export default class ShopItems {
 
         {
             filename: 'greedBox',
-            execute: async (ctx, user) => {
+            execute: async ({ctx, user}) => {
                 if(await InventoryItemService.anyHas('greedBox')) {
                     await MessageUtils.answerMessageFromResource(
                         ctx,
@@ -153,13 +158,13 @@ export default class ShopItems {
 
         {
             filename: 'unban',
-            execute: async (ctx, user) => {
+            execute: async ({ctx, user}) => {
                 const unMuted = await AdminUtils.unmute(ctx, ctx.from.id)
 
                 if(unMuted) {
                     await MessageUtils.answerMessageFromResource(
                         ctx,
-                        'text/commands/items/default-user.pug',
+                        'text/commands/items/default/default-user.pug',
                         {
                             changeValues: user
                         }
@@ -172,8 +177,8 @@ export default class ShopItems {
 
         {
             filename: 'cookie',
-            execute: async (ctx, _) => {
-                const [_isBought, count] = await InventoryItemService.add(ctx.from.id, 'cookie')
+            execute: async ({ctx, count: boughtCount}) => {
+                const [_isBought, count] = await InventoryItemService.add(ctx.from.id, 'cookie', boughtCount)
 
                 await ContextUtils.showCallbackMessage(
                     ctx,
@@ -193,7 +198,7 @@ export default class ShopItems {
 
         {
             filename: 'workUp',
-            execute: async (ctx, user) => {
+            execute: async ({ctx}) => {
                 const [isAdded] = await InventoryItemService.add(ctx.from.id, 'workUp')
 
                 if(isAdded) {
@@ -209,7 +214,7 @@ export default class ShopItems {
 
         {
             filename: 'workCatalog',
-            execute: async (ctx, user) => {
+            execute: async ({ctx}) => {
                 const [isAdded] = await InventoryItemService.add(ctx.from.id, 'workCatalog')
 
                 if(isAdded) {
@@ -224,24 +229,98 @@ export default class ShopItems {
         },
 
         {
-            name: 'Ускоритель уровня',
-            description: `Позволяет увеличить получаемый опыт на ${LEVEL_BOOST}%`,
-            emoji: '📈',
-            price: 1000,
-            execute: async (ctx, _user, item) => {
-                const [_, count] = await InventoryItemService.add(ctx.from.id, 'levelBoost')
+            filename: 'levelBoost',
+            execute: async ({ctx, item, count}) => {
+                const [_, boostCount] = await InventoryItemService.add(ctx.from.id, 'levelBoost', count)
 
                 await ContextUtils.showCallbackMessage(
                     ctx,
                     await FileUtils.readPugFromResource(
-                        'text/commands/items/default.pug',
+                        'text/commands/items/default/default-count.pug',
                         {
                             changeValues: {
-                                count,
+                                count: boostCount,
                                 name: item.name
                             }
                         }
                     )
+                )
+
+                return true
+            }
+        },
+
+        {
+            filename: 'aeHair',
+            execute: async ({ctx, user}) => {
+                const itemId = 'aeHair'
+                if(await InventoryItemService.anyHas(itemId)) {
+                    await ContextUtils.showCallbackMessageFromFile(
+                        ctx,
+                        'text/commands/items/aeHair/empty.pug'
+                    )
+                    return false
+                }
+
+                const [isAdded] = await InventoryItemService.add(ctx.from.id, itemId)
+
+                if(isAdded) {
+                    await MessageUtils.answerMessageFromResource(
+                        ctx,
+                        'text/commands/items/aeHair/done.pug',
+                        {
+                            changeValues: user
+                        }
+                    )
+                }
+
+                return isAdded
+            }
+        },
+
+        {
+            filename: 'shopPrecent',
+            execute: async ({ctx, user, count}) => {
+                const itemId = 'shopPrecent'
+
+                const currentCount = await InventoryItemService.getTotalCount(itemId)
+                const totalCount = currentCount + count
+
+                if(totalCount > MAX_SHOP_PRECENTS) {
+                    await ContextUtils.showCallbackMessage(
+                        ctx,
+                        await FileUtils.readPugFromResource(
+                            'text/commands/items/shopPrecent/max.pug',
+                            {
+                                changeValues: {
+                                    elapsed: MAX_SHOP_PRECENTS - currentCount
+                                }
+                            }
+                        )
+                    )
+                    return false
+                }
+
+                if(await LevelService.get(ctx.from.id) < LevelUtils.max) {
+                    await ContextUtils.showCallbackMessageFromFile(
+                        ctx,
+                        'text/commands/items/shopPrecent/level-issue.pug'
+                    )
+
+                    return false
+                }
+
+                await InventoryItemService.add(ctx.from.id, itemId, count)
+
+                await MessageUtils.answerMessageFromResource(
+                    ctx,
+                    'text/commands/items/shopPrecent/done.pug',
+                    {
+                        changeValues: {
+                            ...user,
+                            precent: count
+                        }
+                    }
                 )
 
                 return true
@@ -258,7 +337,8 @@ export default class ShopItems {
             typeof item.name == 'string' && 
             typeof item.description == 'string' &&
             typeof item.emoji == 'string' && 
-            typeof item.price == 'number'
+            typeof item.price == 'number' &&
+            (typeof item.maxCount == 'number' || typeof item.maxCount == 'undefined')
         )
     }
 
@@ -269,13 +349,19 @@ export default class ShopItems {
             `json/shop_items/${item.filename}.json`
         )
 
-        if(jsonItem && this._isValid(jsonItem)) return {...jsonItem, ...item}
+        if(jsonItem && this._isValid(jsonItem)) 
+            return {
+                ...jsonItem, 
+                ...item
+            }
         else return null
     }
 
     private static async _valid(item: ShopItem): Promise<RequiredShopItem | null> {
         if(this._isValid(item)) {
-            return item as RequiredShopItem
+            return {
+                ...item
+            } as RequiredShopItem
         }
         else {
             return await this._readFromFile(item)
@@ -289,8 +375,13 @@ export default class ShopItems {
         const validatedItem = await this._valid(item)
         if(!validatedItem) return null
 
-        this._items[id] = validatedItem
-        return validatedItem
+        this._items[id] = {
+            ...validatedItem, 
+            maxCount: validatedItem.maxCount ?? -1
+        }
+
+        console.log(this._items[id])
+        return this._items[id] as Required<ShopItem>
     }
 
     static async getWithLength(id: number): Promise<(RequiredShopItem & { length: number; index: number }) | null> {
@@ -302,5 +393,18 @@ export default class ShopItems {
 
     static len(): number {
         return this._items.length
+    }
+
+    static getCount(item: RequiredShopItem, count: number): number {
+        const maxCount = item.maxCount <= 0 ? Number.MAX_SAFE_INTEGER : item.maxCount
+        return Math.min(count, maxCount)
+    }
+
+    static getPriceByCount(item: RequiredShopItem, count: number): number {
+        return this.getCount(item, count) * item.price
+    }
+
+    static getFormattedPriceByCount(item: RequiredShopItem, count: number): string {
+        return StringUtils.toFormattedNumber(this.getPriceByCount(item, count))
     }
 }

@@ -8,10 +8,19 @@ a(href=link) #{name}
 | #{emoji} Ранг: 
 b #{userNameRank} / #{status} (#{rank})
 |
+if isLinked || isLeft
+    |
+    |
 if isLinked
     |
     |
     b 💬 Привязан к данному чату
+    |
+if isLeft
+    |
+    |
+    b 😵 Вышел из чата
+    |
 |
 |
 | #{classEmoji} Класс: 

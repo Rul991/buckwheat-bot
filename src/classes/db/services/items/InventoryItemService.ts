@@ -15,6 +15,8 @@ type UpdateCallback = (
     itemDescription: InventoryItemDescription
 ) => AsyncOrSync<UpdateResult>
 
+type Owner = { id: number, count: number }
+
 export default class InventoryItemService {
     private static async _update(id: number, itemId: string, callback: UpdateCallback): Promise<[boolean, number]> {
         const itemDescription = InventoryItemsUtils.getItemDescription(itemId)
@@ -36,6 +38,20 @@ export default class InventoryItemService {
 
         return [isUpdated, userItem.count!]
     }
+    
+    private static async _forEach(
+        itemId: string, 
+        callback: (item: InventoryItem, items: Items) => AsyncOrSync<void | boolean>
+    ): Promise<void> {
+        const usersItems = await ItemsService.getAll()
+
+        for (const items of usersItems) {
+            const item = InventoryItemsUtils.find(items.items ?? [], itemId)
+            if(item && await callback(item, items)) {
+                return
+            }
+        }
+    }
 
     static async get(id: number, itemId: string): Promise<InventoryItem | null> {
         const items = await this.getAll(id) ?? []
@@ -49,12 +65,12 @@ export default class InventoryItemService {
         return items.items ?? []
     }
 
-    static async add(id: number, itemId: string): Promise<[boolean, number]> {
+    static async add(id: number, itemId: string, count = 1): Promise<[boolean, number]> {
         const result = await this._update(id, itemId, (item, {type}) => {
             if(item.count! > 0 && type == 'oneInfinity') {
                 return {addValue: 0, isUpdated: false}
             }
-            return {addValue: 1, isUpdated: true}
+            return {addValue: count, isUpdated: true}
         })
 
         return result
@@ -81,15 +97,36 @@ export default class InventoryItemService {
     }
 
     static async anyHas(itemId: string): Promise<boolean> {
-        const users = await ItemsService.getAll()
-
-        for (const {items} of users) {
-            const item = InventoryItemsUtils.find(items ?? [], itemId)
-            if(item && item.count! > 0) {
+        let anyHas = false
+        await this._forEach(itemId, item => {
+            if(item.count! > 0) {
+                anyHas = true
                 return true
             }
-        }
+        })
 
-        return false
+        return anyHas
+    }
+
+    static async getTotalCount(itemId: string): Promise<number> {
+        let count = 0
+        await this._forEach(itemId, item => {
+            count += item.count!
+        })
+
+        return count
+    }
+
+    static async getOwners(itemId: string): Promise<Owner[]> {
+        let owners: Owner[] = []
+
+        await this._forEach(itemId, (item, items) => {
+            owners.push({
+                id: items.id,
+                count: item.count ?? 0
+            })
+        })
+
+        return owners
     }
 }

@@ -14,7 +14,7 @@ export default class CasinoAddService {
     }
 
     static async addMoney(id: number, money: number): Promise<number> {
-        return await this._add(id, 'money', money)
+        return await this._add(id, 'money', Math.floor(money))
     }
 
     static async addLoses(id: number, loses: number): Promise<number> {

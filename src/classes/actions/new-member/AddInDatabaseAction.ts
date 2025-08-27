@@ -8,6 +8,7 @@ import UserProfileService from '../../db/services/user/UserProfileService'
 import WorkService from '../../db/services/work/WorkService'
 import UserClassService from '../../db/services/user/UserClassService'
 import LevelService from '../../db/services/level/LevelService'
+import UserLeftService from '../../db/services/user/UserLeftService'
 
 export default class AddInDatabaseAction extends NewMemberAction {
     private async _updateIfBot(ctx: NewMemberContext, from: User): Promise<void> {
@@ -30,7 +31,8 @@ export default class AddInDatabaseAction extends NewMemberAction {
             ItemsService.get(id),
             MessagesService.get(id),
             UserClassService.get(id),
-            LevelService.get(id)
+            LevelService.get(id),
+            UserLeftService.update(id, false)
         ])
 
         await this._updateIfBot(ctx, from)

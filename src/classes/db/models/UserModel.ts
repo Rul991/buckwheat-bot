@@ -13,5 +13,6 @@ export default createModel<User>({
         className: { type: String, default: ClassUtils.defaultClassName },
         isOld: { type: Boolean, default: false },
         linkedChat: { type: Number, default: 0 },
+        isLeft: { type: Boolean, default: false }
     }
 })

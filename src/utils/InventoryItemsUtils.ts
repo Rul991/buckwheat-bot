@@ -2,56 +2,47 @@ import InventoryItem from '../interfaces/schemas/InventoryItem'
 import { INFINITY_SYMB } from './values/consts'
 import Logging from './Logging'
 import { InventoryItemDescription, InventoryItemType } from './values/types'
+import FileUtils from './FileUtils'
+import StringUtils from './StringUtils'
+
+type ItemsRecord = Record<string, InventoryItemDescription>
 
 export default class InventoryItemsUtils {
-    private static _items: Record<string, InventoryItemDescription> = {
-        infinityCasino: {
-            name: 'Беспроигрышное казино',
-            type: 'oneInfinity'
-        },
+    private static _items: ItemsRecord = {}
 
-        manyCasino: {
-            name: 'Улучшение на казино',
-            type: 'oneInfinity'
-        },
+    private static _isValid(item: InventoryItemDescription) {
+        return (
+            typeof item.name == 'string' &&
+            typeof item.type == 'string'
+        )
+    }
 
-        greedBox: {
-            name: 'Шкатулка жадности',
-            type: 'manyInfinity'
-        },
-
-        cookie: {
-            name: '🍪',
-            type: 'consumable'
-        },
-
-        workUp: {
-            name: 'Повышение',
-            type: 'oneInfinity'
-        },
-
-        workCatalog: {
-            name: 'Каталог с квестами',
-            type: 'oneInfinity'
-        },
-
-        rankUp: {
-            name: 'Повышение ранга',
-            type: 'oneInfinity'
-        },
-
-        levelBoost: {
-            name: 'Ускоритель опыта',
-            type: 'manyInfinity'
+    static async setup(): Promise<boolean> {
+        const items = await FileUtils.readJsonFromResource<ItemsRecord>('json/other/item_descriptions.json')
+        if(!items) {
+            Logging.error('cant setup inventory item descriptions')
+            return false
         }
+
+        for (const key in items) {
+            const item = items[key]
+
+            if(this._isValid(item)) {
+                this._items[key] = item
+            }
+        }
+
+        return true
     }
 
     static getCountString(count: number, type?: InventoryItemType): string {
         let result: string = 'x'
+        
         const hasItem = count > 0
+        const countString = StringUtils.toFormattedNumber(count)
 
         if(!(type && hasItem)) {
-            result += `${count}`
+            result += `${countString}`
         }
         else if(type == 'oneInfinity') {
             result += INFINITY_SYMB
@@ -59,7 +50,7 @@ export default class InventoryItemsUtils {
         else {
             const ending = type == 'manyInfinity' ? ` (${INFINITY_SYMB})` : ''
 
-            result += `${count}${ending}`
+            result += `${countString}${ending}`
         }
 
         return result
@@ -84,7 +75,7 @@ export default class InventoryItemsUtils {
         const result = [...items, ...newItem]
             .map(({count, itemId}) => ({count, itemId}))
         
-        Logging.log(`(${itemId}) new items: `,result)
+        Logging.log(`(${itemId}) new items: `, result)
         return result
     }
 

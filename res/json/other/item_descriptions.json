@@ -1,0 +1,51 @@
+{
+    "infinityCasino": {
+        "name": "Беспроигрышное казино",
+        "type": "oneInfinity"
+    },
+
+    "manyCasino": {
+        "name": "Улучшение на казино",
+        "type": "oneInfinity"
+    },
+
+    "greedBox": {
+        "name": "Шкатулка жадности",
+        "type": "manyInfinity"
+    },
+
+    "cookie": {
+        "name": "🍪",
+        "type": "consumable"
+    },
+
+    "workUp": {
+        "name": "Повышение",
+        "type": "oneInfinity"
+    },
+
+    "workCatalog": {
+        "name": "Каталог с квестами",
+        "type": "oneInfinity"
+    },
+
+    "rankUp": {
+        "name": "Повышение ранга",
+        "type": "oneInfinity"
+    },
+
+    "levelBoost": {
+        "name": "Ускоритель опыта",
+        "type": "manyInfinity"
+    },
+
+    "aeHair": {
+        "name": "Волосы Ае",
+        "type": "oneInfinity"
+    },
+
+    "shopPrecent": {
+        "name": "Процент от магазина",
+        "type": "manyInfinity"
+    }
+}

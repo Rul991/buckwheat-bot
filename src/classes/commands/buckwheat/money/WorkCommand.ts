@@ -16,6 +16,7 @@ import ClassUtils from '../../../../utils/ClassUtils'
 import ExperienceService from '../../../db/services/level/ExperienceService'
 import LevelUtils from '../../../../utils/level/LevelUtils'
 import LevelService from '../../../db/services/level/LevelService'
+import RankUtils from '../../../../utils/RankUtils'
 
 export default class WorkCommand extends BuckwheatCommand {
     constructor() {
@@ -35,7 +36,7 @@ export default class WorkCommand extends BuckwheatCommand {
         const [hasCatalog] = await InventoryItemService.use(id, 'workCatalog')
         const workTime = WORK_TIME / (hasCatalog ? CATALOG_BOOST : 1)
 
-        const money = RandomUtils.range(MIN_WORK, MAX_WORK) * Math.max(rank + 1, 2)
+        const money = RandomUtils.range(MIN_WORK, MAX_WORK) * Math.max(rank + 1, RankUtils.moderator - 1)
         const elapsed = await WorkTimeService.getElapsedTime(id, workTime)
 
         const workTypes = await WorkCommand._getWorkTypes()

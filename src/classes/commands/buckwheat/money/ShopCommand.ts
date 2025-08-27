@@ -7,14 +7,25 @@ export default class ShopCommand extends BuckwheatCommand {
         super()
         this._name = 'магазин'
         this._description = 'открываю магазин'
+        this._needData = true
+        this._argumentText = 'количество'
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
+    private _getCount(other: MaybeString): number {
+        if(other && !isNaN(+other) && +other > 0)
+            return +other
+        else 
+            return 1
+    }
+
+    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+        const count = this._getCount(other)
+
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/shop/start.pug',
             {
-                inlineKeyboard: ['start_shop', `${ctx.from.id}`]
+                inlineKeyboard: ['start_shop', `${ctx.from.id}_${count}`]
             }
         )
     }

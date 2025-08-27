@@ -11,9 +11,7 @@ export default class DonateCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'донат'
-        this._description = `передаю деньги от вселенной донатерам\nкурс следующий: 1 рубль к ${RUBLE_TO_COIN} монетам`
-        this._needData = true
-        this._argumentText = 'рубли'
+        this._isShow = false
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {

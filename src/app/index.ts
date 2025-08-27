@@ -52,7 +52,6 @@ import ClassAction from '../classes/callback-button/ClassAction'
 import ClassCommand from '../classes/commands/buckwheat/profile/ClassCommand'
 import GreedBoxCommand from '../classes/commands/buckwheat/GreedBoxCommand'
 import CookieCommand from '../classes/commands/buckwheat/CookieCommand'
-import RoleplayCommand from '../classes/commands/base/RoleplayCommand'
 import IdeaCommand from '../classes/commands/buckwheat/IdeaCommand'
 import IdeaChangeAction from '../classes/callback-button/ideas/IdeaChangeAction'
 import DeleteIdeaAction from '../classes/callback-button/ideas/DeleteIdeaAction'
@@ -71,13 +70,16 @@ import ExperienceCommand from '../classes/commands/buckwheat/level/ExperienceCom
 import AddInDatabaseAction from '../classes/actions/new-member/AddInDatabaseAction'
 import BuckwheatEnterAction from '../classes/actions/new-member/BuckwheatEnterAction'
 import LinkCommand from '../classes/commands/buckwheat/LinkCommand'
-import StringUtils from '../utils/StringUtils'
+import InventoryItemsUtils from '../utils/InventoryItemsUtils'
+import AddLeftInDatabaseAction from '../classes/actions/left-member/AddLeftInDatabaseAction'
+import RandomCommand from '../classes/commands/buckwheat/RandomCommand'
+import CommandsChangeAction from '../classes/callback-button/CommandsChangeAction'
 
 const isEnvVarsValidate = () => {
-    type EnvVariable = {name: string, isMustDefined: boolean}
+    type EnvVariable = { name: string, isMustDefined: boolean }
 
-    const createVariable = (name: string, isMustDefined = true) => 
-        ({name, isMustDefined} as EnvVariable)
+    const createVariable = (name: string, isMustDefined = true) =>
+        ({ name, isMustDefined } as EnvVariable)
 
     const variables = [
         createVariable('BOT_TOKEN'),
@@ -94,10 +96,10 @@ const isEnvVarsValidate = () => {
     ]
 
     for (const variable of variables) {
-        if(!Validator.isEnvVariableDefined(env[variable.name])) {
+        if (!Validator.isEnvVariableDefined(env[variable.name])) {
             const message = `undefined ${variable.name}`
 
-            if(!variable.isMustDefined) {
+            if (!variable.isMustDefined) {
                 console.warn(message)
             }
             else {
@@ -128,10 +130,6 @@ const getCommands = async <
     return result
 }
 
-const getRoleplayCommands = async () => {
-    return await getCommands('rp', RoleplayCommand)
-}
-
 const getSimpleCommands = async () => {
     return await getCommands('simple_commands', SimpleBuckwheatCommand)
 }
@@ -139,10 +137,14 @@ const getSimpleCommands = async () => {
 const launchBot = async (bot: Bot) => {
     bot.addEveryMessageActions(
         new WrongChatAction(), // it should be first
-        new AntiSpamAction(), 
+        new AntiSpamAction(),
         new NewMessagesAction(),
         new WhereMarriageAction(),
         new RandomPrizeMessageAction(),
+    )
+
+    bot.addLeftMemberActions(
+        new AddLeftInDatabaseAction()
     )
 
     bot.addPhotoActions(
@@ -161,6 +163,7 @@ const launchBot = async (bot: Bot) => {
         new IdeaChangeAction(),
         new VoteAction(),
         new DeleteIdeaAction(),
+        new CommandsChangeAction()
     )
 
     bot.addDiceActions(
@@ -179,7 +182,7 @@ const launchBot = async (bot: Bot) => {
         new NoCommand(),
         new CustomRoleplayCommand()
     )
-    
+
     // buckwheat
     bot.addCommands(
         new CommandsCommand(),
@@ -216,10 +219,10 @@ const launchBot = async (bot: Bot) => {
         new AddRoleplayCommand(),
         new ExperienceCommand(),
         new LinkCommand(),
+        new RandomCommand(),
         ...await getSimpleCommands(),
-        ...await getRoleplayCommands()
     )
-    
+
     // tg
     bot.addCommands(
         new StartCommand()
@@ -231,14 +234,14 @@ const launchBot = async (bot: Bot) => {
 
 const setBotParameters = async (bot: Bot) => {
     const { botInfo } = bot.bot
-    if(!botInfo) return 
+    if (!botInfo) return
 
     const { id } = botInfo
 
     const currentName = await UserNameService.get(id)
     const needName = 'Баквит'
 
-    if(currentName === needName) return
+    if (currentName === needName) return
 
     await UserNameService.update(id, needName)
     await UserDescriptionService.update(id, 'Я ваш проводник в данном чате')
@@ -247,16 +250,18 @@ const setBotParameters = async (bot: Bot) => {
 }
 
 const test = async (): Promise<void | boolean> => {
-    
+
 }
 
 const main = async () => {
-    if(MODE == 'dev'){
-        if(await test()) return
+    if (MODE == 'dev') {
+        if (await test()) return
     }
 
-    if(!isEnvVarsValidate()) return
+    if (!isEnvVarsValidate()) return
     await connectDatabase()
+    
+    if(!await InventoryItemsUtils.setup()) return
 
     const bot = new Bot(TOKEN)
     await launchBot(bot)

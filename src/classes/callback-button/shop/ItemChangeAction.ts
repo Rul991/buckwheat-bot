@@ -1,4 +1,3 @@
-import { PARSE_MODE } from '../../../utils/values/consts'
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
 import ShopItems from '../../../utils/ShopItems'
@@ -18,16 +17,22 @@ export default class ItemChangeAction extends CallbackButtonAction {
     async execute(ctx: CallbackButtonContext, data: string): Promise<string | void> {
         const length = ShopItems.len()
         const index = Pager.wrapPages(data, length)
-        const userId = +data.split('_')[2]
+
+        const [userId, count] = data.split('_')
+            .slice(2)
+            .map(v => +v)
 
         if(index === -1) return
         if(userId != ctx.from.id) {
-            ContextUtils.showCallbackMessageFromFile(ctx)
+            ContextUtils.showAlertFromFile(ctx)
             return
         }
         
         const item = await ShopItems.getWithLength(index)
-        if(!item) return 'Что то пошло не так!'
+        if(!item) return await FileUtils.readPugFromResource('text/alerts/wrong-item.pug')
+
+        const totalCount = ShopItems.getCount(item, count)
+        const totalPrice = ShopItems.getFormattedPriceByCount(item, count)
 
         await MessageUtils.editText(
             ctx,
@@ -36,15 +41,16 @@ export default class ItemChangeAction extends CallbackButtonAction {
                 {
                     changeValues: {
                         ...item,
-                        price: StringUtils.toFormattedNumber(item.price)
+                        count: StringUtils.toFormattedNumber(totalCount),
+                        price: StringUtils.toFormattedNumber(item.price),
+                        totalPrice,
                     }
                 }
             ),
             {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get('shop', `${index}_${ctx.from.id}`)
+                    inline_keyboard: await InlineKeyboardManager.get('shop', `${index}_${ctx.from.id}_${count}`)
                 },
-                parse_mode: PARSE_MODE
             }
         )
     }

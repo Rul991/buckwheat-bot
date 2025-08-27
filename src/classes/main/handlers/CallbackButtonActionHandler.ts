@@ -16,9 +16,11 @@ export default class CallbackButtonActionHandler extends BaseHandler<CallbackBut
             if(!name) return
 
             const action = this._instances[name]
-            if(!action) return
 
-            await ctx.answerCbQuery(await action.execute(ctx, data ?? '') ?? undefined)
+            const text = action ? 
+                await action.execute(ctx, data ?? '') ?? undefined :
+                'Кнопка не работает!'
+            await ctx.answerCbQuery(text, !action ? {show_alert: true} : undefined)
         })
     }
 }

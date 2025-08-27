@@ -10,14 +10,19 @@ export default class CommandsCommand extends BuckwheatCommand {
         this._description = 'я выдаю данный список'
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
         const commands = CommandDescriptionUtils
             .getVisible()
 
         await MessageUtils.answerMessageFromResource(
             ctx,
-            'text/commands/commands.pug',
-            {changeValues: {commands}}
+            'text/actions/commands/start.pug',
+            {
+                changeValues: {
+                    length: commands.length
+                },
+                inlineKeyboard: ['commands/start', '']
+            }
         )
     }
 }

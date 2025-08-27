@@ -1,5 +1,4 @@
 import Idea from '../../../interfaces/schemas/Idea'
-import { PARSE_MODE } from '../../../utils/values/consts'
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
 import IdeaUtils from '../../../utils/IdeaUtils'
@@ -37,7 +36,6 @@ export default class IdeaChangeAction extends CallbackButtonAction {
                 reply_markup: {
                     inline_keyboard: await InlineKeyboardManager.get('ideachange', `${newPage}_${id}`)
                 },
-                parse_mode: PARSE_MODE
             }
         )
     }

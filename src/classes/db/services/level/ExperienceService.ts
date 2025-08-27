@@ -11,7 +11,7 @@ export default class ExperienceService {
     }
 
     static async set(id: number, experience: number): Promise<number> {
-        await LevelRepository.updateOne(id, {experience})
+        await LevelRepository.updateOne(id, {experience: ExperienceUtils.clamp(experience)})
         return experience
     }
 

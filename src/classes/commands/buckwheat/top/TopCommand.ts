@@ -12,6 +12,7 @@ import { TextContext, MaybeString, AsyncOrSync, NameObject, ClassTypes, TopLevel
 import CasinoGetService from '../../../db/services/casino/CasinoGetService'
 import LevelService from '../../../db/services/level/LevelService'
 import MessagesService from '../../../db/services/messages/MessagesService'
+import UserLeftService from '../../../db/services/user/UserLeftService'
 import UserProfileService from '../../../db/services/user/UserProfileService'
 import UserRankService from '../../../db/services/user/UserRankService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
@@ -62,7 +63,7 @@ export default class MoneyTopCommand extends BuckwheatCommand {
             name: 'стафф',
             filename: 'staff',
             execute: async ctx => {
-                type Player = string
+                type Player = {name: string, isLeft: boolean}
                 type Rating = {emoji: string, rankName: string, players: Player[]}
 
                 let ratings: Rating[] = []
@@ -73,8 +74,11 @@ export default class MoneyTopCommand extends BuckwheatCommand {
 
                     const players: Player[] = []
 
-                    for await (const {name} of users) {
-                        players.push(name)
+                    for await (const {id, name} of users) {
+                        players.push({
+                            name, 
+                            isLeft: await UserLeftService.get(id) ?? false
+                        })
                     }
 
                     ratings.push({
@@ -83,17 +87,9 @@ export default class MoneyTopCommand extends BuckwheatCommand {
                         players
                     })
                 }
-                const members = ratings.reduce(
-                    (prev, curr) => prev + curr.players.length,
-                    0
-                )
 
                 return {
                     ratings,
-                    members,
-                    maxMembers: await ctx
-                        .telegram
-                        .getChatMembersCount(ctx.chat.id),
                     id: ctx.botInfo.id
                 }
             }

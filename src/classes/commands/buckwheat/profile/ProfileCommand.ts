@@ -1,10 +1,10 @@
-import { MILLISECONDS_IN_DAY } from './../../../../utils/values/consts';
+import { MILLISECONDS_IN_DAY, PARSE_MODE } from './../../../../utils/values/consts';
 import { MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserProfileService from '../../../db/services/user/UserProfileService'
 import ContextUtils from '../../../../utils/ContextUtils'
 import FileUtils from '../../../../utils/FileUtils'
-import { EMPTY_PROFILE_IMAGE as EMPTY_PROFILE_IMAGE_ID, PARSE_MODE } from '../../../../utils/values/consts'
+import { EMPTY_PROFILE_IMAGE as EMPTY_PROFILE_IMAGE_ID } from '../../../../utils/values/consts'
 import RankUtils from '../../../../utils/RankUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import UserImageService from '../../../db/services/user/UserImageService'
@@ -16,6 +16,7 @@ import ExperienceService from '../../../db/services/level/ExperienceService'
 import StringUtils from '../../../../utils/StringUtils'
 import TimeUtils from '../../../../utils/TimeUtils'
 import UserLinkedService from '../../../db/services/user/UserLinkedService'
+import UserLeftService from '../../../db/services/user/UserLeftService'
 
 export default class ProfileCommand extends BuckwheatCommand {
     constructor() {
@@ -105,13 +106,16 @@ export default class ProfileCommand extends BuckwheatCommand {
 
         const messages = await MessagesService.get(id)
         const afterFirstMessage = Date.now() - (messages.firstMessage ?? 0)
+
         const isLinked = (await UserLinkedService.get(id)) == ctx.chat.id
+        const isLeft = await UserLeftService.get(id)
 
         const path = 'text/commands/profile/profile.pug'
         const changeValues = {
             rank,
-            maxLevel: LevelUtils.max,
+            isLeft,
             isLinked,
+            maxLevel: LevelUtils.max,
             level: LevelUtils.get(experience),
             ...await ContextUtils.getUser(id),
             emoji: RankUtils.getEmojiByRank(rank),
@@ -121,8 +125,8 @@ export default class ProfileCommand extends BuckwheatCommand {
             classEmoji: ClassUtils.getEmoji(classType),
             description: user.description?.toUpperCase() || '...',
             spawnDate: afterFirstMessage >= MILLISECONDS_IN_DAY ? 
-            TimeUtils.formatMillisecondsToTime(afterFirstMessage) :
-            TimeUtils.toHHMMSS(afterFirstMessage),
+                TimeUtils.formatMillisecondsToTime(afterFirstMessage) :
+                TimeUtils.toHHMMSS(afterFirstMessage),
             messages: StringUtils.toFormattedNumber(messages.total ?? 0),
             experiencePrecents: ExperienceUtils.precents(experience),
         }

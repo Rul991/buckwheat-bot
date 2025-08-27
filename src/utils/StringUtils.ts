@@ -1,9 +1,9 @@
 export default class StringUtils {
     static spaceRegexp = /\s+/
 
-    static splitBySpace(text: string): string[] {
+    static splitBySpace(text: string, limit?: number): string[] {
         return text
-            .split(this.spaceRegexp)
+            .split(this.spaceRegexp, limit)
     }
 
     static splitByCommands(text: string, spaces: number): string[] {

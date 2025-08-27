@@ -114,7 +114,7 @@ export default class MessageUtils {
 
     static async editText(ctx: Context, text: string, options?: ExtraEditMessageText): Promise<boolean> {
         try {
-            await ctx.editMessageText(text, options)
+            await ctx.editMessageText(text, {parse_mode: PARSE_MODE, ...options})
             return true
         }
         catch(e) {
