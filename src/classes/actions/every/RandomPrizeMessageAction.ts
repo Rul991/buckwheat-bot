@@ -6,7 +6,6 @@ import EveryMessageAction from './EveryMessageAction'
 
 export default class RandomPrizeMessageAction extends EveryMessageAction {
     async execute(ctx: MessageContext): Promise<void | true> {
-        if(ctx.chat.type == 'private') return
         const needSend = RandomUtils.chance(RANDOM_PRIZE_CHANCE)
 
         if(needSend) {

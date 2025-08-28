@@ -8,8 +8,6 @@ import { MessageContext } from '../../../utils/values/types'
 
 export default class AntiSpamAction extends EveryMessageAction {
     async execute(ctx: MessageContext): Promise<void | true> {
-        if(ctx.chat.type == 'private') return
-
         const id = ctx.from.id
 
         await AntiSpamService.add(id, 'lastMessagesCount', 1)
