@@ -30,6 +30,11 @@ export default class BalanceCommand extends BuckwheatCommand {
             .items
             ?.reduce((prev, curr) => (prev + (curr.count ?? 0)), 0) ?? 0
 
+        const wins = casino.wins!
+        const loses = casino.loses!
+        const games = wins + loses
+        const winrate = Math.floor(wins / games * 100 * 10) / 10
+
         await MessageUtils.answerMessageFromResource(
             ctx, 
             'text/commands/balance/balance.pug', 
@@ -39,7 +44,8 @@ export default class BalanceCommand extends BuckwheatCommand {
                     wins: BalanceCommand._getCasinoValue(casino, 'wins'),
                     loses: BalanceCommand._getCasinoValue(casino, 'loses'),
                     uniqueItemsLength: StringUtils.toFormattedNumber(uniqueItemsLength),
-                    itemsLength: StringUtils.toFormattedNumber(itemsLength)
+                    itemsLength: StringUtils.toFormattedNumber(itemsLength),
+                    winrate
                 }
             }
         )

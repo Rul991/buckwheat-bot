@@ -23,10 +23,7 @@ export default class UpdateCommand extends BuckwheatCommand {
             })
         }
         else {
-            await MessageUtils.answerMessageFromResource(
-                ctx,
-                'text/commands/other/wrong-command.pug',
-            )
+            await MessageUtils.sendWrongCommandMessage(ctx)
         }
     }
 }

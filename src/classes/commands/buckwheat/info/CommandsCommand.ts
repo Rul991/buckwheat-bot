@@ -1,7 +1,7 @@
-import CommandDescriptionUtils from '../../../utils/CommandDescriptionUtils'
-import MessageUtils from '../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../utils/values/types'
-import BuckwheatCommand from '../base/BuckwheatCommand'
+import CommandDescriptionUtils from '../../../../utils/CommandDescriptionUtils'
+import MessageUtils from '../../../../utils/MessageUtils'
+import { TextContext, MaybeString } from '../../../../utils/values/types'
+import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class CommandsCommand extends BuckwheatCommand {
     constructor() {

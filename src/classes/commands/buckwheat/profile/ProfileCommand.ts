@@ -1,10 +1,9 @@
-import { MILLISECONDS_IN_DAY, PARSE_MODE } from './../../../../utils/values/consts';
+import { MILLISECONDS_IN_DAY } from './../../../../utils/values/consts';
 import { MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserProfileService from '../../../db/services/user/UserProfileService'
 import ContextUtils from '../../../../utils/ContextUtils'
 import FileUtils from '../../../../utils/FileUtils'
-import { EMPTY_PROFILE_IMAGE as EMPTY_PROFILE_IMAGE_ID } from '../../../../utils/values/consts'
 import RankUtils from '../../../../utils/RankUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import UserImageService from '../../../db/services/user/UserImageService'
@@ -17,6 +16,7 @@ import StringUtils from '../../../../utils/StringUtils'
 import TimeUtils from '../../../../utils/TimeUtils'
 import UserLinkedService from '../../../db/services/user/UserLinkedService'
 import UserLeftService from '../../../db/services/user/UserLeftService'
+import Logging from '../../../../utils/Logging'
 
 export default class ProfileCommand extends BuckwheatCommand {
     constructor() {
@@ -34,18 +34,24 @@ export default class ProfileCommand extends BuckwheatCommand {
             return photoId
         }
         
+        try {
+            if(id != 0) {
+                let profilePhotos = await ctx
+                    .telegram
+                    .getUserProfilePhotos(id, 0, 1)
 
-        if(id != 0) {
-            let profilePhotos = await ctx
-                .telegram
-                .getUserProfilePhotos(id, 0, 1)
 
-            return profilePhotos.total_count > 0 ? 
-                profilePhotos.photos[0][0].file_id : 
-                EMPTY_PROFILE_IMAGE_ID ?? null
+                return profilePhotos.total_count > 0 ? 
+                    profilePhotos.photos[0][0].file_id : 
+                    (await ctx.telegram.getChat(ctx.chat.id)).photo?.big_file_id ?? 
+                    null
+            }
+
+            else {
+                throw 'no profile photos'
+            }
         }
-
-        else {
+        catch {
             return null
         }
     }
@@ -131,18 +137,29 @@ export default class ProfileCommand extends BuckwheatCommand {
             experiencePrecents: ExperienceUtils.precents(experience),
         }
 
-        if(photoId) {
-            const messageText = await FileUtils.readPugFromResource(
-                path,
-                {changeValues}
-            )
+        try {
+            if(photoId) {
+                const messageText = await FileUtils.readPugFromResource(
+                    path,
+                    {changeValues}
+                )
 
-            await ctx.replyWithPhoto(photoId, {
-                caption: messageText,
-                parse_mode: PARSE_MODE
-            })
+                const isSend = await MessageUtils.answerPhoto(
+                    ctx,
+                    messageText,
+                    photoId
+                )
+
+                if(!isSend) {
+                    throw 'cant send photo'
+                }
+            }
+            else {
+                throw 'no photo id'
+            }
         }
-        else {
+        catch(e) {
+            Logging.warn(e)
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 path,

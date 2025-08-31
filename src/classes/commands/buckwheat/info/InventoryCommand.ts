@@ -1,9 +1,9 @@
-import InventoryItem from '../../../interfaces/schemas/InventoryItem'
-import InventoryItemsUtils from '../../../utils/InventoryItemsUtils'
-import MessageUtils from '../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../utils/values/types'
-import InventoryItemService from '../../db/services/items/InventoryItemService'
-import BuckwheatCommand from '../base/BuckwheatCommand'
+import InventoryItem from '../../../../interfaces/schemas/InventoryItem'
+import InventoryItemsUtils from '../../../../utils/InventoryItemsUtils'
+import MessageUtils from '../../../../utils/MessageUtils'
+import { TextContext, MaybeString } from '../../../../utils/values/types'
+import InventoryItemService from '../../../db/services/items/InventoryItemService'
+import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class InventoryCommand extends BuckwheatCommand {
     constructor() {

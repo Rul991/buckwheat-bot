@@ -1,7 +1,7 @@
 import Bot from '../classes/main/Bot'
 import CapsCommand from '../classes/commands/conditional/CapsCommand'
 import NoCommand from '../classes/commands/conditional/NoCommand'
-import TestCommand from '../classes/commands/buckwheat/TestCommand'
+import TestCommand from '../classes/commands/buckwheat/dev/TestCommand'
 import { DOMAIN, MODE, TOKEN } from '../utils/values/consts'
 import Validator from '../utils/Validator'
 import StartCommand from '../classes/commands/telegram/StartCommand'
@@ -33,8 +33,8 @@ import RuleCommand from '../classes/commands/buckwheat/chat/RuleCommand'
 import RuleChangeAction from '../classes/callback-button/RuleChangeAction'
 import WorkCommand from '../classes/commands/buckwheat/money/WorkCommand'
 import { env } from 'process'
-import CommandsCommand from '../classes/commands/buckwheat/CommandsCommand'
-import DonateCommand from '../classes/commands/buckwheat/DonateCommand'
+import CommandsCommand from '../classes/commands/buckwheat/info/CommandsCommand'
+import DonateCommand from '../classes/commands/buckwheat/dev/DonateCommand'
 import HelloCommand from '../classes/commands/buckwheat/chat/HelloCommand'
 import HelloMemberAction from '../classes/actions/new-member/HelloMemberAction'
 import TopCommand from '../classes/commands/buckwheat/top/TopCommand'
@@ -42,7 +42,7 @@ import ImageProfileAction from '../classes/actions/photo/ImageProfileAction'
 import ShopCommand from '../classes/commands/buckwheat/money/ShopCommand'
 import ItemChangeAction from '../classes/callback-button/shop/ItemChangeAction'
 import BuyAction from '../classes/callback-button/shop/BuyAction'
-import InventoryCommand from '../classes/commands/buckwheat/InventoryCommand'
+import InventoryCommand from '../classes/commands/buckwheat/info/InventoryCommand'
 import VerificationAction from '../classes/callback-button/VerificationAction'
 import RandomPrizeMessageAction from '../classes/actions/every/RandomPrizeMessageAction'
 import RandomPrizeButtonAction from '../classes/callback-button/RandomPrizeButtonAction'
@@ -50,9 +50,9 @@ import NewMessagesAction from '../classes/actions/every/NewMessagesAction'
 import WhereMarriageAction from '../classes/actions/every/WhereMarriageAction'
 import ClassAction from '../classes/callback-button/ClassAction'
 import ClassCommand from '../classes/commands/buckwheat/profile/ClassCommand'
-import GreedBoxCommand from '../classes/commands/buckwheat/GreedBoxCommand'
+import GreedBoxCommand from '../classes/commands/buckwheat/money/GreedBoxCommand'
 import CookieCommand from '../classes/commands/buckwheat/CookieCommand'
-import IdeaCommand from '../classes/commands/buckwheat/IdeaCommand'
+import IdeaCommand from '../classes/commands/buckwheat/info/IdeaCommand'
 import IdeaChangeAction from '../classes/callback-button/ideas/IdeaChangeAction'
 import DeleteIdeaAction from '../classes/callback-button/ideas/DeleteIdeaAction'
 import VoteAction from '../classes/callback-button/ideas/VoteAction'
@@ -86,7 +86,6 @@ const isEnvVarsValidate = () => {
         createVariable('DB_NAME'),
         createVariable('DB_URL'),
         createVariable('CHAT_ID'),
-        createVariable('EMPTY_PROFILE_IMAGE', false),
         createVariable('DEV_ID', false),
         createVariable('MODE', false),
         createVariable('DOMAIN', false),

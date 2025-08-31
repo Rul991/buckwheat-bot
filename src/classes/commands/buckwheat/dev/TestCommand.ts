@@ -1,9 +1,9 @@
-import { MaybeString, TextContext } from '../../../utils/values/types'
-import BuckwheatCommand from '../base/BuckwheatCommand'
-import MessageUtils from '../../../utils/MessageUtils'
-import { DEV_ID } from '../../../utils/values/consts'
-import UserProfileService from '../../db/services/user/UserProfileService'
-import UserLeftService from '../../db/services/user/UserLeftService'
+import { MaybeString, TextContext } from '../../../../utils/values/types'
+import BuckwheatCommand from '../../base/BuckwheatCommand'
+import MessageUtils from '../../../../utils/MessageUtils'
+import { DEV_ID } from '../../../../utils/values/consts'
+import UserProfileService from '../../../db/services/user/UserProfileService'
+import UserLeftService from '../../../db/services/user/UserLeftService'
 
 export default class TestCommand extends BuckwheatCommand {
     constructor() {

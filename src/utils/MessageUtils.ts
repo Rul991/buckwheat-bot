@@ -9,15 +9,32 @@ import FileAnswerOptions from '../interfaces/options/FileAnswerOptions'
 import { ExtraEditMessageText } from './values/types'
 
 export default class MessageUtils {
-    static async answer(
+    private static async _getMessageOptions(
         ctx: Context, 
-        text: string, 
         {
             inlineKeyboard = ['empty', ''],
             disableNotification,
             chatId = ctx.chat?.id ?? -1,
             isReply = true
         }: AnswerOptions = {}
+    ) {
+        return {
+            reply_parameters: isReply && ctx.message?.message_id ? {
+                message_id: ctx.message.message_id
+            } : undefined,
+            reply_markup: {
+                inline_keyboard: await InlineKeyboardManager.get(...inlineKeyboard)
+            },
+            disable_notification: disableNotification,
+            parse_mode: PARSE_MODE as ParseMode,
+            chatId: chatId ?? -1
+        }
+    }
+
+    static async answer(
+        ctx: Context, 
+        text: string, 
+        options: AnswerOptions = {}
     ): Promise<Message.TextMessage> {
         const emptyMessage: Message.TextMessage = {
             text: '', 
@@ -26,22 +43,15 @@ export default class MessageUtils {
             chat: {
                 first_name: '', 
                 type: 'private', 
-                id: chatId
+                id: options.chatId ?? -1
             }
         }
+
+        const messageOptions = await this._getMessageOptions(ctx, options)
+        const {chatId} = messageOptions
         
         if(!text.length) return emptyMessage
         if(chatId == -1) return emptyMessage
-
-        const messageOptions = {
-            reply_parameters: isReply ? {
-                message_id: ctx.message?.message_id ?? 0
-            } : undefined,
-            reply_markup: {
-                inline_keyboard: await InlineKeyboardManager.get(...inlineKeyboard)
-            },
-            disable_notification: disableNotification
-        }
 
         let lastMessage: Message.TextMessage = emptyMessage
 
@@ -52,10 +62,7 @@ export default class MessageUtils {
                 lastMessage = await ctx.telegram.sendMessage(
                     chatId,
                     partText, 
-                    {
-                        ...messageOptions, 
-                        parse_mode: PARSE_MODE
-                    }
+                    messageOptions
                 )
             }
             catch(e) {
@@ -63,7 +70,10 @@ export default class MessageUtils {
                     lastMessage = await ctx.telegram.sendMessage(
                         chatId, 
                         partText, 
-                        messageOptions
+                        {
+                            ...messageOptions,
+                            parse_mode: undefined
+                        }
                     )
                 }
                 catch(e) {
@@ -77,7 +87,7 @@ export default class MessageUtils {
     }
 
     static async todo(ctx: Context): Promise<Message.TextMessage> {
-        return this.answer(ctx, 'Я еще не сделал это!')
+        return this.answer(ctx, 'Кажется, команда не работает еще!')
     }
 
     static async sendWrongCommandMessage(ctx: Context): Promise<void> {
@@ -99,6 +109,36 @@ export default class MessageUtils {
             text, 
             options
         )
+    }
+
+    static async answerPhoto(
+        ctx: Context,
+        text: string,
+        photoId: string,
+        options: AnswerOptions = {}
+    ): Promise<boolean> {
+        try {
+            const extra = await this._getMessageOptions(ctx, options)
+            if(extra.chatId == -1) {
+                Logging.error(`Cant send photo '${photoId}', chat id equal -1`)
+                return true
+            }
+
+            await ctx.telegram.sendPhoto(
+                extra.chatId,
+                photoId,
+                {
+                    ...extra,
+                    caption: text
+                }
+            )
+
+            return true
+        }
+        catch(e) {
+            Logging.error(e)
+            return false
+        }
     }
 
     static async editMarkup(ctx: Context, markup?: InlineKeyboardMarkup): Promise<boolean> {

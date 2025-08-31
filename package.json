@@ -1,6 +1,6 @@
 {
   "name": "buckwheat-bot",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "main": "src/app/index.ts",
   "scripts": {
     "start": "npx tsx .",

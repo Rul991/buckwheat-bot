@@ -1,11 +1,11 @@
-import { RUBLE_TO_COIN } from '../../../utils/values/consts'
-import ContextUtils from '../../../utils/ContextUtils'
-import MessageUtils from '../../../utils/MessageUtils'
-import RankUtils from '../../../utils/RankUtils'
-import { TextContext, MaybeString } from '../../../utils/values/types'
-import CasinoAddService from '../../db/services/casino/CasinoAddService'
-import UserRankService from '../../db/services/user/UserRankService'
-import BuckwheatCommand from '../base/BuckwheatCommand'
+import { CHAT_ID, RUBLE_TO_COIN } from '../../../../utils/values/consts'
+import ContextUtils from '../../../../utils/ContextUtils'
+import MessageUtils from '../../../../utils/MessageUtils'
+import RankUtils from '../../../../utils/RankUtils'
+import { TextContext, MaybeString } from '../../../../utils/values/types'
+import CasinoAddService from '../../../db/services/casino/CasinoAddService'
+import UserRankService from '../../../db/services/user/UserRankService'
+import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class DonateCommand extends BuckwheatCommand {
     constructor() {
@@ -17,6 +17,14 @@ export default class DonateCommand extends BuckwheatCommand {
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         const userId = ctx.from.id
         const userRank = await UserRankService.get(userId)
+
+        if(ctx.chat.id != CHAT_ID) {
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/donate/wrong-chat.pug'
+            )
+            return
+        }
 
         if(userRank < RankUtils.admin) {
             await MessageUtils.answerMessageFromResource(

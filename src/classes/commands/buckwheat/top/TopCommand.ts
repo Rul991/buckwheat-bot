@@ -1,6 +1,3 @@
-import Casino from '../../../../interfaces/schemas/Casino'
-import Level from '../../../../interfaces/schemas/Level'
-import Messages from '../../../../interfaces/schemas/Messages'
 import User from '../../../../interfaces/schemas/User'
 import ArrayUtils from '../../../../utils/ArrayUtils'
 import ClassUtils from '../../../../utils/ClassUtils'
@@ -27,13 +24,15 @@ type TopMessageLocals<T> = {
     users: User[],
     sorted: T[],
     key: keyof T,
-    id: number
+    id: number,
+    unit: string
+    totalCount: string
 }
 
 const createTopChangeValues = async <Input, Output = Input>(
     arr: Input[], 
     callback: (arr: Input[]) => Output[],
-    options: {key: keyof Output, id?: number, title: string}
+    options: {key: keyof Output, id?: number, title: string, unit?: string}
 ): Promise<TopMessageLocals<Output>> => {
     const sorted = callback(arr)
 
@@ -42,6 +41,7 @@ const createTopChangeValues = async <Input, Output = Input>(
         id: options.id ?? 0,
         sorted,
         users: await UserProfileService.getAll(),
+        unit: options.unit ?? ''
     } as TopMessageLocals<Output>
 }
 
@@ -57,10 +57,10 @@ const formatAllNumbersInObjects = <
     ))
 }
 
-export default class MoneyTopCommand extends BuckwheatCommand {
+export default class TopCommand extends BuckwheatCommand {
     private _subCommands: SubTopCommand[] = [
         {
-            name: 'стафф',
+            name: 'иерархия',
             filename: 'staff',
             execute: async ctx => {
                 type Player = {name: string, isLeft: boolean}
@@ -107,7 +107,8 @@ export default class MoneyTopCommand extends BuckwheatCommand {
                     {
                         key,
                         id: ctx.botInfo.id,
-                        title: 'богатых'
+                        title: 'богатых',
+                        unit: '💰'
                     }
                 )
             }
@@ -125,7 +126,8 @@ export default class MoneyTopCommand extends BuckwheatCommand {
                     {
                         key,
                         id: ctx.botInfo.id,
-                        title: 'общительных'
+                        title: 'общительных',
+                        unit: '✉️'
                     }
                 )
             }
@@ -171,7 +173,8 @@ export default class MoneyTopCommand extends BuckwheatCommand {
                     {
                         key,
                         id: ctx.botInfo.id,
-                        title: 'прокаченных'
+                        title: 'прокаченных',
+                        unit: '📈'
                     }
                 )
             }
@@ -181,7 +184,7 @@ export default class MoneyTopCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'топ'
-        this._description = 'показываю список от богатых к бедным'
+        this._description = 'показываю топ игроков по разным параметрам'
         this._needData = true
 
         const commands = SubCommandUtils.getArgumentText(this._subCommands)

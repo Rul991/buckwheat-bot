@@ -4,14 +4,14 @@ mixin user_mixin(user, text, i)
     |  - #{text}
     |
 
-b 📌 Топ самых #{title} игроков:
+b #{unit} Топ самых #{title} игроков:
 |
 |
 |
 - for(let i = 0; i < sorted.length; i++) {
     - let element = sorted[i]
     - let user = users.find(user => user.id == element.id)
-    - let text = `${element[key]} ${emoji || ''}`
+    - let text = `${element[key]}`
 
     if user
         if user.isLeft

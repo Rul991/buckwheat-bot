@@ -16,7 +16,6 @@ export default class RandomPrizeMessageAction extends EveryMessageAction {
                     inlineKeyboard: ['random_prize', '@']
                 }
             )
-            return true
         }
     }
 }

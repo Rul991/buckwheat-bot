@@ -6,7 +6,7 @@ import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class ExperienceCommand extends BuckwheatCommand {
     private _commandOther = 'осталось до нового уровня'
-    private _keyWords = ['уровня', 'осталось']
+    private _keyWords = ['уровня']
 
     constructor() {
         super()
