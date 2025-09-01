@@ -32,7 +32,7 @@ export default class BalanceCommand extends BuckwheatCommand {
 
         const wins = casino.wins!
         const loses = casino.loses!
-        const games = wins + loses
+        const games = Math.max(1, wins + loses)
         const winrate = Math.floor(wins / games * 100 * 10) / 10
 
         await MessageUtils.answerMessageFromResource(
