@@ -1,5 +1,5 @@
 import Items from '../../../interfaces/schemas/Items'
 import ItemsModel from '../models/ItemsModel'
-import IdRepository from './base/IdRepository'
+import ChatIdRepository from './base/ChatIdRepository'
 
-export default new IdRepository<typeof ItemsModel, Items>(ItemsModel)
+export default new ChatIdRepository<typeof ItemsModel, Items>(ItemsModel)

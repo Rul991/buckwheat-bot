@@ -78,3 +78,5 @@ export const BAD_COOKIE_CHANCE = 0.15
 export const MAX_SHOP_PRECENTS = 50
 
 export const COMMANDS_PER_PAGE = 5
+
+export const DICE_ANSWER_CHANCE = 0.1

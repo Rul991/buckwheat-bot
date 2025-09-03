@@ -3,6 +3,7 @@ import RankUtils from '../../../../utils/RankUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import { TextContext, MaybeString } from '../../../../utils/values/types'
 import HelloService from '../../../db/services/chat/HelloService'
+import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import UserRankService from '../../../db/services/user/UserRankService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
@@ -17,7 +18,10 @@ export default class HelloCommand extends BuckwheatCommand {
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         const id = ctx.from.id
-        const rank = await UserRankService.get(id)
+        const chatId = await LinkedChatService.getChatId(ctx)
+        if(!chatId) return
+        
+        const rank = await UserRankService.get(chatId, id)
 
         if(!other) {
             await MessageUtils.answerMessageFromResource(
@@ -25,7 +29,7 @@ export default class HelloCommand extends BuckwheatCommand {
                 'text/commands/hello/no-other.pug',
                 {
                     changeValues: {
-                        text: await HelloService.get()
+                        text: await HelloService.get(chatId)
                     }
                 }
             )
@@ -40,7 +44,7 @@ export default class HelloCommand extends BuckwheatCommand {
             return
         }
         
-        await HelloService.edit(other)
+        await HelloService.edit(chatId, other)
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/hello/done.pug',

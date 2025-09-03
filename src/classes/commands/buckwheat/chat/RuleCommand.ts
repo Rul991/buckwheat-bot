@@ -1,4 +1,3 @@
-import { Context } from 'telegraf'
 import { MaybeString, NameObject, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import MessageUtils from '../../../../utils/MessageUtils'
@@ -6,12 +5,13 @@ import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
 import RulesService from '../../../db/services/chat/RulesService'
 import SubCommandUtils from '../../../../utils/SubCommandUtils'
+import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 
 type RuleSubCommand = {
     needData: boolean
     needAdmin: boolean
-    execute: (data: string) => Promise<boolean>
-    sendMessage: (options: {ctx: Context, changeValues: Record<string, any>}) => Promise<void>
+    execute: (ctx: TextContext, data: string) => Promise<boolean>
+    sendMessage: (options: {ctx: TextContext, changeValues: Record<string, any>}) => Promise<void>
     title: string,
     description: string
 } & NameObject
@@ -26,8 +26,10 @@ export default class RuleCommand extends BuckwheatCommand {
             needData: true,
             needAdmin: true,
 
-            execute: async data => {
-                return await this._deleteRule(data)
+            execute: async (ctx, data) => {
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return false
+                return await this._deleteRule(ctx.chat.id, data)
             },
             sendMessage: async ({ctx, changeValues}) => {
                 await MessageUtils.answerMessageFromResource(
@@ -50,8 +52,10 @@ export default class RuleCommand extends BuckwheatCommand {
             needAdmin: true,
             needData: true,
 
-            execute: async data => {
-                return await this._addRule(data)
+            execute: async (ctx, data) => {
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return false
+                return await this._addRule(chatId, data)
             },
             sendMessage: async ({ctx}) => {
                 await MessageUtils.answerMessageFromResource(
@@ -110,32 +114,34 @@ export default class RuleCommand extends BuckwheatCommand {
         )
     }
 
-    private async _deleteRule(data: string): Promise<boolean> {
+    private async _deleteRule(id: number, data: string): Promise<boolean> {
         if(isNaN(+data)) {
             return false
         }
 
         const index = +data - 1
-        const rules = await RulesService.get()
+        const rules = await RulesService.get(id)
 
-        await RulesService.delete(index)
+        await RulesService.delete(id, index)
         return index >= 0 && index < rules.length
     }
 
-    private async _addRule(data: string): Promise<boolean> {
-        await RulesService.add(data)
+    private async _addRule(id: number, data: string): Promise<boolean> {
+        await RulesService.add(id, data)
         return true
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         const id = ctx.from.id
+        const chatId = await LinkedChatService.getChatId(ctx)
+        if(!chatId) return
         const commandAndData = SubCommandUtils.getSubCommandAndData(
             other, 
             this._subCommands
         )
 
         if(commandAndData == 'no-text') {
-            const rules = await RulesService.get()
+            const rules = await RulesService.get(chatId)
 
             await MessageUtils.answerMessageFromResource(
                 ctx,
@@ -152,9 +158,9 @@ export default class RuleCommand extends BuckwheatCommand {
             this._sendHelpMessage(ctx)
         }
         else {
-            const rank = await UserRankService.get(id)
+            const rank = await UserRankService.get(chatId, id)
             const isAdminRank = rank >= RankUtils.admin
-            const rules = await RulesService.get()
+            const rules = await RulesService.get(chatId)
 
             const [
                 {
@@ -192,7 +198,7 @@ export default class RuleCommand extends BuckwheatCommand {
                 return
             }
 
-            const isExecuted = await execute(data)
+            const isExecuted = await execute(ctx, data)
             if(isExecuted) {
                 await sendMessage({ctx, changeValues: {rules, data}})
             }

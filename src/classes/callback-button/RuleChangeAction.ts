@@ -4,6 +4,7 @@ import MessageUtils from '../../utils/MessageUtils'
 import Pager from '../../utils/Pager'
 import { CallbackButtonContext } from '../../utils/values/types'
 import RulesService from '../db/services/chat/RulesService'
+import LinkedChatService from '../db/services/linkedChat/LinkedChatService'
 import InlineKeyboardManager from '../main/InlineKeyboardManager'
 import CallbackButtonAction from './CallbackButtonAction'
 
@@ -13,8 +14,11 @@ export default class RuleChangeAction extends CallbackButtonAction {
         this._name = 'rulechange'
     }
 
-    async execute(ctx: CallbackButtonContext, data: string): Promise<void> {
-        const rules = await RulesService.get()
+    async execute(ctx: CallbackButtonContext, data: string): Promise<string | void> {
+        const chatId = await LinkedChatService.getChatId(ctx)
+        if(!chatId) return 'Что-то пошло не так!'
+
+        const rules = await RulesService.get(chatId)
         const currentPage = Pager.wrapPages(data, rules.length)
 
         if(currentPage === -1) return

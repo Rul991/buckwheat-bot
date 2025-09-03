@@ -3,6 +3,7 @@ import RoleplayUtils from '../../../utils/RoleplayUtils'
 import StringUtils from '../../../utils/StringUtils'
 import SubCommandUtils from '../../../utils/SubCommandUtils'
 import { TextContext, MaybeString, NameObject } from '../../../utils/values/types'
+import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import RoleplaysService from '../../db/services/rp/RoleplaysService'
 import UserRankService from '../../db/services/user/UserRankService'
 import BuckwheatCommand from '../base/BuckwheatCommand'
@@ -19,12 +20,15 @@ export default class AddRoleplayCommand extends BuckwheatCommand {
         {
             name: 'список',
             execute: async ctx => {
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return false
+
                 await MessageUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/add-rp/list.pug',
                     {
                         changeValues: {
-                            commands: await RoleplaysService.getCommands(ctx.chat.id)
+                            commands: await RoleplaysService.getCommands(chatId)
                         }
                     }
                 )
@@ -40,7 +44,10 @@ export default class AddRoleplayCommand extends BuckwheatCommand {
                 const [name, text] = StringUtils.splitByCommands(other, 1)
                 if(!text) return false
 
-                if(await RoleplaysService.set(ctx.chat.id, name, text)) {
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return false
+
+                if(await RoleplaysService.set(chatId, name, text)) {
                     await MessageUtils.answerMessageFromResource(
                         ctx,
                         'text/commands/add-rp/done.pug',
@@ -75,10 +82,12 @@ export default class AddRoleplayCommand extends BuckwheatCommand {
             name: 'удалить',
             execute: async (ctx, other) => {
                 if(!other) return false
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return false
 
                 const [name] = other.split(StringUtils.spaceRegexp, 1)
 
-                if(await RoleplaysService.delete(ctx.chat.id, name)) {
+                if(await RoleplaysService.delete(chatId, name)) {
                     await MessageUtils.answerMessageFromResource(
                         ctx,
                         'text/commands/add-rp/done.pug',
@@ -119,7 +128,10 @@ export default class AddRoleplayCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const rank = await UserRankService.get(ctx.from.id)
+        const chatId = await LinkedChatService.getChatId(ctx)
+        if(!chatId) return
+        
+        const rank = await UserRankService.get(chatId, ctx.from.id)
 
         const [subCommand, text] = SubCommandUtils.getSubCommandAndData(other, this._subCommands)
         const {

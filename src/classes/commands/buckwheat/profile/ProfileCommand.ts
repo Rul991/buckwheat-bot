@@ -14,9 +14,9 @@ import ExperienceUtils from '../../../../utils/level/ExperienceUtils'
 import ExperienceService from '../../../db/services/level/ExperienceService'
 import StringUtils from '../../../../utils/StringUtils'
 import TimeUtils from '../../../../utils/TimeUtils'
-import UserLinkedService from '../../../db/services/user/UserLinkedService'
 import UserLeftService from '../../../db/services/user/UserLeftService'
 import Logging from '../../../../utils/Logging'
+import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 
 export default class ProfileCommand extends BuckwheatCommand {
     constructor() {
@@ -29,7 +29,10 @@ export default class ProfileCommand extends BuckwheatCommand {
     }
 
     private async _getPhotoId(ctx: TextContext, id: number): Promise<string | null> {
-        let photoId: string = await UserImageService.get(id)
+        const chatId = await LinkedChatService.getChatId(ctx)
+        if(!chatId) return null
+
+        let photoId: string = await UserImageService.get(chatId, id)
         if(photoId.length) {
             return photoId
         }
@@ -43,7 +46,6 @@ export default class ProfileCommand extends BuckwheatCommand {
 
                 return profilePhotos.total_count > 0 ? 
                     profilePhotos.photos[0][0].file_id : 
-                    (await ctx.telegram.getChat(ctx.chat.id)).photo?.big_file_id ?? 
                     null
             }
 
@@ -61,7 +63,9 @@ export default class ProfileCommand extends BuckwheatCommand {
         let name: string
 
         if(other) {
-            const user = await UserProfileService.findByName(other)
+            const chatId = await LinkedChatService.getChatId(ctx)
+            if(!chatId) return null
+            const user = await UserProfileService.findByName(chatId, other)
 
             if(!user) {
                 return null
@@ -103,18 +107,21 @@ export default class ProfileCommand extends BuckwheatCommand {
         }
 
         const {id, name} = idAndName
-        const user = await UserProfileService.create(id, name)
+        const chatId = await LinkedChatService.getChatId(ctx)
+        if(!chatId) return
+
+        const user = await UserProfileService.create(chatId, id, name)
         const photoId = await this._getPhotoId(ctx, id)
         
         const rank = user.rank ?? RankUtils.min
         const classType = user.className ?? ClassUtils.defaultClassName
-        const experience = await ExperienceService.get(id)
+        const experience = await ExperienceService.get(chatId, id)
 
-        const messages = await MessagesService.get(id)
+        const messages = await MessagesService.get(chatId, id)
         const afterFirstMessage = Date.now() - (messages.firstMessage ?? 0)
 
-        const isLinked = (await UserLinkedService.get(id)) == ctx.chat.id
-        const isLeft = await UserLeftService.get(id)
+        const isLinked = (await LinkedChatService.get(id)) == ctx.chat.id
+        const isLeft = await UserLeftService.get(chatId, id)
 
         const path = 'text/commands/profile/profile.pug'
         const changeValues = {
@@ -123,7 +130,7 @@ export default class ProfileCommand extends BuckwheatCommand {
             isLinked,
             maxLevel: LevelUtils.max,
             level: LevelUtils.get(experience),
-            ...await ContextUtils.getUser(id),
+            ...await ContextUtils.getUser(chatId, id),
             emoji: RankUtils.getEmojiByRank(rank),
             userNameRank: RankUtils.getRankByNumber(rank),
             className: ClassUtils.getName(classType),

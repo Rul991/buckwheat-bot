@@ -4,22 +4,29 @@ import { TextContext, MaybeString } from '../../../utils/values/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 
 export default class InfoCommand extends BuckwheatCommand {
-    private static _descriptions: {chance: number, texts: string[]}[] = [
+    private static _descriptions: { chance: number, texts: string[] }[] = [
         {
             chance: 0,
-            texts: ['Это не случится']
+            texts: ['Это не случится!']
         },
 
         {
             chance: 10,
-            texts: ['Шанс, что случится это, низок, но не равен нулю']
+            texts: ['Шанс, что случится это, низок, но не равен нулю!']
         },
 
         {
             chance: 20,
-            texts: ['Вряд ли']
+            texts: ['Вряд ли!']
         },
-        
+
+        {
+            chance: 30,
+            texts: [
+                'Кто знает...'
+            ]
+        },
+
         {
             chance: 50,
             texts: ['Может да, а может нет, а может...']
@@ -27,16 +34,16 @@ export default class InfoCommand extends BuckwheatCommand {
 
         {
             chance: 90,
-            texts: ['Очень вероятно']
+            texts: ['Очень вероятно!']
         },
 
         {
             chance: 100,
-            texts: ['Случится, уверяю тебя']
+            texts: ['Случится, уверяю тебя!']
         }
     ]
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'инфа'
         this._description = 'показываю с каким шансом это случится'
@@ -49,8 +56,8 @@ export default class InfoCommand extends BuckwheatCommand {
 
         for (let i = InfoCommand._descriptions.length - 1; i >= 0; i--) {
             const description = InfoCommand._descriptions[i]
-            
-            if(description.chance <= chance) {
+
+            if (description.chance <= chance) {
                 return RandomUtils.choose(description.texts) ?? otherAnswer
             }
         }

@@ -9,38 +9,63 @@ import WorkService from '../../db/services/work/WorkService'
 import UserClassService from '../../db/services/user/UserClassService'
 import LevelService from '../../db/services/level/LevelService'
 import UserLeftService from '../../db/services/user/UserLeftService'
+import RankUtils from '../../../utils/RankUtils'
+import UserDescriptionService from '../../db/services/user/UserDescriptionService'
+import UserNameService from '../../db/services/user/UserNameService'
+import UserRankService from '../../db/services/user/UserRankService'
+import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 
 export default class AddInDatabaseAction extends NewMemberAction {
-    private async _updateIfBot(ctx: NewMemberContext, from: User): Promise<void> {
-        if(!(from.is_bot && from.id != ctx.botInfo.id)) return
+    private async _updateIfBot(ctx: NewMemberContext, from: User, chatId: number): Promise<void> {
+        if(!from.is_bot) return
+        if(from.id == ctx.botInfo.id) {
+            this._updateIfBuckwheat(ctx, from, chatId)
+            return
+        }
 
         await Promise.allSettled(
             [
-                UserClassService.update(from.id, 'bot')
+                UserClassService.update(chatId, from.id, 'bot')
             ]
         )
     }
 
-    private async _addInDatabase(ctx: NewMemberContext, from: User): Promise<void> {
+    private async _updateIfBuckwheat(_: NewMemberContext, from: User, chatId: number): Promise<void> {
+        const { id } = from
+
+        const currentName = await UserNameService.get(chatId, id)
+        const needName = 'Баквит'
+
+        if (currentName === needName) return
+
+        await UserNameService.update(chatId, id, needName)
+        await UserDescriptionService.update(chatId, id, 'Я ваш проводник в данном чате')
+        await UserRankService.update(chatId, id, RankUtils.admin)
+        await UserClassService.update(chatId, id, 'boss')
+    }
+
+    private async _addInDatabase(ctx: NewMemberContext, from: User, chatId: number): Promise<void> {
         const {id, first_name} = from
 
         await Promise.allSettled([
-            UserProfileService.create(id, first_name),
-            CasinoAccountService.create(id),
-            WorkService.get(id),
-            ItemsService.get(id),
-            MessagesService.get(id),
-            UserClassService.get(id),
-            LevelService.get(id),
-            UserLeftService.update(id, false)
+            UserProfileService.create(chatId, id, await UserNameService.getUniqueName(chatId, first_name)),
+            CasinoAccountService.create(chatId, id),
+            WorkService.get(chatId, id),
+            ItemsService.get(chatId, id),
+            MessagesService.get(chatId, id),
+            LevelService.get(chatId, id),
+            UserLeftService.update(chatId, id, false),
+            LinkedChatService.get(id)
         ])
 
-        await this._updateIfBot(ctx, from)
+        await this._updateIfBot(ctx, from, chatId)
     }
 
     async execute(ctx: NewMemberContext): Promise<void> {
         for await(const from of ctx.message.new_chat_members) {
-            await this._addInDatabase(ctx, from)
+            const chatId = await LinkedChatService.getChatId(ctx)
+            if(!chatId) continue
+            await this._addInDatabase(ctx, from, chatId)
         }
     }
 }

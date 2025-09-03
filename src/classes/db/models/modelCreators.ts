@@ -11,9 +11,9 @@ export const createModel = <Type>({name, definition}: ModelOptions<Type>) => {
 }
 
 export const createModelWithSubModel = <Type, SubType>(
-    definition: ObtainDocumentType<SubType>,
+    subSchema: ObtainDocumentType<SubType>,
     schemaCallback: (subModel: Schema<SubType>) => ModelOptions<Type>
 ) => {
-    const subModel = new Schema<SubType>(definition)
+    const subModel = new Schema<SubType>(subSchema)
     return createModel(schemaCallback(subModel))
 }

@@ -3,16 +3,12 @@ import BuckwheatCommand from '../../base/BuckwheatCommand'
 import ContextUtils from '../../../../utils/ContextUtils'
 import CasinoGetService from '../../../db/services/casino/CasinoGetService'
 import CasinoAddService from '../../../db/services/casino/CasinoAddService'
-import UserNameService from '../../../db/services/user/UserNameService'
 import MessageUtils from '../../../../utils/MessageUtils'
 import StringUtils from '../../../../utils/StringUtils'
+import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 
 export default class TransferCommand extends BuckwheatCommand {
     private static _filenames = ['no-receiver', 'self', 'empty', 'wrong', 'negative']
-
-    private static async _getName(id: number): Promise<MaybeString> {
-        return (await UserNameService.get(id)) ?? undefined
-    }
 
     private static _getIdByCondition(ctx: TextContext, other: MaybeString): number {
         const conditions = [
@@ -48,9 +44,8 @@ export default class TransferCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        if(!ctx.from) return
-        if(!ctx.message) return
-
+        const chatId = await LinkedChatService.getChatId(ctx)
+        if(!chatId) return
         const filenameId = TransferCommand._getIdByCondition(ctx, other)
 
         if(filenameId !== -1) {
@@ -67,7 +62,7 @@ export default class TransferCommand extends BuckwheatCommand {
 
             if(receiver === undefined) return
 
-            const senderMoney = await CasinoGetService.getMoney(ctx.from.id)
+            const senderMoney = await CasinoGetService.getMoney(chatId, ctx.from.id)
             const diffMoney = Math.ceil(+other!)
 
             if(senderMoney < diffMoney) {
@@ -78,16 +73,16 @@ export default class TransferCommand extends BuckwheatCommand {
                 return
             }
 
-            await CasinoAddService.addMoney(sender, -diffMoney)
-            await CasinoAddService.addMoney(receiver, diffMoney)
+            await CasinoAddService.addMoney(chatId, sender, -diffMoney)
+            await CasinoAddService.addMoney(chatId, receiver, diffMoney)
 
             MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/transfer/positive.pug',
                 {
                     changeValues: {
-                        sender: await ContextUtils.getUser(sender),
-                        receiver: await ContextUtils.getUser(receiver),
+                        sender: await ContextUtils.getUser(chatId, sender),
+                        receiver: await ContextUtils.getUser(chatId, receiver),
                         count: StringUtils.toFormattedNumber(diffMoney)
                     }
                 }

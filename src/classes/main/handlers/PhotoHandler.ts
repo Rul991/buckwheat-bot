@@ -10,14 +10,17 @@ export default class PhotoHandler extends BaseHandler<PhotoAction, Record<string
 
     setup(bot: Telegraf): void {
         bot.on('photo', async ctx => {
-            const [firstWord, command, other] = CommandUtils.getCommandStrings(ctx.message.caption ?? '')
+            await CommandUtils.doIfCommand(
+                ctx.message.caption ?? '',
+                async ([_, command, other]) => {
+                    if(!command) return
 
-            if(CommandUtils.isCommand(firstWord) && command) {
-                const instance = this._instances[command]
-                if(!instance) return
+                    const instance = this._instances[command]
+                    if(!instance) return
 
-                await instance.execute(ctx, other)
-            }
+                    await instance.execute(ctx, other)
+                }
+            )
         })
     }
 

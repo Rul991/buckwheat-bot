@@ -6,6 +6,7 @@ import InventoryItemService from '../../db/services/items/InventoryItemService'
 import WorkTimeService from '../../db/services/work/WorkTimeService'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 import RandomUtils from '../../../utils/RandomUtils'
+import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 
 export default class CookieCommand extends BuckwheatCommand {
     constructor() {
@@ -16,10 +17,14 @@ export default class CookieCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
+        const chatId = await LinkedChatService.getChatId(ctx)
+        if(!chatId) return
+        
         const reply = ctx.message.reply_to_message
         const userId = ctx.from.id
 
         const [hasCookie] = await InventoryItemService.use(
+            chatId,
             userId, 
             'cookie'
         )
@@ -34,6 +39,7 @@ export default class CookieCommand extends BuckwheatCommand {
 
         if(reply?.from) {
             await InventoryItemService.add(
+                chatId,
                 reply.from.id, 
                 'cookie'
             )
@@ -42,7 +48,7 @@ export default class CookieCommand extends BuckwheatCommand {
                 ctx,
                 'text/commands/cookie/share.pug',
                 {
-                    changeValues: await ContextUtils.getUser(reply.from.id)
+                    changeValues: await ContextUtils.getUser(chatId, reply.from.id)
                 }
             )
         }
@@ -53,7 +59,7 @@ export default class CookieCommand extends BuckwheatCommand {
             )
         }
         else {
-            await WorkTimeService.add(userId, COOKIE_WORK_TIME)
+            await WorkTimeService.add(chatId, userId, COOKIE_WORK_TIME)
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/cookie/eat.pug'

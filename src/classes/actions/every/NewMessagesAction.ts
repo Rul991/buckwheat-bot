@@ -4,6 +4,6 @@ import EveryMessageAction from './EveryMessageAction'
 
 export default class NewMessagesAction extends EveryMessageAction {
     async execute(ctx: MessageContext): Promise<void | true> {
-        await MessagesService.add(ctx.from.id)
+        await MessagesService.add(ctx.chat.id, ctx.from.id)
     }
 }

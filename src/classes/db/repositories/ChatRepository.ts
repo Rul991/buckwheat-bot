@@ -1,5 +1,5 @@
 import ChatModel from '../models/ChatModel'
 import Chat from '../../../interfaces/schemas/Chat'
-import Repository from './base/Repository'
+import IdRepository from './base/IdRepository'
 
-export default new Repository<typeof ChatModel, Chat>(ChatModel)
+export default new IdRepository<typeof ChatModel, Chat>(ChatModel)

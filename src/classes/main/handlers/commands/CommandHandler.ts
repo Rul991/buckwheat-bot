@@ -1,7 +1,5 @@
 import { Telegraf } from 'telegraf'
 import BaseHandler from '../BaseHandler'
-import TelegramCommand from '../../../commands/base/TelegramCommand'
-import StringUtils from '../../../../utils/StringUtils'
 import BuckwheatCommand from '../../../commands/base/BuckwheatCommand'
 import ConditionalCommand from '../../../commands/base/ConditionalCommand'
 import { CommandStrings, TextContext } from '../../../../utils/values/types'
@@ -10,7 +8,6 @@ import CommandDescriptionUtils from '../../../../utils/CommandDescriptionUtils'
 import CommandUtils from '../../../../utils/CommandUtils'
 
 export default class CommandHandler extends BaseHandler<BuckwheatCommand, ConditionalCommand[]> {
-    private static _botNames: string[] = ['баквит', 'гречка']
     private static _wrongCommand = new WrongCommand
 
     private _buckwheatCommands: Record<string, BuckwheatCommand>
@@ -61,11 +58,12 @@ export default class CommandHandler extends BaseHandler<BuckwheatCommand, Condit
 
     setup(bot: Telegraf): void {
         bot.on('text', async ctx => {
-            const [firstWord, command, other] = CommandUtils.getCommandStrings(ctx.text)
-
-            if(CommandUtils.isCommand(firstWord)) {
-                await this._onCommand(ctx, [firstWord, command, other])
-            }
+            await CommandUtils.doIfCommand(
+                ctx.text,
+                async (strings) => {
+                    await this._onCommand(ctx, strings)
+                }
+            )
         })
     }
 }

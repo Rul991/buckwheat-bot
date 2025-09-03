@@ -1,4 +1,5 @@
 export default interface Chat {
-    rules?: string[],
+    id: number
+    rules?: string[]
     hello?: string
 }

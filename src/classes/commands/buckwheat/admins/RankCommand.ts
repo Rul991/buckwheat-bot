@@ -5,10 +5,11 @@ import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
+import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 
 export default class RankCommand extends BuckwheatCommand {
     private static async _answerMyRank(ctx: Context): Promise<void> {
-        const rank = await UserRankService.get(ctx.from!.id)
+        const rank = await UserRankService.get(ctx.chat!.id, ctx.from!.id)
 
         await MessageUtils.answerMessageFromResource(
             ctx,
@@ -82,9 +83,7 @@ export default class RankCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, data: MaybeString): Promise<void> {
-        if(!ctx.message || !ctx.from || !ctx.chat) return
-
-        if('reply_to_message' in ctx.message && data) {
+        if(ctx.message.reply_to_message && data) {
             if(await RankCommand._answerIfWrongData(ctx, data)) return
             else {
                 const reply = ctx.message.reply_to_message!
@@ -92,24 +91,26 @@ export default class RankCommand extends BuckwheatCommand {
                 
                 const myId = ctx.from.id
                 const replyId = reply.from?.id ?? 0
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return
 
                 if(await RankCommand._answerIfRankOutBounds(ctx, rank)) return
                 
-                const myRank = await UserRankService.get(myId)
-                const replyRank = await UserRankService.get(replyId)
+                const myRank = await UserRankService.get(chatId, myId)
+                const replyRank = await UserRankService.get(chatId, replyId)
 
                 if(await RankCommand._answerIfNotAdmin(ctx, myRank)) return
                 if(await RankCommand._answerIfLowRank(ctx, myRank, rank, replyRank)) return
 
                 const mode = replyRank <= rank ? 'up' : 'down'
                 
-                await UserRankService.update(replyId, rank)
+                await UserRankService.update(chatId, replyId, rank)
                 await MessageUtils.answerMessageFromResource(
                     ctx,
                     `text/commands/rank/${mode}.pug`,
                     {
                         changeValues: {
-                            ...await ContextUtils.getUser(replyId),
+                            ...await ContextUtils.getUser(chatId, replyId),
                             rank: RankUtils.getRankByNumber(rank),
                             emoji: RankUtils.getEmojiByRank(rank),
                         }

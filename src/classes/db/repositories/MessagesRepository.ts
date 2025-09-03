@@ -1,5 +1,5 @@
 import Messages from '../../../interfaces/schemas/Messages'
 import MessagesModel from '../models/MessagesModel'
-import IdRepository from './base/IdRepository'
+import ChatIdRepository from './base/ChatIdRepository'
 
-export default new IdRepository<typeof MessagesModel, Messages>(MessagesModel)
+export default new ChatIdRepository<typeof MessagesModel, Messages>(MessagesModel)

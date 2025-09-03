@@ -6,6 +6,7 @@ import { TextContext, MaybeString } from '../../../../utils/values/types'
 import CasinoAddService from '../../../db/services/casino/CasinoAddService'
 import UserRankService from '../../../db/services/user/UserRankService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
+import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 
 export default class DonateCommand extends BuckwheatCommand {
     constructor() {
@@ -15,10 +16,12 @@ export default class DonateCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+        const chatId = await LinkedChatService.getChatId(ctx)
+        if(!chatId) return
         const userId = ctx.from.id
-        const userRank = await UserRankService.get(userId)
+        const userRank = await UserRankService.get(chatId, userId)
 
-        if(ctx.chat.id != CHAT_ID) {
+        if(chatId != CHAT_ID) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/donate/wrong-chat.pug'
@@ -59,8 +62,8 @@ export default class DonateCommand extends BuckwheatCommand {
         }
 
         const replyId = ctx.message.reply_to_message.from?.id ?? 0
-        const replyRank = await UserRankService.get(replyId)
-        const replyValues = await ContextUtils.getUser(replyId)
+        const replyRank = await UserRankService.get(chatId, replyId)
+        const replyValues = await ContextUtils.getUser(chatId, replyId)
 
         if(replyRank >= RankUtils.admin) {
             await MessageUtils.answerMessageFromResource(
@@ -76,7 +79,7 @@ export default class DonateCommand extends BuckwheatCommand {
         const rubles = Math.ceil(+other)
         const coins = Math.ceil(rubles * RUBLE_TO_COIN)
 
-        await CasinoAddService.addMoney(replyId, coins)
+        await CasinoAddService.addMoney(chatId, replyId, coins)
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/donate/done.pug',

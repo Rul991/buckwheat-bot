@@ -8,6 +8,7 @@ import CallbackButtonAction from '../CallbackButtonAction'
 import StringUtils from '../../../utils/StringUtils'
 import FileUtils from '../../../utils/FileUtils'
 import InventoryItemService from '../../db/services/items/InventoryItemService'
+import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 
 export default class BuyAction extends CallbackButtonAction {
     constructor() {
@@ -16,6 +17,9 @@ export default class BuyAction extends CallbackButtonAction {
     }
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<string | void> {
+        const chatId = await LinkedChatService.getChatId(ctx)
+        if(!chatId) return
+
         const [index, _id, count] = data
             .split('_')
             .map(val => +val)
@@ -25,7 +29,7 @@ export default class BuyAction extends CallbackButtonAction {
         const item = await ShopItems.getWithLength(index)
         if(!item) return await FileUtils.readPugFromResource('text/alerts/wrong-item.pug')
 
-        const money = await CasinoGetService.getMoney(ctx.from.id)
+        const money = await CasinoGetService.getMoney(chatId, ctx.from.id)
         const user = await ContextUtils.getUserFromContext(ctx)
 
         const totalCount = ShopItems.getCount(item, count)
@@ -55,16 +59,16 @@ export default class BuyAction extends CallbackButtonAction {
 
         if(isBought) {
             const itemId = 'shopPrecent'
-            const owners = await InventoryItemService.getOwners(itemId)
+            const owners = await InventoryItemService.getOwners(chatId, itemId)
             let precents = 100
 
             for await (const {id, count} of owners) {
                 precents -= count
-                await CasinoAddService.addMoney(id, Math.floor(totalPrice * (count / 100)))
+                await CasinoAddService.addMoney(chatId, id, Math.floor(totalPrice * (count / 100)))
             }
 
-            await CasinoAddService.addMoney(ctx.botInfo.id, Math.ceil(totalPrice * (precents / 100)))
-            await CasinoAddService.addMoney(ctx.from.id, -totalPrice)
+            await CasinoAddService.addMoney(chatId, ctx.botInfo.id, Math.ceil(totalPrice * (precents / 100)))
+            await CasinoAddService.addMoney(chatId, ctx.from.id, -totalPrice)
 
             return await FileUtils.readPugFromResource(
                 'text/alerts/bought.pug',

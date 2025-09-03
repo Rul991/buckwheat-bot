@@ -61,19 +61,14 @@ import InfoCommand from '../classes/commands/buckwheat/InfoCommand'
 import MoneyDropCommand from '../classes/commands/buckwheat/MoneyDropCommand'
 import AddRoleplayCommand from '../classes/commands/buckwheat/AddRoleplayCommand'
 import CustomRoleplayCommand from '../classes/commands/conditional/CustomRoleplayCommand'
-import UserClassService from '../classes/db/services/user/UserClassService'
-import UserDescriptionService from '../classes/db/services/user/UserDescriptionService'
-import UserNameService from '../classes/db/services/user/UserNameService'
-import UserRankService from '../classes/db/services/user/UserRankService'
-import RankUtils from '../utils/RankUtils'
 import ExperienceCommand from '../classes/commands/buckwheat/level/ExperienceCommand'
 import AddInDatabaseAction from '../classes/actions/new-member/AddInDatabaseAction'
-import BuckwheatEnterAction from '../classes/actions/new-member/BuckwheatEnterAction'
 import LinkCommand from '../classes/commands/buckwheat/LinkCommand'
 import InventoryItemsUtils from '../utils/InventoryItemsUtils'
 import AddLeftInDatabaseAction from '../classes/actions/left-member/AddLeftInDatabaseAction'
 import RandomCommand from '../classes/commands/buckwheat/RandomCommand'
 import CommandsChangeAction from '../classes/callback-button/CommandsChangeAction'
+import DiceDice from '../classes/dice/DiceDice'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = { name: string, isMustDefined: boolean }
@@ -166,12 +161,12 @@ const launchBot = async (bot: Bot) => {
     )
 
     bot.addDiceActions(
-        new CasinoDice()
+        new CasinoDice(),
+        new DiceDice()
     )
 
     bot.addNewMemberAction(
         new AddInDatabaseAction(),
-        new BuckwheatEnterAction(),
         new HelloMemberAction(),
     )
 
@@ -228,24 +223,7 @@ const launchBot = async (bot: Bot) => {
     )
 
     console.log('Start launching!')
-    await bot.launch(Boolean(DOMAIN), async () => setBotParameters(bot))
-}
-
-const setBotParameters = async (bot: Bot) => {
-    const { botInfo } = bot.bot
-    if (!botInfo) return
-
-    const { id } = botInfo
-
-    const currentName = await UserNameService.get(id)
-    const needName = 'Баквит'
-
-    if (currentName === needName) return
-
-    await UserNameService.update(id, needName)
-    await UserDescriptionService.update(id, 'Я ваш проводник в данном чате')
-    await UserRankService.update(id, RankUtils.admin)
-    await UserClassService.update(id, 'boss')
+    await bot.launch(Boolean(DOMAIN))
 }
 
 const test = async (): Promise<void | boolean> => {

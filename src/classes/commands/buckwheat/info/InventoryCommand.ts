@@ -3,6 +3,7 @@ import InventoryItemsUtils from '../../../../utils/InventoryItemsUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { TextContext, MaybeString } from '../../../../utils/values/types'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
+import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class InventoryCommand extends BuckwheatCommand {
@@ -13,7 +14,10 @@ export default class InventoryCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const items = (await InventoryItemService.getAll(ctx.from.id) ?? [])
+        const chatId = await LinkedChatService.getChatId(ctx)
+        if(!chatId) return
+        
+        const items = (await InventoryItemService.getAll(chatId, ctx.from.id) ?? [])
             .map(v => {
                 const {name, type} = InventoryItemsUtils.getItemDescription(v.itemId)
                 return {

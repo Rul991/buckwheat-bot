@@ -1,5 +1,5 @@
 import Casino from '../../../interfaces/schemas/Casino'
 import CasinoModel from '../models/CasinoModel'
-import IdRepository from './base/IdRepository'
+import ChatIdRepository from './base/ChatIdRepository'
 
-export default new IdRepository<typeof CasinoModel, Casino>(CasinoModel)
+export default new ChatIdRepository<typeof CasinoModel, Casino>(CasinoModel)

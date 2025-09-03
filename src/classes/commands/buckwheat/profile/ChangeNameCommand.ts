@@ -4,6 +4,7 @@ import ContextUtils from '../../../../utils/ContextUtils'
 import { DEFAULT_USER_NAME, MAX_NAME_LENGTH } from '../../../../utils/values/consts'
 import UserNameService from '../../../db/services/user/UserNameService'
 import MessageUtils from '../../../../utils/MessageUtils'
+import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 
 export default class ChangeNameCommand extends BuckwheatCommand {
     constructor() {
@@ -17,9 +18,11 @@ export default class ChangeNameCommand extends BuckwheatCommand {
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         const {id} = ctx.from
         const link = ContextUtils.getLinkUrl(id)
+        const chatId = await LinkedChatService.getChatId(ctx)
+        if(!chatId) return
 
         if(!other) {
-            const name = await UserNameService.get(id) ?? DEFAULT_USER_NAME
+            const name = await UserNameService.get(chatId, id)
 
             await MessageUtils.answerMessageFromResource(
                 ctx, 
@@ -30,7 +33,7 @@ export default class ChangeNameCommand extends BuckwheatCommand {
 
         else {
             const name = other
-            const names = await UserNameService.getAll()
+            const names = await UserNameService.getAll(chatId)
 
             if(names.includes(name)) {
                 await MessageUtils.answerMessageFromResource(
@@ -54,7 +57,7 @@ export default class ChangeNameCommand extends BuckwheatCommand {
                 return
             }
             
-            await UserNameService.update(id, name)
+            await UserNameService.update(chatId, id, name)
             await MessageUtils.answerMessageFromResource(
                 ctx, 
                 'text/commands/change-name/changed.pug', 

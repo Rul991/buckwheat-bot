@@ -8,7 +8,12 @@ export default createModel<Casino>({
         id: { 
             type: Number, 
             required: true, 
-            unique: true 
+            unique: false
+        },
+        chatId: {
+            type: Number,
+            required: true,
+            unique: false
         },
         loses: {
             type: Number,

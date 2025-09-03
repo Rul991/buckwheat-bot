@@ -1,8 +1,8 @@
 import StringUtils from './StringUtils'
-import { CommandStrings } from './values/types'
+import { AsyncOrSync, CommandStrings } from './values/types'
 
 export default class CommandUtils {
-    private static _botNames: string[] = ['баквит', 'гречка']
+    private static _botNames: string[] = ['баквит', 'гречка', 'баквид']
 
     static getCommandStrings(text: string): CommandStrings {
         return StringUtils.splitByCommands(text, 2) as CommandStrings
@@ -20,5 +20,18 @@ export default class CommandUtils {
         }
 
         return isCommand
+    }
+
+    static async doIfCommand(text: string, callback: (strings: CommandStrings) => AsyncOrSync): Promise<CommandStrings | null> {
+        const strings = this.getCommandStrings(text)
+        const [firstWord] = strings
+
+        if(this.isCommand(firstWord)) {
+            await callback(strings)
+            return strings
+        }
+        else {
+            return null
+        }
     }
 }

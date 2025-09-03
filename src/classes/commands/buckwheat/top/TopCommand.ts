@@ -8,6 +8,7 @@ import SubCommandUtils from '../../../../utils/SubCommandUtils'
 import { TextContext, MaybeString, AsyncOrSync, NameObject, ClassTypes, TopLevelObject } from '../../../../utils/values/types'
 import CasinoGetService from '../../../db/services/casino/CasinoGetService'
 import LevelService from '../../../db/services/level/LevelService'
+import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import MessagesService from '../../../db/services/messages/MessagesService'
 import UserLeftService from '../../../db/services/user/UserLeftService'
 import UserProfileService from '../../../db/services/user/UserProfileService'
@@ -16,7 +17,7 @@ import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 type SubTopCommand = {
     filename: string,
-    execute: (ctx: TextContext, data: string) => AsyncOrSync<Record<string, any> & {id: number}>
+    getChangeValues: (ctx: TextContext, data: string) => AsyncOrSync<Record<string, any> & {id: number}>
 } & NameObject
 
 type TopMessageLocals<T> = {
@@ -32,16 +33,18 @@ type TopMessageLocals<T> = {
 const createTopChangeValues = async <Input, Output = Input>(
     arr: Input[], 
     callback: (arr: Input[]) => Output[],
-    options: {key: keyof Output, id?: number, title: string, unit?: string}
+    options: {key: keyof Output, id?: number, title: string, unit?: string, chatId: number}
 ): Promise<TopMessageLocals<Output>> => {
     const sorted = callback(arr)
 
     return {
-        ...options,
-        id: options.id ?? 0,
+        title: options.title,
+        users: await UserProfileService.getAll(options.chatId),
         sorted,
-        users: await UserProfileService.getAll(),
-        unit: options.unit ?? ''
+        key: options.key,
+        id: options.id ?? 0,
+        unit: options.unit ?? '',
+        totalCount: ''
     } as TopMessageLocals<Output>
 }
 
@@ -62,14 +65,16 @@ export default class TopCommand extends BuckwheatCommand {
         {
             name: 'иерархия',
             filename: 'staff',
-            execute: async ctx => {
+            getChangeValues: async ctx => {
                 type Player = {name: string, isLeft: boolean}
                 type Rating = {emoji: string, rankName: string, players: Player[]}
 
                 let ratings: Rating[] = []
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return {id: ctx.botInfo.id}
 
                 for (let rank = RankUtils.max; rank >= 1; rank--) {
-                    const users = await UserRankService.findByRank(rank)
+                    const users = await UserRankService.findByRank(chatId, rank)
                     if(!users.length) continue
 
                     const players: Player[] = []
@@ -77,7 +82,7 @@ export default class TopCommand extends BuckwheatCommand {
                     for await (const {id, name} of users) {
                         players.push({
                             name, 
-                            isLeft: await UserLeftService.get(id) ?? false
+                            isLeft: await UserLeftService.get(chatId, id) ?? false
                         })
                     }
 
@@ -98,17 +103,20 @@ export default class TopCommand extends BuckwheatCommand {
         {
             name: 'богачи',
             filename: 'top',
-            execute: async ctx => {
+            getChangeValues: async ctx => {
                 const key = 'money'
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return {id: ctx.botInfo.id}
 
                 return createTopChangeValues(
-                    await CasinoGetService.getSortedCasinos(),
+                    await CasinoGetService.getSortedCasinos(chatId),
                     arr => formatAllNumbersInObjects(arr, key),
                     {
                         key,
                         id: ctx.botInfo.id,
                         title: 'богатых',
-                        unit: '💰'
+                        unit: '💰',
+                        chatId
                     }
                 )
             }
@@ -117,17 +125,20 @@ export default class TopCommand extends BuckwheatCommand {
         {
             name: 'чат',
             filename: 'top',
-            execute: async ctx => {
+            getChangeValues: async ctx => {
                 const key = 'total'
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return {id: ctx.botInfo.id}
 
                 return createTopChangeValues(
-                    ArrayUtils.filterAndSort(await MessagesService.getAll(), key, 10),
+                    ArrayUtils.filterAndSort(await MessagesService.getAll(chatId), key, 10),
                     arr => formatAllNumbersInObjects(arr, key),
                     {
                         key,
                         id: ctx.botInfo.id,
                         title: 'общительных',
-                        unit: '✉️'
+                        unit: '✉️',
+                        chatId
                     }
                 )
             }
@@ -136,10 +147,12 @@ export default class TopCommand extends BuckwheatCommand {
         {
             name: 'классы',
             filename: 'class',
-            execute: async ctx => {
-                const classMembers: Record<ClassTypes, string[]> = ClassUtils.getArray()
+            getChangeValues: async ctx => {
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return {id: ctx.botInfo.id}
 
-                const users = await UserProfileService.getAll()
+                const classMembers: Record<ClassTypes, string[]> = ClassUtils.getArray()
+                const users = await UserProfileService.getAll(chatId)
 
                 for (const {className, name} of users) {
                     if(!className) continue
@@ -164,17 +177,20 @@ export default class TopCommand extends BuckwheatCommand {
         {
             name: 'уровни',
             filename: 'top',
-            execute: async ctx => {
+            getChangeValues: async ctx => {
                 const key = 'level'
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return {id: ctx.botInfo.id}
 
                 return createTopChangeValues(
-                    await LevelService.getAllSorted(),
+                    await LevelService.getAllSorted(chatId),
                     arr => arr,
                     {
                         key,
                         id: ctx.botInfo.id,
                         title: 'прокаченных',
-                        unit: '📈'
+                        unit: '📈',
+                        chatId
                     }
                 )
             }
@@ -197,7 +213,7 @@ export default class TopCommand extends BuckwheatCommand {
             this._subCommands
         )
 
-        const {filename: path, execute} = typeof command == 'string' ? this._subCommands[0] : command
+        const {filename: path, getChangeValues: execute} = typeof command == 'string' ? this._subCommands[0] : command
 
         await MessageUtils.answerMessageFromResource(
             ctx,

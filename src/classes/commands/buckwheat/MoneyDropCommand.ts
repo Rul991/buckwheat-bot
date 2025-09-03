@@ -3,6 +3,7 @@ import MessageUtils from '../../../utils/MessageUtils'
 import { TextContext, MaybeString } from '../../../utils/values/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 import CasinoGetService from '../../db/services/casino/CasinoGetService'
+import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 
 export default class MoneyDropCommand extends BuckwheatCommand {
     constructor() {
@@ -12,7 +13,10 @@ export default class MoneyDropCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        if(await CasinoGetService.getMoney(ctx.from.id) <= 0) {
+        const chatId = await LinkedChatService.getChatId(ctx)
+        if(!chatId) return 
+
+        if(await CasinoGetService.getMoney(chatId, ctx.from.id) <= 0) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/money-drop/no-money.pug'

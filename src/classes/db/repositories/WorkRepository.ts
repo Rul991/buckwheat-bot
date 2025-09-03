@@ -1,5 +1,5 @@
 import Work from '../../../interfaces/schemas/Work'
 import WorkModel from '../models/WorkModel'
-import IdRepository from './base/IdRepository'
+import ChatIdRepository from './base/ChatIdRepository'
 
-export default new IdRepository<typeof WorkModel, Work>(WorkModel)
+export default new ChatIdRepository<typeof WorkModel, Work>(WorkModel)

@@ -1,12 +1,10 @@
-import { Context } from 'telegraf'
 import { MaybeString, TextContext } from '../../../utils/values/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
-import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
-import UserLinkedService from '../../db/services/user/UserLinkedService'
 import UserRankService from '../../db/services/user/UserRankService'
 import RankUtils from '../../../utils/RankUtils'
 import Logging from '../../../utils/Logging'
+import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 
 export default class EchoCommand extends BuckwheatCommand {
     constructor() {
@@ -18,7 +16,10 @@ export default class EchoCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const rank = await UserRankService.get(ctx.from.id)
+        const chatId = await LinkedChatService.getChatId(ctx)
+        if(!chatId) return
+        
+        const rank = await UserRankService.get(chatId, ctx.from.id)
 
         if(rank < RankUtils.min + 2) {
             await MessageUtils.answerMessageFromResource(ctx, 'text/commands/echo/rank-issue.pug')
@@ -26,11 +27,12 @@ export default class EchoCommand extends BuckwheatCommand {
         }
 
         if(typeof other == 'string' && other.length) {
-            Logging.log(`${ctx.from.first_name}(${ctx.from.id}) echoed "${other}"`)
+            Logging.log(
+                `${ctx.from.username ? `@${ctx.from.username}` : ctx.from.first_name}(${ctx.from.id}) echoed "${other}"`
+            )
             const isPrivate = ctx.chat.type == 'private'
-            const chatId = isPrivate ? 
-                await UserLinkedService.get(ctx.from.id) || ctx.chat.id :
-                ctx.chat.id
+
+            if(!chatId) return
 
             await MessageUtils.answerMessageFromResource(
                 ctx, 

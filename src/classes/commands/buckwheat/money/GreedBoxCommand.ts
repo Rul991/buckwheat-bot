@@ -4,6 +4,7 @@ import StringUtils from '../../../../utils/StringUtils'
 import { TextContext, MaybeString } from '../../../../utils/values/types'
 import CasinoAddService from '../../../db/services/casino/CasinoAddService'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
+import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class GreedBoxCommand extends BuckwheatCommand {
@@ -16,10 +17,12 @@ export default class GreedBoxCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+        const chatId = await LinkedChatService.getChatId(ctx)
+        if(!chatId) return
         const money = other && !isNaN(+other) ? 
             MathUtils.clamp(Math.ceil(+other), 1, Number.MAX_SAFE_INTEGER) : 
             -1
-        const [hasBox] = await InventoryItemService.use(ctx.from.id, 'greedBox')
+        const [hasBox] = await InventoryItemService.use(chatId, ctx.from.id, 'greedBox')
 
         if(!hasBox) {
             await MessageUtils.answerMessageFromResource(
@@ -37,7 +40,7 @@ export default class GreedBoxCommand extends BuckwheatCommand {
             return
         }
 
-        await CasinoAddService.addMoney(ctx.from.id, money)
+        await CasinoAddService.addMoney(chatId, ctx.from.id, money)
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/greedBox/done.pug',

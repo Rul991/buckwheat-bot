@@ -5,10 +5,12 @@ import { MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from '../../../utils/values
 import MessageUtils from '../../../utils/MessageUtils'
 import ContextUtils from '../../../utils/ContextUtils'
 import { MessageContext } from '../../../utils/values/types'
+import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 
 export default class AntiSpamAction extends EveryMessageAction {
     async execute(ctx: MessageContext): Promise<void | true> {
         const id = ctx.from.id
+        const chatId = await LinkedChatService.getChatId(ctx)
 
         await AntiSpamService.add(id, 'lastMessagesCount', 1)
         const isSpamming = await AntiSpamService.isSpamming(id)
@@ -19,7 +21,7 @@ export default class AntiSpamAction extends EveryMessageAction {
                 ctx,
                 'text/commands/spam.pug',
                 {
-                    changeValues: await ContextUtils.getUser(id)
+                    changeValues: await ContextUtils.getUser(chatId ?? undefined, id)
                 }
             )
             return true

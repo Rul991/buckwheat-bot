@@ -8,6 +8,7 @@ import CasinoGetService from '../../db/services/casino/CasinoGetService'
 import AdminUtils from '../../../utils/AdminUtils'
 import CasinoAddService from '../../db/services/casino/CasinoAddService'
 import StringUtils from '../../../utils/StringUtils'
+import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 
 type DiceAndId = {dice: number, id: number}
 
@@ -42,8 +43,10 @@ export default class CubeYesAction extends CallbackButtonAction {
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<void> {
         const [replyId, userId, cost] = data.split('_').map(val => +val)
+        const chatId = await LinkedChatService.getChatId(ctx)
+        if(!chatId) return
 
-        if(ctx.from.id == replyId) {
+        if(chatId && ctx.from.id == replyId) {
             await MessageUtils.editMarkup(ctx)
 
             const userDice = await CubeYesAction._sendDice(ctx, userId)
@@ -61,11 +64,11 @@ export default class CubeYesAction extends CallbackButtonAction {
                 else {
                     const [winnerId, loserId, boost] = win
                     const money = cost * boost
-                    const loserMoney = await CasinoGetService.getMoney(loserId)
+                    const loserMoney = await CasinoGetService.getMoney(chatId, loserId)
                     const prize = money > loserMoney ? loserMoney : money
 
                     const changeValues = {
-                        ...await ContextUtils.getUser(winnerId),
+                        ...await ContextUtils.getUser(chatId, winnerId),
                         cost: StringUtils.toFormattedNumber(prize)
                     }
 
@@ -84,8 +87,8 @@ export default class CubeYesAction extends CallbackButtonAction {
                         )
                     }
 
-                    await CasinoAddService.addMoney(winnerId, prize)
-                    await CasinoAddService.addMoney(loserId, -prize)
+                    await CasinoAddService.addMoney(chatId, winnerId, prize)
+                    await CasinoAddService.addMoney(chatId, loserId, -prize)
 
                     setTimeout(async () => {
                         if(loserMoney < money) {
@@ -95,11 +98,11 @@ export default class CubeYesAction extends CallbackButtonAction {
                                 {
                                     changeValues: {
                                         ...changeValues, 
-                                        ...await ContextUtils.getUser(loserId)
+                                        ...await ContextUtils.getUser(chatId, loserId)
                                     }
                                 }
                             )
-                            await AdminUtils.ban(ctx, loserId, MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE)
+                            await AdminUtils.kick(ctx, loserId)
                         }
                     }, MILLISECONDS_IN_SECOND)
                 }

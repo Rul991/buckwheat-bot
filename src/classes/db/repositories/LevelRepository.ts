@@ -1,5 +1,5 @@
 import Level from '../../../interfaces/schemas/Level'
 import LevelModel from '../models/LevelModel'
-import IdRepository from './base/IdRepository'
+import ChatIdRepository from './base/ChatIdRepository'
 
-export default new IdRepository<typeof LevelModel, Level>(LevelModel)
+export default new ChatIdRepository<typeof LevelModel, Level>(LevelModel)

@@ -5,6 +5,7 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import ItemsService from '../../../db/services/items/ItemsService'
 import Casino from '../../../../interfaces/schemas/Casino'
 import StringUtils from '../../../../utils/StringUtils'
+import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 
 export default class BalanceCommand extends BuckwheatCommand {
     constructor() {
@@ -18,8 +19,10 @@ export default class BalanceCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const casino = await CasinoAccountService.create(ctx.from.id)
-        const items = await ItemsService.get(ctx.from.id)
+        const chatId = await LinkedChatService.getChatId(ctx)
+        if(!chatId) return
+        const casino = await CasinoAccountService.create(chatId, ctx.from.id)
+        const items = await ItemsService.get(chatId, ctx.from.id)
 
         const uniqueItemsLength = items
             .items

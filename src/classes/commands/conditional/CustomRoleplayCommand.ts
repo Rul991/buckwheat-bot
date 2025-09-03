@@ -1,6 +1,7 @@
 import MessageUtils from '../../../utils/MessageUtils'
 import RoleplayUtils from '../../../utils/RoleplayUtils'
 import { TextContext, CommandStrings, MaybeString } from '../../../utils/values/types'
+import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import RoleplaysService from '../../db/services/rp/RoleplaysService'
 import ConditionalCommand from '../base/ConditionalCommand'
 
@@ -8,8 +9,11 @@ export default class CustomRoleplayCommand extends ConditionalCommand {
     private _text: string | null = null
 
     async condition(ctx: TextContext, [_word, command, _other]: CommandStrings): Promise<boolean> {
+        const chatId = await LinkedChatService.getChatId(ctx)
+        if(!chatId) return false
+
         const roleplayCommand = await RoleplaysService
-            .getCommand(ctx.chat.id, command ?? '')
+            .getCommand(chatId, command ?? '')
         
         if(roleplayCommand) {
             this._text = roleplayCommand[1]

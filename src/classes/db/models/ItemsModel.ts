@@ -10,8 +10,21 @@ export default createModelWithSubModel<Items, InventoryItem>({
         return {
             name: 'Items',
             definition: {
-                id: { type: Number, required: true, unique: true },
-                items: { type: Array, of: inventoryItemSchema, default: [] }
+                id: { 
+                    type: Number, 
+                    required: true, 
+                    unique: false
+                },
+                chatId: {
+                    type: Number,
+                    required: true,
+                    unique: false
+                },
+                items: { 
+                    type: Array, 
+                    of: inventoryItemSchema, 
+                    default: [] 
+                }
             }
         }
     }

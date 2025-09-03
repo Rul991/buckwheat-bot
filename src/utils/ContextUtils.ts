@@ -2,15 +2,22 @@ import { Context } from 'telegraf'
 import { DEFAULT_USER_NAME } from './values/consts'
 import UserNameService from '../classes/db/services/user/UserNameService'
 import MessageUtils from './MessageUtils'
-import { CallbackButtonContext } from './values/types'
 import FileUtils from './FileUtils'
 import { ChatMember } from 'telegraf/types'
 import Logging from './Logging'
+import LinkedChatService from '../classes/db/services/linkedChat/LinkedChatService'
 
 export default class ContextUtils {
-    static async getUser(id?: number, firstName?: string) {
+    static async getUser(chatId?: number, id?: number, firstName?: string) {
         const usedId = id ?? 0
-        const name = await UserNameService.get(usedId) ?? firstName ?? DEFAULT_USER_NAME
+        const usedChatId = chatId ?? 0
+
+        const name = await UserNameService.getUniqueName(
+            usedChatId,
+            await UserNameService.get(usedChatId, usedId) ?? 
+                firstName ?? 
+                DEFAULT_USER_NAME
+        )
 
         return {
             name,
@@ -19,11 +26,12 @@ export default class ContextUtils {
     }
 
     static async getUserFromContext(ctx: Context) {
-        return await this.getUser(ctx.from?.id, ctx.from?.first_name)
+        const chatId = await LinkedChatService.getChatId(ctx)
+        return await this.getUser(chatId ?? undefined, ctx.from?.id, ctx.from?.first_name)
     }
 
-    static async sendDice(ctx: CallbackButtonContext, id: number): Promise<number> {
-        const user = await ContextUtils.getUser(id)
+    static async sendDice(ctx: Context, id: number): Promise<number> {
+        const user = await ContextUtils.getUser(ctx.chat?.id, id)
 
         await MessageUtils.answerMessageFromResource(
             ctx,

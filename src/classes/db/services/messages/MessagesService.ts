@@ -2,22 +2,22 @@ import Messages from '../../../../interfaces/schemas/Messages'
 import MessagesRepository from '../../repositories/MessagesRepository'
 
 export default class MessagesService {
-    static async get(id: number): Promise<Messages> {
-        const messages = await MessagesRepository.findOne(id)
+    static async get(chatId: number, id: number): Promise<Messages> {
+        const messages = await MessagesRepository.findOne(chatId, id)
 
         if(messages) return messages
-        else return await MessagesRepository.create({id, firstMessage: Date.now()})
+        else return await MessagesRepository.create({chatId, id, firstMessage: Date.now()})
     }
 
-    static async getAll(): Promise<Messages[]> {
-        return await MessagesRepository.findMany()
+    static async getAll(chatId: number): Promise<Messages[]> {
+        return await MessagesRepository.findManyInChat(chatId)
     }
 
-    static async add(id: number, addValue = 1): Promise<number> {
-        const messages = await this.get(id)
+    static async add(chatId: number, id: number, addValue = 1): Promise<number> {
+        const messages = await this.get(chatId, id)
         const newCount = (messages.total ?? 0) + addValue
 
-        await MessagesRepository.updateOne(id, {total: newCount})
+        await MessagesRepository.updateOne(chatId, id, {total: newCount})
         return newCount
     }
 }

@@ -10,6 +10,7 @@ import FileUtils from './FileUtils'
 import LevelService from '../classes/db/services/level/LevelService'
 import LevelUtils from './level/LevelUtils'
 import StringUtils from './StringUtils'
+import LinkedChatService from '../classes/db/services/linkedChat/LinkedChatService'
 
 type ItemExecuteCallback = (options: {
     ctx: CallbackButtonContext, 
@@ -36,11 +37,14 @@ export default class ShopItems {
         {
             filename: "rankUp",
             execute: async ({ctx}) => {
-                const rank = await UserRankService.get(ctx.from.id)
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return false
+
+                const rank = await UserRankService.get(chatId, ctx.from.id)
                 if(rank >= RankUtils.moderator) return false
 
-                const [isBought] = await InventoryItemService.add(ctx.from.id, 'rankUp')
-                await UserRankService.update(ctx.from.id, rank + 1)
+                const [isBought] = await InventoryItemService.add(chatId, ctx.from.id, 'rankUp')
+                await UserRankService.update(chatId, ctx.from.id, rank + 1)
 
                 if(isBought) 
                     await ContextUtils.showCallbackMessageFromFile(
@@ -100,7 +104,10 @@ export default class ShopItems {
         {
             filename: 'manyCasino',
             execute: async ({ctx}) => {
-                const [isUpdated] = await InventoryItemService.add(ctx.from.id, 'manyCasino')
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return false
+
+                const [isUpdated] = await InventoryItemService.add(chatId, ctx.from.id, 'manyCasino')
 
                 if(isUpdated)
                     await ContextUtils.showCallbackMessageFromFile(
@@ -115,7 +122,10 @@ export default class ShopItems {
         {
             filename: 'infinityCasino',
             execute: async ({ctx}) => {
-                const [isUpdated] = await InventoryItemService.add(ctx.from.id, 'infinityCasino')
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return false
+
+                const [isUpdated] = await InventoryItemService.add(chatId, ctx.from.id, 'infinityCasino')
 
                 if(isUpdated)
                     await ContextUtils.showCallbackMessageFromFile(
@@ -130,7 +140,10 @@ export default class ShopItems {
         {
             filename: 'greedBox',
             execute: async ({ctx, user}) => {
-                if(await InventoryItemService.anyHas('greedBox')) {
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return false
+
+                if(await InventoryItemService.anyHas(chatId, 'greedBox')) {
                     await MessageUtils.answerMessageFromResource(
                         ctx,
                         'text/commands/items/greedBox/empty.pug',
@@ -141,7 +154,7 @@ export default class ShopItems {
                     return false
                 }
 
-                const [isUpdated] = await InventoryItemService.add(ctx.from.id, 'greedBox')
+                const [isUpdated] = await InventoryItemService.add(chatId, ctx.from.id, 'greedBox')
 
                 if(isUpdated)
                     await MessageUtils.answerMessageFromResource(
@@ -178,7 +191,10 @@ export default class ShopItems {
         {
             filename: 'cookie',
             execute: async ({ctx, count: boughtCount}) => {
-                const [_isBought, count] = await InventoryItemService.add(ctx.from.id, 'cookie', boughtCount)
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return false
+
+                const [_isBought, count] = await InventoryItemService.add(chatId, ctx.from.id, 'cookie', boughtCount)
 
                 await ContextUtils.showCallbackMessage(
                     ctx,
@@ -199,7 +215,10 @@ export default class ShopItems {
         {
             filename: 'workUp',
             execute: async ({ctx}) => {
-                const [isAdded] = await InventoryItemService.add(ctx.from.id, 'workUp')
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return false
+
+                const [isAdded] = await InventoryItemService.add(chatId, ctx.from.id, 'workUp')
 
                 if(isAdded) {
                     await ContextUtils.showCallbackMessageFromFile(
@@ -215,7 +234,10 @@ export default class ShopItems {
         {
             filename: 'workCatalog',
             execute: async ({ctx}) => {
-                const [isAdded] = await InventoryItemService.add(ctx.from.id, 'workCatalog')
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return false
+
+                const [isAdded] = await InventoryItemService.add(chatId, ctx.from.id, 'workCatalog')
 
                 if(isAdded) {
                     await ContextUtils.showCallbackMessageFromFile(
@@ -231,7 +253,10 @@ export default class ShopItems {
         {
             filename: 'levelBoost',
             execute: async ({ctx, item, count}) => {
-                const [_, boostCount] = await InventoryItemService.add(ctx.from.id, 'levelBoost', count)
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return false
+
+                const [_, boostCount] = await InventoryItemService.add(chatId, ctx.from.id, 'levelBoost', count)
 
                 await ContextUtils.showCallbackMessage(
                     ctx,
@@ -253,8 +278,11 @@ export default class ShopItems {
         {
             filename: 'aeHair',
             execute: async ({ctx, user}) => {
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return false
+
                 const itemId = 'aeHair'
-                if(await InventoryItemService.anyHas(itemId)) {
+                if(await InventoryItemService.anyHas(chatId, itemId)) {
                     await ContextUtils.showCallbackMessageFromFile(
                         ctx,
                         'text/commands/items/aeHair/empty.pug'
@@ -262,7 +290,7 @@ export default class ShopItems {
                     return false
                 }
 
-                const [isAdded] = await InventoryItemService.add(ctx.from.id, itemId)
+                const [isAdded] = await InventoryItemService.add(chatId, ctx.from.id, itemId)
 
                 if(isAdded) {
                     await MessageUtils.answerMessageFromResource(
@@ -281,9 +309,12 @@ export default class ShopItems {
         {
             filename: 'shopPrecent',
             execute: async ({ctx, user, count}) => {
+                const chatId = await LinkedChatService.getChatId(ctx)
+                if(!chatId) return false
+
                 const itemId = 'shopPrecent'
 
-                const currentCount = await InventoryItemService.getTotalCount(itemId)
+                const currentCount = await InventoryItemService.getTotalCount(chatId, itemId)
                 const totalCount = currentCount + count
 
                 if(totalCount > MAX_SHOP_PRECENTS) {
@@ -301,7 +332,7 @@ export default class ShopItems {
                     return false
                 }
 
-                if(await LevelService.get(ctx.from.id) < LevelUtils.max) {
+                if(await LevelService.get(chatId, ctx.from.id) < LevelUtils.max) {
                     await ContextUtils.showCallbackMessageFromFile(
                         ctx,
                         'text/commands/items/shopPrecent/level-issue.pug'
@@ -310,7 +341,7 @@ export default class ShopItems {
                     return false
                 }
 
-                await InventoryItemService.add(ctx.from.id, itemId, count)
+                await InventoryItemService.add(chatId, ctx.from.id, itemId, count)
 
                 await MessageUtils.answerMessageFromResource(
                     ctx,
@@ -380,7 +411,6 @@ export default class ShopItems {
             maxCount: validatedItem.maxCount ?? -1
         }
 
-        console.log(this._items[id])
         return this._items[id] as Required<ShopItem>
     }
 

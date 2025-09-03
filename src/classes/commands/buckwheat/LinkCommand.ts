@@ -1,6 +1,6 @@
 import MessageUtils from '../../../utils/MessageUtils'
 import { TextContext, MaybeString } from '../../../utils/values/types'
-import UserLinkedService from '../../db/services/user/UserLinkedService'
+import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 
 export default class LinkCommand extends BuckwheatCommand {
@@ -10,7 +10,7 @@ export default class LinkCommand extends BuckwheatCommand {
         this._description = 'привязываю вас к этому чату\nпозволяю работать с ним из личных сообщений'
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
         if(ctx.chat.type == 'private') {
             await MessageUtils.answerMessageFromResource(
                 ctx,
@@ -19,7 +19,7 @@ export default class LinkCommand extends BuckwheatCommand {
             return
         }
 
-        if(ctx.chat.id == await UserLinkedService.get(ctx.from.id)) {
+        if(ctx.chat.id == await LinkedChatService.get(ctx.from.id)) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/link/already.pug'
@@ -27,7 +27,7 @@ export default class LinkCommand extends BuckwheatCommand {
             return
         }
 
-        await UserLinkedService.update(ctx.from.id, ctx.chat.id)
+        await LinkedChatService.set(ctx.from.id, ctx.chat.id)
 
         await MessageUtils.answerMessageFromResource(
             ctx,
