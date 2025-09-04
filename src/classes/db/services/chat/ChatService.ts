@@ -8,4 +8,8 @@ export default class ChatService {
         if(chat) return chat
         else return await ChatRepository.create({id: chatId})
     }
+
+    static async getAll(): Promise<Chat[]> {
+        return await ChatRepository.findMany()
+    }
 }

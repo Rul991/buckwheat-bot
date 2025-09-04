@@ -20,6 +20,21 @@ export default class UserProfileService {
         return `${DEFAULT_USER_NAME}${await this.getMembersCount(chatId)}`
     }
 
+    static async getUniqueUsers(): Promise<User[]> {
+        const uniqueUsers: User[] = []
+        const ids: number[] = []
+        const users = await UserRepository.findMany()
+
+        for (const user of users) {
+            if(!ids.includes(user.id)) {
+                ids.push(user.id)
+                uniqueUsers.push(user)
+            }
+        }
+
+        return uniqueUsers
+    }
+
     static async update(chatId: number, id: number, profile: Partial<User>): Promise<User | null> {
         await this.create(chatId, id)
         return await UserRepository.updateOne(chatId, id, profile)

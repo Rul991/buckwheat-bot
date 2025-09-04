@@ -69,6 +69,7 @@ import AddLeftInDatabaseAction from '../classes/actions/left-member/AddLeftInDat
 import RandomCommand from '../classes/commands/buckwheat/RandomCommand'
 import CommandsChangeAction from '../classes/callback-button/CommandsChangeAction'
 import DiceDice from '../classes/dice/DiceDice'
+import StatsCommand from '../classes/commands/buckwheat/StatsCommand'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = { name: string, isMustDefined: boolean }
@@ -214,6 +215,7 @@ const launchBot = async (bot: Bot) => {
         new ExperienceCommand(),
         new LinkCommand(),
         new RandomCommand(),
+        new StatsCommand(),
         ...await getSimpleCommands(),
     )
 
