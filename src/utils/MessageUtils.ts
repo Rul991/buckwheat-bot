@@ -7,6 +7,7 @@ import Logging from './Logging'
 import AnswerOptions from '../interfaces/options/AnswerOptions'
 import FileAnswerOptions from '../interfaces/options/FileAnswerOptions'
 import { AsyncOrSync, ExtraEditMessageText } from './values/types'
+import ExceptionUtils from './ExceptionUtils'
 
 export default class MessageUtils {
     private static async _getMessageOptions(
@@ -28,17 +29,6 @@ export default class MessageUtils {
             disable_notification: disableNotification,
             parse_mode: PARSE_MODE as ParseMode,
             chatId: chatId ?? -1
-        }
-    }
-
-    private static async _handleException(callback: () => AsyncOrSync): Promise<boolean> {
-        try {
-            await callback()
-            return true
-        }
-        catch(e) {
-            Logging.error(e)
-            return false
         }
     }
 
@@ -128,7 +118,7 @@ export default class MessageUtils {
         photoId: string,
         options: AnswerOptions = {}
     ): Promise<boolean> {
-        return await this._handleException(async () => {
+        return await ExceptionUtils.handle(async () => {
             const extra = await this._getMessageOptions(ctx, options)
             if(extra.chatId == -1) {
                 Logging.error(`Cant send photo '${photoId}', chat id equal -1`)
@@ -147,25 +137,25 @@ export default class MessageUtils {
     }
 
     static async editMarkup(ctx: Context, markup?: InlineKeyboardMarkup): Promise<boolean> {
-        return await this._handleException(async () => {
+        return await ExceptionUtils.handle(async () => {
             await ctx.editMessageReplyMarkup(markup)
         })
     }
 
     static async editText(ctx: Context, text: string, options?: ExtraEditMessageText): Promise<boolean> {
-        return await this._handleException(async () => {
+        return await ExceptionUtils.handle(async () => {
             await ctx.editMessageText(text, {parse_mode: PARSE_MODE, ...options})
         })
     }
 
     static async react(ctx: Context, reaction: TelegramEmoji): Promise<boolean> {
-        return await this._handleException(async () => {
+        return await ExceptionUtils.handle(async () => {
             await ctx.react(reaction, true)
         })
     }
 
     static async deleteMessage(ctx: Context, messageId?: number) {
-        return await this._handleException(async () => {
+        return await ExceptionUtils.handle(async () => {
             await ctx.deleteMessage(messageId)
         })
     }

@@ -6,6 +6,7 @@ import FileUtils from './FileUtils'
 import { ChatMember } from 'telegraf/types'
 import Logging from './Logging'
 import LinkedChatService from '../classes/db/services/linkedChat/LinkedChatService'
+import ExceptionUtils from './ExceptionUtils'
 
 export default class ContextUtils {
     static async getUser(chatId?: number, id?: number, firstName?: string) {
@@ -52,11 +53,13 @@ export default class ContextUtils {
         return `tg://user?id=${id}`
     }
 
-    static async showCallbackMessage(ctx: Context, text: string, isAlert = false) {
-        await ctx.answerCbQuery(
-            text, 
-            { show_alert: isAlert }
-        )
+    static async showCallbackMessage(ctx: Context, text: string, isAlert = false): Promise<boolean> {
+        return await ExceptionUtils.handle(async () => {
+            await ctx.answerCbQuery(
+                text, 
+                { show_alert: isAlert }
+            )
+        })
     }
 
     static async showCallbackMessageFromFile(ctx: Context, path = 'text/alerts/alert.pug', isAlert = false) {

@@ -3,11 +3,13 @@
   "version": "1.3.0",
   "main": "src/app/index.ts",
   "scripts": {
-    "start": "npx tsx .",
+    "start": "npx tsx src/app/index.ts",
     "dev": "npx nodemon --ext ts -w src --exec \"npm start\"",
-    "build": "npm i",
-    "check": "npx tsc -b",
-    "db": "npx tsx src/app/update-db.ts"
+    "build": "npx tsc -b",
+    "db": "npx tsx src/app/update-db.ts",
+    "start:prod": "npm run build && pm2 start dist/app/index.js --name buckwheat",
+    "stop:prod": "pm2 stop buckwheat && pm2 delete buckwheat",
+    "restart:prod": "npm run build && pm2 restart buckwheat"
   },
   "keywords": [
     "telegraf",
@@ -18,7 +20,7 @@
   ],
   "author": "Rul",
   "license": "MIT",
-  "description": "Bot for chat: \"https://t.me/envell_chat\"",
+  "description": "",
   "devDependencies": {
     "@types/express": "^5.0.3",
     "@types/mongoose": "^5.11.96",
@@ -29,6 +31,7 @@
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "mongoose": "^8.16.4",
+    "pm2": "^6.0.10",
     "pug": "^3.0.3",
     "telegraf": "^4.16.3"
   }

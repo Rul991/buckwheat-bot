@@ -11,7 +11,7 @@ export default class TestCommand extends BuckwheatCommand {
     }
 
     private async _secretFunction(ctx: TextContext, _: MaybeString) {
-        
+        throw new Error('test error')
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
