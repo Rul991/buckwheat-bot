@@ -51,7 +51,7 @@ export default class CasinoDice extends BaseDice {
 
     private async _checkAndHandleCasinoMoney(ctx: DiceContext, casino: Casino): Promise<boolean> {
         if (casino.money! <= 0) {
-            await ctx.deleteMessage()
+            await MessageUtils.deleteMessage(ctx)
             return false
         }
         return true

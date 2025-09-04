@@ -1,4 +1,5 @@
 import ArrayUtils from '../../../utils/ArrayUtils'
+import MessageUtils from '../../../utils/MessageUtils'
 import { DEV_ID } from '../../../utils/values/consts'
 import { CallbackButtonContext } from '../../../utils/values/types'
 import IdeasService from '../../db/services/ideas/IdeasService'
@@ -34,7 +35,7 @@ export default class DeleteIdeaAction extends CallbackButtonAction {
                 )
             }
             else {
-                await ctx.deleteMessage()
+                await MessageUtils.deleteMessage(ctx)
             }
             
             return `Идея #${page + 1} удалена!`

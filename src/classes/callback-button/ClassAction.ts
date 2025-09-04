@@ -34,7 +34,7 @@ export default class ClassAction extends CallbackButtonAction {
                     }
                 }
             )
-            await ctx.deleteMessage()
+            await MessageUtils.deleteMessage(ctx)
         }
         else {
             await ContextUtils.showCallbackMessageFromFile(ctx)

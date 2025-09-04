@@ -1,4 +1,4 @@
-import { Context } from 'telegraf'
+import MessageUtils from '../../../utils/MessageUtils'
 import { MaybeString, TextContext } from '../../../utils/values/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 
@@ -10,6 +10,6 @@ export default class PingCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        await ctx.react('🫡', true)
+        await MessageUtils.react(ctx, '🫡')
     }
 }

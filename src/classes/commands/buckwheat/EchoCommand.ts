@@ -47,7 +47,7 @@ export default class EchoCommand extends BuckwheatCommand {
             )
 
             if(isPrivate) return
-            await ctx.deleteMessage()
+            await MessageUtils.deleteMessage(ctx)
         }
         else {
             await MessageUtils.answerMessageFromResource(ctx, 'text/commands/echo/echoError.pug')
