@@ -4,7 +4,7 @@ import MessageUtils from '../../utils/MessageUtils'
 import Pager from '../../utils/Pager'
 import { COMMANDS_PER_PAGE } from '../../utils/values/consts'
 import { CallbackButtonContext } from '../../utils/values/types'
-import InlineKeyboardManager from '../main/InlineKeyboardManager'
+import CallbackButtonManager from '../main/CallbackButtonManager'
 import CallbackButtonAction from './CallbackButtonAction'
 
 export default class CommandsChangeAction extends CallbackButtonAction {
@@ -32,7 +32,7 @@ export default class CommandsChangeAction extends CallbackButtonAction {
             ),
             {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get('commands/pager', `${page}`)
+                    inline_keyboard: await CallbackButtonManager.get('commands/pager', `${page}`)
                 }
             }
         )

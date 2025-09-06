@@ -1,19 +1,18 @@
 import { InlineKeyboardMarkup, Message, ParseMode, TelegramEmoji } from 'telegraf/types'
 import { Context } from 'telegraf'
-import InlineKeyboardManager from '../classes/main/InlineKeyboardManager'
 import { MAX_MESSAGE_LENGTH, PARSE_MODE } from './values/consts'
 import FileUtils from './FileUtils'
 import Logging from './Logging'
 import AnswerOptions from '../interfaces/options/AnswerOptions'
 import FileAnswerOptions from '../interfaces/options/FileAnswerOptions'
-import { AsyncOrSync, ExtraEditMessageText } from './values/types'
+import { ExtraEditMessageText } from './values/types'
 import ExceptionUtils from './ExceptionUtils'
 
 export default class MessageUtils {
     private static async _getMessageOptions(
         ctx: Context, 
         {
-            inlineKeyboard = ['empty', ''],
+            inlineKeyboard = [],
             disableNotification,
             chatId = ctx.chat?.id ?? -1,
             isReply = true
@@ -24,7 +23,7 @@ export default class MessageUtils {
                 message_id: ctx.message.message_id
             } : undefined,
             reply_markup: {
-                inline_keyboard: await InlineKeyboardManager.get(...inlineKeyboard)
+                inline_keyboard: inlineKeyboard
             },
             disable_notification: disableNotification,
             parse_mode: PARSE_MODE as ParseMode,

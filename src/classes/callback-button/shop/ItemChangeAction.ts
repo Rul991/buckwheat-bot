@@ -4,7 +4,7 @@ import ShopItems from '../../../utils/ShopItems'
 import MessageUtils from '../../../utils/MessageUtils'
 import Pager from '../../../utils/Pager'
 import { CallbackButtonContext } from '../../../utils/values/types'
-import InlineKeyboardManager from '../../main/InlineKeyboardManager'
+import CallbackButtonManager from '../../main/CallbackButtonManager'
 import CallbackButtonAction from '../CallbackButtonAction'
 import StringUtils from '../../../utils/StringUtils'
 
@@ -49,7 +49,7 @@ export default class ItemChangeAction extends CallbackButtonAction {
             ),
             {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get('shop', `${index}_${ctx.from.id}_${count}`)
+                    inline_keyboard: await CallbackButtonManager.get('shop', `${index}_${ctx.from.id}_${count}`)
                 },
             }
         )

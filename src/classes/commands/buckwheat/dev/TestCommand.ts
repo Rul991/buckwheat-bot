@@ -2,6 +2,7 @@ import { MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { DEV_ID } from '../../../../utils/values/consts'
+import CallbackButtonManager from '../../../main/CallbackButtonManager'
 
 export default class TestCommand extends BuckwheatCommand {
     constructor() {
@@ -11,7 +12,7 @@ export default class TestCommand extends BuckwheatCommand {
     }
 
     private async _secretFunction(ctx: TextContext, _: MaybeString) {
-        throw new Error('test error')
+        
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
@@ -19,10 +20,17 @@ export default class TestCommand extends BuckwheatCommand {
             this._secretFunction(ctx, other)
         }
 
+        let test: {text: string, data: string}[] = []
+
+        for (let i = 1; i < 1000; i++) {
+            test.push({text: i.toString(), data: i.toString()})
+        }
+
         await MessageUtils.answerMessageFromResource(ctx, 
             'text/commands/other/test.pug',
             {
-                changeValues: {other: other ?? ''}
+                changeValues: {other: other ?? ''},
+                inlineKeyboard: await CallbackButtonManager.map('test', test)
             }
         )
     }

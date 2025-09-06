@@ -65,7 +65,7 @@ export default class CubeYesAction extends CallbackButtonAction {
                     const [winnerId, loserId, boost] = win
                     const money = cost * boost
                     const loserMoney = await CasinoGetService.getMoney(chatId, loserId)
-                    const prize = money > loserMoney ? loserMoney : money
+                    const prize = money
 
                     const changeValues = {
                         ...await ContextUtils.getUser(chatId, winnerId),

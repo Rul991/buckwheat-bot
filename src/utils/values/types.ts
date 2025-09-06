@@ -66,3 +66,23 @@ export type ExtraEditMessageText = {
 
 export type NameObject = {name: string}
 export type TopLevelObject = {id: number, level: number}
+
+export type PrimitiveJavascriptTypes = 
+  | 'string'
+  | 'number'
+  | 'bigint'
+  | 'boolean'
+  | 'symbol'
+  | 'undefined'
+  | 'function'
+  | 'object'
+  | 'array'
+  | 'any'
+
+export type ObjectJavascriptTypes = Record<string, PrimitiveJavascriptTypes | Record<string, PrimitiveJavascriptTypes>>
+export type JavascriptTypes = PrimitiveJavascriptTypes | ObjectJavascriptTypes | (PrimitiveJavascriptTypes | ObjectJavascriptTypes)[]
+
+export type AnyRecord = Record<string, any>
+export type SchemaObject<T> = Record<keyof T, JavascriptTypes>
+export type ObjectOrArray<T> = T | T[]
+export type CallbackButtonValues = {text?: string, data?: string}

@@ -5,6 +5,7 @@ import { NewMemberContext } from '../../../utils/values/types'
 import HelloService from '../../db/services/chat/HelloService'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import UserOldService from '../../db/services/user/UserOldService'
+import CallbackButtonManager from '../../main/CallbackButtonManager'
 import NewMemberAction from './NewMemberAction'
 
 export default class HelloMemberAction extends NewMemberAction {
@@ -43,7 +44,7 @@ export default class HelloMemberAction extends NewMemberAction {
                         chatId,
                         text: await HelloService.get(chatId)
                     },
-                    inlineKeyboard: ['verify', `${from.id}`]
+                    inlineKeyboard: await CallbackButtonManager.get('verify', `${from.id}`)
                 }
             )
         }

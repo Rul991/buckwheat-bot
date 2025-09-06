@@ -1,7 +1,6 @@
 import { appendFile, readFile, stat, writeFile } from 'fs/promises'
 import { join } from 'path'
 import FileCache from '../interfaces/other/FileCache'
-import StringUtils from './StringUtils'
 import Logging from './Logging'
 import ReplaceOptions from '../interfaces/options/ReplaceOptions'
 import { render } from 'pug'
@@ -67,7 +66,7 @@ export default class FileUtils {
         }
     }
 
-    static async readToJson<T extends object>(path: string): Promise<T | null> {
+    static async readToJson<T>(path: string): Promise<T | null> {
         try {
             const text = await this.readToString(path)
             return JSON.parse(text)
@@ -96,7 +95,7 @@ export default class FileUtils {
         }
     }
 
-    static async readJsonFromResource<T extends object>(path: string): Promise<T | null> {
+    static async readJsonFromResource<T>(path: string): Promise<T | null> {
         return await this.readToJson<T>(join(this._resourceFolder, path))
     }
 }

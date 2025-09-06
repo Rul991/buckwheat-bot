@@ -6,7 +6,7 @@ import MessageUtils from '../../../utils/MessageUtils'
 import Pager from '../../../utils/Pager'
 import { CallbackButtonContext } from '../../../utils/values/types'
 import IdeasService from '../../db/services/ideas/IdeasService'
-import InlineKeyboardManager from '../../main/InlineKeyboardManager'
+import CallbackButtonManager from '../../main/CallbackButtonManager'
 import CallbackButtonAction from '../CallbackButtonAction'
 
 export default class IdeaChangeAction extends CallbackButtonAction {
@@ -34,7 +34,7 @@ export default class IdeaChangeAction extends CallbackButtonAction {
             ),
             {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get('ideachange', `${newPage}_${id}`)
+                    inline_keyboard: await CallbackButtonManager.get('ideachange', `${newPage}_${id}`)
                 },
             }
         )

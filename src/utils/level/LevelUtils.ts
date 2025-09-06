@@ -2,6 +2,7 @@ import { Context } from 'telegraf'
 import MathUtils from '../MathUtils'
 import MessageUtils from '../MessageUtils'
 import ContextUtils from '../ContextUtils'
+import { LEVEL_UP_MONEY } from '../values/consts'
 
 export default class LevelUtils {
     static min = 1
@@ -22,7 +23,8 @@ export default class LevelUtils {
             {
                 changeValues: {
                     ...await ContextUtils.getUserFromContext(ctx),
-                    lvl: newLevel
+                    lvl: newLevel,
+                    money: newLevel * LEVEL_UP_MONEY
                 }
             }
         )

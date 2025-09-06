@@ -3,6 +3,9 @@ import BuckwheatCommand from './BuckwheatCommand'
 import FileUtils from '../../../utils/FileUtils'
 import SimpleCommand from '../../../interfaces/other/SimpleComand'
 import MessageUtils from '../../../utils/MessageUtils'
+import RandomUtils from '../../../utils/RandomUtils'
+import ObjectValidator from '../../../utils/ObjectValidator'
+import { simpleCommandSchema } from '../../../utils/values/schemas'
 
 export default class SimpleBuckwheatCommand extends BuckwheatCommand {
     static async loadFromJsonResource(path: string): Promise<SimpleBuckwheatCommand> {
@@ -13,11 +16,8 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
             isWrong = true
         }
         else {
-            isWrong = !(
-                typeof json.name == 'string' && 
-                (typeof json.src == 'string' || typeof json.text == 'string') &&
-                (typeof json.avoidOther === 'boolean' || typeof json.avoidOther == 'undefined')
-            )
+            isWrong = ObjectValidator.isValidatedObject(json, simpleCommandSchema) 
+                && !(typeof json.src == 'undefined' && typeof json.src == typeof json.text)
         }
 
         if(isWrong)
@@ -26,9 +26,39 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
             return new this(json!)
     }
 
-    protected _src?: string
-    protected _text?: string
+    protected _sources?: string[]
+    protected _texts?: string[]
     protected _avoidOther?: boolean
+
+    protected _getAllText(text?: string[] | string): string[] {
+        if(typeof text == 'string') 
+            return [text]
+        else if(typeof text == 'undefined') {
+            return []
+        }
+        else {
+            return text
+        }
+    }
+
+    protected _hasLength(arr?: any[]): boolean {
+        return (arr?.length ?? 0) > 0
+    }
+
+    protected _isSource(): boolean | null {
+        const hasTexts = this._hasLength(this._texts)
+        const hasSources = this._hasLength(this._sources)
+
+        if(hasTexts && hasSources) {
+            return RandomUtils.chance(0.5)
+        }
+        else if(hasSources && !hasTexts) {
+            return true
+        }
+        else {
+            return null
+        }
+    }
 
     protected async _sendMessageBySrc(ctx: TextContext, src: string) {
         await MessageUtils.answerMessageFromResource(ctx, src)
@@ -44,11 +74,21 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
             return
         }
 
-        if(typeof this._src == 'string') {
-            this._sendMessageBySrc(ctx, this._src)
+        const isSource = this._isSource()
+        const text = RandomUtils.choose((isSource ? this._sources : this._texts) ?? [])
+
+        if(!text) {
+            return await MessageUtils.sendWrongCommandMessage(ctx)
         }
-        else if(typeof this._text == 'string') {
-            this._sendMessageByText(ctx, this._text)
+
+        if(isSource) {
+            this._sendMessageBySrc(ctx, text)
+        }
+        else if(isSource !== null) {
+            this._sendMessageByText(ctx, text)
+        }
+        else {
+            await MessageUtils.sendWrongCommandMessage(ctx)
         }
     }
 
@@ -56,8 +96,8 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
         super()
 
         this._name = name
-        this._src = src
-        this._text = text
+        this._sources = this._getAllText(src)
+        this._texts = this._getAllText(text)
         this._avoidOther = avoidOther
 
         this._isShow = false

@@ -73,11 +73,11 @@ export default class ShopItems {
 
         {
             filename: "ban",
-            execute: async ({ctx, user}) => {
+            execute: async ({ctx, user, count}) => {
                 const isKicked = await AdminUtils.ban(
                     ctx, 
                     ctx.from.id, 
-                    MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE
+                    MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * count
                 )
 
                 if(isKicked) {

@@ -1,4 +1,4 @@
-import { CATALOG_BOOST, LEVEL_BOOST, WORK_TIME } from '../../../../utils/values/consts'
+import { CATALOG_BOOST, LEVEL_BOOST, LEVEL_UP_MONEY, WORK_TIME } from '../../../../utils/values/consts'
 import { ClassTypes, MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserRankService from '../../../db/services/user/UserRankService'
@@ -75,6 +75,7 @@ export default class WorkCommand extends BuckwheatCommand {
             )
 
             if(newLevel) {
+                await CasinoAddService.addMoney(chatId, id, newLevel * LEVEL_UP_MONEY)
                 await LevelUtils.sendLevelUpMessage(ctx, newLevel)
             }
         }

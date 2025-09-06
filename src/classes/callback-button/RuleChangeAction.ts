@@ -5,7 +5,7 @@ import Pager from '../../utils/Pager'
 import { CallbackButtonContext } from '../../utils/values/types'
 import RulesService from '../db/services/chat/RulesService'
 import LinkedChatService from '../db/services/linkedChat/LinkedChatService'
-import InlineKeyboardManager from '../main/InlineKeyboardManager'
+import CallbackButtonManager from '../main/CallbackButtonManager'
 import CallbackButtonAction from './CallbackButtonAction'
 
 export default class RuleChangeAction extends CallbackButtonAction {
@@ -38,7 +38,7 @@ export default class RuleChangeAction extends CallbackButtonAction {
                 ),
                 {
                     reply_markup: {
-                        inline_keyboard: await InlineKeyboardManager.get('rules', `${currentPage}`)
+                        inline_keyboard: await CallbackButtonManager.get('rules', `${currentPage}`)
                     },
                 }
             )

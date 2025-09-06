@@ -70,6 +70,7 @@ import RandomCommand from '../classes/commands/buckwheat/RandomCommand'
 import CommandsChangeAction from '../classes/callback-button/CommandsChangeAction'
 import DiceDice from '../classes/dice/DiceDice'
 import StatsCommand from '../classes/commands/buckwheat/StatsCommand'
+import DebtMemberAction from '../classes/actions/new-member/DebtMemberAction'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = { name: string, isMustDefined: boolean }
@@ -169,6 +170,7 @@ const launchBot = async (bot: Bot) => {
     bot.addNewMemberAction(
         new AddInDatabaseAction(),
         new HelloMemberAction(),
+        new DebtMemberAction(),
     )
 
     // conditional
@@ -229,7 +231,7 @@ const launchBot = async (bot: Bot) => {
 }
 
 const test = async (): Promise<void | boolean> => {
-
+    
 }
 
 const main = async () => {

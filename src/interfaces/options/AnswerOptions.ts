@@ -1,5 +1,7 @@
+import { InlineKeyboardButton } from 'telegraf/types'
+
 export default interface AnswerOptions {
-    inlineKeyboard?: [string, string]
+    inlineKeyboard?: InlineKeyboardButton[][]
     disableNotification?: boolean
     chatId?: number
     isReply?: boolean

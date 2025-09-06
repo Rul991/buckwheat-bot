@@ -1,5 +1,6 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import { TextContext, MaybeString } from '../../../../utils/values/types'
+import CallbackButtonManager from '../../../main/CallbackButtonManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class ShopCommand extends BuckwheatCommand {
@@ -25,7 +26,7 @@ export default class ShopCommand extends BuckwheatCommand {
             ctx,
             'text/commands/shop/start.pug',
             {
-                inlineKeyboard: ['start_shop', `${ctx.from.id}_${count}`]
+                inlineKeyboard: await CallbackButtonManager.get('start_shop', `${ctx.from.id}_${count}`)
             }
         )
     }

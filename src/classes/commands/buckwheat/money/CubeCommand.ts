@@ -5,6 +5,8 @@ import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import CallbackButtonManager from '../../../main/CallbackButtonManager'
+import { MAX_DEBT_PRICE } from '../../../../utils/values/consts'
 
 export default class CubeCommand extends BuckwheatCommand {
     constructor() {
@@ -64,6 +66,14 @@ export default class CubeCommand extends BuckwheatCommand {
                 return
             }
 
+            if(needMoney - replyMoney >= MAX_DEBT_PRICE) {
+                await MessageUtils.answerMessageFromResource(
+                    ctx,
+                    'text/commands/cubes/debt-diff.pug'
+                )
+                return
+            }
+
             if(replyMoney <= 0 && needMoney > 0) {
                 await MessageUtils.answerMessageFromResource(
                     ctx, 
@@ -84,9 +94,10 @@ export default class CubeCommand extends BuckwheatCommand {
                         userUrl: user.link,
                         replyName: reply.name,
                         userName: user.name,
-                        cost: needMoney > 0 ? `${StringUtils.toFormattedNumber(needMoney)} монет` : 'интерес'
+                        cost: needMoney > 0 ? `${StringUtils.toFormattedNumber(needMoney)} монет` : 'интерес',
+                        isReplyHasNeedMoney: replyMoney >= needMoney
                     },
-                    inlineKeyboard: ['cubes', `${replyId}_${userId}_${needMoney}`]
+                    inlineKeyboard: await CallbackButtonManager.get('cubes', `${replyId}_${userId}_${needMoney}`)
                 }
             )
         }

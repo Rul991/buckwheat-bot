@@ -1,6 +1,7 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import { TextContext, MaybeString } from '../../../../utils/values/types'
 import IdeasService from '../../../db/services/ideas/IdeasService'
+import CallbackButtonManager from '../../../main/CallbackButtonManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class IdeaCommand extends BuckwheatCommand {
@@ -20,7 +21,7 @@ export default class IdeaCommand extends BuckwheatCommand {
                 ctx,
                 'text/commands/ideas/start.pug',
                 {
-                    inlineKeyboard: ['start_ideas', `${ctx.from.id}`],
+                    inlineKeyboard: await CallbackButtonManager.get('start_ideas', `${ctx.from.id}`),
                     changeValues: {
                         length: (await IdeasService.getIdeas()).length
                     }

@@ -1,5 +1,6 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import { TextContext, MaybeString } from '../../../../utils/values/types'
+import CallbackButtonManager from '../../../main/CallbackButtonManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class ClassCommand extends BuckwheatCommand {
@@ -14,7 +15,7 @@ export default class ClassCommand extends BuckwheatCommand {
             ctx,
             'text/commands/class/classes.pug',
             {
-                inlineKeyboard: ['class', `${ctx.from.id}`]
+                inlineKeyboard: await CallbackButtonManager.get('class', `${ctx.from.id}`)
             }
         )
     }

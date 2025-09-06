@@ -1,3 +1,6 @@
+- let noCubesPhrases = ['кубики суровы', 'какая жалость', 'грустно', 'где деньги, игрокский?']
+- let index = Math.floor(Math.random() * noCubesPhrases.length)
+
 b 📌 Твой баланс:
 |
 |
@@ -24,3 +27,8 @@ b #{loses}
 | Процент побед: 
 b #{winrate}%
 |
+|
+|
+if money < 0
+    tg-spoiler 
+        b (#{noCubesPhrases[index]})
