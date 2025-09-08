@@ -9,6 +9,9 @@ export default class CommandsCommand extends BuckwheatCommand {
         super()
         this._name = 'команды'
         this._description = 'я выдаю данный список'
+        this._aliases = [
+            'команда',
+        ]
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {

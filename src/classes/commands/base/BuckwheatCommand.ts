@@ -6,6 +6,7 @@ export default abstract class BuckwheatCommand extends BaseAction {
     protected _isShow: boolean = true
     protected _needData: boolean = false
     protected _replySupport: boolean = false
+    protected _aliases: string[] = []
     protected _argumentText?: string
 
     abstract execute(ctx: TextContext, other: MaybeString): Promise<void>
@@ -17,7 +18,12 @@ export default abstract class BuckwheatCommand extends BaseAction {
             isShow: this._isShow,
             needData: this._needData,
             replySupport: this._replySupport,
-            argumentText: this._argumentText
+            argumentText: this._argumentText,
+            aliases: this._aliases
         }
+    }
+
+    get aliases(): string[] {
+        return this._aliases
     }
 }

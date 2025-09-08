@@ -9,7 +9,14 @@ each command in commands
     code баквит #{command.name}#{command.needData ? ` [${command.argumentText || 'аргументы'}]` : ''}
     |  #{command.replySupport ? replySymbol : ''}
     |
-    each description in command.description.split('\n')
+    - let lines = command.description.split('\n')
+    - let aliasesText = command.aliases.join(', ')
+    if aliasesText.length
+        |     ➖ также доступны как: 
+        b #{aliasesText}
+        |
+        |
+    each description in lines
         |     ➖ #{description}
         |
     |

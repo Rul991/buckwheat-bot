@@ -12,7 +12,7 @@ export default class Pager {
         
         const [addedValue, prevPage] = this._getPageAndIncrease(data)
         const newPage = prevPage + addedValue
-        let resultPage = MathUtils.wrap(newPage, 0, length - 1)
+        const resultPage = MathUtils.wrap(newPage, 0, length - 1)
 
         if(prevPage == resultPage) {
             return -1

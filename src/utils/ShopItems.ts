@@ -1,36 +1,19 @@
 import InventoryItemService from '../classes/db/services/items/InventoryItemService'
 import UserRankService from '../classes/db/services/user/UserRankService'
 import AdminUtils from './AdminUtils'
-import { LEVEL_BOOST, MAX_SHOP_PRECENTS, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './values/consts'
+import { MAX_SHOP_PRECENTS, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './values/consts'
 import MessageUtils from './MessageUtils'
 import RankUtils from './RankUtils'
-import { AsyncOrSync, CallbackButtonContext } from './values/types'
+import {  ItemExecuteOptions, RequiredShopItem, RequiredShopItemWithLength, ShopItem } from './values/types'
 import ContextUtils from './ContextUtils'
 import FileUtils from './FileUtils'
 import LevelService from '../classes/db/services/level/LevelService'
 import LevelUtils from './level/LevelUtils'
 import StringUtils from './StringUtils'
 import LinkedChatService from '../classes/db/services/linkedChat/LinkedChatService'
-
-type ItemExecuteCallback = (options: {
-    ctx: CallbackButtonContext, 
-    user: {link: string, name: string},
-    item: RequiredShopItem,
-    count: number
-}) => AsyncOrSync<boolean>
-
-type ShopItem = 
-    {
-        filename?: string | undefined,
-        name?: string,
-        description?: string,
-        emoji?: string,
-        price?: number,
-        maxCount?: number,
-        execute: ItemExecuteCallback
-    }
-
-type RequiredShopItem = Required<ShopItem>
+import { sleep } from './values/functions'
+import ObjectValidator from './ObjectValidator'
+import { shopItemSchema } from './values/schemas'
 
 export default class ShopItems {
     private static _items: ShopItem[] = [
@@ -365,11 +348,7 @@ export default class ShopItems {
 
     private static _isValid(item: ShopItem): boolean {
         return (
-            typeof item.name == 'string' && 
-            typeof item.description == 'string' &&
-            typeof item.emoji == 'string' && 
-            typeof item.price == 'number' &&
-            (typeof item.maxCount == 'number' || typeof item.maxCount == 'undefined')
+            ObjectValidator.isValidatedObject(item, shopItemSchema)
         )
     }
 
@@ -391,7 +370,10 @@ export default class ShopItems {
     private static async _valid(item: ShopItem): Promise<RequiredShopItem | null> {
         if(this._isValid(item)) {
             return {
-                ...item
+                ...item,
+                cooldown: item.cooldown ?? 0,
+                execute: item.execute ?? (() => false),
+                maxCount: item.maxCount ?? 0
             } as RequiredShopItem
         }
         else {
@@ -406,15 +388,12 @@ export default class ShopItems {
         const validatedItem = await this._valid(item)
         if(!validatedItem) return null
 
-        this._items[id] = {
-            ...validatedItem, 
-            maxCount: validatedItem.maxCount ?? -1
-        }
+        this._items[id] = validatedItem
 
         return this._items[id] as Required<ShopItem>
     }
 
-    static async getWithLength(id: number): Promise<(RequiredShopItem & { length: number; index: number }) | null> {
+    static async getWithLength(id: number): Promise<RequiredShopItemWithLength | null> {
         const item = await this.get(id)
         if(!item) return item
 
@@ -436,5 +415,13 @@ export default class ShopItems {
 
     static getFormattedPriceByCount(item: RequiredShopItem, count: number): string {
         return StringUtils.toFormattedNumber(this.getPriceByCount(item, count))
+    }
+
+    static async execute(item: RequiredShopItem, options: ItemExecuteOptions): Promise<boolean> {
+        if(item.cooldown > 0) {
+            await sleep(item.cooldown)
+        }
+
+        return await item.execute(options)
     }
 }

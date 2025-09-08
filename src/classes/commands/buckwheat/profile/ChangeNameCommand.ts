@@ -13,6 +13,7 @@ export default class ChangeNameCommand extends BuckwheatCommand {
         this._description = 'показываю или меняю вам имя в беседе'
         this._needData = true
         this._argumentText = 'имя'
+        this._aliases = ['имя']
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {

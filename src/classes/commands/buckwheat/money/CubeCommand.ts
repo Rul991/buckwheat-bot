@@ -16,6 +16,7 @@ export default class CubeCommand extends BuckwheatCommand {
         this._replySupport = true
         this._needData = true
         this._argumentText = 'деньги'
+        this._aliases = ['кубики']
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {

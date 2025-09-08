@@ -1,3 +1,4 @@
+import ClassUtils from '../../../../utils/ClassUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { TextContext, MaybeString } from '../../../../utils/values/types'
 import CallbackButtonManager from '../../../main/CallbackButtonManager'
@@ -10,12 +11,22 @@ export default class ClassCommand extends BuckwheatCommand {
         this._description = 'меняю вам класс'
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
+        const buttons = Object
+            .entries(ClassUtils.getVisibleNames())
+            .map(([key, value]) => 
+                ({text: value, data: `${key}_${ctx.from.id}`}))
+
+        const inlineKeyboard = await CallbackButtonManager.map(
+            'class', 
+            buttons
+        )
+
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/class/classes.pug',
             {
-                inlineKeyboard: await CallbackButtonManager.get('class', `${ctx.from.id}`)
+                inlineKeyboard
             }
         )
     }

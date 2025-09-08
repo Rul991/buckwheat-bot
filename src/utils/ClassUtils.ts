@@ -3,13 +3,17 @@ import { ClassTypes, ClassRecord } from './values/types'
 export default class ClassUtils {
     static defaultClassName: 'unknown' = 'unknown'
 
-    private static _classNames: ClassRecord = {
+    private static _visibleClassNames = {
         knight: 'Рыцарь',
         thief: 'Вор',
         sorcerer: 'Маг',
         engineer: 'Инженер',
         bard: 'Бард',
-        boss: 'Финальный босс',
+        boss: 'Финальный босс'
+    }
+
+    private static _classNames: ClassRecord = {
+        ...this._visibleClassNames,
         bot: 'НПС',
         [this.defaultClassName]: 'Не выбрано'
     }
@@ -35,6 +39,10 @@ export default class ClassUtils {
 
     static getNames(): ClassRecord {
         return this._classNames
+    }
+
+    static getVisibleNames() {
+        return this._visibleClassNames
     }
 
     static getArray(): Record<ClassTypes, string[]> {

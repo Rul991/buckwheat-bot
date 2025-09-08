@@ -15,25 +15,22 @@ export default class ObjectValidator {
             const valueArray = value instanceof Array ? value : [value]
 
             for (const type of valueArray) {
-                let isError = false
-
-                if(type == 'any') {
-                    continue
-                }
+                if(type == 'any') continue
+                
+                let errorCounts = 0
+                
                 if(typeof type == typeof obj[key] && typeof type == 'object') {
-                    isError = !this.isValidatedObject(obj[key], type)
+                    errorCounts = +!this.isValidatedObject(obj[key], type)
                 }
-                else if(type == 'array' && this.isArray(obj[key])) {
-                    isError = false
-                }
+                else if(type == 'array' && this.isArray(obj[key])) {}
                 else if(type != typeof obj[key]) {
-                    isError = true
+                    errorCounts++
                 }
                 else if(type == 'object' && obj[key] === null) {
-                    isError = true
+                    errorCounts++
                 }
 
-                if(isError) return false
+                if(errorCounts >= valueArray.length) return false
             }
 
         }

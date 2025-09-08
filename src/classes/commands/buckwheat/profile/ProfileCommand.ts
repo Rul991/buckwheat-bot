@@ -26,6 +26,7 @@ export default class ProfileCommand extends BuckwheatCommand {
         this._replySupport = true
         this._needData = true
         this._argumentText = 'ник'
+        this._aliases = ['кто']
     }
 
     private async _getPhotoId(ctx: TextContext, id: number): Promise<string | null> {

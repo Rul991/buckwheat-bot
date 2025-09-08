@@ -24,6 +24,10 @@ export default class WorkCommand extends BuckwheatCommand {
         super()
         this._name = 'работа'
         this._description = 'даю тебе деньги за твою работу\nчем выше ранг, тем больше денег ты получаешь'
+        this._aliases = [
+            'фарма',
+            'ферма',
+        ]
     }
 
     private static async _getWorkTypes(): Promise<Record<ClassTypes, string[]>> {

@@ -10,6 +10,7 @@ export type CommandDescription = {
     isShow: boolean, 
     description: string, 
     name: string
+    aliases: string[]
 }
 
 export type TextContext = Context<{
@@ -86,3 +87,36 @@ export type AnyRecord = Record<string, any>
 export type SchemaObject<T> = Record<keyof T, JavascriptTypes>
 export type ObjectOrArray<T> = T | T[]
 export type CallbackButtonValues = {text?: string, data?: string}
+
+export type ItemExecuteOptions = {
+    ctx: CallbackButtonContext, 
+    user: {link: string, name: string},
+    item: RequiredShopItem,
+    count: number
+}
+export type ItemExecuteCallback = (options: ItemExecuteOptions) => AsyncOrSync<boolean>
+export type RequiredShopItem = Required<ShopItem>
+export type RequiredShopItemWithLength = RequiredShopItem  & { length: number; index: number }
+export type ShopItem = 
+{
+    filename?: string | undefined,
+    name?: string,
+    description?: string,
+    emoji?: string,
+    price?: number,
+    maxCount?: number,
+    cooldown?: number
+    execute: ItemExecuteCallback
+}
+
+export type ScrollerSendMessageOptions<T> = {
+    currentPage: number
+    length: number
+    objects: T[]
+    data: string
+}
+
+export type ScrollerEditMessageResult = {
+    text: string,
+    options?: ExtraEditMessageText
+}

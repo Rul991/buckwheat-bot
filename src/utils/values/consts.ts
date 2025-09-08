@@ -80,7 +80,8 @@ export const MAX_SHOP_PRECENTS = 50
 export const COMMANDS_PER_PAGE = 5
 
 export const DICE_ANSWER_CHANCE = 0.1
-export const LEVEL_UP_MONEY = 10
+export const LEVEL_UP_MONEY = 2
 
 export const DATA_REPLACEABLE_SYMBOL = '@'
 export const MAX_DEBT_PRICE = 1000
+export const MAX_SHOP_COUNT = 1e6

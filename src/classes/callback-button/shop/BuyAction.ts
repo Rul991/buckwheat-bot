@@ -26,7 +26,7 @@ export default class BuyAction extends CallbackButtonAction {
 
         if(index === -1) return
         
-        const item = await ShopItems.getWithLength(index)
+        const item = await ShopItems.get(index)
         if(!item) return await FileUtils.readPugFromResource('text/alerts/wrong-item.pug')
 
         const money = await CasinoGetService.getMoney(chatId, ctx.from.id)
@@ -50,11 +50,11 @@ export default class BuyAction extends CallbackButtonAction {
             return
         }
 
-        const isBought = await item.execute({
-            ctx, 
-            user, 
-            item, 
-            count: totalCount,
+        const isBought = await ShopItems.execute(item, {
+            ctx,
+            user,
+            item,
+            count: totalCount
         })
 
         if(isBought) {

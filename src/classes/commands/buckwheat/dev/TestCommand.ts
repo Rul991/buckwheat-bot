@@ -3,6 +3,7 @@ import BuckwheatCommand from '../../base/BuckwheatCommand'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { DEV_ID } from '../../../../utils/values/consts'
 import CallbackButtonManager from '../../../main/CallbackButtonManager'
+import CasinoAddService from '../../../db/services/casino/CasinoAddService'
 
 export default class TestCommand extends BuckwheatCommand {
     constructor() {
@@ -12,7 +13,7 @@ export default class TestCommand extends BuckwheatCommand {
     }
 
     private async _secretFunction(ctx: TextContext, _: MaybeString) {
-        
+        await CasinoAddService.addMoney(ctx.chat.id, ctx.from.id, Number.MAX_SAFE_INTEGER)
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {

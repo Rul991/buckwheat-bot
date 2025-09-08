@@ -52,8 +52,11 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
         if(hasTexts && hasSources) {
             return RandomUtils.chance(0.5)
         }
-        else if(hasSources && !hasTexts) {
+        else if(hasSources) {
             return true
+        }
+        else if(hasTexts) {
+            return false
         }
         else {
             return null
@@ -75,7 +78,8 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
         }
 
         const isSource = this._isSource()
-        const text = RandomUtils.choose((isSource ? this._sources : this._texts) ?? [])
+        const texts = (isSource ? this._sources : this._texts) ?? []
+        const text = RandomUtils.choose(texts)
 
         if(!text) {
             return await MessageUtils.sendWrongCommandMessage(ctx)

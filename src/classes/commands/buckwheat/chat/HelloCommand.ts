@@ -1,6 +1,5 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import RankUtils from '../../../../utils/RankUtils'
-import StringUtils from '../../../../utils/StringUtils'
 import { TextContext, MaybeString } from '../../../../utils/values/types'
 import HelloService from '../../../db/services/chat/HelloService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
@@ -14,6 +13,9 @@ export default class HelloCommand extends BuckwheatCommand {
         this._description = 'редактирую сообщение, которые отправляется при входе нового игрока'
         this._needData = true
         this._argumentText = 'текст приветствия'
+        this._aliases = [
+            'привет',
+        ]
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {

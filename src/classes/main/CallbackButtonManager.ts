@@ -61,12 +61,12 @@ export default class CallbackButtonManager {
         >({
             name,
             callback: keyboard => {
-                const newKeyboard: Result[][] = []
+                const resultKeyboard: Result[][] = []
                 const buttons = keyboard instanceof Array ? keyboard : [keyboard]
 
                 for (const button of buttons) {
                     if(button.notEach) {
-                        newKeyboard.push([{text: button.text, callback_data: button.data}])
+                        resultKeyboard.push([{text: button.text, callback_data: button.data}])
                         continue
                     }
 
@@ -78,14 +78,14 @@ export default class CallbackButtonManager {
                     })
 
                     if(button.isHorisontal) {
-                        newKeyboard.push(keyboard)
+                        resultKeyboard.push(keyboard)
                     }
                     else {
-                        newKeyboard.push(...keyboard.map(kb => [kb]))
+                        resultKeyboard.push(...(keyboard.map(kb => [kb])))
                     }
                 }
 
-                return newKeyboard
+                return resultKeyboard
             },
             folder: 'map'
         })

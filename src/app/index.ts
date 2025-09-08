@@ -30,7 +30,7 @@ import CubeNoAction from '../classes/callback-button/cube/CubeNoAction'
 import UpdateCommand from '../classes/commands/buckwheat/UpdateCommand'
 import AntiSpamAction from '../classes/actions/every/AntiSpamAction'
 import RuleCommand from '../classes/commands/buckwheat/chat/RuleCommand'
-import RuleChangeAction from '../classes/callback-button/RuleChangeAction'
+import RuleChangeAction from '../classes/callback-button/scrollers/RuleChangeAction'
 import WorkCommand from '../classes/commands/buckwheat/money/WorkCommand'
 import { env } from 'process'
 import CommandsCommand from '../classes/commands/buckwheat/info/CommandsCommand'
@@ -67,10 +67,11 @@ import LinkCommand from '../classes/commands/buckwheat/LinkCommand'
 import InventoryItemsUtils from '../utils/InventoryItemsUtils'
 import AddLeftInDatabaseAction from '../classes/actions/left-member/AddLeftInDatabaseAction'
 import RandomCommand from '../classes/commands/buckwheat/RandomCommand'
-import CommandsChangeAction from '../classes/callback-button/CommandsChangeAction'
+import CommandsChangeAction from '../classes/callback-button/scrollers/CommandsChangeAction'
 import DiceDice from '../classes/dice/DiceDice'
 import StatsCommand from '../classes/commands/buckwheat/StatsCommand'
 import DebtMemberAction from '../classes/actions/new-member/DebtMemberAction'
+import ChannelCommand from '../classes/commands/buckwheat/info/ChannelCommand'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = { name: string, isMustDefined: boolean }
@@ -218,6 +219,7 @@ const launchBot = async (bot: Bot) => {
         new LinkCommand(),
         new RandomCommand(),
         new StatsCommand(),
+        new ChannelCommand(),
         ...await getSimpleCommands(),
     )
 

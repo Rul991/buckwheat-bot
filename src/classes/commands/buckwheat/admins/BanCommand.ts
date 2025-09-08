@@ -1,4 +1,3 @@
-import { Context } from 'telegraf'
 import AdminCommand from './AdminCommand'
 import AdminUtils from '../../../../utils/AdminUtils'
 import { TextContext } from '../../../../utils/values/types'
@@ -15,6 +14,7 @@ export default class MuteCommand extends AdminCommand {
 
         this._folder = 'ban'
         this._isUndoCommand = false
+        this._aliases = ['кик']
     }
 
     protected async _do(ctx: TextContext, replyId: number, time: number): Promise<boolean> {

@@ -23,7 +23,9 @@ export default class CommandHandler extends BaseHandler<BuckwheatCommand, Condit
             super._add(value)
         }
         else {
-            this._buckwheatCommands[value.name] = value
+            for (const name of [value.name, ...value.aliases]) {
+                this._buckwheatCommands[name] = value
+            }
         }
     }
 
@@ -58,6 +60,7 @@ export default class CommandHandler extends BaseHandler<BuckwheatCommand, Condit
 
     setup(bot: Telegraf): void {
         bot.on('text', async ctx => {
+            if(ctx.message.forward_origin) return
             await CommandUtils.doIfCommand(
                 ctx.text,
                 async (strings) => {

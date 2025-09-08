@@ -41,6 +41,10 @@ export default class TransferCommand extends BuckwheatCommand {
         this._needData = true
         this._replySupport = true
         this._argumentText = 'деньги'
+        this._aliases = [
+            'перевести',
+            'передать'
+        ]
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {

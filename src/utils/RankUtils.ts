@@ -1,4 +1,18 @@
-import { DEFAULT_USER_NAME_CAPITAL } from './values/consts'
+import { DEFAULT_USER_NAME_CAPITAL, DEV_ID } from './values/consts'
+
+type BaseCanUseOptions = {
+    id?: number
+    isCreator?: boolean
+}
+
+type CanUseOptions = BaseCanUseOptions & {
+    userRank: number
+    adminRank?: number
+}
+
+type CanAdminUseOptions = CanUseOptions & {
+    replyRank: number
+}
 
 export default class RankUtils {
     private static _wrongRankName = 'HH'
@@ -31,6 +45,16 @@ export default class RankUtils {
         'Шалунишки'
     ]
 
+    private static _canUse(
+        {
+            isCreator,
+            id
+        }: BaseCanUseOptions,
+        value: boolean
+    ) {
+        return value || isCreator || id == DEV_ID
+    }
+
     static min = 0
     static max = this._rankNames.length - 1
 
@@ -59,7 +83,13 @@ export default class RankUtils {
         return this._rankEmoji[this._rankEmoji.length - rank - 1] ?? this._wrongRankEmoji
     }
 
-    static canUse(userRank: number, replyRank: number, adminRank: number = this.admin): boolean {
-        return (userRank >= adminRank && replyRank < userRank)
+    static canUse(options: CanUseOptions): boolean {
+        const {userRank, adminRank} = options
+        return this._canUse(options, userRank >= (adminRank ?? this.admin))
+    }
+
+    static canAdminUse(options: CanAdminUseOptions): boolean {
+        const {userRank, adminRank, replyRank} = options
+        return this._canUse(options, userRank >= (adminRank ?? this.admin) && replyRank < userRank)
     }
 }

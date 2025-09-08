@@ -30,7 +30,7 @@ export default class RuleCommand extends BuckwheatCommand {
             execute: async (ctx, data) => {
                 const chatId = await LinkedChatService.getChatId(ctx)
                 if(!chatId) return false
-                return await this._deleteRule(ctx.chat.id, data)
+                return await this._deleteRule(chatId, data)
             },
             sendMessage: async ({ctx, changeValues}) => {
                 await MessageUtils.answerMessageFromResource(
@@ -160,7 +160,10 @@ export default class RuleCommand extends BuckwheatCommand {
         }
         else {
             const rank = await UserRankService.get(chatId, id)
-            const isAdminRank = rank >= RankUtils.admin
+            const isAdminRank = RankUtils.canUse({
+                userRank: rank,
+                id
+            })
             const rules = await RulesService.get(chatId)
 
             const [

@@ -12,6 +12,7 @@ export default class BalanceCommand extends BuckwheatCommand {
         super()
         this._name = 'баланс'
         this._description = 'показываю ваш баланс'
+        this._aliases = ['казино']
     }
 
     private static _getCasinoValue(casino: Casino, key: keyof Casino): string {

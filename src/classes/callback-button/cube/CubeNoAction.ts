@@ -10,7 +10,8 @@ export default class CubeNoAction extends CallbackButtonAction {
     }
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<void> {
-        const replyId = +data.split('_')[0]
+        const [replyId, userId] = data.split('_').map(v => +v)
+        const changeValues = await ContextUtils.getUserFromContext(ctx)
         
         if(ctx.from.id == replyId) {
             await MessageUtils.editMarkup(ctx)
@@ -18,9 +19,17 @@ export default class CubeNoAction extends CallbackButtonAction {
                 ctx,
                 'text/commands/cubes/cancel.pug',
                 {
-                    changeValues: {
-                        link: ContextUtils.getLinkUrl(replyId)
-                    }
+                    changeValues
+                }
+            )
+        }
+        else if(ctx.from.id == userId) {
+            await MessageUtils.editMarkup(ctx)
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/cubes/creator-cancel.pug',
+                {
+                    changeValues
                 }
             )
         }

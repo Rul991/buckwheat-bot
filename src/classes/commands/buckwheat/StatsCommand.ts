@@ -9,6 +9,10 @@ export default class StatsCommand extends BuckwheatCommand {
         super()
         this._name = 'статы'
         this._description = 'показываю население энвелла и количество их бесед'
+        this._aliases = [
+            'статистика',
+            'стата'
+        ]
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {

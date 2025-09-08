@@ -13,7 +13,7 @@ export default class CustomRoleplayCommand extends ConditionalCommand {
         if(!chatId) return false
 
         const roleplayCommand = await RoleplaysService
-            .getCommand(chatId, command ?? '')
+            .getCommand(chatId, command?.toLowerCase() ?? '')
         
         if(roleplayCommand) {
             this._text = roleplayCommand[1]

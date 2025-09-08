@@ -1,5 +1,4 @@
 import MessageUtils from '../../../utils/MessageUtils'
-import RoleplayUtils from '../../../utils/RoleplayUtils'
 import StringUtils from '../../../utils/StringUtils'
 import SubCommandUtils from '../../../utils/SubCommandUtils'
 import { TextContext, MaybeString, NameObject } from '../../../utils/values/types'
@@ -41,8 +40,9 @@ export default class AddRoleplayCommand extends BuckwheatCommand {
             execute: async (ctx, other) => {
                 if(!other) return false
 
-                const [name, text] = StringUtils.splitByCommands(other, 1)
+                const [rawName, text] = StringUtils.splitByCommands(other, 1)
                 if(!text) return false
+                const name = rawName.toLowerCase()
 
                 const chatId = await LinkedChatService.getChatId(ctx)
                 if(!chatId) return false

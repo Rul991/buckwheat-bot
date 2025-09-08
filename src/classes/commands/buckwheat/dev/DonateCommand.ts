@@ -65,7 +65,10 @@ export default class DonateCommand extends BuckwheatCommand {
         const replyRank = await UserRankService.get(chatId, replyId)
         const replyValues = await ContextUtils.getUser(chatId, replyId)
 
-        if(replyRank >= RankUtils.admin) {
+        if(RankUtils.canUse({
+            userRank: replyRank,
+            id: userId
+        })) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/donate/high-rank.pug',

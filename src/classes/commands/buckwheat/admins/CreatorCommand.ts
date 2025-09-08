@@ -11,6 +11,7 @@ export default class CreatorCommand extends BuckwheatCommand {
         super()
         this._name = 'создатель'
         this._description = 'повышаю твой ранг до Гниды, если ты являешься создателем беседы.'
+        this._aliases = ['гнида']
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {

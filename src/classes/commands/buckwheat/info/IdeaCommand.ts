@@ -13,6 +13,9 @@ export default class IdeaCommand extends BuckwheatCommand {
 
         this._needData = true
         this._argumentText = 'идея'
+        this._aliases = [
+            'идея',
+        ]
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
