@@ -3,7 +3,7 @@ import UserRepository from '../../repositories/UserRepository'
 import BaseUserService from './BaseUserService'
 
 export default class UserNameService {
-    static async get(chatId: number, id: number): Promise<string | null> {
+    static async get(chatId: number, id: number): Promise<string> {
         return (await BaseUserService.get<string>(chatId, id, 'name')) ?? DEFAULT_USER_NAME
     }
 

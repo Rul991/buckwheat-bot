@@ -1,0 +1,13 @@
+[
+    [
+        {
+            "text": "<<",
+            "callback_data": "roleplaychange_-1_@"
+        },
+
+        {
+            "text": ">>",
+            "callback_data": "roleplaychange_1_@"
+        }
+    ]
+]

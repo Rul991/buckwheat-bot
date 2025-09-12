@@ -157,6 +157,7 @@ export default class TopCommand extends BuckwheatCommand {
                 for (const {className, name} of users) {
                     if(!className) continue
 
+                    if(!classMembers[className]) classMembers[className] = []
                     classMembers[className].push(name)
                 }
 

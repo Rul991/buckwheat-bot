@@ -13,11 +13,11 @@ export default class ObjectValidator {
         for (const key of Object.keys(schema)) {
             const value = schema[key]
             const valueArray = value instanceof Array ? value : [value]
+            let errorCounts = 0
 
             for (const type of valueArray) {
                 if(type == 'any') continue
                 
-                let errorCounts = 0
                 
                 if(typeof type == typeof obj[key] && typeof type == 'object') {
                     errorCounts = +!this.isValidatedObject(obj[key], type)
@@ -29,9 +29,9 @@ export default class ObjectValidator {
                 else if(type == 'object' && obj[key] === null) {
                     errorCounts++
                 }
-
-                if(errorCounts >= valueArray.length) return false
             }
+
+            if(errorCounts >= valueArray.length) return false
 
         }
 

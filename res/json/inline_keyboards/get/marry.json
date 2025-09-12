@@ -1,0 +1,13 @@
+[
+    [
+        {
+            "text": "Согласиться",
+            "callback_data": "marryyes_@"
+        },
+
+        {
+            "text": "Отказаться",
+            "callback_data": "marryno_@"
+        }
+    ]
+]

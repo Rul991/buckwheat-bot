@@ -85,3 +85,5 @@ export const LEVEL_UP_MONEY = 2
 export const DATA_REPLACEABLE_SYMBOL = '@'
 export const MAX_DEBT_PRICE = 1000
 export const MAX_SHOP_COUNT = 1e6
+
+export const ROULETTE_CHANCE = 1 / 6

@@ -138,9 +138,7 @@ export default class ProfileCommand extends BuckwheatCommand {
             status: RankUtils.getAdminStatusByNumber(rank),
             classEmoji: ClassUtils.getEmoji(classType),
             description: user.description?.toUpperCase() || '...',
-            spawnDate: afterFirstMessage >= MILLISECONDS_IN_DAY ? 
-                TimeUtils.formatMillisecondsToTime(afterFirstMessage) :
-                TimeUtils.toHHMMSS(afterFirstMessage),
+            spawnDate: TimeUtils.formatMillisecondsToTime(afterFirstMessage),
             messages: StringUtils.toFormattedNumber(messages.total ?? 0),
             experiencePrecents: ExperienceUtils.precents(experience),
         }

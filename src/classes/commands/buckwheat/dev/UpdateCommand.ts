@@ -1,9 +1,9 @@
 import { Context } from 'telegraf'
-import { MaybeString, TextContext } from '../../../utils/values/types'
-import BuckwheatCommand from '../base/BuckwheatCommand'
-import { DEV_ID } from '../../../utils/values/consts'
+import { MaybeString, TextContext } from '../../../../utils/values/types'
+import BuckwheatCommand from '../../base/BuckwheatCommand'
+import { DEV_ID } from '../../../../utils/values/consts'
 import { exec } from 'node:child_process'
-import MessageUtils from '../../../utils/MessageUtils'
+import MessageUtils from '../../../../utils/MessageUtils'
 
 export default class UpdateCommand extends BuckwheatCommand {
     constructor() {

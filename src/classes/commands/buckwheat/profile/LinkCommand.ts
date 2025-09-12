@@ -1,7 +1,7 @@
-import MessageUtils from '../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../utils/values/types'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
-import BuckwheatCommand from '../base/BuckwheatCommand'
+import MessageUtils from '../../../../utils/MessageUtils'
+import { TextContext, MaybeString } from '../../../../utils/values/types'
+import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class LinkCommand extends BuckwheatCommand {
     constructor() {

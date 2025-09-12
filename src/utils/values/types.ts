@@ -116,7 +116,8 @@ export type ScrollerSendMessageOptions<T> = {
     data: string
 }
 
-export type ScrollerEditMessageResult = {
+export type ScrollerEditMessage = {
     text: string,
     options?: ExtraEditMessageText
 }
+export type ScrollerEditMessageResult = ScrollerEditMessage | string | null

@@ -1,5 +1,5 @@
 import FileUtils from '../../../utils/FileUtils'
-import { CallbackButtonContext, ScrollerEditMessageResult, ScrollerSendMessageOptions } from '../../../utils/values/types'
+import { CallbackButtonContext, ScrollerEditMessage, ScrollerSendMessageOptions } from '../../../utils/values/types'
 import RulesService from '../../db/services/chat/RulesService'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import CallbackButtonManager from '../../main/CallbackButtonManager'
@@ -25,7 +25,7 @@ export default class RuleChangeAction extends ScrollerAction<string> {
             length, 
             objects
         }: ScrollerSendMessageOptions<string>
-    ): Promise<ScrollerEditMessageResult> {
+    ): Promise<ScrollerEditMessage> {
         return {
             text: await FileUtils.readPugFromResource(
                 'text/commands/rules/rule.pug',

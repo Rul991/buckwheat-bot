@@ -1,10 +1,11 @@
-import { MaybeString, TextContext } from '../../../utils/values/types'
-import BuckwheatCommand from '../base/BuckwheatCommand'
-import MessageUtils from '../../../utils/MessageUtils'
-import UserRankService from '../../db/services/user/UserRankService'
-import RankUtils from '../../../utils/RankUtils'
-import Logging from '../../../utils/Logging'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
+import { MaybeString, TextContext } from '../../../../utils/values/types'
+import BuckwheatCommand from '../../base/BuckwheatCommand'
+import MessageUtils from '../../../../utils/MessageUtils'
+import UserRankService from '../../../db/services/user/UserRankService'
+import RankUtils from '../../../../utils/RankUtils'
+import Logging from '../../../../utils/Logging'
+import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import ContextUtils from '../../../../utils/ContextUtils'
 
 export default class EchoCommand extends BuckwheatCommand {
     constructor() {
@@ -20,6 +21,15 @@ export default class EchoCommand extends BuckwheatCommand {
         if(!chatId) return
         
         const rank = await UserRankService.get(chatId, ctx.from.id)
+        const chatMember = await ctx.telegram.getChatMember(chatId, ctx.from.id)
+
+        if(chatMember.status == 'restricted' || chatMember.status == 'kicked' || chatMember.status == 'left') {
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/echo/status-issue.pug'
+            )
+            return
+        }
 
         if(rank < RankUtils.min + 2) {
             await MessageUtils.answerMessageFromResource(ctx, 'text/commands/echo/rank-issue.pug')
@@ -32,14 +42,13 @@ export default class EchoCommand extends BuckwheatCommand {
             )
             const isPrivate = ctx.chat.type == 'private'
 
-            if(!chatId) return
-
             await MessageUtils.answerMessageFromResource(
                 ctx, 
                 'text/commands/echo/echo.pug',
                 {
                     changeValues: {
                         other,
+                        user: rank >= RankUtils.admin ? {} : await ContextUtils.getUserFromContext(ctx)
                     },
                     chatId,
                     isReply: false

@@ -1,6 +1,6 @@
-import MessageUtils from '../../../utils/MessageUtils'
-import { MaybeString, TextContext } from '../../../utils/values/types'
-import BuckwheatCommand from '../base/BuckwheatCommand'
+import MessageUtils from '../../../../utils/MessageUtils'
+import { MaybeString, TextContext } from '../../../../utils/values/types'
+import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class PingCommand extends BuckwheatCommand {
     constructor() {

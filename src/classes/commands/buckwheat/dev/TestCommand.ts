@@ -4,6 +4,7 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import { DEV_ID } from '../../../../utils/values/consts'
 import CallbackButtonManager from '../../../main/CallbackButtonManager'
 import CasinoAddService from '../../../db/services/casino/CasinoAddService'
+import CommandDescriptionUtils from '../../../../utils/CommandDescriptionUtils'
 
 export default class TestCommand extends BuckwheatCommand {
     constructor() {
@@ -13,7 +14,13 @@ export default class TestCommand extends BuckwheatCommand {
     }
 
     private async _secretFunction(ctx: TextContext, _: MaybeString) {
-        await CasinoAddService.addMoney(ctx.chat.id, ctx.from.id, Number.MAX_SAFE_INTEGER)
+        await MessageUtils.answer(
+            ctx,
+            `${JSON.stringify(CommandDescriptionUtils.getSecret(), undefined, 4)}`,
+            {
+                
+            }
+        )
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
@@ -23,7 +30,7 @@ export default class TestCommand extends BuckwheatCommand {
 
         let test: {text: string, data: string}[] = []
 
-        for (let i = 1; i < 1000; i++) {
+        for (let i = 1; i < 3; i++) {
             test.push({text: i.toString(), data: i.toString()})
         }
 

@@ -4,18 +4,23 @@ import { CallbackButtonContext, AsyncOrSync, ScrollerSendMessageOptions, Scrolle
 import CallbackButtonAction from '../CallbackButtonAction'
 
 export default abstract class ScrollerAction<T> extends CallbackButtonAction {
-    protected _objectsPerPage: number = 1
+    protected _objectsPerPage: number = 0
     protected abstract _getObjects(ctx: CallbackButtonContext): AsyncOrSync<T[]>
+
+    protected _getSlicedObjects(objects: T[], currentPage: number): T[] {
+        if(this._objectsPerPage <= 0) return objects
+        return objects
+            .slice(
+                this._objectsPerPage * currentPage,
+                this._objectsPerPage * (currentPage + 1)
+            )
+    }
     
     protected _getLength(ctx: CallbackButtonContext, objects: T[]): AsyncOrSync<number> {
         return Math.ceil(objects.length / this._objectsPerPage)
     }
 
-    protected abstract _editMessage(ctx: CallbackButtonContext, options: ScrollerSendMessageOptions<T>): Promise<
-        | ScrollerEditMessageResult 
-        | string 
-        | null
-    >
+    protected abstract _editMessage(ctx: CallbackButtonContext, options: ScrollerSendMessageOptions<T>): Promise<ScrollerEditMessageResult>
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<string | void> {
         const objects = await this._getObjects(ctx)
@@ -27,7 +32,7 @@ export default abstract class ScrollerAction<T> extends CallbackButtonAction {
         const editedMessage = await this._editMessage(ctx, {
             currentPage,
             length,
-            objects,
+            objects: this._getSlicedObjects(objects, currentPage),
             data
         })
 

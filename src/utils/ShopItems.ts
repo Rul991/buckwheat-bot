@@ -18,28 +18,6 @@ import { shopItemSchema } from './values/schemas'
 export default class ShopItems {
     private static _items: ShopItem[] = [
         {
-            filename: "rankUp",
-            execute: async ({ctx}) => {
-                const chatId = await LinkedChatService.getChatId(ctx)
-                if(!chatId) return false
-
-                const rank = await UserRankService.get(chatId, ctx.from.id)
-                if(rank >= RankUtils.moderator) return false
-
-                const [isBought] = await InventoryItemService.add(chatId, ctx.from.id, 'rankUp')
-                await UserRankService.update(chatId, ctx.from.id, rank + 1)
-
-                if(isBought) 
-                    await ContextUtils.showCallbackMessageFromFile(
-                        ctx,
-                        'text/commands/items/default/default-count.pug'
-                    )
-
-                return isBought
-            }
-        },
-
-        {
             filename: "thanks",
             execute: async ({ctx, user}) => {
                 await MessageUtils.answerMessageFromResource(

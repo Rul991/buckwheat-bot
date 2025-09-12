@@ -1,12 +1,12 @@
-import { BAD_COOKIE_CHANCE, COOKIE_WORK_TIME } from '../../../utils/values/consts'
-import ContextUtils from '../../../utils/ContextUtils'
-import MessageUtils from '../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../utils/values/types'
-import InventoryItemService from '../../db/services/items/InventoryItemService'
-import WorkTimeService from '../../db/services/work/WorkTimeService'
-import BuckwheatCommand from '../base/BuckwheatCommand'
-import RandomUtils from '../../../utils/RandomUtils'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
+import { BAD_COOKIE_CHANCE, COOKIE_WORK_TIME } from '../../../../utils/values/consts'
+import ContextUtils from '../../../../utils/ContextUtils'
+import MessageUtils from '../../../../utils/MessageUtils'
+import { TextContext, MaybeString } from '../../../../utils/values/types'
+import InventoryItemService from '../../../db/services/items/InventoryItemService'
+import WorkTimeService from '../../../db/services/work/WorkTimeService'
+import BuckwheatCommand from '../../base/BuckwheatCommand'
+import RandomUtils from '../../../../utils/RandomUtils'
+import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 
 export default class CookieCommand extends BuckwheatCommand {
     constructor() {

@@ -65,7 +65,7 @@ export default class DonateCommand extends BuckwheatCommand {
         const replyRank = await UserRankService.get(chatId, replyId)
         const replyValues = await ContextUtils.getUser(chatId, replyId)
 
-        if(RankUtils.canUse({
+        if(!RankUtils.canUse({
             userRank: replyRank,
             id: userId
         })) {

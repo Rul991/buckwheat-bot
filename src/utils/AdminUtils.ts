@@ -23,16 +23,7 @@ export default class AdminUtils {
 
     static async unmute(ctx: Context, id: number) {
         try {
-            return await ctx.restrictChatMember(id, {
-                permissions: {
-                    can_send_messages: true,
-                    can_send_other_messages: true,
-                    can_invite_users: true,
-                    can_send_polls: true,
-                    can_add_web_page_previews: true,
-                },
-                until_date: 0
-            })
+            return await ctx.promoteChatMember(id, {})
         }
         catch(e) {
             Logging.error('cant unmute', e)

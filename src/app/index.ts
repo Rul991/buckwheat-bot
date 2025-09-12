@@ -5,7 +5,7 @@ import TestCommand from '../classes/commands/buckwheat/dev/TestCommand'
 import { DOMAIN, MODE, TOKEN } from '../utils/values/consts'
 import Validator from '../utils/Validator'
 import StartCommand from '../classes/commands/telegram/StartCommand'
-import EchoCommand from '../classes/commands/buckwheat/EchoCommand'
+import EchoCommand from '../classes/commands/buckwheat/game/EchoCommand'
 import SimpleBuckwheatCommand from '../classes/commands/base/SimpleBuckwheatCommand'
 import { connectDatabase } from './db'
 import { join } from 'path'
@@ -20,14 +20,14 @@ import CreatorCommand from '../classes/commands/buckwheat/admins/CreatorCommand'
 import RankCommand from '../classes/commands/buckwheat/admins/RankCommand'
 import { readdir } from 'fs/promises'
 import MuteCommand from '../classes/commands/buckwheat/admins/MuteCommand'
-import PingCommand from '../classes/commands/buckwheat/PingCommand'
+import PingCommand from '../classes/commands/buckwheat/other/PingCommand'
 import UnmuteCommand from '../classes/commands/buckwheat/admins/UnmuteCommand'
 import BanCommand from '../classes/commands/buckwheat/admins/BanCommand'
 import UnbanCommand from '../classes/commands/buckwheat/admins/UnbanCommand'
 import CubeYesAction from '../classes/callback-button/cube/CubeYesAction'
 import CubeCommand from '../classes/commands/buckwheat/money/CubeCommand'
 import CubeNoAction from '../classes/callback-button/cube/CubeNoAction'
-import UpdateCommand from '../classes/commands/buckwheat/UpdateCommand'
+import UpdateCommand from '../classes/commands/buckwheat/dev/UpdateCommand'
 import AntiSpamAction from '../classes/actions/every/AntiSpamAction'
 import RuleCommand from '../classes/commands/buckwheat/chat/RuleCommand'
 import RuleChangeAction from '../classes/callback-button/scrollers/RuleChangeAction'
@@ -47,31 +47,35 @@ import VerificationAction from '../classes/callback-button/VerificationAction'
 import RandomPrizeMessageAction from '../classes/actions/every/RandomPrizeMessageAction'
 import RandomPrizeButtonAction from '../classes/callback-button/RandomPrizeButtonAction'
 import NewMessagesAction from '../classes/actions/every/NewMessagesAction'
-import WhereMarriageAction from '../classes/actions/every/WhereMarriageAction'
 import ClassAction from '../classes/callback-button/ClassAction'
 import ClassCommand from '../classes/commands/buckwheat/profile/ClassCommand'
 import GreedBoxCommand from '../classes/commands/buckwheat/money/GreedBoxCommand'
-import CookieCommand from '../classes/commands/buckwheat/CookieCommand'
+import CookieCommand from '../classes/commands/buckwheat/game/CookieCommand'
 import IdeaCommand from '../classes/commands/buckwheat/info/IdeaCommand'
 import IdeaChangeAction from '../classes/callback-button/ideas/IdeaChangeAction'
 import DeleteIdeaAction from '../classes/callback-button/ideas/DeleteIdeaAction'
 import VoteAction from '../classes/callback-button/ideas/VoteAction'
-import SaveCommand from '../classes/commands/buckwheat/SaveCommand'
-import InfoCommand from '../classes/commands/buckwheat/InfoCommand'
-import MoneyDropCommand from '../classes/commands/buckwheat/MoneyDropCommand'
-import AddRoleplayCommand from '../classes/commands/buckwheat/AddRoleplayCommand'
+import SaveCommand from '../classes/commands/buckwheat/game/SaveCommand'
+import InfoCommand from '../classes/commands/buckwheat/game/InfoCommand'
+import MoneyDropCommand from '../classes/commands/buckwheat/game/MoneyDropCommand'
+import RoleplayCommand from '../classes/commands/buckwheat/game/RoleplayCommand'
 import CustomRoleplayCommand from '../classes/commands/conditional/CustomRoleplayCommand'
 import ExperienceCommand from '../classes/commands/buckwheat/level/ExperienceCommand'
 import AddInDatabaseAction from '../classes/actions/new-member/AddInDatabaseAction'
-import LinkCommand from '../classes/commands/buckwheat/LinkCommand'
+import LinkCommand from '../classes/commands/buckwheat/profile/LinkCommand'
 import InventoryItemsUtils from '../utils/InventoryItemsUtils'
 import AddLeftInDatabaseAction from '../classes/actions/left-member/AddLeftInDatabaseAction'
-import RandomCommand from '../classes/commands/buckwheat/RandomCommand'
+import RandomCommand from '../classes/commands/buckwheat/other/RandomCommand'
 import CommandsChangeAction from '../classes/callback-button/scrollers/CommandsChangeAction'
 import DiceDice from '../classes/dice/DiceDice'
-import StatsCommand from '../classes/commands/buckwheat/StatsCommand'
+import StatsCommand from '../classes/commands/buckwheat/info/StatsCommand'
 import DebtMemberAction from '../classes/actions/new-member/DebtMemberAction'
 import ChannelCommand from '../classes/commands/buckwheat/info/ChannelCommand'
+import LevelCommand from '../classes/commands/buckwheat/level/LevelCommand'
+import RouletteCommand from '../classes/commands/buckwheat/game/RouletteCommand'
+import RoleplayChangeAction from '../classes/callback-button/scrollers/RoleplayChangeAction'
+import MarriageCommand from '../classes/commands/buckwheat/marriage/MarriageCommand'
+import MarryCommand from '../classes/commands/buckwheat/marriage/MarryCommand'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = { name: string, isMustDefined: boolean }
@@ -136,7 +140,6 @@ const launchBot = async (bot: Bot) => {
         new WrongChatAction(), // it should be first
         new AntiSpamAction(),
         new NewMessagesAction(),
-        new WhereMarriageAction(),
         new RandomPrizeMessageAction(),
     )
 
@@ -160,7 +163,8 @@ const launchBot = async (bot: Bot) => {
         new IdeaChangeAction(),
         new VoteAction(),
         new DeleteIdeaAction(),
-        new CommandsChangeAction()
+        new CommandsChangeAction(),
+        new RoleplayChangeAction()
     )
 
     bot.addDiceActions(
@@ -214,12 +218,16 @@ const launchBot = async (bot: Bot) => {
         new SaveCommand(),
         new InfoCommand(),
         new MoneyDropCommand(),
-        new AddRoleplayCommand(),
+        new RoleplayCommand(),
         new ExperienceCommand(),
+        new LevelCommand(),
         new LinkCommand(),
         new RandomCommand(),
         new StatsCommand(),
         new ChannelCommand(),
+        new RouletteCommand(),
+        // new MarriageCommand(),
+        // new MarryCommand(),
         ...await getSimpleCommands(),
     )
 

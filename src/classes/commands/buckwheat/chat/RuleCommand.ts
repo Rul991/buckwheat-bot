@@ -64,26 +64,6 @@ export default class RuleCommand extends BuckwheatCommand {
                     'text/commands/rules/done/add.pug'
                 )
             }
-        },
-
-        {
-            title: 'Для вызова списка',
-            description: 'баквит правила список',
-            name: 'список',
-
-            needData: false,
-            needAdmin: false,
-
-            execute: async _ => {
-                return true
-            },
-            sendMessage: async ({ctx, changeValues}) => {
-                await MessageUtils.answerMessageFromResource(
-                    ctx,
-                    'text/commands/rules/list.pug',
-                    { changeValues }
-                )
-            }
         }
     ]
 

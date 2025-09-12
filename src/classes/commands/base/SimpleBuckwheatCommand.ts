@@ -16,8 +16,8 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
             isWrong = true
         }
         else {
-            isWrong = ObjectValidator.isValidatedObject(json, simpleCommandSchema) 
-                && !(typeof json.src == 'undefined' && typeof json.src == typeof json.text)
+            isWrong = !(ObjectValidator.isValidatedObject(json, simpleCommandSchema) 
+                && !(typeof json.src == 'undefined' && typeof json.src == typeof json.text))
         }
 
         if(isWrong)

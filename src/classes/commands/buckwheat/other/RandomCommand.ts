@@ -1,8 +1,8 @@
-import MessageUtils from '../../../utils/MessageUtils'
-import RandomUtils from '../../../utils/RandomUtils'
-import StringUtils from '../../../utils/StringUtils'
-import { MaybeString, TextContext } from '../../../utils/values/types'
-import BuckwheatCommand from '../base/BuckwheatCommand'
+import MessageUtils from '../../../../utils/MessageUtils'
+import RandomUtils from '../../../../utils/RandomUtils'
+import StringUtils from '../../../../utils/StringUtils'
+import { MaybeString, TextContext } from '../../../../utils/values/types'
+import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class RandomCommand extends BuckwheatCommand {
     constructor() {

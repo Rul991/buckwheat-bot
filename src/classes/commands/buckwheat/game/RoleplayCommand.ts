@@ -1,11 +1,12 @@
-import MessageUtils from '../../../utils/MessageUtils'
-import StringUtils from '../../../utils/StringUtils'
-import SubCommandUtils from '../../../utils/SubCommandUtils'
-import { TextContext, MaybeString, NameObject } from '../../../utils/values/types'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
-import RoleplaysService from '../../db/services/rp/RoleplaysService'
-import UserRankService from '../../db/services/user/UserRankService'
-import BuckwheatCommand from '../base/BuckwheatCommand'
+import MessageUtils from '../../../../utils/MessageUtils'
+import StringUtils from '../../../../utils/StringUtils'
+import SubCommandUtils from '../../../../utils/SubCommandUtils'
+import { TextContext, MaybeString, NameObject } from '../../../../utils/values/types'
+import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import RoleplaysService from '../../../db/services/rp/RoleplaysService'
+import UserRankService from '../../../db/services/user/UserRankService'
+import CallbackButtonManager from '../../../main/CallbackButtonManager'
+import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 type SubCommand = NameObject & {
     execute: (ctx: TextContext, text: MaybeString) => Promise<boolean>
@@ -14,7 +15,7 @@ type SubCommand = NameObject & {
     exampleData?: string
 }
 
-export default class AddRoleplayCommand extends BuckwheatCommand {
+export default class RoleplayCommand extends BuckwheatCommand {
     private _subCommands: SubCommand[] = [
         {
             name: 'список',
@@ -24,11 +25,12 @@ export default class AddRoleplayCommand extends BuckwheatCommand {
 
                 await MessageUtils.answerMessageFromResource(
                     ctx,
-                    'text/commands/add-rp/list.pug',
+                    'text/commands/add-rp/start-list.pug',
                     {
                         changeValues: {
-                            commands: await RoleplaysService.getCommands(chatId)
-                        }
+                            length: (await RoleplaysService.getCommands(chatId)).length
+                        },
+                        inlineKeyboard: await CallbackButtonManager.get('start-roleplaychange')
                     }
                 )
                 return true

@@ -1,0 +1,19 @@
+b 💍 Брак:
+|
+|
+| Игрок 
+a(href=user.link) #{user.name}
+if isMarried
+    - let isNamesEqual = user.name == partner.name
+    |  в браке с 
+    if isNamesEqual
+        |
+    else
+        | игроком 
+    a(href=partner.link) #{!isNamesEqual ? partner.name : 'собой'}
+    | !
+    | Время в браке: 
+    b #{time}
+else
+    |  - 
+    b холостяк!

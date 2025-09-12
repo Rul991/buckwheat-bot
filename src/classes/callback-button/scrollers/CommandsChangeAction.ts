@@ -1,7 +1,7 @@
 import CommandDescriptionUtils from '../../../utils/CommandDescriptionUtils'
 import FileUtils from '../../../utils/FileUtils'
 import { COMMANDS_PER_PAGE } from '../../../utils/values/consts'
-import { AsyncOrSync, CallbackButtonContext, CommandDescription, ScrollerEditMessageResult, ScrollerSendMessageOptions } from '../../../utils/values/types'
+import { CallbackButtonContext, CommandDescription, ScrollerEditMessage, ScrollerSendMessageOptions } from '../../../utils/values/types'
 import CallbackButtonManager from '../../main/CallbackButtonManager'
 import ScrollerAction from './ScrollerAction'
 
@@ -23,17 +23,13 @@ export default class CommandsChangeAction extends ScrollerAction<CommandDescript
             length, 
             objects
         }: ScrollerSendMessageOptions<CommandDescription>
-    ): Promise<ScrollerEditMessageResult> {
+    ): Promise<ScrollerEditMessage> {
         return {
             text: await FileUtils.readPugFromResource(
                 'text/actions/commands/commands.pug',
                 {
                     changeValues: {
-                        commands: objects
-                            .slice(
-                                this._objectsPerPage * currentPage, 
-                                this._objectsPerPage * (currentPage + 1)
-                            ),
+                        commands: objects,
                         page: currentPage,
                         length
                     }
