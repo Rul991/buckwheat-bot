@@ -2,13 +2,12 @@ import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import { CallbackButtonContext } from '../../../utils/values/types'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
-import MarriageService from '../../db/services/marriage/MarriageService'
 import CallbackButtonAction from '../CallbackButtonAction'
 
-export default class MarryYesAction extends CallbackButtonAction {
+export default class MarryNoAction extends CallbackButtonAction {
     constructor() {
         super()
-        this._name = 'marryyes'
+        this._name = 'marryno'
     }
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<string | void> {
@@ -24,31 +23,14 @@ export default class MarryYesAction extends CallbackButtonAction {
             return
         }
 
-        const replyHasPartner = await MarriageService.hasPartner(chatId, replyId)
-
-        if(replyHasPartner) {
-            await MessageUtils.answerMessageFromResource(
-                ctx,
-                'text/commands/marriage/married/user.pug',
-                {
-                    changeValues: {
-                        ...await ContextUtils.getUser(chatId, replyId)
-                    }
-                }
-            )
-            return
-        }
-
-
-        await MarriageService.marry(chatId, userId, replyId)
-        await MessageUtils.editMarkup(ctx, undefined)
+        await MessageUtils.editMarkup(ctx)
         await MessageUtils.answerMessageFromResource(
             ctx,
-            'text/commands/marriage/marry/yes.pug',
+            'text/commands/marriage/marry/no.pug',
             {
                 changeValues: {
-                    reply: await ContextUtils.getUser(chatId, replyId),
                     user: await ContextUtils.getUser(chatId, userId),
+                    reply: await ContextUtils.getUser(chatId, replyId),
                 }
             }
         )

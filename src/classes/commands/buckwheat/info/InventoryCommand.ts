@@ -1,4 +1,3 @@
-import InventoryItem from '../../../../interfaces/schemas/InventoryItem'
 import InventoryItemsUtils from '../../../../utils/InventoryItemsUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { TextContext, MaybeString } from '../../../../utils/values/types'
@@ -10,6 +9,10 @@ export default class InventoryCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'инвентарь'
+        this._aliases = [
+            'вещи',
+            'предметы'
+        ]
         this._description = 'показываю все доступные тебе предметы'
     }
 

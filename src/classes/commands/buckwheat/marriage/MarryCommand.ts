@@ -15,6 +15,7 @@ export default class MarryCommand extends BuckwheatCommand {
             'встречаться',
         ]
         this._replySupport = true
+        this._description = 'выполняю услуги ЗАГСа'
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
@@ -24,6 +25,19 @@ export default class MarryCommand extends BuckwheatCommand {
         
         const chatId = await LinkedChatService.getChatId(ctx, replyId)
         if(!chatId) return
+
+        if(await MarriageService.hasPartner(chatId, userId)) {
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/marriage/married/user.pug',
+                {
+                    changeValues: {
+                        ...await ContextUtils.getUser(chatId, userId)
+                    }
+                }
+            )
+            return
+        }
 
         await MessageUtils.answerMessageFromResource(
             ctx,

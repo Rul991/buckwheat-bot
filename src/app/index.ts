@@ -76,6 +76,9 @@ import RouletteCommand from '../classes/commands/buckwheat/game/RouletteCommand'
 import RoleplayChangeAction from '../classes/callback-button/scrollers/RoleplayChangeAction'
 import MarriageCommand from '../classes/commands/buckwheat/marriage/MarriageCommand'
 import MarryCommand from '../classes/commands/buckwheat/marriage/MarryCommand'
+import MarryYesAction from '../classes/callback-button/marry/MarryYesAction'
+import DivorceCommand from '../classes/commands/buckwheat/marriage/DivorceCommand'
+import MarryNoAction from '../classes/callback-button/marry/MarryNoAction'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = { name: string, isMustDefined: boolean }
@@ -164,7 +167,9 @@ const launchBot = async (bot: Bot) => {
         new VoteAction(),
         new DeleteIdeaAction(),
         new CommandsChangeAction(),
-        new RoleplayChangeAction()
+        new RoleplayChangeAction(),
+        new MarryYesAction(),
+        new MarryNoAction()
     )
 
     bot.addDiceActions(
@@ -226,8 +231,9 @@ const launchBot = async (bot: Bot) => {
         new StatsCommand(),
         new ChannelCommand(),
         new RouletteCommand(),
-        // new MarriageCommand(),
-        // new MarryCommand(),
+        new MarriageCommand(),
+        new MarryCommand(),
+        new DivorceCommand(),
         ...await getSimpleCommands(),
     )
 

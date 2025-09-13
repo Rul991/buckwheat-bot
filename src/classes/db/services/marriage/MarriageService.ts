@@ -23,7 +23,7 @@ export default class MarriageService {
         }
         else {
             const marriage = {
-                createdAt: Date.now()
+                startedAt: Date.now()
             }
 
             await MarriageRepository.updateOne(
@@ -51,13 +51,14 @@ export default class MarriageService {
         const userMarriage = await this.get(chatId, userId)
         const partnerMarriage = await this.get(chatId, partnerId)
 
-        if(!(userMarriage.partnerId || partnerMarriage.partnerId)) {
-            return false
-        }
-        else {
+        console.log(partnerId, userId)
+        if(userMarriage.partnerId == partnerId && partnerMarriage.partnerId == userId) {
+            console.log('goyda')
             const marriage = {
-                createdAt: undefined,
-                partnerId: undefined
+                $set: {
+                    startedAt: null,
+                    partnerId: null
+                }
             }
 
             await MarriageRepository.updateOne(
@@ -72,6 +73,9 @@ export default class MarriageService {
                 marriage
             )
             return true
+        }
+        else {
+            return false
         }
     }
 }

@@ -1,4 +1,4 @@
-import { Model, RootFilterQuery } from 'mongoose'
+import { Model, RootFilterQuery, UpdateQuery } from 'mongoose'
 import BaseRepository from './BaseRepository'
 
 export default class IdRepository<T extends typeof Model, K extends {id: number}> extends BaseRepository<K, T> {
@@ -14,7 +14,7 @@ export default class IdRepository<T extends typeof Model, K extends {id: number}
         return await super.deleteOne({...this._getFilter(filter), id})
     }
 
-    async updateOne(id: number, data: Partial<K>): Promise<K | null> {
+    async updateOne(id: number, data: UpdateQuery<K>): Promise<K | null> {
         return await super.updateOne({id}, data)
     }
 }

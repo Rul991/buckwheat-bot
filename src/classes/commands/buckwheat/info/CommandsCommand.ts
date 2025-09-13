@@ -11,6 +11,9 @@ export default class CommandsCommand extends BuckwheatCommand {
         this._description = 'я выдаю данный список'
         this._aliases = [
             'команда',
+            'лист',
+            'функции',
+            'как'
         ]
     }
 

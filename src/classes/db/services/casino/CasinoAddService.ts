@@ -7,7 +7,8 @@ type T = Casino
 export default class CasinoAddService {
     private static async _add(chatId: number, id: number, key: keyof T, value: number): Promise<number> {
         const casino = await CasinoAccountService.create(chatId, id)
-        const newCasino = await CasinoRepository.updateOne(chatId, id, {[key]: casino[key]! + value})
+        const newValue = casino[key]! + value
+        const newCasino = await CasinoRepository.updateOne(chatId, id, {[key]: isNaN(newValue) ? 0 : newValue})
         if(!newCasino) return -1
 
         return newCasino[key] ?? -1

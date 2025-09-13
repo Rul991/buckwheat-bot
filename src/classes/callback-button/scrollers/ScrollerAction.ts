@@ -4,7 +4,7 @@ import { CallbackButtonContext, AsyncOrSync, ScrollerSendMessageOptions, Scrolle
 import CallbackButtonAction from '../CallbackButtonAction'
 
 export default abstract class ScrollerAction<T> extends CallbackButtonAction {
-    protected _objectsPerPage: number = 0
+    protected _objectsPerPage: number = 1
     protected abstract _getObjects(ctx: CallbackButtonContext): AsyncOrSync<T[]>
 
     protected _getSlicedObjects(objects: T[], currentPage: number): T[] {

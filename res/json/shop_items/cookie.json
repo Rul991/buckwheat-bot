@@ -3,5 +3,5 @@
     "description": "Вкусные печеньки",
     "emoji": "🍪",
     "price": 10,
-    "maxCount": 120
+    "maxCount": 5000
 }

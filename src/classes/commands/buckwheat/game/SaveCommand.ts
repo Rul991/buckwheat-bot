@@ -9,6 +9,9 @@ export default class SaveCommand extends BuckwheatCommand {
         super()
         this._name = 'сохраниться'
         this._isShow = false
+        this._aliases = [
+            'сохранится'
+        ]
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
