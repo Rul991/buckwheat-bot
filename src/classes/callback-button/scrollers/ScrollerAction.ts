@@ -4,7 +4,7 @@ import { CallbackButtonContext, AsyncOrSync, ScrollerSendMessageOptions, Scrolle
 import CallbackButtonAction from '../CallbackButtonAction'
 
 export default abstract class ScrollerAction<T> extends CallbackButtonAction {
-    protected _objectsPerPage: number = 1
+    protected _objectsPerPage: number = 0
     protected abstract _getObjects(ctx: CallbackButtonContext): AsyncOrSync<T[]>
 
     protected _getSlicedObjects(objects: T[], currentPage: number): T[] {
@@ -17,6 +17,7 @@ export default abstract class ScrollerAction<T> extends CallbackButtonAction {
     }
     
     protected _getLength(ctx: CallbackButtonContext, objects: T[]): AsyncOrSync<number> {
+        if(this._objectsPerPage <= 0) return objects.length
         return Math.ceil(objects.length / this._objectsPerPage)
     }
 

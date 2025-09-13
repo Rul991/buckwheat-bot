@@ -1,7 +1,7 @@
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
 import ShopItems from '../../../utils/ShopItems'
-import { AsyncOrSync, CallbackButtonContext, RequiredShopItemWithLength, ScrollerEditMessage, ScrollerEditMessageResult, ScrollerSendMessageOptions } from '../../../utils/values/types'
+import { AsyncOrSync, CallbackButtonContext, RequiredShopItemWithLength, ScrollerEditMessageResult, ScrollerSendMessageOptions } from '../../../utils/values/types'
 import CallbackButtonManager from '../../main/CallbackButtonManager'
 import StringUtils from '../../../utils/StringUtils'
 import ScrollerAction from '../scrollers/ScrollerAction'

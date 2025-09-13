@@ -51,9 +51,7 @@ export default class MarriageService {
         const userMarriage = await this.get(chatId, userId)
         const partnerMarriage = await this.get(chatId, partnerId)
 
-        console.log(partnerId, userId)
         if(userMarriage.partnerId == partnerId && partnerMarriage.partnerId == userId) {
-            console.log('goyda')
             const marriage = {
                 $set: {
                     startedAt: null,

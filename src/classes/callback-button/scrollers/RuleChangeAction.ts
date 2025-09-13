@@ -9,6 +9,7 @@ export default class RuleChangeAction extends ScrollerAction<string> {
     constructor() {
         super()
         this._name = 'rulechange'
+        this._objectsPerPage = 1
     }
 
     protected async _getObjects(ctx: CallbackButtonContext): Promise<string[]> {
@@ -33,7 +34,7 @@ export default class RuleChangeAction extends ScrollerAction<string> {
                     changeValues: {
                         number: currentPage,
                         rulesCount: length,
-                        text: objects[currentPage]
+                        text: objects[0]
                     }
                 }
             ),
