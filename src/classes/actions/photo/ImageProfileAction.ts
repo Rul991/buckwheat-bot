@@ -11,7 +11,7 @@ export default class ImageProfileAction extends PhotoAction {
     }
 
     async execute(ctx: PhotoContext, _: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
         
         await UserImageService.update(

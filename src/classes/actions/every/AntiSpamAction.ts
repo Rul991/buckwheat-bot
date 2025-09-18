@@ -10,7 +10,7 @@ import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 export default class AntiSpamAction extends EveryMessageAction {
     async execute(ctx: MessageContext): Promise<void | true> {
         const id = ctx.from.id
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
 
         await AntiSpamService.add(id, 'lastMessagesCount', 1)
         const isSpamming = await AntiSpamService.isSpamming(id)

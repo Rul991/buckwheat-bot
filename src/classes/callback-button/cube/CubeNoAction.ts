@@ -19,7 +19,7 @@ export default class CubeNoAction extends CallbackButtonAction {
                 ctx,
                 'text/commands/cubes/cancel.pug',
                 {
-                    changeValues
+                    changeValues,
                 }
             )
         }

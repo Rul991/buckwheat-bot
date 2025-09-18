@@ -1,4 +1,4 @@
-import { Model, RootFilterQuery } from 'mongoose'
+import { Model, RootFilterQuery, UpdateWriteOpResult } from 'mongoose'
 
 export default abstract class BaseRepository<K, T extends typeof Model<K>> {
     protected _Model: T
@@ -36,5 +36,15 @@ export default abstract class BaseRepository<K, T extends typeof Model<K>> {
 
     async updateOne(...values: any): Promise<K | null> {
         return await this._Model.findOneAndUpdate(values[0], values[1])
+    }
+
+    /**
+     * first argument is filter
+     * 
+     * second argument is update query
+     */
+
+    async updateMany(...values: any): Promise<UpdateWriteOpResult> {
+        return await this._Model.updateMany(values[0], values[1])
     }
 }

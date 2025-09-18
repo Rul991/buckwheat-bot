@@ -20,7 +20,7 @@ export default class CookieCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
         
         const reply = ctx.message.reply_to_message

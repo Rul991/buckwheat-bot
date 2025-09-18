@@ -27,7 +27,7 @@ export default class ContextUtils {
     }
 
     static async getUserFromContext(ctx: Context) {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         return await this.getUser(chatId ?? undefined, ctx.from?.id, ctx.from?.first_name)
     }
 

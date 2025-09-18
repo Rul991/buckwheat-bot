@@ -91,7 +91,7 @@ export default class RankCommand extends BuckwheatCommand {
                 
                 const myId = ctx.from.id
                 const replyId = reply.from?.id ?? 0
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return
 
                 if(await RankCommand._answerIfRankOutBounds(ctx, rank)) return

@@ -15,7 +15,7 @@ export default class MarryNoAction extends CallbackButtonAction {
         if(splittedData.some(v => isNaN(v))) return
 
         const [userId, replyId] = splittedData
-        const chatId = await LinkedChatService.getChatId(ctx, userId)
+        const chatId = await LinkedChatService.getCurrent(ctx, userId)
         if(!chatId) return
 
         if(ctx.from.id !== replyId) {

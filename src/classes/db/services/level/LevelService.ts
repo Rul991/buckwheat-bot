@@ -24,4 +24,12 @@ export default class LevelService {
         return ArrayUtils.filterAndSort(levels, 'experience', 10)
             .map(lv => ({id: lv.id, level: LevelUtils.get(lv.experience ?? ExperienceUtils.min)}))
     }
+
+    static async wipe(chatId: number): Promise<void> {
+        await LevelRepository.updateMany(chatId, {
+            $set: {
+                experience: 0
+            }
+        })
+    }
 }

@@ -1,4 +1,4 @@
-import { Model, RootFilterQuery, UpdateQuery } from 'mongoose'
+import { Model, RootFilterQuery, UpdateQuery, UpdateWriteOpResult } from 'mongoose'
 import BaseRepository from './BaseRepository'
 
 export default class Repository<T extends typeof Model, K> extends BaseRepository<K, T> {
@@ -16,5 +16,9 @@ export default class Repository<T extends typeof Model, K> extends BaseRepositor
 
     async updateOne(data: UpdateQuery<K>, filter?: RootFilterQuery<K>): Promise<K | null> {
         return await super.updateOne(this._getFilter(filter), data)
+    }
+    
+    async updateMany(data: UpdateQuery<K>, filter?: RootFilterQuery<K>): Promise<UpdateWriteOpResult> {
+        return await super.updateMany(this._getFilter(filter), data)
     }
 }

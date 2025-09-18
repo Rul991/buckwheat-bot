@@ -11,7 +11,7 @@ export default class WrongChatAction extends EveryMessageAction {
 
     async execute(ctx: MessageContext): Promise<void | true> {
         if(ctx.chat.type == 'private') {
-            const linkedChat = await LinkedChatService.get(ctx.from.id)
+            const linkedChat = await LinkedChatService.getRaw(ctx.from.id)
             const hasntLinkedChat = !linkedChat
 
             if(hasntLinkedChat) {

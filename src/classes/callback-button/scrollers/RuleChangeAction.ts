@@ -13,7 +13,7 @@ export default class RuleChangeAction extends ScrollerAction<string> {
     }
 
     protected async _getObjects(ctx: CallbackButtonContext): Promise<string[]> {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return []
 
         return await RulesService.get(chatId)

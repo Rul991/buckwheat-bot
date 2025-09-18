@@ -79,6 +79,7 @@ import MarryCommand from '../classes/commands/buckwheat/marriage/MarryCommand'
 import MarryYesAction from '../classes/callback-button/marry/MarryYesAction'
 import DivorceCommand from '../classes/commands/buckwheat/marriage/DivorceCommand'
 import MarryNoAction from '../classes/callback-button/marry/MarryNoAction'
+import WipeCommand from '../classes/commands/buckwheat/admins/WipeCommand'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = { name: string, isMustDefined: boolean }
@@ -234,6 +235,7 @@ const launchBot = async (bot: Bot) => {
         new MarriageCommand(),
         new MarryCommand(),
         new DivorceCommand(),
+        new WipeCommand(),
         ...await getSimpleCommands(),
     )
 

@@ -19,7 +19,7 @@ export default class LinkCommand extends BuckwheatCommand {
             return
         }
 
-        if(ctx.chat.id == await LinkedChatService.get(ctx.from.id)) {
+        if(ctx.chat.id == await LinkedChatService.getRaw(ctx.from.id)) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/link/already.pug'

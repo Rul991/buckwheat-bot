@@ -20,7 +20,7 @@ export default class RoleplayCommand extends BuckwheatCommand {
         {
             name: 'список',
             execute: async ctx => {
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return false
 
                 await MessageUtils.answerMessageFromResource(
@@ -46,7 +46,7 @@ export default class RoleplayCommand extends BuckwheatCommand {
                 if(!text) return false
                 const name = rawName.toLowerCase()
 
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return false
 
                 if(await RoleplaysService.set(chatId, name, text)) {
@@ -84,7 +84,7 @@ export default class RoleplayCommand extends BuckwheatCommand {
             name: 'удалить',
             execute: async (ctx, other) => {
                 if(!other) return false
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return false
 
                 const [name] = other.split(StringUtils.spaceRegexp, 1)
@@ -130,7 +130,7 @@ export default class RoleplayCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
         
         const rank = await UserRankService.get(chatId, ctx.from.id)

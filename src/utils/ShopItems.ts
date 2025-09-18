@@ -65,7 +65,7 @@ export default class ShopItems {
         {
             filename: 'manyCasino',
             execute: async ({ctx}) => {
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return false
 
                 const [isUpdated] = await InventoryItemService.add(chatId, ctx.from.id, 'manyCasino')
@@ -83,7 +83,7 @@ export default class ShopItems {
         {
             filename: 'infinityCasino',
             execute: async ({ctx}) => {
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return false
 
                 const [isUpdated] = await InventoryItemService.add(chatId, ctx.from.id, 'infinityCasino')
@@ -101,7 +101,7 @@ export default class ShopItems {
         {
             filename: 'greedBox',
             execute: async ({ctx, user}) => {
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return false
 
                 if(await InventoryItemService.anyHas(chatId, 'greedBox')) {
@@ -152,7 +152,7 @@ export default class ShopItems {
         {
             filename: 'cookie',
             execute: async ({ctx, count: boughtCount}) => {
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return false
 
                 const [_isBought, count] = await InventoryItemService.add(chatId, ctx.from.id, 'cookie', boughtCount)
@@ -176,7 +176,7 @@ export default class ShopItems {
         {
             filename: 'workUp',
             execute: async ({ctx}) => {
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return false
 
                 const [isAdded] = await InventoryItemService.add(chatId, ctx.from.id, 'workUp')
@@ -195,7 +195,7 @@ export default class ShopItems {
         {
             filename: 'workCatalog',
             execute: async ({ctx}) => {
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return false
 
                 const [isAdded] = await InventoryItemService.add(chatId, ctx.from.id, 'workCatalog')
@@ -214,7 +214,7 @@ export default class ShopItems {
         {
             filename: 'levelBoost',
             execute: async ({ctx, item, count}) => {
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return false
 
                 const [_, boostCount] = await InventoryItemService.add(chatId, ctx.from.id, 'levelBoost', count)
@@ -239,7 +239,7 @@ export default class ShopItems {
         {
             filename: 'aeHair',
             execute: async ({ctx, user}) => {
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return false
 
                 const itemId = 'aeHair'
@@ -270,7 +270,7 @@ export default class ShopItems {
         {
             filename: 'shopPrecent',
             execute: async ({ctx, user, count}) => {
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return false
 
                 const itemId = 'shopPrecent'

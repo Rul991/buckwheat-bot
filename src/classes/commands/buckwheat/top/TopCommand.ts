@@ -70,7 +70,7 @@ export default class TopCommand extends BuckwheatCommand {
                 type Rating = {emoji: string, rankName: string, players: Player[]}
 
                 let ratings: Rating[] = []
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return {id: ctx.botInfo.id}
 
                 for (let rank = RankUtils.max; rank >= 1; rank--) {
@@ -105,11 +105,11 @@ export default class TopCommand extends BuckwheatCommand {
             filename: 'top',
             getChangeValues: async ctx => {
                 const key = 'money'
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return {id: ctx.botInfo.id}
 
                 return createTopChangeValues(
-                    await CasinoGetService.getSortedCasinos(chatId),
+                    await CasinoGetService.sortedCasinos(chatId),
                     arr => formatAllNumbersInObjects(arr, key),
                     {
                         key,
@@ -127,7 +127,7 @@ export default class TopCommand extends BuckwheatCommand {
             filename: 'top',
             getChangeValues: async ctx => {
                 const key = 'total'
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return {id: ctx.botInfo.id}
 
                 return createTopChangeValues(
@@ -148,7 +148,7 @@ export default class TopCommand extends BuckwheatCommand {
             name: 'классы',
             filename: 'class',
             getChangeValues: async ctx => {
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return {id: ctx.botInfo.id}
 
                 const classMembers: Record<ClassTypes, string[]> = ClassUtils.getArray()
@@ -180,7 +180,7 @@ export default class TopCommand extends BuckwheatCommand {
             filename: 'top',
             getChangeValues: async ctx => {
                 const key = 'level'
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return {id: ctx.botInfo.id}
 
                 return createTopChangeValues(

@@ -9,7 +9,7 @@ export default class CustomRoleplayCommand extends ConditionalCommand {
     private _text: string | null = null
 
     async condition(ctx: TextContext, [_word, command, _other]: CommandStrings): Promise<boolean> {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return false
 
         const roleplayCommand = await RoleplaysService

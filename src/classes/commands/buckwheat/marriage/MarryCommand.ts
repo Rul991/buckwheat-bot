@@ -23,7 +23,7 @@ export default class MarryCommand extends BuckwheatCommand {
         const userId = ctx.from.id
         const replyId = replyFrom ? replyFrom.id : userId
         
-        const chatId = await LinkedChatService.getChatId(ctx, replyId)
+        const chatId = await LinkedChatService.getCurrent(ctx, replyId)
         if(!chatId) return
 
         if(await MarriageService.hasPartner(chatId, userId)) {

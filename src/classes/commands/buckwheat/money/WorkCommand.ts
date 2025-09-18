@@ -36,7 +36,7 @@ export default class WorkCommand extends BuckwheatCommand {
     
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
         const id = ctx.from.id
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
         const rank = await UserRankService.get(chatId, id)
         
@@ -64,7 +64,7 @@ export default class WorkCommand extends BuckwheatCommand {
             const experience = Math.ceil(rawExperience * (1 + (count * LEVEL_BOOST / 100)))
             const newLevel = await ExperienceService.isLevelUpAfterAdding(chatId, id, experience)
 
-            await CasinoAddService.addMoney(chatId, id, totalMoney)
+            await CasinoAddService.money(chatId, id, totalMoney)
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/work/work.pug',
@@ -79,7 +79,7 @@ export default class WorkCommand extends BuckwheatCommand {
             )
 
             if(newLevel) {
-                await CasinoAddService.addMoney(chatId, id, newLevel * LEVEL_UP_MONEY)
+                await CasinoAddService.money(chatId, id, newLevel * LEVEL_UP_MONEY)
                 await LevelUtils.sendLevelUpMessage(ctx, newLevel)
             }
         }

@@ -20,9 +20,9 @@ export default class BalanceCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
-        const casino = await CasinoAccountService.create(chatId, ctx.from.id)
+        const casino = await CasinoAccountService.get(chatId, ctx.from.id)
         const items = await ItemsService.get(chatId, ctx.from.id)
 
         const uniqueItemsLength = items

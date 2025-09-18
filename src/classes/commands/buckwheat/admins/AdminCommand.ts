@@ -27,7 +27,7 @@ export default abstract class AdminCommand extends BuckwheatCommand {
             const replyId = ctx.message.reply_to_message.from.id
             const adminId = ctx.from.id
             
-            const chatId = await LinkedChatService.getChatId(ctx)
+            const chatId = await LinkedChatService.getCurrent(ctx)
             if(!chatId) return
 
             const adminRank = await UserRankService.get(chatId, adminId)

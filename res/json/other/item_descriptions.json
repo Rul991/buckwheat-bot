@@ -47,5 +47,10 @@
     "shopPrecent": {
         "name": "Процент от магазина",
         "type": "manyInfinity"
+    },
+
+    "newGame": {
+        "name": "Новая игра",
+        "type": "manyInfinity"
     }
 }

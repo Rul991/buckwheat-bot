@@ -8,4 +8,12 @@ export default class WorkService {
         if(!work) return WorkRepository.create({chatId, id})
         else return work
     }
+
+    static async wipe(chatId: number): Promise<void> {
+        await WorkRepository.updateMany(chatId, {
+            $set: {
+                lastWork: 0
+            }
+        })
+    }
 }

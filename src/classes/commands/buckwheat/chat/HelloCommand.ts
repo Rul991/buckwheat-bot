@@ -20,7 +20,7 @@ export default class HelloCommand extends BuckwheatCommand {
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         const id = ctx.from.id
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
         
         const rank = await UserRankService.get(chatId, id)

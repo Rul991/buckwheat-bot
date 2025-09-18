@@ -28,7 +28,7 @@ export default class RuleCommand extends BuckwheatCommand {
             needAdmin: true,
 
             execute: async (ctx, data) => {
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return false
                 return await this._deleteRule(chatId, data)
             },
@@ -54,7 +54,7 @@ export default class RuleCommand extends BuckwheatCommand {
             needData: true,
 
             execute: async (ctx, data) => {
-                const chatId = await LinkedChatService.getChatId(ctx)
+                const chatId = await LinkedChatService.getCurrent(ctx)
                 if(!chatId) return false
                 return await this._addRule(chatId, data)
             },
@@ -114,7 +114,7 @@ export default class RuleCommand extends BuckwheatCommand {
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         const id = ctx.from.id
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
         const commandAndData = SubCommandUtils.getSubCommandAndData(
             other, 

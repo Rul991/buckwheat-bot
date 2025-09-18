@@ -12,4 +12,15 @@ export default class ItemsService {
     static async getAll(chatId: number): Promise<Items[]> {
         return await ItemsRepository.findManyInChat(chatId)
     }
+
+    static async wipe(chatId: number) {
+        await ItemsRepository.updateMany(
+            chatId,
+            {
+                $set: {
+                    items: []
+                }
+            }
+        )
+    }
 }

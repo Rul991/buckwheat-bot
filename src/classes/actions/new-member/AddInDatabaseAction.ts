@@ -49,13 +49,13 @@ export default class AddInDatabaseAction extends NewMemberAction {
 
         await Promise.allSettled([
             UserProfileService.create(chatId, id, await UserNameService.getUniqueName(chatId, first_name)),
-            CasinoAccountService.create(chatId, id),
+            CasinoAccountService.get(chatId, id),
             WorkService.get(chatId, id),
             ItemsService.get(chatId, id),
             MessagesService.get(chatId, id),
             LevelService.get(chatId, id),
             UserLeftService.update(chatId, id, false),
-            LinkedChatService.get(id)
+            LinkedChatService.getRaw(id)
         ])
 
         await this._updateIfBot(ctx, from, chatId)
@@ -63,7 +63,7 @@ export default class AddInDatabaseAction extends NewMemberAction {
 
     async execute(ctx: NewMemberContext): Promise<void> {
         for await(const from of ctx.message.new_chat_members) {
-            const chatId = await LinkedChatService.getChatId(ctx)
+            const chatId = await LinkedChatService.getCurrent(ctx)
             if(!chatId) continue
             await this._addInDatabase(ctx, from, chatId)
         }

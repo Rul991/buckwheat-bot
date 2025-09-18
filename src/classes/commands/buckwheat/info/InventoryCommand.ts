@@ -17,7 +17,7 @@ export default class InventoryCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
         
         const items = (await InventoryItemService.getAll(chatId, ctx.from.id) ?? [])

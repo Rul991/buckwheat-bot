@@ -6,7 +6,7 @@ import LeftMemberAction from './LeftMemberAction'
 export default class AddLeftInDatabaseAction extends LeftMemberAction {
     async execute(ctx: LeftMemberContext): Promise<void> {
         const user = ctx.message.left_chat_member
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
 
         await UserLeftService.update(chatId, user.id, true)

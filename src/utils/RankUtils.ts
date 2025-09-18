@@ -84,8 +84,11 @@ export default class RankUtils {
     }
 
     static canUse(options: CanUseOptions): boolean {
-        const {userRank, adminRank} = options
-        return this._canUse(options, userRank >= (adminRank ?? this.admin))
+        const {
+            userRank, 
+            adminRank = this.admin
+        } = options
+        return this._canUse(options, userRank >= adminRank)
     }
 
     static canAdminUse(options: CanAdminUseOptions): boolean {

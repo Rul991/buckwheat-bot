@@ -17,7 +17,7 @@ export default class BuyAction extends CallbackButtonAction {
     }
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<string | void> {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
 
         const [index, _id, count] = data
@@ -29,7 +29,7 @@ export default class BuyAction extends CallbackButtonAction {
         const item = await ShopItems.get(index)
         if(!item) return await FileUtils.readPugFromResource('text/alerts/wrong-item.pug')
 
-        const money = await CasinoGetService.getMoney(chatId, ctx.from.id)
+        const money = await CasinoGetService.money(chatId, ctx.from.id)
         const user = await ContextUtils.getUserFromContext(ctx)
 
         const totalCount = ShopItems.getCount(item, count)
@@ -64,11 +64,11 @@ export default class BuyAction extends CallbackButtonAction {
 
             for await (const {id, count} of owners) {
                 precents -= count
-                await CasinoAddService.addMoney(chatId, id, Math.floor(totalPrice * (count / 100)))
+                await CasinoAddService.money(chatId, id, Math.floor(totalPrice * (count / 100)))
             }
 
-            await CasinoAddService.addMoney(chatId, ctx.botInfo.id, Math.ceil(totalPrice * (precents / 100)))
-            await CasinoAddService.addMoney(chatId, ctx.from.id, -totalPrice)
+            await CasinoAddService.money(chatId, ctx.botInfo.id, Math.ceil(totalPrice * (precents / 100)))
+            await CasinoAddService.money(chatId, ctx.from.id, -totalPrice)
 
             return await FileUtils.readPugFromResource(
                 'text/alerts/bought.pug',

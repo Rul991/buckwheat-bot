@@ -15,7 +15,7 @@ export default class CreatorCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
         let member = await ContextUtils.getChatMember(ctx, ctx.from.id)
 

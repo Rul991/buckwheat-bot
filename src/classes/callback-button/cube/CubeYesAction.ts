@@ -43,7 +43,7 @@ export default class CubeYesAction extends CallbackButtonAction {
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<void> {
         const [replyId, userId, cost] = data.split('_').map(val => +val)
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
 
         if(chatId && ctx.from.id == replyId) {
@@ -64,7 +64,7 @@ export default class CubeYesAction extends CallbackButtonAction {
                 else {
                     const [winnerId, loserId, boost] = win
                     const money = cost * boost
-                    const loserMoney = await CasinoGetService.getMoney(chatId, loserId)
+                    const loserMoney = await CasinoGetService.money(chatId, loserId)
                     const prize = money
 
                     const changeValues = {
@@ -87,8 +87,8 @@ export default class CubeYesAction extends CallbackButtonAction {
                         )
                     }
 
-                    await CasinoAddService.addMoney(chatId, winnerId, prize)
-                    await CasinoAddService.addMoney(chatId, loserId, -prize)
+                    await CasinoAddService.money(chatId, winnerId, prize)
+                    await CasinoAddService.money(chatId, loserId, -prize)
 
                     setTimeout(async () => {
                         if(loserMoney < money) {

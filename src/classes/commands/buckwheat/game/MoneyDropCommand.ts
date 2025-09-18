@@ -13,10 +13,10 @@ export default class MoneyDropCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return 
 
-        if(await CasinoGetService.getMoney(chatId, ctx.from.id) <= 0) {
+        if(await CasinoGetService.money(chatId, ctx.from.id) <= 0) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/money-drop/no-money.pug'

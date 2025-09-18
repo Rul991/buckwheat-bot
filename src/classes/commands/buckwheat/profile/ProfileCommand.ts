@@ -30,7 +30,7 @@ export default class ProfileCommand extends BuckwheatCommand {
     }
 
     private async _getPhotoId(ctx: TextContext, id: number): Promise<string | null> {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return null
 
         let photoId: string = await UserImageService.get(chatId, id)
@@ -64,7 +64,7 @@ export default class ProfileCommand extends BuckwheatCommand {
         let name: string
 
         if(other) {
-            const chatId = await LinkedChatService.getChatId(ctx)
+            const chatId = await LinkedChatService.getCurrent(ctx)
             if(!chatId) return null
             const user = await UserProfileService.findByName(chatId, other)
 
@@ -108,7 +108,7 @@ export default class ProfileCommand extends BuckwheatCommand {
         }
 
         const {id, name} = idAndName
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
 
         const user = await UserProfileService.create(chatId, id, name)
@@ -121,7 +121,7 @@ export default class ProfileCommand extends BuckwheatCommand {
         const messages = await MessagesService.get(chatId, id)
         const afterFirstMessage = Date.now() - (messages.firstMessage ?? 0)
 
-        const isLinked = (await LinkedChatService.get(id)) == ctx.chat.id
+        const isLinked = (await LinkedChatService.getRaw(id)) == ctx.chat.id
         const isLeft = await UserLeftService.get(chatId, id)
 
         const path = 'text/commands/profile/profile.pug'

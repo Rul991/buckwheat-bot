@@ -5,6 +5,8 @@ import { DEV_ID } from '../../../../utils/values/consts'
 import CallbackButtonManager from '../../../main/CallbackButtonManager'
 import CasinoAddService from '../../../db/services/casino/CasinoAddService'
 import CommandDescriptionUtils from '../../../../utils/CommandDescriptionUtils'
+import InventoryItemService from '../../../db/services/items/InventoryItemService'
+import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 
 export default class TestCommand extends BuckwheatCommand {
     constructor() {
@@ -14,13 +16,7 @@ export default class TestCommand extends BuckwheatCommand {
     }
 
     private async _secretFunction(ctx: TextContext, _: MaybeString) {
-        await MessageUtils.answer(
-            ctx,
-            `${JSON.stringify(CommandDescriptionUtils.getSecret(), undefined, 4)}`,
-            {
-                
-            }
-        )
+        
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {

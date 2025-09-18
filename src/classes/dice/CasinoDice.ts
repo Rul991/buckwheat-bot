@@ -28,11 +28,11 @@ export default class CasinoDice extends BaseDice {
         values: ChangeValues,
         isWin: boolean
     ): Promise<void> {
-        const chatId = await LinkedChatService.getChatId(ctx, id)
+        const chatId = await LinkedChatService.getCurrent(ctx, id)
         if(!chatId) return
         
-        CasinoAddService.addMoney(chatId, id, count)
-        isWin ? CasinoAddService.addWins(chatId, id, 1) : CasinoAddService.addLoses(chatId, id, 1)
+        CasinoAddService.money(chatId, id, count)
+        isWin ? CasinoAddService.wins(chatId, id, 1) : CasinoAddService.loses(chatId, id, 1)
 
         await MessageUtils.answerMessageFromResource(
             ctx, 
@@ -46,7 +46,7 @@ export default class CasinoDice extends BaseDice {
     }
 
     private async _handleCasinoAccount(chatId: number, id: number): Promise<Casino | null> {
-        return await CasinoAccountService.create(chatId, id)
+        return await CasinoAccountService.get(chatId, id)
     }
 
     private async _checkAndHandleCasinoMoney(ctx: DiceContext, casino: Casino): Promise<boolean> {
@@ -63,7 +63,7 @@ export default class CasinoDice extends BaseDice {
         value: number,
         values: ChangeValues
     ): Promise<void> {
-        const chatId = await LinkedChatService.getChatId(ctx, id)
+        const chatId = await LinkedChatService.getCurrent(ctx, id)
         if(!chatId) return
         const [hasBoost] = await InventoryItemService.use(chatId, id, 'manyCasino')
         const boost = hasBoost ? CASINO_PLUS_BOOST : 1
@@ -106,9 +106,9 @@ export default class CasinoDice extends BaseDice {
     }
 
     private async _checkAndNotifyEndGame(ctx: DiceContext, id: number, values: ChangeValues): Promise<void> {
-        const chatId = await LinkedChatService.getChatId(ctx, id)
+        const chatId = await LinkedChatService.getCurrent(ctx, id)
         if(!chatId) return
-        const newCasino = await CasinoAccountService.create(chatId, id)
+        const newCasino = await CasinoAccountService.get(chatId, id)
 
         if (newCasino && newCasino.money! <= 0) {
             await MessageUtils.answerMessageFromResource(ctx, `text/dice/end.pug`, {changeValues: values})
@@ -125,7 +125,7 @@ export default class CasinoDice extends BaseDice {
         }
 
         const id = ctx.from.id
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
         const values = await ContextUtils.getUserFromContext(ctx)
 

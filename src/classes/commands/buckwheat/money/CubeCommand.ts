@@ -34,7 +34,7 @@ export default class CubeCommand extends BuckwheatCommand {
                 return
             }
 
-            const chatId = await LinkedChatService.getChatId(ctx)
+            const chatId = await LinkedChatService.getCurrent(ctx)
             if(!chatId) return
             const replyId = ctx.message.reply_to_message?.from?.id ?? 0
             const userId = ctx.from.id
@@ -47,8 +47,8 @@ export default class CubeCommand extends BuckwheatCommand {
                 return
             }
 
-            const userMoney = await CasinoGetService.getMoney(chatId, userId)
-            const replyMoney = await CasinoGetService.getMoney(chatId, replyId)
+            const userMoney = await CasinoGetService.money(chatId, userId)
+            const replyMoney = await CasinoGetService.money(chatId, replyId)
             const needMoney = Math.ceil(other && !isNaN(+other) ? +other : 0)
 
             if(needMoney < 0) {

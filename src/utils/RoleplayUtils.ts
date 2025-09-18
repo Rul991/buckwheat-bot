@@ -13,7 +13,7 @@ export default class RoleplayUtils {
                     id: dummyId
                 }
             const hasReply = reply.id != dummyId
-            const chatId = await LinkedChatService.getChatId(ctx)
+            const chatId = await LinkedChatService.getCurrent(ctx)
             if(!chatId) return 'Ошибка!'
     
             return await FileUtils.readPugFromResource(

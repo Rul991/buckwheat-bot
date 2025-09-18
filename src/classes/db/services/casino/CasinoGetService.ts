@@ -7,7 +7,7 @@ type T = Casino
 
 export default class CasinoGetService {
     private static async _get(chatId: number, id: number, key: keyof T): Promise<number> {
-        const casino = await CasinoAccountService.create(chatId, id)
+        const casino = await CasinoAccountService.get(chatId, id)
 
         if(!casino) {
             return -1
@@ -17,19 +17,19 @@ export default class CasinoGetService {
         }
     }
     
-    static async getMoney(chatId: number, id: number): Promise<number> {
+    static async money(chatId: number, id: number): Promise<number> {
         return await this._get(chatId, id, 'money')
     }
 
-    static async getLoses(chatId: number, id: number): Promise<number> {
+    static async loses(chatId: number, id: number): Promise<number> {
         return await this._get(chatId, id, 'loses')
     }
 
-    static async getWins(chatId: number, id: number): Promise<number> {
+    static async wins(chatId: number, id: number): Promise<number> {
         return await this._get(chatId, id, 'wins')
     }
 
-    static async getSortedCasinos(chatId: number, maxCount = 10): Promise<Casino[]> {
+    static async sortedCasinos(chatId: number, maxCount = 10): Promise<Casino[]> {
         const casinos = await CasinoRepository.findManyInChat(chatId)
         return ArrayUtils.filterAndSort(casinos, 'money', maxCount)
     }

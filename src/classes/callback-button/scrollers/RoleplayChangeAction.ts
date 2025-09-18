@@ -13,7 +13,7 @@ export default class RoleplayChangeAction extends ScrollerAction<[string, string
     }
 
     protected async _getObjects(ctx: CallbackButtonContext): Promise<[string, string][]> {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return []
 
         return await RoleplaysService.getCommands(chatId)

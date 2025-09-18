@@ -7,7 +7,7 @@ export default class DebtMemberAction extends NewMemberAction {
     async execute(ctx: NewMemberContext): Promise<void> {
         const chatId = ctx.chat.id
         for (const member of ctx.message.new_chat_members) {
-            const money = await CasinoGetService.getMoney(chatId, member.id)
+            const money = await CasinoGetService.money(chatId, member.id)
             if(money < 0) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,

@@ -18,7 +18,7 @@ export default class RandomPrizeButtonAction extends CallbackButtonAction {
         const randomMoney = RandomUtils.range(MIN_RANDOM_PRIZE, MAX_RANDOM_PRIZE)
         const money = randomMoney == EXTRA_RANDOM_NUMBER ? EXTRA_RANDOM_PRIZE : randomMoney
         
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
 
         try {
@@ -28,7 +28,7 @@ export default class RandomPrizeButtonAction extends CallbackButtonAction {
             Logging.warn(e)
             return
         }
-        await CasinoAddService.addMoney(chatId, ctx.from.id, money)
+        await CasinoAddService.money(chatId, ctx.from.id, money)
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/actions/random-prize/win.pug',

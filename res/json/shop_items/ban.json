@@ -2,6 +2,6 @@
     "name": "Платный кик",
     "description": "Продаю платный кик на 1м",
     "emoji": "❗️",
-    "price": 100000,
+    "price": 1e20,
     "maxCount": 10
 }

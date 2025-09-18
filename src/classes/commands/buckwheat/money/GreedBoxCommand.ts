@@ -17,7 +17,7 @@ export default class GreedBoxCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
         const money = other && !isNaN(+other) ? 
             MathUtils.clamp(Math.ceil(+other), 1, Number.MAX_SAFE_INTEGER) : 
@@ -40,7 +40,7 @@ export default class GreedBoxCommand extends BuckwheatCommand {
             return
         }
 
-        await CasinoAddService.addMoney(chatId, ctx.from.id, money)
+        await CasinoAddService.money(chatId, ctx.from.id, money)
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/greedBox/done.pug',

@@ -30,7 +30,7 @@ export default class MarriageCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if (!chatId) return
 
         const id = await this._getId(ctx)

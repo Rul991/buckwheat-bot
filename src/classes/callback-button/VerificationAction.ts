@@ -26,7 +26,7 @@ export default class VerificationAction extends CallbackButtonAction {
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<void> {
         const dataId = +data
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
 
         if(chatId && ctx.from.id == dataId) {

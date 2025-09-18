@@ -17,7 +17,7 @@ export default class ChangeDescriptionCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
         const description = other ?? ''
 

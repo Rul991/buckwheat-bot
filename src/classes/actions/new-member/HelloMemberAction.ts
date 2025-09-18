@@ -11,7 +11,7 @@ import NewMemberAction from './NewMemberAction'
 
 export default class HelloMemberAction extends NewMemberAction {
     async execute(ctx: NewMemberContext): Promise<void> {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
         const botName = ctx.botInfo.first_name
 

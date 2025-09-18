@@ -13,7 +13,7 @@ export default class ClassAction extends CallbackButtonAction {
     }
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<void> {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
                 
 

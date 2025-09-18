@@ -48,7 +48,7 @@ export default class TransferCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getChatId(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
         const filenameId = TransferCommand._getIdByCondition(ctx, other)
 
@@ -66,7 +66,7 @@ export default class TransferCommand extends BuckwheatCommand {
 
             if(receiver === undefined) return
 
-            const senderMoney = await CasinoGetService.getMoney(chatId, ctx.from.id)
+            const senderMoney = await CasinoGetService.money(chatId, ctx.from.id)
             const diffMoney = Math.ceil(+other!)
 
             if(senderMoney < diffMoney) {
@@ -77,8 +77,8 @@ export default class TransferCommand extends BuckwheatCommand {
                 return
             }
 
-            await CasinoAddService.addMoney(chatId, sender, -diffMoney)
-            await CasinoAddService.addMoney(chatId, receiver, diffMoney)
+            await CasinoAddService.money(chatId, sender, -diffMoney)
+            await CasinoAddService.money(chatId, receiver, diffMoney)
 
             MessageUtils.answerMessageFromResource(
                 ctx,
