@@ -17,6 +17,7 @@ import TimeUtils from '../../../../utils/TimeUtils'
 import UserLeftService from '../../../db/services/user/UserLeftService'
 import Logging from '../../../../utils/Logging'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import UserOldService from '../../../db/services/user/UserOldService'
 
 export default class ProfileCommand extends BuckwheatCommand {
     constructor() {
@@ -141,6 +142,7 @@ export default class ProfileCommand extends BuckwheatCommand {
             spawnDate: TimeUtils.formatMillisecondsToTime(afterFirstMessage),
             messages: StringUtils.toFormattedNumber(messages.total ?? 0),
             experiencePrecents: ExperienceUtils.precents(experience),
+            isMonkey: !(await UserOldService.get(chatId, id))
         }
 
         try {

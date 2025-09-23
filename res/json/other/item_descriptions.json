@@ -39,11 +39,6 @@
         "type": "manyInfinity"
     },
 
-    "aeHair": {
-        "name": "Волосы Ае",
-        "type": "oneInfinity"
-    },
-
     "shopPrecent": {
         "name": "Процент от магазина",
         "type": "manyInfinity"

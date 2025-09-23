@@ -7,6 +7,7 @@ import StringUtils from '../../../../utils/StringUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import CallbackButtonManager from '../../../main/CallbackButtonManager'
 import { MAX_DEBT_PRICE } from '../../../../utils/values/consts'
+import CubePlayingService from '../../../db/services/cube/CubePlayingService'
 
 export default class CubeCommand extends BuckwheatCommand {
     constructor() {
@@ -47,9 +48,20 @@ export default class CubeCommand extends BuckwheatCommand {
                 return
             }
 
+            if(await CubePlayingService.get(chatId, userId)) {
+                await MessageUtils.answerMessageFromResource(
+                    ctx,
+                    'text/commands/cubes/playing.pug',
+                    {changeValues: await ContextUtils.getUser(chatId, userId)}
+                )
+                return
+            }
+
             const userMoney = await CasinoGetService.money(chatId, userId)
             const replyMoney = await CasinoGetService.money(chatId, replyId)
-            const needMoney = Math.ceil(other && !isNaN(+other) ? +other : 0)
+
+            const rawMoney = StringUtils.getNumberFromString(other ?? '0')
+            const needMoney = Math.ceil(other && !isNaN(rawMoney) ? rawMoney : 0)
 
             if(needMoney < 0) {
                 await MessageUtils.answerMessageFromResource(
@@ -85,6 +97,8 @@ export default class CubeCommand extends BuckwheatCommand {
 
             const user = await ContextUtils.getUser(chatId, userId)
             const reply = await ContextUtils.getUser(chatId, replyId)
+
+            await CubePlayingService.set(chatId, userId, true)
 
             await MessageUtils.answerMessageFromResource(
                 ctx,

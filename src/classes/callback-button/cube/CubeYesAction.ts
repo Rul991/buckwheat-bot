@@ -9,6 +9,9 @@ import AdminUtils from '../../../utils/AdminUtils'
 import CasinoAddService from '../../db/services/casino/CasinoAddService'
 import StringUtils from '../../../utils/StringUtils'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
+import CubeWinsService from '../../db/services/cube/CubeWinsService'
+import CubeLosesService from '../../db/services/cube/CubeLosesService'
+import CubePlayingService from '../../db/services/cube/CubePlayingService'
 
 type DiceAndId = {dice: number, id: number}
 
@@ -47,6 +50,16 @@ export default class CubeYesAction extends CallbackButtonAction {
         if(!chatId) return
 
         if(chatId && ctx.from.id == replyId) {
+            if(await CubePlayingService.get(chatId, replyId)) {
+                await MessageUtils.answerMessageFromResource(
+                    ctx,
+                    'text/commands/cubes/playing.pug',
+                    {changeValues: await ContextUtils.getUser(chatId, replyId)}
+                )
+                return
+            }
+
+            await CubePlayingService.set(chatId, replyId, true)
             await MessageUtils.editMarkup(ctx)
 
             const userDice = await CubeYesAction._sendDice(ctx, userId)
@@ -69,7 +82,8 @@ export default class CubeYesAction extends CallbackButtonAction {
 
                     const changeValues = {
                         ...await ContextUtils.getUser(chatId, winnerId),
-                        cost: StringUtils.toFormattedNumber(prize)
+                        cost: StringUtils.toFormattedNumber(prize),
+                        isFree: cost == 0
                     }
 
                     if(boost == 1) {
@@ -89,6 +103,12 @@ export default class CubeYesAction extends CallbackButtonAction {
 
                     await CasinoAddService.money(chatId, winnerId, prize)
                     await CasinoAddService.money(chatId, loserId, -prize)
+
+                    await CubeWinsService.add(chatId, winnerId)
+                    await CubeLosesService.add(chatId, loserId)
+
+                    await CubePlayingService.set(chatId, winnerId, false)
+                    await CubePlayingService.set(chatId, loserId, false)
 
                     setTimeout(async () => {
                         if(loserMoney < money) {

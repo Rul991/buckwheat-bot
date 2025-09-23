@@ -30,7 +30,7 @@ export default class FileUtils {
             
             else {
                 const buffer = await readFile(path)
-                result = buffer.toString()
+                result = buffer.toString('utf-8')
             }
 
             cachedValue.text = result

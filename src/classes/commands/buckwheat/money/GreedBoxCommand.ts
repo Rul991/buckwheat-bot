@@ -19,8 +19,10 @@ export default class GreedBoxCommand extends BuckwheatCommand {
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
-        const money = other && !isNaN(+other) ? 
-            MathUtils.clamp(Math.ceil(+other), 1, Number.MAX_SAFE_INTEGER) : 
+
+        const rawMoney = StringUtils.getNumberFromString(other ?? '1')
+        const money = other && !isNaN(rawMoney) ? 
+            MathUtils.clamp(Math.ceil(rawMoney), 1, Number.MAX_SAFE_INTEGER) : 
             -1
         const [hasBox] = await InventoryItemService.use(chatId, ctx.from.id, 'greedBox')
 

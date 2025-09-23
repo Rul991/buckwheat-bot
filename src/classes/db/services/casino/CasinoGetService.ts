@@ -1,5 +1,6 @@
 import Casino from '../../../../interfaces/schemas/Casino'
 import ArrayUtils from '../../../../utils/ArrayUtils'
+import { DEFAULT_FILTER_LENGTH } from '../../../../utils/values/consts'
 import CasinoRepository from '../../repositories/CasinoRepository'
 import CasinoAccountService from './CasinoAccountService'
 
@@ -29,7 +30,7 @@ export default class CasinoGetService {
         return await this._get(chatId, id, 'wins')
     }
 
-    static async sortedCasinos(chatId: number, maxCount = 10): Promise<Casino[]> {
+    static async sortedCasinos(chatId: number, maxCount = DEFAULT_FILTER_LENGTH): Promise<Casino[]> {
         const casinos = await CasinoRepository.findManyInChat(chatId)
         return ArrayUtils.filterAndSort(casinos, 'money', maxCount)
     }

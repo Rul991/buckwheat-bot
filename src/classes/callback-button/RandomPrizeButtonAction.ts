@@ -20,6 +20,7 @@ export default class RandomPrizeButtonAction extends CallbackButtonAction {
         
         const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
+        const id = ctx.from.id
 
         try {
             await MessageUtils.editMarkup(ctx)
@@ -28,7 +29,7 @@ export default class RandomPrizeButtonAction extends CallbackButtonAction {
             Logging.warn(e)
             return
         }
-        await CasinoAddService.money(chatId, ctx.from.id, money)
+        await CasinoAddService.money(chatId, id, money)
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/actions/random-prize/win.pug',
@@ -36,7 +37,7 @@ export default class RandomPrizeButtonAction extends CallbackButtonAction {
                 changeValues: {
                     ...await ContextUtils.getUser(
                         chatId, 
-                        ctx.from.id, 
+                        id, 
                         ctx.from.first_name
                     ),
                     money

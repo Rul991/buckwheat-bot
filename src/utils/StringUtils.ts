@@ -39,18 +39,27 @@ export default class StringUtils {
             return `${firstNumberPart} * 10^${zeroCount}`
         }
         else {
+            let j = 0
             return number
                 .toString()
                 .split('')
                 .reverse()
                 .reduce((prev, curr, i, arr) => {
                     let newSegment: string = curr
-                    if(i > 0 && (i + 1) % 3 == 0 && i != arr.length - 1) {
+                    if(j > 0 && (j + 1) % 3 == 0 && j != arr.length - 1) {
                         newSegment = ' ' + newSegment
+                    }
+
+                    if(curr != '.' && curr != '-') {
+                        j++
                     }
 
                     return newSegment + prev
                 }, '')
         }
+    }
+
+    static getNumberFromString(str: string): number {
+        return +str.replaceAll(',', '.').replaceAll(/[^0-9.e+-]/g, '')
     }
 }

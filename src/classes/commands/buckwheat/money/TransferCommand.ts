@@ -16,7 +16,7 @@ export default class TransferCommand extends BuckwheatCommand {
             //@ts-ignore
             ctx.from?.id == ctx.message?.reply_to_message?.from?.id,
             !other,
-            isNaN(+other!),
+            isNaN(StringUtils.getNumberFromString(other ?? '')),
             +other! < 0,
         ]
 
@@ -67,7 +67,7 @@ export default class TransferCommand extends BuckwheatCommand {
             if(receiver === undefined) return
 
             const senderMoney = await CasinoGetService.money(chatId, ctx.from.id)
-            const diffMoney = Math.ceil(+other!)
+            const diffMoney = Math.ceil(StringUtils.getNumberFromString(other!))
 
             if(senderMoney < diffMoney) {
                 await TransferCommand._sendMessage(

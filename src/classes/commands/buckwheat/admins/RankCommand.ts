@@ -8,8 +8,8 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 
 export default class RankCommand extends BuckwheatCommand {
-    private static async _answerMyRank(ctx: Context): Promise<void> {
-        const rank = await UserRankService.get(ctx.chat!.id, ctx.from!.id)
+    private static async _answerMyRank(ctx: Context, chatId: number, userId: number): Promise<void> {
+        const rank = await UserRankService.get(chatId, userId)
 
         await MessageUtils.answerMessageFromResource(
             ctx,
@@ -83,16 +83,18 @@ export default class RankCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, data: MaybeString): Promise<void> {
+        const chatId = await LinkedChatService.getCurrent(ctx)
+        if(!chatId) return
+
+        const myId = ctx.from.id
+
         if(ctx.message.reply_to_message && data) {
             if(await RankCommand._answerIfWrongData(ctx, data)) return
             else {
                 const reply = ctx.message.reply_to_message!
                 const rank = +data
                 
-                const myId = ctx.from.id
                 const replyId = reply.from?.id ?? 0
-                const chatId = await LinkedChatService.getCurrent(ctx)
-                if(!chatId) return
 
                 if(await RankCommand._answerIfRankOutBounds(ctx, rank)) return
                 
@@ -119,7 +121,7 @@ export default class RankCommand extends BuckwheatCommand {
             }
         }
         else {
-            RankCommand._answerMyRank(ctx)
+            RankCommand._answerMyRank(ctx, chatId, myId)
         }
     }
 }

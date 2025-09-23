@@ -6,6 +6,8 @@ import ItemsService from '../../../db/services/items/ItemsService'
 import Casino from '../../../../interfaces/schemas/Casino'
 import StringUtils from '../../../../utils/StringUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import InventoryItem from '../../../../interfaces/schemas/InventoryItem'
+import CubeService from '../../../db/services/cube/CubeService'
 
 export default class BalanceCommand extends BuckwheatCommand {
     constructor() {
@@ -15,41 +17,57 @@ export default class BalanceCommand extends BuckwheatCommand {
         this._aliases = ['казино']
     }
 
-    private static _getCasinoValue(casino: Casino, key: keyof Casino): string {
-        return casino[key] ? StringUtils.toFormattedNumber(casino[key]) : '0'
+    private static _getGamesStatistic({wins = 0, loses = 0}: {wins?: number, loses?: number}) {
+        const games = Math.max(1, wins + loses)
+        const winrate = Math.floor(wins / games * 100 * 10) / 10
+
+        return {
+            wins: StringUtils.toFormattedNumber(wins),
+            loses: StringUtils.toFormattedNumber(loses),
+            winrate: StringUtils.toFormattedNumber(winrate),
+        }
+    }
+
+    private static _getItemsStatistic(items: InventoryItem[] = []) {
+        let unique = 0
+        let total = 0
+
+        items.forEach(item => {
+            const count = item.count ?? 0
+            total += count
+            unique += count > 0 ? 1 : 0
+        })
+
+        return {
+            unique: StringUtils.toFormattedNumber(unique),
+            total: StringUtils.toFormattedNumber(total)
+        }
+    }
+
+    private static _getCasinoValue(casino: Casino, key: keyof Casino): number {
+        return casino[key] ?? 0
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
         const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
-        const casino = await CasinoAccountService.get(chatId, ctx.from.id)
-        const items = await ItemsService.get(chatId, ctx.from.id)
 
-        const uniqueItemsLength = items
-            .items
-            ?.reduce((prev, curr) => ((curr.count ?? 0) > 0 ? prev + 1 : prev), 0) 
-            ?? 0
-        
-        const itemsLength = items
-            .items
-            ?.reduce((prev, curr) => (prev + (curr.count ?? 0)), 0) ?? 0
-
-        const wins = casino.wins!
-        const loses = casino.loses!
-        const games = Math.max(1, wins + loses)
-        const winrate = Math.floor(wins / games * 100 * 10) / 10
+        const id = ctx.from.id
+        const casino = await CasinoAccountService.get(chatId, id)
+        const items = await ItemsService.get(chatId, id)
+        const cube = await CubeService.get(chatId, id)
+        const money = BalanceCommand._getCasinoValue(casino, 'money')
 
         await MessageUtils.answerMessageFromResource(
             ctx, 
             'text/commands/balance/balance.pug', 
             {
                 changeValues: {
-                    money: BalanceCommand._getCasinoValue(casino, 'money'),
-                    wins: BalanceCommand._getCasinoValue(casino, 'wins'),
-                    loses: BalanceCommand._getCasinoValue(casino, 'loses'),
-                    uniqueItemsLength: StringUtils.toFormattedNumber(uniqueItemsLength),
-                    itemsLength: StringUtils.toFormattedNumber(itemsLength),
-                    winrate
+                    money: StringUtils.toFormattedNumber(money),
+                    isNegativeMoney: money < 0,
+                    casino: BalanceCommand._getGamesStatistic(casino),
+                    cube: BalanceCommand._getGamesStatistic(cube),
+                    itemsLength: BalanceCommand._getItemsStatistic(items.items)
                 }
             }
         )

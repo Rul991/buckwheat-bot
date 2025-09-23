@@ -24,7 +24,7 @@ export default class UserNameService {
     static async getUniqueName(chatId: number, name: string): Promise<string> {
         const names = await this.getAllByName(chatId, name)
 
-        if(names.length > 1) {
+        if(names.length > 0) {
             return `${name}${names.length}`
         }
         else {

@@ -5,6 +5,7 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import RankUtils from '../../../../utils/RankUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import SubCommandUtils from '../../../../utils/SubCommandUtils'
+import { DEFAULT_FILTER_LENGTH } from '../../../../utils/values/consts'
 import { TextContext, MaybeString, AsyncOrSync, NameObject, ClassTypes, TopLevelObject } from '../../../../utils/values/types'
 import CasinoGetService from '../../../db/services/casino/CasinoGetService'
 import LevelService from '../../../db/services/level/LevelService'
@@ -131,7 +132,7 @@ export default class TopCommand extends BuckwheatCommand {
                 if(!chatId) return {id: ctx.botInfo.id}
 
                 return createTopChangeValues(
-                    ArrayUtils.filterAndSort(await MessagesService.getAll(chatId), key, 10),
+                    ArrayUtils.filterAndSort(await MessagesService.getAll(chatId), key, DEFAULT_FILTER_LENGTH),
                     arr => formatAllNumbersInObjects(arr, key),
                     {
                         key,

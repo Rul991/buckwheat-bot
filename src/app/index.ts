@@ -80,6 +80,11 @@ import MarryYesAction from '../classes/callback-button/marry/MarryYesAction'
 import DivorceCommand from '../classes/commands/buckwheat/marriage/DivorceCommand'
 import MarryNoAction from '../classes/callback-button/marry/MarryNoAction'
 import WipeCommand from '../classes/commands/buckwheat/admins/WipeCommand'
+import ChooseCommand from '../classes/commands/buckwheat/game/ChooseCommand'
+import AddAwardCommand from '../classes/commands/award/AddAwardCommand'
+import CubeWinsService from '../classes/db/services/cube/CubeWinsService'
+import GetAwardCommand from '../classes/commands/award/GetAwardCommand'
+import AwardsChangeAction from '../classes/callback-button/scrollers/AwardsChangeAction'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = { name: string, isMustDefined: boolean }
@@ -169,6 +174,7 @@ const launchBot = async (bot: Bot) => {
         new DeleteIdeaAction(),
         new CommandsChangeAction(),
         new RoleplayChangeAction(),
+        new AwardsChangeAction(),
         new MarryYesAction(),
         new MarryNoAction()
     )
@@ -236,6 +242,9 @@ const launchBot = async (bot: Bot) => {
         new MarryCommand(),
         new DivorceCommand(),
         new WipeCommand(),
+        new AddAwardCommand(),
+        new GetAwardCommand(),
+        new ChooseCommand(),
         ...await getSimpleCommands(),
     )
 
@@ -249,7 +258,7 @@ const launchBot = async (bot: Bot) => {
 }
 
 const test = async (): Promise<void | boolean> => {
-    
+
 }
 
 const main = async () => {

@@ -7,6 +7,7 @@ import CasinoAddService from '../../../db/services/casino/CasinoAddService'
 import UserRankService from '../../../db/services/user/UserRankService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import StringUtils from '../../../../utils/StringUtils'
 
 export default class DonateCommand extends BuckwheatCommand {
     constructor() {
@@ -18,6 +19,7 @@ export default class DonateCommand extends BuckwheatCommand {
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
+
         const userId = ctx.from.id
         const userRank = await UserRankService.get(chatId, userId)
 
@@ -52,8 +54,10 @@ export default class DonateCommand extends BuckwheatCommand {
             )
             return
         }
+
+        const rawRubles = StringUtils.getNumberFromString(other)
         
-        if(isNaN(+other)) {
+        if(isNaN(rawRubles)) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/donate/wrong-other.pug'

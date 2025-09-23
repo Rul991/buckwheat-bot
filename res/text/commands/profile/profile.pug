@@ -1,3 +1,16 @@
+mixin status(condition, text)
+    if condition
+        |
+        |
+        b #{text}
+        |
+
+mixin withTitle(title, text)
+    |
+    | #{title}: 
+    b #{text}
+    |
+
 | 💫 
 b #{description}
 |
@@ -5,34 +18,20 @@ b #{description}
 | 👾 Это - игрок 
 a(href=link) #{name}
 | . 
-| #{emoji} Ранг: 
-b #{userNameRank} / #{status} (#{rank})
-|
-if isLinked || isLeft
+
++withTitle(`${emoji} Ранг`, `${userNameRank} / ${status} (${rank})`)
+
+if isLinked || isLeft || isMonkey
     |
     |
-if isLinked
-    |
-    |
-    b 💬 Привязан к данному чату
-    |
-if isLeft
-    |
-    |
-    b 😵 Вышел из чата
-    |
+
++status(isLinked, '💬 Привязан к данному чату')
++status(isLeft, '😵 Вышел из чата')
++status(isMonkey, '🐒 Не справился с кнопкой')
 |
 |
-| #{classEmoji} Класс: 
-b #{className}
-|
-| 📈 Уровень: 
-b #{level}/#{maxLevel} (#{Math.floor(experiencePrecents * 100)}%)
-|
-|
-| ✉️ Кол-во сообщений: 
-b #{messages}
-|
-| ⏰ Появление в чате: 
-b #{spawnDate} назад
-|
+
++withTitle(`${classEmoji} Класс`, className)
++withTitle('📈 Уровень', `${level}/${maxLevel} (${Math.floor(experiencePrecents * 100)}%)`)
++withTitle('✉️ Кол-во сообщений', `${messages}`)
++withTitle('⏰ Появление в чате', `${spawnDate} назад`)

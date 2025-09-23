@@ -1,0 +1,13 @@
+[
+    [
+        {
+            "text": "<<",
+            "callback_data": "awardschange_-1_@"
+        },
+
+        {
+            "text": ">>",
+            "callback_data": "awardschange_1_@"
+        }
+    ]
+]

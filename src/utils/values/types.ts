@@ -88,13 +88,14 @@ export type SchemaObject<T> = Record<keyof T, JavascriptTypes>
 export type ObjectOrArray<T> = T | T[]
 export type CallbackButtonValues = {text?: string, data?: string}
 
-export type ItemExecuteOptions = {
+export type ItemCallbackOptions = {
     ctx: CallbackButtonContext, 
     user: {link: string, name: string},
     item: RequiredShopItem,
     count: number
 }
-export type ItemExecuteCallback = (options: ItemExecuteOptions) => AsyncOrSync<boolean>
+
+export type ItemExecuteCallback = (options: ItemCallbackOptions) => AsyncOrSync<boolean>
 export type RequiredShopItem = Required<ShopItem>
 export type RequiredShopItemWithLength = RequiredShopItem  & { length: number; index: number }
 export type ShopItem = 
@@ -114,6 +115,7 @@ export type ScrollerSendMessageOptions<T> = {
     length: number
     objects: T[]
     data: string
+    id: number
 }
 
 export type ScrollerEditMessage = {
@@ -121,3 +123,8 @@ export type ScrollerEditMessage = {
     options?: ExtraEditMessageText
 }
 export type ScrollerEditMessageResult = ScrollerEditMessage | string | null
+
+export type Ids = {
+    chatId: number
+    id: number
+}

@@ -5,7 +5,7 @@ import CallbackButtonAction from '../CallbackButtonAction'
 
 export default abstract class ScrollerAction<T> extends CallbackButtonAction {
     protected _objectsPerPage: number = 0
-    protected abstract _getObjects(ctx: CallbackButtonContext): AsyncOrSync<T[]>
+    protected abstract _getObjects(ctx: CallbackButtonContext, id: number): AsyncOrSync<T[]>
 
     protected _getSlicedObjects(objects: T[], currentPage: number): T[] {
         if(this._objectsPerPage <= 0) return objects
@@ -14,6 +14,10 @@ export default abstract class ScrollerAction<T> extends CallbackButtonAction {
                 this._objectsPerPage * currentPage,
                 this._objectsPerPage * (currentPage + 1)
             )
+    }
+
+    protected _getId(ctx: CallbackButtonContext, data: string): AsyncOrSync<number> {
+        return ctx.from.id
     }
     
     protected _getLength(ctx: CallbackButtonContext, objects: T[]): AsyncOrSync<number> {
@@ -24,7 +28,8 @@ export default abstract class ScrollerAction<T> extends CallbackButtonAction {
     protected abstract _editMessage(ctx: CallbackButtonContext, options: ScrollerSendMessageOptions<T>): Promise<ScrollerEditMessageResult>
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<string | void> {
-        const objects = await this._getObjects(ctx)
+        const id = await this._getId(ctx, data)
+        const objects = await this._getObjects(ctx, id)
         const length = await this._getLength(ctx, objects)
 
         const currentPage = Pager.wrapPages(data, length)
@@ -34,7 +39,8 @@ export default abstract class ScrollerAction<T> extends CallbackButtonAction {
             currentPage,
             length,
             objects: this._getSlicedObjects(objects, currentPage),
-            data
+            data,
+            id
         })
 
         if(typeof editedMessage == 'string') 

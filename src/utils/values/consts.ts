@@ -49,9 +49,6 @@ export const MAX_RANDOM_PRIZE = 50
 export const EXTRA_RANDOM_PRIZE = 100
 export const EXTRA_RANDOM_NUMBER = 1
 
-export const WHERE_MARRIAGE_TIME = 10000
-export const WHERE_MARRIAGE_MESSAGES = 1
-
 export const MIN_WORK = 5
 export const MAX_WORK = 20
 export const CATALOG_BOOST = 3
@@ -75,15 +72,16 @@ export const MONEY_DROP_TIME = 2500
 export const LEVEL_BOOST = 7.5
 
 export const BAD_COOKIE_CHANCE = 0.15
-export const MAX_SHOP_PRECENTS = 50
+export const MAX_SHOP_PRECENTS = 100
 
 export const COMMANDS_PER_PAGE = 5
 
 export const DICE_ANSWER_CHANCE = 0.1
-export const LEVEL_UP_MONEY = 2
+export const LEVEL_UP_MONEY = 4
 
 export const DATA_REPLACEABLE_SYMBOL = '@'
 export const MAX_DEBT_PRICE = 1000
 export const MAX_SHOP_COUNT = 1e6
 
 export const ROULETTE_CHANCE = 1 / 6
+export const DEFAULT_FILTER_LENGTH = 15
