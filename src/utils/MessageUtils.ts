@@ -15,7 +15,8 @@ export default class MessageUtils {
             inlineKeyboard = [],
             disableNotification,
             chatId = ctx.chat?.id ?? -1,
-            isReply = true
+            isReply = true,
+            replyMarkup
         }: AnswerOptions = {}
     ) {
         return {
@@ -23,6 +24,7 @@ export default class MessageUtils {
                 message_id: ctx.message.message_id
             } : undefined,
             reply_markup: {
+                ...replyMarkup,
                 inline_keyboard: inlineKeyboard
             },
             disable_notification: disableNotification,

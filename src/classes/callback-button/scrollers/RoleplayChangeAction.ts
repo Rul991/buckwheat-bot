@@ -2,7 +2,7 @@ import FileUtils from '../../../utils/FileUtils'
 import { CallbackButtonContext, ScrollerSendMessageOptions, ScrollerEditMessageResult } from '../../../utils/values/types'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import RoleplaysService from '../../db/services/rp/RoleplaysService'
-import CallbackButtonManager from '../../main/CallbackButtonManager'
+import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import ScrollerAction from './ScrollerAction'
 
 export default class RoleplayChangeAction extends ScrollerAction<[string, string]> {
@@ -40,7 +40,7 @@ export default class RoleplayChangeAction extends ScrollerAction<[string, string
             ),
             options: {
                 reply_markup: {
-                    inline_keyboard: await CallbackButtonManager.get('roleplaychange', `${currentPage}`)
+                    inline_keyboard: await InlineKeyboardManager.get('roleplaychange', `${currentPage}`)
                 },
             }
         }

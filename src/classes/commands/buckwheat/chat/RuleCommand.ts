@@ -6,7 +6,7 @@ import RankUtils from '../../../../utils/RankUtils'
 import RulesService from '../../../db/services/chat/RulesService'
 import SubCommandUtils from '../../../../utils/SubCommandUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
-import CallbackButtonManager from '../../../main/CallbackButtonManager'
+import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 
 type RuleSubCommand = {
     needData: boolean
@@ -128,7 +128,7 @@ export default class RuleCommand extends BuckwheatCommand {
                 ctx,
                 'text/commands/rules/start.pug',
                 {
-                    inlineKeyboard: await CallbackButtonManager.get('rules', '-1'),
+                    inlineKeyboard: await InlineKeyboardManager.get('rules', '-1'),
                     changeValues: {
                         count: rules.length
                     }

@@ -16,5 +16,6 @@ export const shopItemSchema: SchemaObject<ShopItem> = {
     maxCount: ['number', 'undefined'],
     cooldown: ['number', 'undefined'],
     filename: ['string', 'undefined'],
-    execute: ['function', 'undefined']
+    execute: ['function', 'undefined'],
+    isPremium: ['boolean', 'undefined']
 }

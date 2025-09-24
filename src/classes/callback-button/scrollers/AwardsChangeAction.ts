@@ -3,7 +3,7 @@ import FileUtils from '../../../utils/FileUtils'
 import { CallbackButtonContext, ScrollerSendMessageOptions, ScrollerEditMessageResult, AsyncOrSync } from '../../../utils/values/types'
 import AwardsService from '../../db/services/awards/AwardsService'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
-import CallbackButtonManager from '../../main/CallbackButtonManager'
+import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import ScrollerAction from './ScrollerAction'
 
 export default class AwardsChangeAction extends ScrollerAction<Award> {
@@ -64,7 +64,7 @@ export default class AwardsChangeAction extends ScrollerAction<Award> {
             ),
             options: {
                 reply_markup: {
-                    inline_keyboard: await CallbackButtonManager.get('awards/change', `${currentPage}_${id}`)
+                    inline_keyboard: await InlineKeyboardManager.get('awards/change', `${currentPage}_${id}`)
                 }
             }
         }

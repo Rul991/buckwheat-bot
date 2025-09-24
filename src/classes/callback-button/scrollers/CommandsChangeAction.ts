@@ -2,7 +2,7 @@ import CommandDescriptionUtils from '../../../utils/CommandDescriptionUtils'
 import FileUtils from '../../../utils/FileUtils'
 import { COMMANDS_PER_PAGE } from '../../../utils/values/consts'
 import { CallbackButtonContext, CommandDescription, ScrollerEditMessage, ScrollerSendMessageOptions } from '../../../utils/values/types'
-import CallbackButtonManager from '../../main/CallbackButtonManager'
+import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import ScrollerAction from './ScrollerAction'
 
 export default class CommandsChangeAction extends ScrollerAction<CommandDescription> {
@@ -37,7 +37,7 @@ export default class CommandsChangeAction extends ScrollerAction<CommandDescript
             ),
             options: {
                 reply_markup: {
-                    inline_keyboard: await CallbackButtonManager.get('commands/pager', `${currentPage}`)
+                    inline_keyboard: await InlineKeyboardManager.get('commands/pager', `${currentPage}`)
                 }
             }
         }

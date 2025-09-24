@@ -71,6 +71,9 @@ export default class CubeYesAction extends CallbackButtonAction {
                     CubeYesAction._createDiceAndId(replyId, replyDice), 
                 )
 
+                await CubePlayingService.set(chatId, userId, false)
+                await CubePlayingService.set(chatId, replyId, false)
+
                 if(!win) {
                     await MessageUtils.answerMessageFromResource(ctx, 'text/commands/cubes/win/tie.pug')
                 }
@@ -106,9 +109,6 @@ export default class CubeYesAction extends CallbackButtonAction {
 
                     await CubeWinsService.add(chatId, winnerId)
                     await CubeLosesService.add(chatId, loserId)
-
-                    await CubePlayingService.set(chatId, winnerId, false)
-                    await CubePlayingService.set(chatId, loserId, false)
 
                     setTimeout(async () => {
                         if(loserMoney < money) {

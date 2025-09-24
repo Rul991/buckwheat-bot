@@ -2,7 +2,7 @@ import Chat from '../../../../interfaces/schemas/Chat'
 import ChatRepository from '../../repositories/ChatRepository'
 
 export default class ChatService {
-    static async create(chatId: number): Promise<Chat> {
+    static async get(chatId: number): Promise<Chat> {
         const chat = await ChatRepository.findOne(chatId)
         
         if(chat) return chat

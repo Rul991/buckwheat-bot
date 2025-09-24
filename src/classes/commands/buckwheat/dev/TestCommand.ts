@@ -2,7 +2,7 @@ import { MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { DEV_ID } from '../../../../utils/values/consts'
-import CallbackButtonManager from '../../../main/CallbackButtonManager'
+import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import CasinoAddService from '../../../db/services/casino/CasinoAddService'
 import CommandDescriptionUtils from '../../../../utils/CommandDescriptionUtils'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
@@ -34,7 +34,7 @@ export default class TestCommand extends BuckwheatCommand {
             'text/commands/other/test.pug',
             {
                 changeValues: {other: other ?? ''},
-                inlineKeyboard: await CallbackButtonManager.map('test', test)
+                inlineKeyboard: await InlineKeyboardManager.map('test', test)
             }
         )
     }

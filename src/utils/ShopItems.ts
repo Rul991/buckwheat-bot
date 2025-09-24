@@ -320,7 +320,8 @@ export default class ShopItems {
                 ...item,
                 cooldown: item.cooldown ?? 0,
                 execute: item.execute ?? (() => false),
-                maxCount: item.maxCount ?? 0
+                maxCount: item.maxCount ?? 0,
+                isPremium: item.isPremium ?? false
             } as RequiredShopItem
         }
         else {

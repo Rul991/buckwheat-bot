@@ -12,7 +12,7 @@ export default class DiceDice extends BaseDice {
     async execute(ctx: DiceContext, _: number): Promise<void> {
         if(!RandomUtils.chance(DICE_ANSWER_CHANCE)) return
         
-        ctx.replyWithDice({
+        await ctx.replyWithDice({
             emoji: this._name
         })
     }

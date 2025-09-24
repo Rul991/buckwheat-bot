@@ -3,7 +3,7 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import { TextContext, MaybeString } from '../../../../utils/values/types'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import MarriageService from '../../../db/services/marriage/MarriageService'
-import CallbackButtonManager from '../../../main/CallbackButtonManager'
+import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class MarryCommand extends BuckwheatCommand {
@@ -47,7 +47,7 @@ export default class MarryCommand extends BuckwheatCommand {
                     user: await ContextUtils.getUser(chatId, userId),
                     reply: await ContextUtils.getUser(chatId, replyId),
                 },
-                inlineKeyboard: await CallbackButtonManager.get('marry', `${userId}_${replyId}`)
+                inlineKeyboard: await InlineKeyboardManager.get('marry', `${userId}_${replyId}`)
             }
         )
     }

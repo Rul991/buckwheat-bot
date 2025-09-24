@@ -1,7 +1,7 @@
 import CommandDescriptionUtils from '../../../../utils/CommandDescriptionUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { TextContext, MaybeString } from '../../../../utils/values/types'
-import CallbackButtonManager from '../../../main/CallbackButtonManager'
+import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class CommandsCommand extends BuckwheatCommand {
@@ -28,7 +28,7 @@ export default class CommandsCommand extends BuckwheatCommand {
                 changeValues: {
                     length: commands.length
                 },
-                inlineKeyboard: await CallbackButtonManager.get('commands/start')
+                inlineKeyboard: await InlineKeyboardManager.get('commands/start')
             }
         )
     }

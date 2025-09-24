@@ -14,7 +14,7 @@ export default class RulesService {
     }
 
     static async get(chatId: number): Promise<string[]> {
-        return (await ChatService.create(chatId))?.rules ?? []
+        return (await ChatService.get(chatId))?.rules ?? []
     }
 
     static async add(chatId: number, data: string): Promise<void> {

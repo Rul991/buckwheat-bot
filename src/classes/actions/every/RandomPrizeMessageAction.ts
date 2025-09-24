@@ -3,7 +3,7 @@ import MessageUtils from '../../../utils/MessageUtils'
 import RandomUtils from '../../../utils/RandomUtils'
 import { MessageContext } from '../../../utils/values/types'
 import EveryMessageAction from './EveryMessageAction'
-import CallbackButtonManager from '../../main/CallbackButtonManager'
+import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 
 export default class RandomPrizeMessageAction extends EveryMessageAction {
     async execute(ctx: MessageContext): Promise<void | true> {
@@ -14,7 +14,7 @@ export default class RandomPrizeMessageAction extends EveryMessageAction {
                 ctx,
                 'text/actions/random-prize/spawn.pug',
                 {
-                    inlineKeyboard: await CallbackButtonManager.get('random_prize')
+                    inlineKeyboard: await InlineKeyboardManager.get('random_prize')
                 }
             )
         }

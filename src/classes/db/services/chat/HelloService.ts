@@ -3,7 +3,7 @@ import ChatService from './ChatService'
 
 export default class HelloService {
     static async get(chatId: number): Promise<string> {
-        return (await ChatService.create(chatId))?.hello ?? ''
+        return (await ChatService.get(chatId))?.hello ?? ''
     }
 
     static async edit(chatId: number, hello: string): Promise<void> {

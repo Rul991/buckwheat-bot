@@ -106,7 +106,8 @@ export type ShopItem =
     emoji?: string,
     price?: number,
     maxCount?: number,
-    cooldown?: number
+    cooldown?: number,
+    isPremium?: boolean,
     execute: ItemExecuteCallback
 }
 

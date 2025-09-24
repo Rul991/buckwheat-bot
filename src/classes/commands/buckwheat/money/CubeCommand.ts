@@ -5,7 +5,7 @@ import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
-import CallbackButtonManager from '../../../main/CallbackButtonManager'
+import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import { MAX_DEBT_PRICE } from '../../../../utils/values/consts'
 import CubePlayingService from '../../../db/services/cube/CubePlayingService'
 
@@ -112,7 +112,7 @@ export default class CubeCommand extends BuckwheatCommand {
                         cost: needMoney > 0 ? `${StringUtils.toFormattedNumber(needMoney)} монет` : 'интерес',
                         isReplyHasNeedMoney: replyMoney >= needMoney
                     },
-                    inlineKeyboard: await CallbackButtonManager.get('cubes', `${replyId}_${userId}_${needMoney}`)
+                    inlineKeyboard: await InlineKeyboardManager.get('cubes', `${replyId}_${userId}_${needMoney}`)
                 }
             )
         }

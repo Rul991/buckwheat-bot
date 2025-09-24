@@ -85,6 +85,7 @@ import AddAwardCommand from '../classes/commands/award/AddAwardCommand'
 import CubeWinsService from '../classes/db/services/cube/CubeWinsService'
 import GetAwardCommand from '../classes/commands/award/GetAwardCommand'
 import AwardsChangeAction from '../classes/callback-button/scrollers/AwardsChangeAction'
+import ChatCommand from '../classes/commands/buckwheat/chat/ChatCommand'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = { name: string, isMustDefined: boolean }
@@ -176,7 +177,7 @@ const launchBot = async (bot: Bot) => {
         new RoleplayChangeAction(),
         new AwardsChangeAction(),
         new MarryYesAction(),
-        new MarryNoAction()
+        new MarryNoAction(),
     )
 
     bot.addDiceActions(
@@ -245,6 +246,7 @@ const launchBot = async (bot: Bot) => {
         new AddAwardCommand(),
         new GetAwardCommand(),
         new ChooseCommand(),
+        new ChatCommand(),
         ...await getSimpleCommands(),
     )
 

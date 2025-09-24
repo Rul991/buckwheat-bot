@@ -13,7 +13,7 @@ type GetOptions<T, K> = {
 type Result = InlineKeyboardButton.CallbackButton
 type JsonValue = {notEach?: boolean, text: string, data: string, isHorisontal?: boolean}
 
-export default class CallbackButtonManager {
+export default class InlineKeyboardManager {
     private static _getPath(name: string): string {
         return `json/inline_keyboards/${name}.json`
     }

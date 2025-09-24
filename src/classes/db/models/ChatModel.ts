@@ -17,6 +17,10 @@ export default createModel<Chat>({
         hello: {
             type: String,
             default: ''
+        },
+        premiumUntilDate: {
+            type: Number,
+            required: false
         }
     }
 })

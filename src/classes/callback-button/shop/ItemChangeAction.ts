@@ -2,7 +2,7 @@ import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
 import ShopItems from '../../../utils/ShopItems'
 import { AsyncOrSync, CallbackButtonContext, RequiredShopItemWithLength, ScrollerEditMessageResult, ScrollerSendMessageOptions } from '../../../utils/values/types'
-import CallbackButtonManager from '../../main/CallbackButtonManager'
+import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import StringUtils from '../../../utils/StringUtils'
 import ScrollerAction from '../scrollers/ScrollerAction'
 
@@ -59,7 +59,7 @@ export default class ItemChangeAction extends ScrollerAction<RequiredShopItemWit
             ),
             options: {
                 reply_markup: {
-                    inline_keyboard: await CallbackButtonManager.get('shop', `${index}_${userId}_${count}`)
+                    inline_keyboard: await InlineKeyboardManager.get('shop', `${index}_${userId}_${count}`)
                 },
             }
         }

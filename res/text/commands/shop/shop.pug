@@ -1,7 +1,18 @@
+- const premiumEmoji = '👑'
+
+mixin conditionText(condition, emoji, text)
+    if condition
+        |
+        i #{emoji} #{text}
+        | 
+        |
+
 | [#{index + 1}/#{length}] #{emoji}
-code #{name}
+code #{name} 
 
 blockquote #{description}
 |
+|
++conditionText(isPremium, premiumEmoji, `Премиум-товар`)
 |
 | Цена: #{price} * #{count} = #{totalPrice} 💰

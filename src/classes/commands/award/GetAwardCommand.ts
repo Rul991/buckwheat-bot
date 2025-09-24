@@ -2,7 +2,7 @@ import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import { TextContext, MaybeString } from '../../../utils/values/types'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
-import CallbackButtonManager from '../../main/CallbackButtonManager'
+import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 
 export default class GetAwardCommand extends BuckwheatCommand {
@@ -32,7 +32,7 @@ export default class GetAwardCommand extends BuckwheatCommand {
             'text/commands/award/start-get.pug',
             {
                 changeValues: {user},
-                inlineKeyboard: await CallbackButtonManager.get('awards/start', `${id}`)
+                inlineKeyboard: await InlineKeyboardManager.get('awards/start', `${id}`)
             }
         )
     }

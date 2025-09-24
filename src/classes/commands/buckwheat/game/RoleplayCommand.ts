@@ -5,7 +5,7 @@ import { TextContext, MaybeString, NameObject } from '../../../../utils/values/t
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import RoleplaysService from '../../../db/services/rp/RoleplaysService'
 import UserRankService from '../../../db/services/user/UserRankService'
-import CallbackButtonManager from '../../../main/CallbackButtonManager'
+import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 type SubCommand = NameObject & {
@@ -30,7 +30,7 @@ export default class RoleplayCommand extends BuckwheatCommand {
                         changeValues: {
                             length: (await RoleplaysService.getCommands(chatId)).length
                         },
-                        inlineKeyboard: await CallbackButtonManager.get('start-roleplaychange')
+                        inlineKeyboard: await InlineKeyboardManager.get('start-roleplaychange')
                     }
                 )
                 return true

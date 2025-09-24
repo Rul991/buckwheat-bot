@@ -9,6 +9,7 @@ import StringUtils from '../../../utils/StringUtils'
 import FileUtils from '../../../utils/FileUtils'
 import InventoryItemService from '../../db/services/items/InventoryItemService'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
+import PremiumChatService from '../../db/services/chat/PremiumChatService'
 
 export default class BuyAction extends CallbackButtonAction {
     constructor() {
@@ -44,6 +45,19 @@ export default class BuyAction extends CallbackButtonAction {
                         name: item.name, 
                         elapsedMoney: StringUtils.toFormattedNumber(totalPrice - money),
                         user
+                    }
+                }
+            )
+            return
+        }
+
+        if(item.isPremium && !(await PremiumChatService.get(chatId))) {
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/shop/no-premium.pug',
+                {
+                    changeValues: {
+                        name: item.name
                     }
                 }
             )
