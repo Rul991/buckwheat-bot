@@ -1,11 +1,19 @@
+import ContextUtils from '../../../../utils/ContextUtils'
+import ExceptionUtils from '../../../../utils/ExceptionUtils'
+import FileUtils from '../../../../utils/FileUtils'
+import Logging from '../../../../utils/Logging'
 import MessageUtils from '../../../../utils/MessageUtils'
+import { DAYS_IN_MONTH, DEV_ID, MAX_MONTHS_PER_BUY, MILLISECONDS_IN_DAY, PREMIUM_PRICE_PER_MONTH } from '../../../../utils/values/consts'
 import { TextContext, MaybeString } from '../../../../utils/values/types'
+import PremiumChatService from '../../../db/services/chat/PremiumChatService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class PremiumCommand extends BuckwheatCommand {
     constructor() {
         super()
+        this._isShow = false
         this._name = 'премиум'
         this._description = 'продаю вам премиум для чата'
         this._needData = true
@@ -13,25 +21,38 @@ export default class PremiumCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const months = +(other ?? '1')
+        if(ctx.chat.type == 'private') {
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/premium/private.pug'
+            )
+            return
+        }
 
         const id = ctx.from.id
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return
+        const chatId = ctx.chat.id
 
-        await MessageUtils.answerMessageFromResource(
-            ctx,
-            'text/commands/chat/buy.pug',
+        if(id != DEV_ID) {
+            await MessageUtils.sendWrongCommandMessage(ctx)
+            return
+        }
+
+        const rawOther = +(other ?? '1')
+        const months = Math.min(
+            Math.max(1, isNaN(rawOther) ? 1 : rawOther),
+            MAX_MONTHS_PER_BUY
+        )
+
+        await MessageUtils.answerInvoice(
+            ctx, 
             {
-                inlineKeyboard: [
-                    [
-                        {
-                            pay: true,
-                            text: 'goyda',
-                            
-                        }
-                    ]
-                ]
+                title: 'Премиум-подписка для чата',
+                description: `Дает чату ${months} месяцев премиум-подписки`,
+                payload: `sub_${months}_${chatId}`,
+                prices: [{
+                    label: `Подписка на ${months} месяцев`,
+                    amount: PREMIUM_PRICE_PER_MONTH * months
+                }]
             }
         )
     }

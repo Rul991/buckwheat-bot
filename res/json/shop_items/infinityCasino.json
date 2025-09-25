@@ -3,5 +3,6 @@
     "description": "Перестаю забирать деньги за казино",
     "emoji": "🎰",
     "price": 15000,
-    "maxCount": 1
+    "maxCount": 1,
+    "isPremium": false
 }

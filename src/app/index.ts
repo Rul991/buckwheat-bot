@@ -82,10 +82,21 @@ import MarryNoAction from '../classes/callback-button/marry/MarryNoAction'
 import WipeCommand from '../classes/commands/buckwheat/admins/WipeCommand'
 import ChooseCommand from '../classes/commands/buckwheat/game/ChooseCommand'
 import AddAwardCommand from '../classes/commands/award/AddAwardCommand'
-import CubeWinsService from '../classes/db/services/cube/CubeWinsService'
 import GetAwardCommand from '../classes/commands/award/GetAwardCommand'
 import AwardsChangeAction from '../classes/callback-button/scrollers/AwardsChangeAction'
 import ChatCommand from '../classes/commands/buckwheat/chat/ChatCommand'
+import DeleteMessageAction from '../classes/callback-button/DeleteMessageAction'
+import PremiumCommand from '../classes/commands/buckwheat/chat/PremiumCommand'
+import CallbackButtonActionHandler from '../classes/main/handlers/CallbackButtonActionHandler'
+import CommandHandler from '../classes/main/handlers/commands/CommandHandler'
+import TelegramCommandHandler from '../classes/main/handlers/commands/TelegramCommandHandler'
+import DiceHandler from '../classes/main/handlers/DiceHandler'
+import EveryMessageHandler from '../classes/main/handlers/EveryMessageHandler'
+import LeftMemberHandler from '../classes/main/handlers/LeftMemberHandler'
+import NewMemberHandler from '../classes/main/handlers/NewMemberHandler'
+import PhotoHandler from '../classes/main/handlers/PhotoHandler'
+import PaymentHandler from '../classes/main/handlers/PaymentHandler'
+import SubscriptionAction from '../classes/actions/payment/SubscriptionAction'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = { name: string, isMustDefined: boolean }
@@ -146,22 +157,39 @@ const getSimpleCommands = async () => {
 }
 
 const launchBot = async (bot: Bot) => {
-    bot.addEveryMessageActions(
+    // handlers
+    bot.addHandlers(
+        new EveryMessageHandler(),
+        new TelegramCommandHandler(),
+        new CommandHandler(),
+        new CallbackButtonActionHandler(),
+        new DiceHandler(),
+        new NewMemberHandler(),
+        new PhotoHandler(),
+        new LeftMemberHandler(),
+        new PaymentHandler()
+    )
+
+    // every message 
+    bot.addActions(
         new WrongChatAction(), // it should be first
         new AntiSpamAction(),
         new NewMessagesAction(),
         new RandomPrizeMessageAction(),
     )
 
-    bot.addLeftMemberActions(
+    // left member 
+    bot.addActions(
         new AddLeftInDatabaseAction()
     )
 
-    bot.addPhotoActions(
+    // photo 
+    bot.addActions(
         new ImageProfileAction()
     )
 
-    bot.addCallbackButtonAction(
+    // callback button 
+    bot.addActions(
         new CubeYesAction(),
         new CubeNoAction(),
         new RuleChangeAction(),
@@ -178,30 +206,38 @@ const launchBot = async (bot: Bot) => {
         new AwardsChangeAction(),
         new MarryYesAction(),
         new MarryNoAction(),
+        new DeleteMessageAction()
     )
 
-    bot.addDiceActions(
+    // dice 
+    bot.addActions(
         new CasinoDice(),
         new DiceDice()
     )
 
-    bot.addNewMemberAction(
+    // new member 
+    bot.addActions(
         new AddInDatabaseAction(),
         new HelloMemberAction(),
         new DebtMemberAction(),
     )
 
+    bot.addActions(
+        new SubscriptionAction()
+    )
+
     // conditional
-    bot.addCommands(
+    bot.addActions(
         new CapsCommand(),
         new NoCommand(),
         new CustomRoleplayCommand()
     )
 
     // buckwheat
-    bot.addCommands(
+    bot.addActions(
         new CommandsCommand(),
         new ProfileCommand(),
+        new PremiumCommand(),
         new BalanceCommand(),
         new ChangeNameCommand(),
         new ChangeDescriptionCommand(),
@@ -251,7 +287,7 @@ const launchBot = async (bot: Bot) => {
     )
 
     // tg
-    bot.addCommands(
+    bot.addActions(
         new StartCommand()
     )
 

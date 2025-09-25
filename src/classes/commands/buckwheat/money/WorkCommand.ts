@@ -18,6 +18,7 @@ import LevelUtils from '../../../../utils/level/LevelUtils'
 import LevelService from '../../../db/services/level/LevelService'
 import RankUtils from '../../../../utils/RankUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import PremiumChatService from '../../../db/services/chat/PremiumChatService'
 
 export default class WorkCommand extends BuckwheatCommand {
     constructor() {
@@ -54,8 +55,9 @@ export default class WorkCommand extends BuckwheatCommand {
         const quest = RandomUtils.choose(quests) ?? 'Неизвестный квест'
 
         if(!elapsed) {
+            const isPremium = await PremiumChatService.isPremium(chatId)
             const [hasUp] = await InventoryItemService.use(chatId, id, 'workUp')
-            const totalMoney = Math.ceil((+hasUp * 0.25 + 1) * money)
+            const totalMoney = Math.ceil((+hasUp * 0.25 + 1) * money * (1 + +isPremium))
 
             const currentLevel = await LevelService.get(chatId, id)
             const rawExperience = RandomUtils.range(3, Math.min(100, 3 * currentLevel))

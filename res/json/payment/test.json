@@ -1,0 +1,11 @@
+{
+    "title": "test",
+    "description": "test",
+    "payload": "test",
+    "prices": [
+        {
+            "label": "test",
+            "amount": 1000
+        }
+    ]
+}

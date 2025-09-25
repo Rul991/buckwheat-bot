@@ -51,7 +51,7 @@ export default class BuyAction extends CallbackButtonAction {
             return
         }
 
-        if(item.isPremium && !(await PremiumChatService.get(chatId))) {
+        if(item.isPremium && !(await PremiumChatService.isPremium(chatId))) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/shop/no-premium.pug',

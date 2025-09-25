@@ -1,110 +1,39 @@
 import { Telegraf } from 'telegraf'
-import BuckwheatCommand from '../commands/base/BuckwheatCommand'
-import TelegramCommand from '../commands/base/TelegramCommand'
-import BaseDice from '../dice/BaseDice'
-import EveryMessageAction from '../actions/every/EveryMessageAction'
-import CallbackButtonAction from '../callback-button/CallbackButtonAction'
 import Logging from '../../utils/Logging'
-import { CHAT_ID, DOMAIN, HOOK_PORT, MODE, SECRET_PATH, SECRET_TOKEN } from '../../utils/values/consts'
+import { CHAT_ID, DOMAIN, HOOK_PORT, MODE, SECRET_PATH } from '../../utils/values/consts'
 import FileUtils from '../../utils/FileUtils'
 import BaseHandler from './handlers/BaseHandler'
-import TelegramCommandHandler from './handlers/commands/TelegramCommandHandler'
-import CommandHandler from './handlers/commands/CommandHandler'
-import EveryMessageHandler from './handlers/EveryMessageHandler'
-import CallbackButtonActionHandler from './handlers/CallbackButtonActionHandler'
-import DiceHandler from './handlers/DiceHandler'
-import NewMemberHandler from './handlers/NewMemberHandler'
-import NewMemberAction from '../actions/new-member/NewMemberAction'
-import PhotoHandler from './handlers/PhotoHandler'
-import PhotoAction from '../actions/photo/PhotoAction'
 import MessageUtils from '../../utils/MessageUtils'
 import express from 'express'
-import LeftMemberHandler from './handlers/LeftMemberHandler'
-import LeftMemberAction from '../actions/left-member/LeftMemberAction'
+import BaseAction from '../actions/base/BaseAction'
 
 export default class Bot {    
     private _bot: Telegraf
     private _handlers: BaseHandler<any, any>[]
 
-    private _telegramCommandHandler: TelegramCommandHandler
-    private _commandHandler: CommandHandler
-    private _everyMessageHandler: EveryMessageHandler
-    private _callbackButtonHandler: CallbackButtonActionHandler
-    private _diceHandler: DiceHandler
-    private _newMemberHandler: NewMemberHandler
-    private _photoHandler: PhotoHandler
-    private _leftMemberHandler: LeftMemberHandler
-
     constructor(token: string) {
         this._bot = new Telegraf(token)
 
-        this._everyMessageHandler = new EveryMessageHandler()
-        this._telegramCommandHandler = new TelegramCommandHandler()
-        this._commandHandler = new CommandHandler()
-        this._callbackButtonHandler = new CallbackButtonActionHandler()
-        this._diceHandler = new DiceHandler()
-        this._newMemberHandler = new NewMemberHandler()
-        this._photoHandler = new PhotoHandler()
-        this._leftMemberHandler = new LeftMemberHandler()
-
-        this._handlers = [
-            this._everyMessageHandler,
-            this._telegramCommandHandler,
-            this._commandHandler,
-            this._callbackButtonHandler,
-            this._diceHandler,
-            this._newMemberHandler,
-            this._photoHandler,
-            this._leftMemberHandler
-        ]
+        this._handlers = []
     }
 
     get bot(): Telegraf {
         return this._bot
     }
 
-    private _addTelegramCommand(command: TelegramCommand): void {
-        this._telegramCommandHandler.add(command)
+    addHandlers(...handlers: BaseHandler<any, any>[]): void {
+        this._handlers.push(...handlers)
     }
 
-    private _addCommand(command: BuckwheatCommand): void {
-        this._commandHandler.add(command)
-    }
-
-    addLeftMemberActions(...actions: LeftMemberAction[]): void {
-        this._leftMemberHandler.add(...actions)
-    }
-
-    addPhotoActions(...actions: PhotoAction[]): void {
-        this._photoHandler.add(...actions)
-    }
-
-    addNewMemberAction(...actions: NewMemberAction[]): void {
-        this._newMemberHandler.add(...actions)
-    }
-
-    addCallbackButtonAction(...actions: CallbackButtonAction[]): void {
-        this._callbackButtonHandler.add(...actions)
-    }
-
-    addCommands(...commands: BuckwheatCommand[]): void {
-        commands.forEach(command => {
-            if(command instanceof TelegramCommand) {
-                this._addTelegramCommand(command)
+    addActions(...actions: BaseAction[]): void {
+        for (const action of actions) {
+            for (const handler of this._handlers) {
+                if(handler.isNeedType(action)) {
+                    handler.add(action)
+                    break
+                }
             }
-            else if(command instanceof BuckwheatCommand) {
-                this._addCommand(command)
-            }
-            else Logging.warn('its not command', command)
-        })
-    }
-
-    addDiceActions(...actions: BaseDice[]): void {
-        this._diceHandler.add(...actions)
-    }
-
-    addEveryMessageActions(...actions: EveryMessageAction[]): void {
-        this._everyMessageHandler.add(...actions)
+        }
     }
 
     private async _launchCallback(): Promise<void> {
@@ -164,9 +93,5 @@ export default class Bot {
         else {
             this._startLongPolling(launchCallback)
         }
-    }
-
-    stop(reason?: string) {
-        this._bot.stop(reason)
     }
 }

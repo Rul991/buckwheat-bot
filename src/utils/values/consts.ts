@@ -85,3 +85,9 @@ export const MAX_SHOP_COUNT = 1e6
 
 export const ROULETTE_CHANCE = 1 / 6
 export const DEFAULT_FILTER_LENGTH = 15
+
+export const DAYS_IN_MONTH = 28
+export const MILLISECONDS_IN_MONTH = MILLISECONDS_IN_DAY * DAYS_IN_MONTH
+export const MAX_MONTHS_PER_BUY = 60
+
+export const PREMIUM_PRICE_PER_MONTH = MODE == 'dev' ? 1: 30

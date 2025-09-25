@@ -3,9 +3,9 @@ import EveryMessageAction from '../../actions/every/EveryMessageAction'
 import BaseHandler from './BaseHandler'
 import Logging from '../../../utils/Logging'
 
-export default class EveryMessageHandler extends BaseHandler<EveryMessageAction, EveryMessageAction[]> {
+export default class EveryMessageHandler extends BaseHandler<EveryMessageAction, EveryMessageAction[], typeof EveryMessageAction> {
     constructor() {
-        super([])
+        super([], EveryMessageAction)
     }
 
     setup(bot: Telegraf): void {
@@ -14,7 +14,7 @@ export default class EveryMessageHandler extends BaseHandler<EveryMessageAction,
 
             const isPrivate = ctx.chat.type == 'private'
 
-            for (const action of this._instances) {
+            for (const action of this._container) {
                 if(isPrivate && !action.canUsePrivate) continue
                 if(await action.execute(ctx)) return
             }

@@ -7,13 +7,13 @@ import WrongCommand from '../../../commands/buckwheat/WrongCommand'
 import CommandDescriptionUtils from '../../../../utils/CommandDescriptionUtils'
 import CommandUtils from '../../../../utils/CommandUtils'
 
-export default class CommandHandler extends BaseHandler<BuckwheatCommand, ConditionalCommand[]> {
+export default class CommandHandler extends BaseHandler<BuckwheatCommand, ConditionalCommand[], typeof BuckwheatCommand> {
     private static _wrongCommand = new WrongCommand
 
     private _buckwheatCommands: Record<string, BuckwheatCommand>
 
     constructor() {
-        super([])
+        super([], BuckwheatCommand)
         this._buckwheatCommands = {}
     }
 
@@ -30,7 +30,7 @@ export default class CommandHandler extends BaseHandler<BuckwheatCommand, Condit
     }
 
     protected async _onConditionalCommand(ctx: TextContext, message: CommandStrings) {
-        for await (const command of this._instances) {
+        for await (const command of this._container) {
             if(await command.executeIfCondition(ctx, message)) {
                 return true
             }

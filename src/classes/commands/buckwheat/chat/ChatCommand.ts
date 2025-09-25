@@ -20,7 +20,8 @@ export default class ChatCommand extends BuckwheatCommand {
         if(!chatId) return
 
         const chat = await ChatService.get(chatId)
-        const isPremium = await PremiumChatService.get(chatId)
+        const isPremium = await PremiumChatService.isPremium(chatId)
+        const untilDate = await PremiumChatService.getUntilDate(chatId)
 
         await MessageUtils.answerMessageFromResource(
             ctx,
@@ -30,7 +31,7 @@ export default class ChatCommand extends BuckwheatCommand {
                     isPremium,
                     rulesLength: chat.rules?.length ?? 0,
                     hasHello: Boolean(chat.hello),
-                    untilDate: TimeUtils.formatMillisecondsToTime(Date.now() - (chat.premiumUntilDate ?? 0))
+                    untilDate: TimeUtils.formatMillisecondsToTime(untilDate)
                 }
             }
         )

@@ -5,8 +5,10 @@ import FileUtils from './FileUtils'
 import Logging from './Logging'
 import AnswerOptions from '../interfaces/options/AnswerOptions'
 import FileAnswerOptions from '../interfaces/options/FileAnswerOptions'
-import { ExtraEditMessageText } from './values/types'
+import { ExtraEditMessageText, NewInvoiceParameters } from './values/types'
 import ExceptionUtils from './ExceptionUtils'
+import ObjectValidator from './ObjectValidator'
+import { invoiceSchema } from './values/schemas'
 
 export default class MessageUtils {
     private static async _getMessageOptions(
@@ -155,9 +157,34 @@ export default class MessageUtils {
         })
     }
 
-    static async deleteMessage(ctx: Context, messageId?: number) {
+    static async deleteMessage(ctx: Context, messageId?: number): Promise<boolean> {
         return await ExceptionUtils.handle(async () => {
             await ctx.deleteMessage(messageId)
         })
+    }
+
+    static async answerInvoice(ctx: Context, params: NewInvoiceParameters, extra?: AnswerOptions): Promise<boolean> {
+        return await ExceptionUtils.handle(async () => {
+            await ctx.replyWithInvoice(
+                {
+                    ...params,
+                    currency: 'XTR',
+                    provider_token: ''
+                },
+                await this._getMessageOptions(ctx, extra)
+            )
+        })
+    }
+
+    static async answerInvoiceFromFile(ctx: Context, path: string, extra?: AnswerOptions): Promise<boolean> {
+        const json = await FileUtils.readJsonFromResource<NewInvoiceParameters>(path)
+        if(!json) return false
+        if(!ObjectValidator.isValidatedObject(json, invoiceSchema)) return false
+
+        return await this.answerInvoice(
+            ctx,
+            json,
+            extra
+        )
     }
 }
