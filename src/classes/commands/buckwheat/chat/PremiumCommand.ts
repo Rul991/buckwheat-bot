@@ -13,7 +13,6 @@ import BuckwheatCommand from '../../base/BuckwheatCommand'
 export default class PremiumCommand extends BuckwheatCommand {
     constructor() {
         super()
-        this._isShow = false
         this._name = 'премиум'
         this._description = 'продаю вам премиум для чата'
         this._needData = true
@@ -29,13 +28,7 @@ export default class PremiumCommand extends BuckwheatCommand {
             return
         }
 
-        const id = ctx.from.id
         const chatId = ctx.chat.id
-
-        if(id != DEV_ID) {
-            await MessageUtils.sendWrongCommandMessage(ctx)
-            return
-        }
 
         const rawOther = +(other ?? '1')
         const months = Math.min(
@@ -43,11 +36,16 @@ export default class PremiumCommand extends BuckwheatCommand {
             MAX_MONTHS_PER_BUY
         )
 
+        await MessageUtils.answerMessageFromResource(
+            ctx,
+            'text/commands/premium/premium.pug'
+        )
+
         await MessageUtils.answerInvoice(
             ctx, 
             {
                 title: 'Премиум-подписка для чата',
-                description: `Дает чату ${months} месяцев премиум-подписки`,
+                description: `Даёт чату ${months} месяцев премиум-подписки`,
                 payload: `sub_${months}_${chatId}`,
                 prices: [{
                     label: `Подписка на ${months} месяцев`,

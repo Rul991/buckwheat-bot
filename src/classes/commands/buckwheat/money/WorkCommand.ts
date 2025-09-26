@@ -20,6 +20,12 @@ import RankUtils from '../../../../utils/RankUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import PremiumChatService from '../../../db/services/chat/PremiumChatService'
 
+type TotalMoney = {
+    money: number
+    isPremium: boolean
+    hasUp: boolean
+}
+
 export default class WorkCommand extends BuckwheatCommand {
     constructor() {
         super()
@@ -28,7 +34,20 @@ export default class WorkCommand extends BuckwheatCommand {
         this._aliases = [
             'фарма',
             'ферма',
+            'ворк'
         ]
+    }
+
+    private _fromBooleanToBoost(bool: boolean, procents = 0.25) {
+        return (+bool * procents) + 1
+    } 
+
+    private _getTotalMoney({money, isPremium, hasUp}: TotalMoney) {
+        return Math.ceil(
+            this._fromBooleanToBoost(hasUp) * 
+            money * 
+            this._fromBooleanToBoost(isPremium)
+        )
     }
 
     private static async _getWorkTypes(): Promise<Record<ClassTypes, string[]>> {
@@ -57,7 +76,7 @@ export default class WorkCommand extends BuckwheatCommand {
         if(!elapsed) {
             const isPremium = await PremiumChatService.isPremium(chatId)
             const [hasUp] = await InventoryItemService.use(chatId, id, 'workUp')
-            const totalMoney = Math.ceil((+hasUp * 0.25 + 1) * money * (1 + +isPremium))
+            const totalMoney = this._getTotalMoney({money, isPremium, hasUp})
 
             const currentLevel = await LevelService.get(chatId, id)
             const rawExperience = RandomUtils.range(3, Math.min(100, 3 * currentLevel))

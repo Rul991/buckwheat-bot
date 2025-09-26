@@ -31,7 +31,7 @@ export default class SubscriptionAction extends PaymentAction {
     async precheckout(ctx: PreCheckoutQueryContext, {invoice_payload, total_amount}: PreCheckoutQuery): Promise<string | boolean> {
         const isPrecheckout = this._isPrecheckout(invoice_payload, total_amount)
         
-        return isPrecheckout
+        return isPrecheckout ? true : 'Цена неактуальна'
     }
     
     async execute(ctx: SuccessfulPaymentContext, payment: SuccessfulPayment): Promise<void> {
