@@ -1,6 +1,9 @@
 import ExperienceUtils from '../../../../utils/level/ExperienceUtils'
 import LevelUtils from '../../../../utils/level/LevelUtils'
+import { DUEL_EXPERIENCE } from '../../../../utils/values/consts'
+import { FirstSecond } from '../../../../utils/values/types'
 import LevelRepository from '../../repositories/LevelRepository'
+import InventoryItemService from '../items/InventoryItemService'
 import LevelService from './LevelService'
 
 export default class ExperienceService {
@@ -11,7 +14,11 @@ export default class ExperienceService {
     }
 
     static async set(chatId: number, id: number, experience: number): Promise<number> {
-        await LevelRepository.updateOne(chatId, id, {experience: ExperienceUtils.clamp(experience)})
+        await LevelRepository.updateOne(chatId, id, {
+            experience: Math.floor(
+                ExperienceUtils.clamp(experience)
+            )
+        })
         return experience
     }
 
@@ -27,5 +34,48 @@ export default class ExperienceService {
         return ExperienceUtils.isNewLevel(currentExperience, added) ? 
             LevelUtils.get(currentExperience + added) :
             null
+    }
+
+    static async addExperienceAfterDuel(chatId: number, firstDuelist: number, secondDuelist: number) {
+        const getLevel = async (id: number) => (
+            await LevelService.get(chatId, id)
+        )
+
+        const getLevelBoost = async (id: number) => (
+            (await InventoryItemService.use(chatId, id, 'levelBoost'))[1]
+        )
+
+        const getLevelDiff = (first: keyof FirstSecond, second: keyof FirstSecond) => (
+            level[first] / level[second]
+        )
+
+        const getAddedExperience = (key: keyof FirstSecond) => (
+            levelDiff[key] * DUEL_EXPERIENCE * levelBoosts[key]
+        )
+
+        const level = {
+            first: await getLevel(firstDuelist),
+            second: await getLevel(secondDuelist),
+        }
+
+        const levelDiff = {
+            first: getLevelDiff('first', 'second'),
+            second: getLevelDiff('second', 'first'),
+        }
+
+        const levelBoosts = {
+            first: await getLevelBoost(firstDuelist),
+            second: await getLevelBoost(secondDuelist),
+        }
+
+        const addedExperience = {
+            first: getAddedExperience('first'),
+            second: getAddedExperience('second')
+        }
+
+        await this.add(chatId, firstDuelist, addedExperience.first)
+        await this.add(chatId, firstDuelist, addedExperience.second)
+
+        return addedExperience
     }
 }

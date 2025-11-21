@@ -1,0 +1,13 @@
+[
+    [
+        {
+            "text": "Да",
+            "callback_data": "wipe_@{chatId}_@{userId}"
+        },
+
+        {
+            "text": "Нет",
+            "callback_data": "deletemessage_{\"isSecure\": true}_@{userId}"
+        }
+    ]
+]

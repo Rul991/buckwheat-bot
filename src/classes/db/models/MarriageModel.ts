@@ -1,4 +1,4 @@
-import Marriage from '../../../interfaces/schemas/Marriage'
+import Marriage from '../../../interfaces/schemas/other/Marriage'
 import { createModel } from './modelCreators'
 
 export default createModel<Marriage>(

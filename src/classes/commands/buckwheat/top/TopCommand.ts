@@ -1,11 +1,12 @@
-import User from '../../../../interfaces/schemas/User'
+import { WizardScene } from 'telegraf/scenes'
+import User from '../../../../interfaces/schemas/user/User'
 import ArrayUtils from '../../../../utils/ArrayUtils'
 import ClassUtils from '../../../../utils/ClassUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import RankUtils from '../../../../utils/RankUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import SubCommandUtils from '../../../../utils/SubCommandUtils'
-import { DEFAULT_FILTER_LENGTH } from '../../../../utils/values/consts'
+import { DEFAULT_FILTER_LENGTH, FIRST_INDEX } from '../../../../utils/values/consts'
 import { TextContext, MaybeString, AsyncOrSync, NameObject, ClassTypes, TopLevelObject } from '../../../../utils/values/types'
 import CasinoGetService from '../../../db/services/casino/CasinoGetService'
 import LevelService from '../../../db/services/level/LevelService'
@@ -149,22 +150,26 @@ export default class TopCommand extends BuckwheatCommand {
             name: 'классы',
             filename: 'class',
             getChangeValues: async ctx => {
+                const id = ctx.botInfo.id
                 const chatId = await LinkedChatService.getCurrent(ctx)
-                if(!chatId) return {id: ctx.botInfo.id}
+                if(!chatId) return {id}
 
                 const classMembers: Record<ClassTypes, string[]> = ClassUtils.getArray()
                 const users = await UserProfileService.getAll(chatId)
+                const maxLength = 10
 
                 for (const {className, name} of users) {
                     if(!className) continue
 
                     if(!classMembers[className]) classMembers[className] = []
-                    classMembers[className].push(name)
+                    const arr = classMembers[className]
+                    if(arr.length >= maxLength) continue
+                    arr.push(name)
                 }
 
                 return {
                     classMembers,
-                    id: ctx.botInfo.id,
+                    id,
                     emojies: Object.entries(classMembers).reduce(
                         (prev, [key]) => {
                             return {...prev, [key]: ClassUtils.getEmoji(key as ClassTypes)}
@@ -215,7 +220,10 @@ export default class TopCommand extends BuckwheatCommand {
             this._subCommands
         )
 
-        const {filename: path, getChangeValues: execute} = typeof command == 'string' ? this._subCommands[0] : command
+        const {
+            filename: path, 
+            getChangeValues: execute
+        } = typeof command == 'string' ? this._subCommands[FIRST_INDEX] : command
 
         await MessageUtils.answerMessageFromResource(
             ctx,

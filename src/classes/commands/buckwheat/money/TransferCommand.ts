@@ -6,6 +6,7 @@ import CasinoAddService from '../../../db/services/casino/CasinoAddService'
 import MessageUtils from '../../../../utils/MessageUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
 
 export default class TransferCommand extends BuckwheatCommand {
     private static _filenames = ['no-receiver', 'self', 'empty', 'wrong', 'negative']
@@ -13,18 +14,16 @@ export default class TransferCommand extends BuckwheatCommand {
     private static _getIdByCondition(ctx: TextContext, other: MaybeString): number {
         const conditions = [
             !('reply_to_message' in ctx.message!),
-            //@ts-ignore
             ctx.from?.id == ctx.message?.reply_to_message?.from?.id,
             !other,
             isNaN(StringUtils.getNumberFromString(other ?? '')),
-            +other! < 0,
         ]
 
         for (let i = 0; i < conditions.length; i++) {
             if(conditions[i]) return i
         }
 
-        return -1
+        return NOT_FOUND_INDEX
     }
 
     private static async _sendMessage(ctx: TextContext, filename: string) {
@@ -52,7 +51,7 @@ export default class TransferCommand extends BuckwheatCommand {
         if(!chatId) return
         const filenameId = TransferCommand._getIdByCondition(ctx, other)
 
-        if(filenameId !== -1) {
+        if(filenameId !== NOT_FOUND_INDEX) {
             await TransferCommand._sendMessage(
                 ctx,
                 TransferCommand._filenames[filenameId]
@@ -67,7 +66,8 @@ export default class TransferCommand extends BuckwheatCommand {
             if(receiver === undefined) return
 
             const senderMoney = await CasinoGetService.money(chatId, ctx.from.id)
-            const diffMoney = Math.ceil(StringUtils.getNumberFromString(other!))
+            const rawDiffMoney = StringUtils.getNumberFromString(other!)
+            const diffMoney = Math.abs(Math.ceil(rawDiffMoney))
 
             if(senderMoney < diffMoney) {
                 await TransferCommand._sendMessage(
@@ -87,7 +87,8 @@ export default class TransferCommand extends BuckwheatCommand {
                     changeValues: {
                         sender: await ContextUtils.getUser(chatId, sender),
                         receiver: await ContextUtils.getUser(chatId, receiver),
-                        count: StringUtils.toFormattedNumber(diffMoney)
+                        count: StringUtils.toFormattedNumber(diffMoney),
+                        raw: rawDiffMoney
                     }
                 }
             )

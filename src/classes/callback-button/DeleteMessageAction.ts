@@ -1,27 +1,44 @@
+import { JSONSchemaType } from 'ajv'
+import DeleteMessageData from '../../interfaces/callback-button-data/DeleteMessageData'
 import MessageUtils from '../../utils/MessageUtils'
 import { CallbackButtonContext } from '../../utils/values/types'
 import CallbackButtonAction from './CallbackButtonAction'
+import ContextUtils from '../../utils/ContextUtils'
 
-export default class DeleteMessageAction extends CallbackButtonAction {
+export default class DeleteMessageAction extends CallbackButtonAction<DeleteMessageData> {
+    protected _schema: JSONSchemaType<DeleteMessageData> = {
+        type: 'object',
+        properties: {
+            userId: {
+                type: 'number'
+            },
+            isSecure: {
+                type: 'boolean'
+            },
+        },
+        required: ['userId', 'isSecure']
+    }
+
     constructor() {
         super()
         this._name = 'deletemessage'
     }
 
-    async execute(ctx: CallbackButtonContext, data: string): Promise<string | void> {
+    async execute(ctx: CallbackButtonContext, data: DeleteMessageData): Promise<string | void> {
         let isCanDelete = true
-        const [rawSecure, rawUserId] = data.split('_')
-        const isSecure = Boolean(+rawSecure)
+
+        const {userId, isSecure} = data
+        const id = ctx.from.id
         
         if(isSecure) {
-            const userId = +rawUserId
-            const id = ctx.from.id
-
             isCanDelete = id == userId
         }
 
         if(isCanDelete) {
             await MessageUtils.deleteMessage(ctx)
+        }
+        else {
+            await ContextUtils.showAlertFromFile(ctx)
         }
     }
 }

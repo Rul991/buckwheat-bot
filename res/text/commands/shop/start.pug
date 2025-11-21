@@ -1,1 +1,13 @@
-| Добро пожаловать ко мне в магазин, показать мои товары?
+- let mePhrase = 'ко мне'
+- let usPhrase = 'к нам'
+- let themPhrase = 'к ним'
+- let hisPhrase = 'к игроку'
+
+| Добро пожаловать 
+if fullOwner
+    | #{hisPhrase}
+else if totalCount == 0
+    | #{mePhrase}
+else if totalCount == 100
+    | #{themPhrase}
+|  в магазин, показать товары?

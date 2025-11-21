@@ -1,6 +1,11 @@
-import User from '../../../../interfaces/schemas/User'
+import User from '../../../../interfaces/schemas/user/User'
 import { DEFAULT_USER_NAME } from '../../../../utils/values/consts'
 import UserRepository from '../../repositories/UserRepository'
+
+type Stats = {
+    uniqueUsers: User[],
+    users: User[]
+}
 
 export default class UserProfileService {
     static async create(chatId: number, id: number, name?: string): Promise<User> {
@@ -20,7 +25,7 @@ export default class UserProfileService {
         return `${DEFAULT_USER_NAME}${await this.getMembersCount(chatId)}`
     }
 
-    static async getUniqueUsers(): Promise<User[]> {
+    static async getStats(): Promise<Stats> {
         const uniqueUsers: User[] = []
         const ids: number[] = []
         const users = await UserRepository.findMany()
@@ -32,7 +37,10 @@ export default class UserProfileService {
             }
         }
 
-        return uniqueUsers
+        return {
+            users,
+            uniqueUsers
+        }
     }
 
     static async update(chatId: number, id: number, profile: Partial<User>): Promise<User | null> {
@@ -45,7 +53,7 @@ export default class UserProfileService {
     }
 
     static async findByName(chatId: number, name: string): Promise<User | null> {
-        return (await UserRepository.findMany({name}))[0]
+        return (await UserRepository.findManyInChat(chatId, {name}))[0] ?? null
     }
 
     static async getAll(chatId: number): Promise<User[]> {

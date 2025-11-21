@@ -1,4 +1,4 @@
-import LinkedChat from '../../../interfaces/schemas/LinkedChat'
+import LinkedChat from '../../../interfaces/schemas/user/LinkedChat'
 import { createModel } from './modelCreators'
 
 export default createModel<LinkedChat>({

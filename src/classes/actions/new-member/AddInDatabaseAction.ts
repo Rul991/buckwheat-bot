@@ -35,11 +35,12 @@ export default class AddInDatabaseAction extends NewMemberAction {
 
         const currentName = await UserNameService.get(chatId, id)
         const needName = 'Баквит'
+        const description = 'Я ваш проводник в данном чате'
 
         if (currentName === needName) return
 
         await UserNameService.update(chatId, id, needName)
-        await UserDescriptionService.update(chatId, id, 'Я ваш проводник в данном чате')
+        await UserDescriptionService.update(chatId, id, description)
         await UserRankService.update(chatId, id, RankUtils.admin)
         await UserClassService.update(chatId, id, 'boss')
     }

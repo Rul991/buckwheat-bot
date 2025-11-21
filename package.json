@@ -1,11 +1,11 @@
 {
   "name": "buckwheat-bot",
-  "version": "1.3.7",
+  "version": "1.4.0",
   "main": "src/app/index.ts",
   "scripts": {
     "start": "npx tsx src/app/index.ts",
     "dev": "npx nodemon --ext ts -w src --exec \"npm start\"",
-    "build": "npx tsc -b",
+    "build": "npm i && npx tsc -b",
     "db": "npx tsx src/app/update-db.ts",
     "start:prod": "npm run build && pm2 start dist/app/index.js --name buckwheat",
     "stop:prod": "pm2 stop buckwheat && pm2 delete buckwheat",
@@ -19,7 +19,7 @@
     "telegram"
   ],
   "author": "Rul",
-  "license": "MIT",
+  "license": "CC BY-NC",
   "description": "",
   "devDependencies": {
     "@types/express": "^5.0.3",
@@ -28,6 +28,7 @@
     "@types/pug": "^2.0.10"
   },
   "dependencies": {
+    "ajv": "^8.17.1",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "mongoose": "^8.16.4",

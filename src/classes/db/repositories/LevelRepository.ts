@@ -1,4 +1,4 @@
-import Level from '../../../interfaces/schemas/Level'
+import Level from '../../../interfaces/schemas/user/Level'
 import LevelModel from '../models/LevelModel'
 import ChatIdRepository from './base/ChatIdRepository'
 

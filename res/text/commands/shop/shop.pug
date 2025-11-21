@@ -1,4 +1,8 @@
 - const premiumEmoji = '👑'
+- const infinityEmoji = '♾️'
+
+- const yesEmoji = '✅'
+- const noEmoji = '❌'
 
 mixin conditionText(condition, emoji, text)
     if condition
@@ -6,6 +10,12 @@ mixin conditionText(condition, emoji, text)
         i #{emoji} #{text}
         | 
         |
+
+mixin param(title, value)
+    |
+    |
+    i #{title}: 
+    | #{value}
 
 | [#{index + 1}/#{length}] #{emoji}
 code #{name} 
@@ -15,4 +25,8 @@ blockquote #{description}
 |
 +conditionText(isPremium, premiumEmoji, `Премиум-товар`)
 |
-| Цена: #{price} * #{count} = #{totalPrice} 💰
++param('Осталось', `${isRestInfinity ? infinityEmoji : rest}`)
++param('Общий склад', `${isChatMode ? yesEmoji : noEmoji}`)
+|
+|
++param('Цена', `${price} * ${count} = ${totalPrice} 💰`)

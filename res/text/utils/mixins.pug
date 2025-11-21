@@ -1,0 +1,24 @@
+mixin link(user, hasSpace = true)
+    a(href=user.link) #{user.name}#{hasSpace ? ' ' : ''}
+
+mixin param(title, progress, spaces = 0)
+    |
+    |
+    b #{title}: 
+    code #{' '.repeat(spaces)}#{progress}
+    |
+
+mixin faq(title)
+    b #{title}
+    |
+    block
+
+mixin pin(text)
+    |
+    | 📍 #{text}
+
+mixin pins(arr)
+    |
+    each text in arr
+        +pin(text)
+    |

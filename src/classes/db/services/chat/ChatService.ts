@@ -1,4 +1,4 @@
-import Chat from '../../../../interfaces/schemas/Chat'
+import Chat from '../../../../interfaces/schemas/chat/Chat'
 import ChatRepository from '../../repositories/ChatRepository'
 
 export default class ChatService {

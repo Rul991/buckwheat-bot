@@ -1,51 +1,37 @@
-import type { AnyRecord, PrimitiveJavascriptTypes, SchemaObject } from './values/types'
+import Ajv, { JSONSchemaType } from 'ajv/dist/2020'
+import Logging from './Logging'
 
 export default class ObjectValidator {
-    static isArray(arr: any): boolean {
-        return arr instanceof Array
-    }
+    private static _ajv: Ajv = new Ajv({
+        allowUnionTypes: true, 
+        allErrors: true, 
+        verbose: true, 
+        strict: true,
+        strictNumbers: true,
+        strictRequired: true,
+        strictSchema: true,
+        strictTuples: true,
+        strictTypes: true
+    })
 
-    static isObject(obj: any): boolean {
-        return typeof obj == 'object' && !this.isArray(obj) && obj !== null
-    }
+    static isValidatedObject<T>(obj: T | any, schema: JSONSchemaType<T>): obj is T {
+        try {
+            const validator = this._ajv.compile<T>(schema)
+            const isValid = validator(obj)
 
-    static isValidatedObject<T extends AnyRecord>(obj: T, schema: SchemaObject<T>): boolean {
-        for (const key of Object.keys(schema)) {
-            const value = schema[key]
-            const valueArray = value instanceof Array ? value : [value]
-            let errorCounts = 0
-
-            for (const type of valueArray) {
-                if(type == 'any') continue
-                
-                
-                if(typeof type == typeof obj[key] && typeof type == 'object') {
-                    errorCounts = +!this.isValidatedObject(obj[key], type)
-                }
-                else if(type == 'array' && this.isArray(obj[key])) {}
-                else if(type != typeof obj[key]) {
-                    errorCounts++
-                }
-                else if(type == 'object' && obj[key] === null) {
-                    errorCounts++
-                }
+            if(validator.errors) {
+                Logging.error('[Cant be validated]', obj)
             }
 
-            if(errorCounts >= valueArray.length) return false
+            validator.errors?.forEach(error => {
+                Logging.error('[Validation Error]', error)
+            })
 
+            return isValid
         }
-
-        return true
-    }
-
-    static isArrayWithObjects<T extends AnyRecord>(arr: any[], schema: SchemaObject<T>): boolean {
-        if(!this.isArray(arr)) return false
-        if(!arr.length) return true
-
-        for (const object of arr) {
-            if(!this.isValidatedObject(object, schema)) return false
+        catch(e) {
+            Logging.error('[Validation exception]', e)
+            return false
         }
-
-        return true
     }
 }

@@ -1,4 +1,4 @@
-import Level from '../../../../interfaces/schemas/Level'
+import Level from '../../../../interfaces/schemas/user/Level'
 import ArrayUtils from '../../../../utils/ArrayUtils'
 import ExperienceUtils from '../../../../utils/level/ExperienceUtils'
 import LevelUtils from '../../../../utils/level/LevelUtils'

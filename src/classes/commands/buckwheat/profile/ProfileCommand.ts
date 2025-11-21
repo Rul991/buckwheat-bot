@@ -1,4 +1,4 @@
-import { MILLISECONDS_IN_DAY } from './../../../../utils/values/consts';
+import { FIRST_INDEX, MILLISECONDS_IN_DAY } from './../../../../utils/values/consts';
 import { MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserProfileService from '../../../db/services/user/UserProfileService'
@@ -18,6 +18,8 @@ import UserLeftService from '../../../db/services/user/UserLeftService'
 import Logging from '../../../../utils/Logging'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import UserOldService from '../../../db/services/user/UserOldService'
+import AnswerOptions from '../../../../interfaces/options/AnswerOptions'
+import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 
 export default class ProfileCommand extends BuckwheatCommand {
     constructor() {
@@ -47,7 +49,7 @@ export default class ProfileCommand extends BuckwheatCommand {
 
 
                 return profilePhotos.total_count > 0 ? 
-                    profilePhotos.photos[0][0].file_id : 
+                    profilePhotos.photos[FIRST_INDEX][FIRST_INDEX].file_id : 
                     null
             }
 
@@ -120,7 +122,7 @@ export default class ProfileCommand extends BuckwheatCommand {
         const experience = await ExperienceService.get(chatId, id)
 
         const messages = await MessagesService.get(chatId, id)
-        const afterFirstMessage = Date.now() - (messages.firstMessage ?? 0)
+        const afterFirstMessage = TimeUtils.getElapsed(messages.firstMessage ?? 0)
 
         const isLinked = (await LinkedChatService.getRaw(id)) == ctx.chat.id
         const isLeft = await UserLeftService.get(chatId, id)
@@ -145,6 +147,8 @@ export default class ProfileCommand extends BuckwheatCommand {
             isMonkey: !(await UserOldService.get(chatId, id))
         }
 
+        const inlineKeyboard =  await InlineKeyboardManager.get('awards/start', `${id}`)
+
         try {
             if(photoId) {
                 const messageText = await FileUtils.readPugFromResource(
@@ -155,7 +159,8 @@ export default class ProfileCommand extends BuckwheatCommand {
                 const isSend = await MessageUtils.answerPhoto(
                     ctx,
                     messageText,
-                    photoId
+                    photoId,
+                    {inlineKeyboard}
                 )
 
                 if(!isSend) {
@@ -171,7 +176,7 @@ export default class ProfileCommand extends BuckwheatCommand {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 path,
-                {changeValues}
+                {changeValues, inlineKeyboard}
             )
         }
     }

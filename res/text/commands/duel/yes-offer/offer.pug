@@ -1,0 +1,20 @@
+mixin price(user)
+    | Взнос от игрока 
+    a(href=user.link) #{user.name}
+    |  - 
+    b #{user.price} 💰
+    | 
+    |
+
+| 🧤 Игрок 
+a(href=reply.link) #{reply.name}
+| , вы были вызваны на дуэль игроком 
+a(href=user.link) #{user.name}
+| !
+|
+|
++price(user)
++price(reply)
+|
+| 
+b Примете вызов или бесчестиво откажетесь?

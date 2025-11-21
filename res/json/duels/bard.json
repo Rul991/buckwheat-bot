@@ -1,0 +1,950 @@
+{
+    "characteristics": {
+        "start": {
+            "hp": 80,
+            "mana": 90
+        },
+        "up": {
+            "hp": 9,
+            "mana": 10
+        }
+    },
+    "skills": [
+        {
+            "id": "attack",
+            "level": 1,
+            "isAlwaysUsable": true,
+            "title": "Атака",
+            "description": "Именно этот навык используется, когда вы жмете на кнопку ''Атаковать''",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "attack",
+                    "args": [
+                        8,
+                        0.4
+                    ]
+                }
+            ],
+            "cost": []
+        },
+        {
+            "id": "string",
+            "level": 1,
+            "title": "Порваная струна",
+            "description": "Настраивает гитару и рвет струну",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "damage",
+                    "args": [
+                        16
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -3
+                    ]
+                }
+            ],
+            "_whatDo": "наносит 11 урона"
+        },
+        {
+            "id": "laugh-sin",
+            "level": 5,
+            "title": "Смех и Грех",
+            "description": "Смешной урон, грешные последствия",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "ls1",
+                        1
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -45
+                    ]
+                }
+            ],
+            "_whatDo": "Наносит врагу 2 урона и удваивается каждую секунду вплоть до 5 секунд"
+        },
+        {
+            "id": "white-defender",
+            "level": 10,
+            "title": "Музыка защитника",
+            "description": "Вы чувствуете, что вы под защитой",
+            "onEnemy": false,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "defend",
+                        25
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -20
+                    ]
+                }
+            ],
+            "_whatDo": "Накладывает щит на 15 здоровья"
+        },
+        {
+            "id": "scary-notes",
+            "level": 15,
+            "title": "Ужасающие ноты",
+            "description": "Вы чувствуете, что вас пробирает до мурашек",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "damage",
+                    "args": [
+                        40
+                    ]
+                },
+                {
+                    "name": "effect",
+                    "args": [
+                        "psn10",
+                        4
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -50
+                    ]
+                }
+            ],
+            "_whatDo": "Наносит 40 урона и накладывает эффект отравления на врага"
+        },
+        {
+            "id": "sleep-melody",
+            "level": 20,
+            "title": "Спокойная мелодия",
+            "description": "Умиротворяющая мелодия заставляет вас забыть о сражении и погружает вас в приятный востанавливающий сон",
+            "onEnemy": false,
+            "execute": [
+                {
+                    "name": "mana",
+                    "args": [
+                        60
+                    ]
+                }
+            ],
+            "cost": [],
+            "_whatDo": "После использования навыка бард погружается в сон пропуская один ход и восстанавливает себе 40 маны"
+        },
+        {
+            "id": "jimmy",
+            "level": 25,
+            "title": "Джимми Хендрикс",
+            "description": "– Я умею только как Джимми Хендрикс.\n– Играть соло зубами?\n– Нет... Поджигать гитару!",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "attack",
+                    "args": [
+                        8,
+                        1.6
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "manaHasntEffect",
+                    "args": [
+                        -50,
+                        "fire-guitar"
+                    ]
+                },
+                {
+                    "name": "effectHasntEffect",
+                    "args": [
+                        "fire-guitar",
+                        "fire-guitar",
+                        4
+                    ]
+                }
+            ],
+            "_whatDo": "Поджигает гитару на 4 хода позволяя барду сражаться в ближнем бою\r\nХарактеристики:\r\nТратит 30 маны\r\nУдар наносит 7 урона\r\nДополнительно:\r\nПоджигает врага при ударе\r\nНельзя использовать другие способности кроме досрочного тушения гитары (НЕ тратит ход)\r\n\r\nПоджог:\r\nВрагу наносится урон в 3 хп в конце каждого его хода в течении 3 ходов"
+        },
+        {
+            "id": "yeah-rock",
+            "level": 30,
+            "title": "Рок-стар",
+            "description": "Он не ценит рок, убей его.",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "randomDamage",
+                    "args": [
+                        75,
+                        150
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -100
+                    ]
+                }
+            ],
+            "_whatDo": "Наносит 50-70 урона, затем ослабляет атаки противника на 15%"
+        },
+        {
+            "id": "stay",
+            "level": 35,
+            "title": "Держать строй",
+            "description": "Повышает ваш боевой дух и улучшает самочувствие",
+            "onEnemy": false,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "2prec-heal",
+                        3
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -100
+                    ]
+                }
+            ],
+            "_whatDo": "Восстанавливает по 2% очков здоровья, в течение 5 секунд. "
+        },
+        {
+            "id": "lamp",
+            "level": 40,
+            "title": "Маячок",
+            "description": "Если не хочешь разговаривать с людьми - телепортируйся от них. Это же так просто!",
+            "onEnemy": false,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "invulnerable",
+                        1
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -100
+                    ]
+                }
+            ],
+            "_whatDo": "Бард уходит от следующей атаки, но противник не знает об этом."
+        },
+        {
+            "id": "koffy",
+            "level": 45,
+            "title": "Зелёная миля",
+            "description": "Лечит лучше, чем печеньки",
+            "onEnemy": false,
+            "execute": [
+                {
+                    "name": "heal",
+                    "args": [
+                        100
+                    ]
+                },
+                {
+                    "name": "effect",
+                    "args": [
+                        "invulnerable",
+                        1
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -250
+                    ]
+                }
+            ],
+            "_whatDo": "Вместо нанесения урона залечивает барду 100 хп."
+        },
+        {
+            "id": "chili-riff",
+            "level": 50,
+            "title": "Жгучий рифф",
+            "description": "Сожги их всех",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "fire",
+                        7
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -200
+                    ]
+                }
+            ],
+            "_whatDo": "Бард играет риф и накладывает статус горение на врага. Число врагов от горения зависит от уровня. Макс. 5 врагов. Последняя прокачка на 50ур.\\Каждую секунду наносит 2ур.Действует 7сек."
+        },
+        {
+            "id": "angry-pick",
+            "level": 55,
+            "title": "Заряженный медиатор",
+            "description": "Бард кидает медиаторы во врагов",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "randomDamage",
+                    "args": [
+                        50,
+                        250
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -100
+                    ]
+                }
+            ],
+            "_whatDo": "Наносит 11 урона."
+        },
+        {
+            "id": "mana-up",
+            "level": 60,
+            "title": "Повышение энергии",
+            "description": "Сыграв особую мелодию, Бард посылает волну ритма, которая заряжает оружие. Даже полностью разряженное оружие получает новый заряд, готовый к бою.",
+            "onEnemy": false,
+            "execute": [
+                {
+                    "name": "manaHasntEffect",
+                    "args": [
+                        535,
+                        "used-mana-up"
+                    ]
+                },
+                {
+                    "name": "effect",
+                    "args": [
+                        "used-mana-up",
+                        30
+                    ]
+                }
+            ],
+            "cost": [],
+            "_whatDo": "Заряжает оружие всех союзников в радиусе 10 м.\n\nПолностью восстанавливает энергию разряженного оружия.\r\n\r\nЕсли оружие было частично заряжено — добавляет +50% энергии.\r\n\r\nВремя восстановления способности: 30 секунд."
+        },
+        {
+            "id": "hero-song",
+            "level": 65,
+            "title": "Гимн героя",
+            "description": "Сыграв этот воодушевляющий гимн, вы почувствуете себя лучше!",
+            "onEnemy": false,
+            "execute": [
+                {
+                    "name": "precentHeal",
+                    "args": [
+                        50
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "precentMana",
+                    "args": [
+                        -50
+                    ]
+                }
+            ],
+            "_whatDo": "сильное исцеление, и восстановление Маны, а также +20% к скорости бега"
+        },
+        {
+            "id": "punk-rock",
+            "level": 70,
+            "title": "Панк-рок",
+            "description": "ПАНКИ ХОЙ!",
+            "onEnemy": false,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "good-punk",
+                        3
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -300
+                    ]
+                }
+            ],
+            "_whatDo": "Даёт каждому из союзников увеличение урона на 40% на 10 секунд но потом уменьшает на 40% на 15 секунд"
+        },
+        {
+            "id": "guitar-hero",
+            "level": 75,
+            "title": "Гитарное соло",
+            "description": "Музыка настолько прекрасная, что заставляет врагов танцевать, пока не устанут",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "skip-step",
+                        2
+                    ]
+                },
+
+                {
+                    "name": "mana",
+                    "args": [
+                        -150
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -650
+                    ]
+                }
+            ],
+            "_whatDo": "Враги начинают танцевать 2 хода теряя при этом за каждый ход 150 маны. Навык требует 70 маны"
+        },
+        {
+            "id": "king-song",
+            "level": 80,
+            "title": "Королевская игра",
+            "description": "Сыграй им рок-н-ролл!",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "king1",
+                        2
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -175
+                    ]
+                }
+            ],
+            "_whatDo": "Наносит 100 урона два хода подряд, после этого три хода 50 "
+        },
+        {
+            "id": "hard-rock",
+            "level": 85,
+            "title": "Хард-рок",
+            "description": "Рок задорный, иногда хорошо сыгранный, иногда не очень",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "randomDamage",
+                    "args": [
+                        0,
+                        584
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -150
+                    ]
+                }
+            ],
+            "_whatDo": "Наносит 13-20 урона, защита врага понижается на 2 хода"
+        },
+        {
+            "id": "we-die",
+            "level": 90,
+            "title": "Все существа смертны",
+            "description": "Все мы смертны, а значит когда-нибудь умрем. Этот навык приближает врагов к их кончине, ослабляя их",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "precentMana",
+                    "args": [
+                        -10
+                    ]
+                },
+                {
+                    "name": "precentDamage",
+                    "args": [
+                        5
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "precentMana",
+                    "args": [
+                        -15
+                    ]
+                }
+            ],
+            "_whatDo": "Снижает защиту и скорость врага на 10% от максимума"
+        },
+        {
+            "id": "angle",
+            "level": 95,
+            "title": "Ангел во плоти",
+            "description": "Скоро взойдёт солнце... А пока оставь недостойных в тени.",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "damage",
+                    "args": [
+                        350
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "heal",
+                    "args": [
+                        200
+                    ]
+                },
+                {
+                    "name": "mana",
+                    "args": [
+                        -500
+                    ]
+                }
+            ],
+            "_whatDo": "Наносит 350 урона, лечит барда на 200 хп, восстанавливает 300 маны"
+        },
+        {
+            "id": "sun-up",
+            "level": 99,
+            "title": "Восход солнца",
+            "description": "Люди издавна поклонялись солнцу, но это солнце они бы вряд ли хотели увидеть...",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "damage",
+                    "args": [
+                        300
+                    ]
+                },
+
+                {
+                    "name": "effect",
+                    "args": [
+                        "agony",
+                        7
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -550
+                    ]
+                }
+            ],
+            "_whatDo": "Наносит 300 мнгновенного урона и потом по 50 следующие 7 ходов"
+        },
+        {
+            "id": "ls1",
+            "level": 5,
+            "title": "Смех и Грех I",
+            "isEffect": true,
+            "description": "",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "ls2",
+                        1
+                    ]
+                },
+                {
+                    "name": "damage",
+                    "args": [
+                        2
+                    ]
+                }
+            ],
+            "cost": []
+        },
+        {
+            "id": "ls2",
+            "level": 5,
+            "isEffect": true,
+            "title": "Смех и Грех II",
+            "description": "",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "ls3",
+                        1
+                    ]
+                },
+                {
+                    "name": "damage",
+                    "args": [
+                        4
+                    ]
+                }
+            ],
+            "cost": []
+        },
+        {
+            "id": "ls3",
+            "level": 5,
+            "title": "Смех и Грех III",
+            "isEffect": true,
+            "description": "",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "ls4",
+                        1
+                    ]
+                },
+                {
+                    "name": "damage",
+                    "args": [
+                        8
+                    ]
+                }
+            ],
+            "cost": []
+        },
+        {
+            "id": "ls4",
+            "level": 5,
+            "isEffect": true,
+            "title": "Смех и Грех IV",
+            "description": "",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "ls5",
+                        1
+                    ]
+                },
+                {
+                    "name": "damage",
+                    "args": [
+                        16
+                    ]
+                }
+            ],
+            "cost": []
+        },
+        {
+            "id": "ls5",
+            "level": 5,
+            "isEffect": true,
+            "title": "Смех и Грех V",
+            "description": "",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "damage",
+                    "args": [
+                        32
+                    ]
+                }
+            ],
+            "cost": []
+        },
+        {
+            "id": "psn10",
+            "level": 15,
+            "title": "Отравление",
+            "description": "",
+            "isEffect": true,
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "damage",
+                    "args": [
+                        10
+                    ]
+                }
+            ],
+            "cost": []
+        },
+        {
+            "id": "2prec-heal",
+            "level": 35,
+            "isEffect": true,
+            "title": "Восстановление здоровья",
+            "description": "",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "precentHeal",
+                    "args": [
+                        2
+                    ]
+                }
+            ],
+            "cost": []
+        },
+
+        {
+            "id": "fire-guitar",
+            "level": 1,
+            "isEffect": true,
+            "title": "Огненная гитара",
+            "description": "",
+            "onEnemy": true,
+            "execute": [],
+            "cost": []
+        },
+
+        {
+            "id": "good-punk",
+            "level": 1,
+            "isEffect": true,
+            "title": "Хороший панк",
+            "description": "",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "damageup40",
+                        1
+                    ]
+                },
+
+                {
+                    "name": "effectLastStep",
+                    "args": [
+                        "good-punk",
+                        "dead-punk",
+                        5
+                    ]
+                }
+            ],
+            "cost": []
+        },
+
+        {
+            "id": "dead-punk",
+            "level": 1,
+            "isEffect": true,
+            "title": "Мертвый панк",
+            "description": "",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "damageup-40",
+                        1
+                    ]
+                }
+            ],
+            "cost": []
+        },
+
+        {
+            "id": "fire",
+            "level": 1,
+            "isEffect": true,
+            "title": "Горение",
+            "description": "",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "randomDamage",
+                    "args": [
+                        5,
+                        50
+                    ]
+                }
+            ],
+            "cost": []
+        },
+
+        {
+            "id": "used-mana-up",
+            "level": 1,
+            "isEffect": true,
+            "title": "Повышение энергии (использовано)",
+            "description": "",
+            "onEnemy": true,
+            "execute": [],
+            "cost": []
+        },
+
+        {
+            "id": "skip-step",
+            "level": 1,
+            "title": "Пропуск хода",
+            "description": "",
+            "isEffect": true,
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "skipStep",
+                    "args": []
+                }
+            ],
+            "cost": []
+        },
+
+        {
+            "id": "king1",
+            "level": 1,
+            "title": "Начало Концерта",
+            "description": "",
+            "isEffect": true,
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "damage",
+                    "args": [
+                        100
+                    ]
+                },
+                {
+                    "name": "effectLastStep",
+                    "args": [
+                        "king1",
+                        "king2",
+                        3
+                    ]
+                }
+            ],
+            "cost": []
+        },
+
+        {
+            "id": "king2",
+            "level": 1,
+            "title": "Продолжение Концерта",
+            "description": "",
+            "isEffect": true,
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "damage",
+                    "args": [
+                        50
+                    ]
+                }
+            ],
+            "cost": []
+        },
+
+        {
+            "id": "agony",
+            "level": 1,
+            "title": "Агония",
+            "description": "",
+            "isEffect": true,
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "damage",
+                    "args": [
+                        50
+                    ]
+                }
+            ],
+            "cost": []
+        },
+
+        {
+            "id": "damageup40",
+            "level": 1,
+            "isEffect": true,
+            "title": "Повышение урона на 40%",
+            "description": "",
+            "onEnemy": true,
+            "execute": [],
+            "cost": []
+        },
+
+        {
+            "id": "damageup-40",
+            "level": 1,
+            "isEffect": true,
+            "title": "Понижение урона на 40%",
+            "description": "",
+            "onEnemy": true,
+            "execute": [],
+            "cost": []
+        },
+
+        {
+            "id": "invulnerable",
+            "level": 1,
+            "isEffect": true,
+            "secret": true,
+            "title": "Неуязвимость",
+            "description": "",
+            "onEnemy": true,
+            "execute": [],
+            "cost": []
+        },
+
+        {
+            "id": "defend",
+            "level": 1,
+            "isEffect": true,
+            "title": "Защита",
+            "description": "",
+            "onEnemy": true,
+            "execute": [],
+            "cost": []
+        }
+    ]
+}

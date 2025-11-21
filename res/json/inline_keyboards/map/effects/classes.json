@@ -1,0 +1,18 @@
+{
+    "definition": {
+        "class": {
+            "text": "@",
+            "data": "salert_@"
+        },
+        "arrow": {
+            "text": "@",
+            "data": "echg_@_@{objId}"
+        }
+    },
+    
+    "values": 
+    [
+        "class",
+        ["arrow"]
+    ]
+}

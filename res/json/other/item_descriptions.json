@@ -29,11 +29,6 @@
         "type": "oneInfinity"
     },
 
-    "rankUp": {
-        "name": "Повышение ранга",
-        "type": "oneInfinity"
-    },
-
     "levelBoost": {
         "name": "Ускоритель опыта",
         "type": "manyInfinity"
@@ -47,5 +42,20 @@
     "newGame": {
         "name": "Новая игра",
         "type": "manyInfinity"
+    },
+
+    "businessPaper": {
+        "name": "Бизнес-документ",
+        "type": "consumable"
+    },
+
+    "corporation": {
+        "name": "Разрешение на зарубежную торговлю",
+        "type": "consumable"
+    },
+
+    "effectBook": {
+        "name": "Книга с эффектами",
+        "type": "oneInfinity"
     }
 }

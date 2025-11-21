@@ -1,5 +1,9 @@
-i Имя изменено!
-|
-| Ты теперь - 
-a(href=link) #{name}
+include utils/mixins.pug
+
+- let firstNameUser = {...user, name: firstName}
+
+| Игрок 
++link(firstNameUser)
+| теперь - 
++link(user, false)
 | !

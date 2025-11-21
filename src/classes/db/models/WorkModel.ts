@@ -1,4 +1,4 @@
-import Work from '../../../interfaces/schemas/Work'
+import Work from '../../../interfaces/schemas/user/Work'
 import { createModel } from './modelCreators'
 
 export default createModel<Work>({

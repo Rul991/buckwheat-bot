@@ -13,16 +13,25 @@ export default class HelloMemberAction extends NewMemberAction {
     async execute(ctx: NewMemberContext): Promise<void> {
         const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
-        const botName = ctx.botInfo.first_name
 
+        const botName = ctx.botInfo.first_name
+        const botId = ctx.botInfo.id
+        const chatName = 'title' in ctx.chat ? ctx.chat.title : botName
+        
         for (const from of ctx.message.new_chat_members) {
+            let isNeedSetOld = false
+            
+            const id = from.id
+            const name = from.first_name
+            const isBot = from.is_bot
+
             const changeValues = await ContextUtils.getUser(
-                ctx.chat.id, 
-                from.id, 
-                from.first_name
+                chatId, 
+                id, 
+                name
             )
 
-            if(from.is_bot && from.id != ctx.botInfo.id) {
+            if(isBot && id != botId) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/hello/bot.pug',
@@ -30,10 +39,13 @@ export default class HelloMemberAction extends NewMemberAction {
                         changeValues
                     }
                 )
-                return
+
+                isNeedSetOld = true
             }
-            else if(from.is_bot) return
-            else if(from.id == DEV_ID) {
+            else if(isBot) {
+                isNeedSetOld = true
+            }
+            else if(id == DEV_ID) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/hello/creator.pug',
@@ -41,13 +53,18 @@ export default class HelloMemberAction extends NewMemberAction {
                         changeValues
                     }
                 )
-                return
+                isNeedSetOld = true
             }
 
-            const isOld = await UserOldService.get(chatId, from.id)
-            if(isOld) return
+            if(isNeedSetOld) {
+                await UserOldService.update(chatId, id, true)
+                continue
+            }
+
+            const isOld = await UserOldService.get(chatId, id)
+            if(isOld) continue
             
-            await AdminUtils.mute(ctx, from.id)
+            await AdminUtils.mute(ctx, id)
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/hello/hello.pug',
@@ -55,11 +72,11 @@ export default class HelloMemberAction extends NewMemberAction {
                     changeValues: {
                         ...changeValues,
                         botName,
-                        chatName: 'title' in ctx.chat ? ctx.chat.title : botName,
+                        chatName,
                         chatId,
                         text: await HelloService.get(chatId)
                     },
-                    inlineKeyboard: await InlineKeyboardManager.get('verify', `${from.id}`)
+                    inlineKeyboard: await InlineKeyboardManager.get('verify', `${id}`)
                 }
             )
         }

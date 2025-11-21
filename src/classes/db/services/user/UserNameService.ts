@@ -4,7 +4,7 @@ import BaseUserService from './BaseUserService'
 
 export default class UserNameService {
     static async get(chatId: number, id: number): Promise<string> {
-        return (await BaseUserService.get<string>(chatId, id, 'name')) ?? DEFAULT_USER_NAME
+        return (await BaseUserService.get(chatId, id, 'name')) ?? DEFAULT_USER_NAME
     }
 
     static async getAll(chatId: number): Promise<string[]> {

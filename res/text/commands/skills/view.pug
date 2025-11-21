@@ -1,0 +1,29 @@
+include utils/mixins.pug
+
+mixin effects(title, arr)
+    if arr.length > 0
+        b #{title}: 
+        |
+        |
+        +pins(arr)
+        |
+        |
+        |
+
+b #{emoji} #{title}
+|
+blockquote #{description}
+|
+|
+|
+b 📈 Нужный уровень: 
+code #{level}
+|
+|
+b #{onEnemy ? '😈' : '😄'} Действует на врага: 
+code #{onEnemy ? '✅' : '✖️'}
+|
+|
+|
++effects('🔼 Воздействие', executeTexts)
++effects('🔽 Стоимость', costTexts)

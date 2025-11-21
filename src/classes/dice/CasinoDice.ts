@@ -3,7 +3,7 @@ import ContextUtils from '../../utils/ContextUtils'
 import { CASINO_TIME, JACKPOT_PRIZE, LOSE_PRIZE, WIN_PRIZE, CASINO_PLUS_BOOST } from '../../utils/values/consts'
 import CasinoAccountService from '../db/services/casino/CasinoAccountService'
 import CasinoAddService from '../db/services/casino/CasinoAddService'
-import Casino from '../../interfaces/schemas/Casino'
+import Casino from '../../interfaces/schemas/games/Casino'
 import MessageUtils from '../../utils/MessageUtils'
 import { DiceContext } from '../../utils/values/types'
 import InventoryItemService from '../db/services/items/InventoryItemService'
@@ -31,8 +31,8 @@ export default class CasinoDice extends BaseDice {
         const chatId = await LinkedChatService.getCurrent(ctx, id)
         if(!chatId) return
         
-        CasinoAddService.money(chatId, id, count)
-        isWin ? CasinoAddService.wins(chatId, id, 1) : CasinoAddService.loses(chatId, id, 1)
+        await CasinoAddService.money(chatId, id, count)
+        await (isWin ? CasinoAddService.wins(chatId, id, 1) : CasinoAddService.loses(chatId, id, 1))
 
         await MessageUtils.answerMessageFromResource(
             ctx, 

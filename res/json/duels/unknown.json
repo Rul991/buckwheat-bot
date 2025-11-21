@@ -1,0 +1,23 @@
+{
+    "characteristics": {
+        "start": {
+            "hp": 0,
+            "mana": 0
+        },
+        "up": {
+            "hp": 0,
+            "mana": 0
+        }
+    },
+    "skills": [
+        {
+            "id": "attack",
+            "level": 1000,
+            "title": "",
+            "description": "",
+            "onEnemy": true,
+            "execute": [],
+            "cost": []
+        }
+    ]
+}

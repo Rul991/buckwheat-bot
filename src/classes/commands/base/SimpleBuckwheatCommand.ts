@@ -50,7 +50,7 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
         const hasSources = this._hasLength(this._sources)
 
         if(hasTexts && hasSources) {
-            return RandomUtils.chance(0.5)
+            return RandomUtils.halfChance()
         }
         else if(hasSources) {
             return true

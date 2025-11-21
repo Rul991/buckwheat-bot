@@ -1,4 +1,4 @@
-import InventoryItem from '../interfaces/schemas/InventoryItem'
+import InventoryItem from '../interfaces/schemas/items/InventoryItem'
 import { INFINITY_SYMB } from './values/consts'
 import Logging from './Logging'
 import { InventoryItemDescription, InventoryItemType } from './values/types'

@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import LinkedChat from '../../../../interfaces/schemas/LinkedChat'
+import LinkedChat from '../../../../interfaces/schemas/user/LinkedChat'
 import LinkedChatRepository from '../../repositories/LinkedChatRepository'
 
 export default class LinkedChatService {

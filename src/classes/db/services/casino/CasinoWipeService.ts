@@ -1,4 +1,4 @@
-import Casino from '../../../../interfaces/schemas/Casino'
+import Casino from '../../../../interfaces/schemas/games/Casino'
 import CasinoRepository from '../../repositories/CasinoRepository'
 
 export default class CasinoWipeService {

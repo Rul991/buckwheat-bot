@@ -72,6 +72,9 @@ export default class RuleCommand extends BuckwheatCommand {
         this._name = 'правила'
         this._description = 'показываю или редактирую правила'
         this._needData = true
+        this._aliases = [
+            'правило',
+        ]
 
         const commands = SubCommandUtils.getArgumentText(this._subCommands)
         this._argumentText = `(${commands}) [аргументы]`

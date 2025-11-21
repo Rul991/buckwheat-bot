@@ -12,9 +12,16 @@ export default class TelegramCommandHandler extends BaseHandler<TelegramCommand,
         this._botCommands = []
     }
 
+    private _addCommand(command: TelegramCommand) {
+        const botCommand = command.botCommand
+        if(botCommand.isShow) {
+            this._botCommands.push(botCommand)
+        }
+    }
+
     setup(bot: Telegraf): void {
         for (const command of this._container) {
-            this._botCommands.push(command.botCommand)
+            this._addCommand(command)
             bot.command(command.name, async ctx => {
                 const [_, other] = StringUtils.splitByCommands(ctx.text, 1)
                 await command.execute(ctx, other)

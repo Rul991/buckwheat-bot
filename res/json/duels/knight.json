@@ -1,0 +1,733 @@
+{
+    "characteristics": {
+        "start": {
+            "hp": 110,
+            "mana": 60
+        },
+        "up": {
+            "hp": 11,
+            "mana": 6
+        }
+    },
+    "skills": [
+        {
+            "id": "attack",
+            "level": 1,
+            "isAlwaysUsable": true,
+            "title": "Атака",
+            "description": "Именно этот навык используется, когда вы жмете на кнопку ''Атаковать''",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "attack",
+                    "args": [
+                        15,
+                        0.75
+                    ]
+                },
+                {
+                    "name": "effectHasEffect",
+                    "args": [
+                        "poison-bullet",
+                        "poison",
+                        2
+                    ]
+                }
+            ],
+            "cost": []
+        },
+        {
+            "id": "shield",
+            "level": 1,
+            "title": "Щит",
+            "description": "С щитом можно и на Моргарта",
+            "onEnemy": false,
+            "execute": [
+                {
+                    "name": "effectLevel",
+                    "args": [
+                        "defend",
+                        3,
+                        1
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -10
+                    ]
+                }
+            ],
+            "_whatDo": "(затем будет навык щит+ , который например будет обладать большей областью отражения, будет дольше держаться)"
+        },
+        {
+            "id": "subwaysurf",
+            "level": 5,
+            "title": "Тихая гладь",
+            "description": "Мечник со всей скоростью оказывает за спиной и наносит удар",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "attack",
+                    "args": [
+                        25,
+                        0.25
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -5
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "gun",
+            "level": 10,
+            "title": "Дробовик",
+            "description": "Переключает меч в режим дробовика и наносит увеличенный урон",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "attack",
+                    "args": [
+                        25,
+                        1.1
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -10
+                    ]
+                }
+            ],
+            "_whatDo": "Теперь обычная атака наносит больше урона и тратит ману"
+        },
+        {
+            "id": "go-go",
+            "level": 15,
+            "title": "Град ударов",
+            "description": "Быстро махаешь мечом, молодец!",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "skip-step",
+                        1
+                    ]
+                },
+                {
+                    "name": "skipStep",
+                    "args": []
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -50
+                    ]
+                }
+            ],
+            "_whatDo": "Позволяет атаковать дважды"
+        },
+        {
+            "id": "envell",
+            "level": 20,
+            "title": "Во имя Энвелла",
+            "description": "Испустите боевой клич и поднимите свой дух.",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "invulnerable",
+                        1
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -85
+                    ]
+                }
+            ],
+            "_whatDo": "Обнуляет следующую атаку врага"
+        },
+        {
+            "id": "kys",
+            "level": 25,
+            "title": "Самоатака",
+            "description": "Давай, давай, побей себя ещё. Совсем с ума сошёл...",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "self-attack",
+                        1
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -50
+                    ]
+                }
+            ],
+            "_whatDo": "Следующая атака врага уходит в него самого"
+        },
+        {
+            "id": "super",
+            "level": 30,
+            "title": "Ядовитые пули",
+            "description": "Они думают, что они хитрее меня, но я ещё никого не видел, кто может обхитрить пулю!",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "poison-bullet",
+                        5
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -80
+                    ]
+                }
+            ],
+            "_whatDo": "Превращает меч в ружьё на три выстрела / пока игрок не вернёт его в состояние меча (не тратит ход)\r\nВыстрел наносит случайный урон противнику, а именно 15/20/30"
+        },
+        {
+            "id": "stfu-light",
+            "level": 35,
+            "title": "Громоотвод",
+            "description": "Назревает гром? Просто уничтожь его.",
+            "onEnemy": false,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "stfu-energy",
+                        5
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -75
+                    ]
+                }
+            ],
+            "_whatDo": "Полностью аннулирует следующее заклинание врага, если оно содержит молнию в течение следующих 5 шагов"
+        },
+        {
+            "id": "maad",
+            "level": 40,
+            "title": "Волна безумия",
+            "description": "Один взмах мечом - и у противника уже подгибаются коленки!",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "damageup-50",
+                        5
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -150
+                    ]
+                }
+            ],
+            "_whatDo": "Уменьшает урон противника вдвое на 5 ходов"
+        },
+        {
+            "id": "grenade",
+            "level": 45,
+            "title": "Граната",
+            "description": "Используйте, чтобы взорвать врага",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "randomDamage",
+                    "args": [
+                        150,
+                        250
+                    ]
+                },
+                {
+                    "name": "effect",
+                    "args": [
+                        "skip-step",
+                        1
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -200
+                    ]
+                }
+            ],
+            "_whatDo": "Наносит 250 урона и оглушает на один шаг"
+        },
+        {
+            "id": "iron",
+            "level": 50,
+            "title": "Железная воля",
+            "description": "Собрав всю свою волю в кулак, можно проигнорировать все эмоции и даже боль",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "damageup-50",
+                        2
+                    ]
+                },
+                {
+                    "name": "effect",
+                    "args": [
+                        "no-effects",
+                        2
+                    ]
+                },
+                {
+                    "name": "effect",
+                    "args": [
+                        "damageup-50",
+                        2
+                    ]
+                },
+                {
+                    "name": "deleteEffects",
+                    "args": [
+                        false
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -200
+                    ]
+                }
+            ],
+            "_whatDo": "Механика: Снимает с пользователя все текущие эффекты (например, горение, отравление, ослабление) и делает его невосприимчивым к новым на 2 хода. И весь входящий урон делится на два "
+        },
+        {
+            "id": "glove",
+            "level": 55,
+            "title": "Перчатка",
+            "description": "Как-как ты это сделал? Подожди, я записываю. Что-что ты в него кинул?",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "reverse-skill",
+                        1
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -200
+                    ]
+                }
+            ],
+            "_whatDo": "Кидает во врага перчатку, отвлекая его. Следующий спелл будет обращён против противника. Противник, в свою очередь о перчатке не знает. В случае, если спелл будет лечить, то здоровье восполнится тому, кто этот спелл использовал"
+        },
+        {
+            "id": "break",
+            "level": 60,
+            "title": "Перерыв",
+            "description": "Для каждого несокрушимого воина нужен перерыв, так ведь? Отдохни, расслабься. Сокрушишь их после.",
+            "onEnemy": false,
+            "execute": [
+                {
+                    "name": "heal",
+                    "args": [
+                        100
+                    ]
+                },
+                {
+                    "name": "mana",
+                    "args": [
+                        100
+                    ]
+                }
+            ],
+            "cost": [],
+            "_whatDo": "Лечит рыцаря на 250 хп и восстанавливает ему 300 маны"
+        },
+        {
+            "id": "piglins",
+            "level": 65,
+            "title": "Несокрушимый бастион",
+            "description": "За ним - как за горой",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "damageup-50",
+                        8
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -350
+                    ]
+                }
+            ],
+            "_whatDo": "снижает получаемый урон союзникам на 50% в течении 8 шагов"
+        },
+        {
+            "id": "phenix",
+            "level": 70,
+            "title": "Феникс",
+            "description": "Феникс - птица радости и мести. Сожги всех, не оставь и следа. Отомсти, возродись из пепла и живи полной грудью.",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "damage",
+                    "args": [
+                        100
+                    ]
+                },
+                {
+                    "name": "mana",
+                    "args": [
+                        -200
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -450
+                    ]
+                },
+                {
+                    "name": "heal",
+                    "args": [
+                        200
+                    ]
+                }
+            ],
+            "_whatDo": "Наносит врагу 100 урона и сжигает ему 200 маны. Затем у рыцаря, что использовал это заклятье, восполняется 200 хп."
+        },
+        {
+            "id": "cross",
+            "level": 75,
+            "title": "Крестоносец",
+            "description": "Вперёд, возьмём Тронный Зал! ",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "skip-skill",
+                        3
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -300
+                    ]
+                },
+                {
+                    "name": "effect",
+                    "args": [
+                        "invulnerable",
+                        2
+                    ]
+                }
+            ],
+            "_whatDo": "Блокирует следующую атаку противника и следующие два хода тот не может применять спеллы"
+        },
+        {
+            "id": "shield+",
+            "level": 80,
+            "title": "Щит+",
+            "description": "Ну с таким щитом вообще ничего не страшно",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effectLevel",
+                    "args": [
+                        "defend",
+                        5,
+                        1.75
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -50
+                    ]
+                }
+            ],
+            "_whatDo": "Более крутая версия Щита"
+        },
+        {
+            "id": "white-def",
+            "level": 85,
+            "title": "Клич храбрости",
+            "description": "Будь храбр, не бойся врага, стань самой смертью в обличие человека",
+            "onEnemy": false,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "damageup25",
+                        10
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -300
+                    ]
+                }
+            ],
+            "_whatDo": "увеличивает урон всей команде на 25% действует 10 шагов"
+        },
+        {
+            "id": "lshield",
+            "level": 90,
+            "title": "Щит света",
+            "description": "Порой свет бывает ярок настолько, что даже урон может ослепнуть",
+            "onEnemy": false,
+            "execute": [
+                {
+                    "name": "effect",
+                    "args": [
+                        "invulnerable",
+                        3
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -350
+                    ]
+                }
+            ],
+            "_whatDo": "блокирует 100% получаемый, урон на 2-3 шага"
+        },
+        {
+            "id": "finish",
+            "level": 99,
+            "title": "Казнь",
+            "description": "FINISH HIM",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "instantKill",
+                    "args": [
+                        30
+                    ]
+                }
+            ],
+            "cost": [
+                {
+                    "name": "mana",
+                    "args": [
+                        -635
+                    ]
+                }
+            ],
+            "_whatDo": "Добивает врага если у него меньше 30% здоровья"
+        },
+        {
+            "id": "poison-bullet",
+            "level": 1,
+            "isEffect": true,
+            "title": "Ядовитые пули",
+            "description": "",
+            "onEnemy": true,
+            "execute": [],
+            "cost": []
+        },
+        {
+            "id": "poison",
+            "level": 1,
+            "isEffect": true,
+            "title": "Яд",
+            "description": "",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "randomDamage",
+                    "args": [
+                        20,
+                        60
+                    ]
+                }
+            ],
+            "cost": []
+        },
+        {
+            "id": "self-attack",
+            "level": 1,
+            "isEffect": true,
+            "title": "Самоатака",
+            "description": "",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "returnDamage",
+                    "args": [
+                        100
+                    ]
+                }
+            ],
+            "cost": []
+        },
+        {
+            "id": "no-effects",
+            "level": 1,
+            "isEffect": true,
+            "title": "Нет эффектам",
+            "description": "",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "deleteEffects",
+                    "args": [
+                        false
+                    ]
+                }
+            ],
+            "cost": []
+        },
+        {
+            "id": "stfu-energy",
+            "level": 1,
+            "isEffect": true,
+            "title": "Громоотвод",
+            "description": "",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "effectHasEffect",
+                    "args": [
+                        "energy",
+                        "delete-energy",
+                        2
+                    ]
+                }
+            ],
+            "cost": []
+        },
+        {
+            "id": "delete-energy",
+            "level": 1,
+            "isEffect": true,
+            "title": "Не люблю, блин, молнию",
+            "description": "",
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "deleteEffect",
+                    "args": [
+                        "energy",
+                        true
+                    ]
+                }
+            ],
+            "cost": []
+        },
+        {
+            "id": "reverse-skill",
+            "level": 1,
+            "isEffect": true,
+            "secret": true,
+            "title": "Карточка UNO",
+            "description": "Следующая атака врага будет обращена против него",
+            "onEnemy": true,
+            "execute": [],
+            "cost": []
+        },
+        {
+            "id": "skip-step",
+            "level": 1,
+            "title": "Пропуск хода",
+            "description": "",
+            "isEffect": true,
+            "onEnemy": true,
+            "execute": [
+                {
+                    "name": "skipStep",
+                    "args": []
+                }
+            ],
+            "cost": []
+        },
+        {
+            "id": "defend",
+            "level": 1,
+            "isEffect": true,
+            "title": "Защита",
+            "description": "",
+            "onEnemy": true,
+            "execute": [],
+            "cost": []
+        },
+        {
+            "id": "invulnerable",
+            "level": 1,
+            "isEffect": true,
+            "secret": true,
+            "title": "Неуязвимость",
+            "description": "",
+            "onEnemy": true,
+            "execute": [],
+            "cost": []
+        }
+    ]
+}

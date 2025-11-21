@@ -2,7 +2,9 @@
     "name": "Шкатулка жадности",
     "description": "Дает деньги, стоит дорого, ничего не берет взамен",
     "emoji": "💰",
-    "price": 150000,
+    "price": 4500000,
     "maxCount": 1,
-    "isPremium": true
+    "isPremium": true,
+    "totalCount": 1,
+    "totalCountMode": "chat"
 }

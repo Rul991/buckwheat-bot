@@ -8,12 +8,15 @@ export default class LevelUtils {
     static min = 1
     static max = 99
 
+    static multiplier = 1.95
+    static firstLevelExperience = 90
+
     static clamp(level: number): number {
         return MathUtils.clamp(level, this.min, this.max)
     }
 
     static get(experience: number): number {
-        return this.clamp(Math.floor(((experience + 32) ** (1 / 1.5)) / 10))
+        return this.clamp(Math.floor(((experience + this.firstLevelExperience) ** (1 / this.multiplier)) / 10))
     }
 
     static async sendLevelUpMessage(ctx: Context, newLevel: number): Promise<void> {

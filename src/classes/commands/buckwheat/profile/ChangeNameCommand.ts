@@ -1,71 +1,61 @@
-import { MaybeString, TextContext } from '../../../../utils/values/types'
-import BuckwheatCommand from '../../base/BuckwheatCommand'
-import ContextUtils from '../../../../utils/ContextUtils'
-import { DEFAULT_USER_NAME, MAX_NAME_LENGTH } from '../../../../utils/values/consts'
+import { HasOtherChangeProfileMessage, TextContext } from '../../../../utils/values/types'
+import { MAX_NAME_LENGTH } from '../../../../utils/values/consts'
 import UserNameService from '../../../db/services/user/UserNameService'
 import MessageUtils from '../../../../utils/MessageUtils'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import ChangeProfileCommand from './ChangeProfileCommand'
+import ContextUtils from '../../../../utils/ContextUtils'
 
-export default class ChangeNameCommand extends BuckwheatCommand {
-    constructor() {
+export default class ChangeNameCommand extends ChangeProfileCommand {
+    protected _folderName: string = 'change-name'
+    protected _maxLength: number = MAX_NAME_LENGTH
+
+    constructor () {
         super()
         this._name = 'ник'
         this._description = 'показываю или меняю вам имя в беседе'
-        this._needData = true
         this._argumentText = 'имя'
         this._aliases = ['имя']
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const {id} = ctx.from
-        const link = ContextUtils.getLinkUrl(id)
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return
+    private async _sendMessageIfNameExist({
+        chatId,
+        ctx,
+        other: name
+    }: HasOtherChangeProfileMessage) {
+        const names = await UserNameService.getAll(chatId)
 
-        if(!other) {
-            const name = await UserNameService.get(chatId, id)
-
+        if (names.includes(name)) {
             await MessageUtils.answerMessageFromResource(
-                ctx, 
-                'text/commands/change-name/name.pug', 
-                {changeValues: {link, name}}
-            )
-        }
-
-        else {
-            const name = other
-            const names = await UserNameService.getAll(chatId)
-
-            if(names.includes(name)) {
-                await MessageUtils.answerMessageFromResource(
-                    ctx, 
-                    'text/commands/change-name/exist.pug', 
-                    {
-                        changeValues: {
-                            name
-                        }
-                    }
-                )
-                return
-            }
-
-            if(name.length > MAX_NAME_LENGTH) {
-                await MessageUtils.answerMessageFromResource(
-                    ctx, 
-                    'text/commands/change-name/big-name.pug', 
-                    {changeValues: {max: MAX_NAME_LENGTH.toString()}}
-                )
-                return
-            }
-            
-            await UserNameService.update(chatId, id, name)
-            await MessageUtils.answerMessageFromResource(
-                ctx, 
-                'text/commands/change-name/changed.pug', 
+                ctx,
+                'text/commands/change-name/exist.pug',
                 {
-                    changeValues: {link, name}
+                    changeValues: {
+                        name
+                    }
                 }
             )
+            return true
         }
+
+        return false
+    }
+
+    protected async _updateProfile({ other, chatId, id, }: HasOtherChangeProfileMessage): Promise<void> {
+        await UserNameService.update(chatId, id, other)
+    }
+
+    protected async _getUpdateMessageChangeValues(options: HasOtherChangeProfileMessage): Promise<Record<string, any>> {
+        const { ctx } = options
+        return {
+            ...await super._getUpdateMessageChangeValues(options),
+            firstName: ContextUtils.getUserOrBotFirstName(ctx)
+        }
+    }
+
+    protected async _canSendMessageIfHasOther(options: HasOtherChangeProfileMessage) {
+        if (!await super._canSendMessageIfHasOther(options)) return false
+        if (await this._sendMessageIfNameExist(options)) return false
+
+        return true
     }
 }

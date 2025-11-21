@@ -1,11 +1,11 @@
 import { InlineKeyboardMarkup, Message, ParseMode, TelegramEmoji } from 'telegraf/types'
 import { Context } from 'telegraf'
-import { MAX_MESSAGE_LENGTH, PARSE_MODE } from './values/consts'
+import { FIRST_INDEX, MAX_MESSAGE_LENGTH, NOT_FOUND_INDEX, PARSE_MODE } from './values/consts'
 import FileUtils from './FileUtils'
 import Logging from './Logging'
 import AnswerOptions from '../interfaces/options/AnswerOptions'
 import FileAnswerOptions from '../interfaces/options/FileAnswerOptions'
-import { ExtraEditMessageText, NewInvoiceParameters } from './values/types'
+import { DiceValues, ExtraEditMessageText, NewInvoiceParameters } from './values/types'
 import ExceptionUtils from './ExceptionUtils'
 import ObjectValidator from './ObjectValidator'
 import { invoiceSchema } from './values/schemas'
@@ -16,7 +16,7 @@ export default class MessageUtils {
         {
             inlineKeyboard = [],
             disableNotification,
-            chatId = ctx.chat?.id ?? -1,
+            chatId = ctx.chat?.id ?? NOT_FOUND_INDEX,
             isReply = true,
             replyMarkup
         }: AnswerOptions = {}
@@ -31,7 +31,7 @@ export default class MessageUtils {
             },
             disable_notification: disableNotification,
             parse_mode: PARSE_MODE as ParseMode,
-            chatId: chatId ?? -1
+            chatId
         }
     }
 
@@ -42,12 +42,12 @@ export default class MessageUtils {
     ): Promise<Message.TextMessage> {
         const emptyMessage: Message.TextMessage = {
             text: '', 
-            message_id: -1, 
-            date: -1, 
+            message_id: NOT_FOUND_INDEX, 
+            date: NOT_FOUND_INDEX, 
             chat: {
                 first_name: '', 
                 type: 'private', 
-                id: options.chatId ?? -1
+                id: options.chatId ?? NOT_FOUND_INDEX
             }
         }
 
@@ -55,14 +55,15 @@ export default class MessageUtils {
         const {chatId} = messageOptions
         
         if(!text.length) return emptyMessage
-        if(chatId == -1) return emptyMessage
+        if(chatId == NOT_FOUND_INDEX) return emptyMessage
 
         let lastMessage: Message.TextMessage = emptyMessage
 
-        for (let i = 0; i < text.length; i += MAX_MESSAGE_LENGTH) {
+        for (let i = FIRST_INDEX; i < text.length; i += MAX_MESSAGE_LENGTH) {
             const partText = text.substring(i, i + MAX_MESSAGE_LENGTH)
-
+            
             try {
+                await ctx.sendChatAction('typing')
                 lastMessage = await ctx.telegram.sendMessage(
                     chatId,
                     partText, 
@@ -90,10 +91,6 @@ export default class MessageUtils {
         return lastMessage
     }
 
-    static async todo(ctx: Context): Promise<Message.TextMessage> {
-        return this.answer(ctx, 'Кажется, команда не работает еще!')
-    }
-
     static async sendWrongCommandMessage(ctx: Context): Promise<void> {
         await this.answerMessageFromResource(
             ctx,
@@ -115,6 +112,46 @@ export default class MessageUtils {
         )
     }
 
+    static async answerDice(
+        ctx: Context,
+        dice: DiceValues,
+        options: AnswerOptions = {}
+    ): Promise<Message.DiceMessage | null> {
+        let msg: Message.DiceMessage | null = null
+
+        await ExceptionUtils.handle(async () => {
+            const extra = await this._getMessageOptions(ctx, options)
+
+            if(extra.chatId == NOT_FOUND_INDEX) {
+                Logging.error(`chat id equal -1`)
+                return
+            }
+
+            await ctx.sendChatAction('typing')
+            msg = await ctx.telegram.sendDice(
+                extra.chatId,
+                {
+                    ...extra,
+                    emoji: dice
+                }
+            )
+        })
+
+        return msg ?? {
+            dice: {
+                emoji: '', 
+                value: NOT_FOUND_INDEX
+            }, 
+            message_id: NOT_FOUND_INDEX, 
+            date: NOT_FOUND_INDEX, 
+            chat: {
+                first_name: '',
+                id: NOT_FOUND_INDEX,
+                type: 'private'
+            }
+        }
+    }
+
     static async answerPhoto(
         ctx: Context,
         text: string,
@@ -128,6 +165,7 @@ export default class MessageUtils {
                 return
             }
 
+            await ctx.sendChatAction('upload_photo')
             await ctx.telegram.sendPhoto(
                 extra.chatId,
                 photoId,
@@ -146,9 +184,21 @@ export default class MessageUtils {
     }
 
     static async editText(ctx: Context, text: string, options?: ExtraEditMessageText): Promise<boolean> {
-        return await ExceptionUtils.handle(async () => {
+        try {
             await ctx.editMessageText(text, {parse_mode: PARSE_MODE, ...options})
-        })
+            return true
+        }
+        catch {
+            await ctx.reply(text, {
+                ...options,
+                parse_mode: PARSE_MODE,
+                reply_parameters: ctx.message ? {
+                    message_id: ctx.message.message_id
+                } : undefined
+            })
+            await this.deleteMessage(ctx)
+            return false
+        }
     }
 
     static async react(ctx: Context, reaction: TelegramEmoji): Promise<boolean> {

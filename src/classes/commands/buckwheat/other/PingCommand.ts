@@ -6,6 +6,9 @@ export default class PingCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'прием'
+        this._aliases = [
+            'приём'
+        ]
         this._description = 'прием-прием'
     }
 

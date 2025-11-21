@@ -1,4 +1,4 @@
-import AntiSpam from '../../../interfaces/schemas/AntiSpam'
+import AntiSpam from '../../../interfaces/schemas/other/AntiSpam'
 import { createModel } from './modelCreators'
 
 export default createModel<AntiSpam>({

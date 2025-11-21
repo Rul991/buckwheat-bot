@@ -1,6 +1,6 @@
-import Casino from '../../../../interfaces/schemas/Casino'
+import Casino from '../../../../interfaces/schemas/games/Casino'
 import ArrayUtils from '../../../../utils/ArrayUtils'
-import { DEFAULT_FILTER_LENGTH } from '../../../../utils/values/consts'
+import { DEFAULT_FILTER_LENGTH, NOT_FOUND_INDEX } from '../../../../utils/values/consts'
 import CasinoRepository from '../../repositories/CasinoRepository'
 import CasinoAccountService from './CasinoAccountService'
 
@@ -11,7 +11,7 @@ export default class CasinoGetService {
         const casino = await CasinoAccountService.get(chatId, id)
 
         if(!casino) {
-            return -1
+            return NOT_FOUND_INDEX
         }
         else {
             return casino[key]!

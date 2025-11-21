@@ -22,12 +22,12 @@ export default class CustomRoleplayCommand extends ConditionalCommand {
         return Boolean(roleplayCommand)
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
+    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         if(!this._text) return
         
         await MessageUtils.answer(
             ctx,
-            await RoleplayUtils.getMessage(ctx, this._text)
+            await RoleplayUtils.getMessage(ctx, this._text, other)
         )
     }
 }

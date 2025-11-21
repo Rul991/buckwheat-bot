@@ -3,6 +3,7 @@ import PaymentAction from '../../actions/payment/PaymentAction'
 import BaseHandler from './BaseHandler'
 import { PreCheckoutQueryContext, SuccessfulPaymentContext } from '../../../utils/values/types'
 import ContextUtils from '../../../utils/ContextUtils'
+import FileUtils from '../../../utils/FileUtils'
 
 export default class PaymentHandler extends BaseHandler<PaymentAction, Record<string, PaymentAction>, typeof PaymentAction> {
     constructor() {
@@ -29,7 +30,11 @@ export default class PaymentHandler extends BaseHandler<PaymentAction, Record<st
             const action = this._searchAction(ctx)
             
             if(!action) {
-                await ContextUtils.answerPrecheckout(ctx, false, 'Такого нет')
+                await ContextUtils.answerPrecheckoutFromResource(
+                    ctx, 
+                    false, 
+                    'text/precheckout/hasnt.pug'
+                )
                 return
             }
             

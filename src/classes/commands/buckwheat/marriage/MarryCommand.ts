@@ -47,7 +47,10 @@ export default class MarryCommand extends BuckwheatCommand {
                     user: await ContextUtils.getUser(chatId, userId),
                     reply: await ContextUtils.getUser(chatId, replyId),
                 },
-                inlineKeyboard: await InlineKeyboardManager.get('marry', `${userId}_${replyId}`)
+                inlineKeyboard: await InlineKeyboardManager.get('marry', JSON.stringify({
+                    user: userId,
+                    reply: replyId
+                }))
             }
         )
     }

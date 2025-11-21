@@ -1,4 +1,4 @@
-import Chat from '../../../interfaces/schemas/Chat'
+import Chat from '../../../interfaces/schemas/chat/Chat'
 import { createModel } from './modelCreators'
 
 export default createModel<Chat>({

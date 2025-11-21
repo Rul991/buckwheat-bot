@@ -1,5 +1,5 @@
-import Ideas from '../../../interfaces/schemas/Ideas'
-import Idea from '../../../interfaces/schemas/Idea'
+import Ideas from '../../../interfaces/schemas/ideas/Ideas'
+import Idea from '../../../interfaces/schemas/ideas/Idea'
 import { createModelWithSubModel } from './modelCreators'
 
 type Type = Ideas

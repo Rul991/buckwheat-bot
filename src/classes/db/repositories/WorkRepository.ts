@@ -1,4 +1,4 @@
-import Work from '../../../interfaces/schemas/Work'
+import Work from '../../../interfaces/schemas/user/Work'
 import WorkModel from '../models/WorkModel'
 import ChatIdRepository from './base/ChatIdRepository'
 

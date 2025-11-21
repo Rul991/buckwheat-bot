@@ -1,4 +1,4 @@
-import Roleplays from '../../../interfaces/schemas/Roleplays'
+import Roleplays from '../../../interfaces/schemas/chat/Roleplays'
 import RoleplaysModel from '../models/RoleplaysModel'
 import IdRepository from './base/IdRepository'
 

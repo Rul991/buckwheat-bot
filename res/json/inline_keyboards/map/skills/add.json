@@ -1,0 +1,24 @@
+{
+    "definition": {
+        "add": {
+            "text": "@",
+            "data": "skillview_@"
+        },
+        "arrow": {
+            "text": "@",
+            "data": "skillchange_@_@{id}"
+        },
+        "back": {
+            "text": "-",
+            "notEach": true,
+            "data": "skillmenu_@{id}"
+        }
+    },
+
+    "values": 
+    [
+        "add",
+        ["arrow"],
+        "back"
+    ]
+}

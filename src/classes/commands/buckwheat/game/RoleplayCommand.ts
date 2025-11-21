@@ -1,6 +1,7 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import SubCommandUtils from '../../../../utils/SubCommandUtils'
+import { FIRST_INDEX } from '../../../../utils/values/consts'
 import { TextContext, MaybeString, NameObject } from '../../../../utils/values/types'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import RoleplaysService from '../../../db/services/rp/RoleplaysService'
@@ -104,7 +105,7 @@ export default class RoleplayCommand extends BuckwheatCommand {
                 else {
                     await MessageUtils.answerMessageFromResource(
                         ctx,
-                        'text/commands/add-rp/exist.pug',
+                        'text/commands/add-rp/not-exist.pug',
                         {
                             changeValues: {
                                 name
@@ -142,7 +143,7 @@ export default class RoleplayCommand extends BuckwheatCommand {
             execute, 
             needData, 
             exampleData, 
-        } = typeof subCommand == 'string' ? this._subCommands[0] : subCommand
+        } = typeof subCommand == 'string' ? this._subCommands[FIRST_INDEX] : subCommand
 
         if(minimumRank! > rank) {
             await MessageUtils.answerMessageFromResource(

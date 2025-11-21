@@ -5,10 +5,12 @@ import { TextContext, MaybeString } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class ChooseCommand extends BuckwheatCommand {
+    private _separator = ';'
+
     constructor() {
         super()
         this._name = 'выбери'
-        this._description = 'выбираю одно из ваших слов'
+        this._description = `выбираю одну из ваших фраз, разделенных "${this._separator}"`
         this._aliases = [
             'выбор',
             'выбрать'
@@ -16,7 +18,7 @@ export default class ChooseCommand extends BuckwheatCommand {
     }
 
     private _getRandomWord(text: string): string {
-        return RandomUtils.choose(StringUtils.splitBySpace(text)) ?? 'ничего'
+        return RandomUtils.choose(StringUtils.splitAndTrim(text, this._separator)) ?? 'ничего'
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {

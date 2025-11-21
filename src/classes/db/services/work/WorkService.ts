@@ -1,4 +1,4 @@
-import Work from '../../../../interfaces/schemas/Work'
+import Work from '../../../../interfaces/schemas/user/Work'
 import WorkRepository from '../../repositories/WorkRepository'
 
 export default class WorkService {

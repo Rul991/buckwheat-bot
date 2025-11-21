@@ -1,0 +1,31 @@
+include utils/mixins.pug
+
+mixin stats(title, obj)
+    |
+    u #{title}:
+    |
+    +param('Здоровье', obj.hp)
+    +param('Мана', obj.mana, 4)
+    |
+    |
+
+b Дуэль между 
++link(first)
+| и 
++link(second, false)
+| :
+|
+| Текущий шаг у игрока 
++link(step, false)
+| !
+| Всего шагов: 
+b #{steps}
+|
+|
+|
++stats('Вы', you)
+|
+|
++stats('Противник', enemy)
+|
+| Что будете делать?

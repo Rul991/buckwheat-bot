@@ -1,5 +1,5 @@
 import FileUtils from '../../utils/FileUtils'
-import { CallbackButtonValues, ObjectOrArray } from '../../utils/values/types'
+import { CallbackButtonMapValues, CallbackButtonValue, ObjectOrArray, CallbackButtonGlobals } from '../../utils/values/types'
 import { DATA_REPLACEABLE_SYMBOL } from '../../utils/values/consts'
 import { InlineKeyboardButton } from 'telegraf/types'
 
@@ -11,15 +11,40 @@ type GetOptions<T, K> = {
     name: string
 }
 type Result = InlineKeyboardButton.CallbackButton
-type JsonValue = {notEach?: boolean, text: string, data: string, isHorisontal?: boolean}
+type JsonValue = {
+    definition: DefinitionRecord,
+    values: ObjectOrArray<string>[]
+}
+type DefinitionRecord = Record<string, CallbackButtonValue>
 
 export default class InlineKeyboardManager {
     private static _getPath(name: string): string {
         return `json/inline_keyboards/${name}.json`
     }
 
-    private static _replaceAll(text?: string, data = DATA_REPLACEABLE_SYMBOL): string {
-        return text?.replaceAll(DATA_REPLACEABLE_SYMBOL, data) ?? ''
+    private static _replaceGlobals(text: string, data?: CallbackButtonGlobals): string {
+        let result: string = text
+        const usedData = data ?? {}
+
+        for (const key in usedData) {
+            result = result.replaceAll(
+                `${DATA_REPLACEABLE_SYMBOL}{${key}}`,
+                usedData[key].toString()
+            )
+        }
+
+        return result
+    }
+
+    private static _replaceValues(text: string, data?: string): string {
+        if(!text) return ''
+        else if(!data) return text
+        
+        return text
+            .replaceAll(
+                DATA_REPLACEABLE_SYMBOL, 
+                data
+            )
     }
 
     private static async _get<T, K = T>(
@@ -36,16 +61,22 @@ export default class InlineKeyboardManager {
         if(!keyboard) return null
         if(typeof isArray !== 'undefined' && isArray != keyboard instanceof Array) return null
 
-        return callback(keyboard)
+        const result = callback(keyboard)
+        return result
     }
 
-    static async get(name: string, data?: string): Promise<Result[][]> {
+    static async get(name: string, data?: string | CallbackButtonGlobals): Promise<Result[][]> {
         return await this._get<Result[][]>({
             name,
             callback: keyboard => {
                 return keyboard.map(arr => 
                     arr.map(button => {
-                        button.callback_data = this._replaceAll(button.callback_data, data)
+                        if(typeof data == 'string') {
+                            button.callback_data = this._replaceValues(button.callback_data, data)
+                        }
+                        else {
+                            button.callback_data = this._replaceGlobals(button.callback_data, data)
+                        }
                         return button
                     })
                 )
@@ -54,34 +85,63 @@ export default class InlineKeyboardManager {
         }) ?? []
     }
 
-    static async map(name: string, values: CallbackButtonValues[]): Promise<Result[][]> {
+    static async map(name: string, values: CallbackButtonMapValues): Promise<Result[][]> {
         const keyboard = await this._get<
-            ObjectOrArray<JsonValue>, 
+            JsonValue, 
             Result[][]
         >({
             name,
             callback: keyboard => {
                 const resultKeyboard: Result[][] = []
-                const buttons = keyboard instanceof Array ? keyboard : [keyboard]
+                for (const button of keyboard.values) {
+                    const isArray = button instanceof Array
+                    const buttonArray = isArray ? button : [button]
 
-                for (const button of buttons) {
-                    if(button.notEach) {
-                        resultKeyboard.push([{text: button.text, callback_data: button.data}])
-                        continue
+                    const subResult: Result[] = []
+
+                    for (const key of buttonArray) {
+                        const value = keyboard.definition[key]
+                        if(!value) continue
+
+                        const text = this._replaceGlobals(value.text, values.globals)
+                        const data = this._replaceGlobals(value.data, values.globals)
+
+                        if(value.notEach) {
+                            const result = {
+                                text, 
+                                callback_data: data
+                            }
+                            if(isArray) {
+                                subResult.push(result)
+                            }
+                            else {
+                                resultKeyboard.push([result])
+                            }
+                            continue
+                        }
+
+                        const valueValues = values.values[key]
+                        if(!valueValues) continue
+
+                        const resultValues = valueValues.map(v => ({
+                            text: this._replaceValues(text, v.text),
+                            callback_data: this._replaceValues(data, v.data)
+                        }))
+
+                        if(isArray) {
+                            subResult.push(
+                                ...resultValues
+                            )
+                        }
+                        else {
+                            resultKeyboard.push(
+                                ...resultValues.map(v => [v])
+                            )
+                        }
                     }
 
-                    const keyboard: Result[] = values.map(({text, data}) => {
-                        return {
-                            text: this._replaceAll(button.text, text),
-                            callback_data: this._replaceAll(button.data, data)
-                        } as Result
-                    })
-
-                    if(button.isHorisontal) {
-                        resultKeyboard.push(keyboard)
-                    }
-                    else {
-                        resultKeyboard.push(...(keyboard.map(kb => [kb])))
+                    if(subResult.length) {
+                        resultKeyboard.push(subResult)
                     }
                 }
 

@@ -14,6 +14,14 @@ export default class RouletteCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
+        if(ctx.chat.type == 'private') {
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/roulette/private.pug'
+            )
+            return
+        }
+
         const isKilled = RandomUtils.chance(ROULETTE_CHANCE)
         const changeValues = await ContextUtils.getUserFromContext(ctx)
 

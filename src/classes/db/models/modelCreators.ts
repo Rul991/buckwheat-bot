@@ -1,19 +1,19 @@
-import { model, ObtainDocumentType, Schema } from 'mongoose'
+import { model, ObtainDocumentType, Schema, SchemaDefinition } from 'mongoose'
 
 type ModelOptions<T> = {
     name: string,
-    definition: ObtainDocumentType<T>
+    definition: SchemaDefinition<T>
 }
 
 export const createModel = <Type>({name, definition}: ModelOptions<Type>) => {
     const schema = new Schema<Type>(definition)
-    return model<Type>(name, schema)
+    return model<Schema<Type>>(name, schema)
 }
 
 export const createModelWithSubModel = <Type, SubType>(
-    subSchema: ObtainDocumentType<SubType>,
-    schemaCallback: (subModel: Schema<SubType>) => ModelOptions<Type>
+    definition: SchemaDefinition<SubType>,
+    schemaCallback: (subSchema: Schema<SubType>) => ModelOptions<Type>
 ) => {
-    const subModel = new Schema<SubType>(subSchema)
-    return createModel(schemaCallback(subModel))
+    const subSchema = new Schema<SubType>(definition)
+    return createModel(schemaCallback(subSchema))
 }

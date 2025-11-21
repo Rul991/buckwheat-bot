@@ -1,4 +1,4 @@
-import Cube from '../../../interfaces/schemas/Cube'
+import Cube from '../../../interfaces/schemas/games/Cube'
 import { createModel } from './modelCreators'
 
 export default createModel<Cube>({
@@ -20,9 +20,9 @@ export default createModel<Cube>({
             type: Number,
             default: 0
         },
-        isNeedPlaying: {
-            type: Boolean,
-            default: false
+        lastMessage: {
+            type: Number,
+            required: false
         }
     }
 })

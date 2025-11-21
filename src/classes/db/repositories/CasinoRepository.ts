@@ -1,4 +1,4 @@
-import Casino from '../../../interfaces/schemas/Casino'
+import Casino from '../../../interfaces/schemas/games/Casino'
 import CasinoModel from '../models/CasinoModel'
 import ChatIdRepository from './base/ChatIdRepository'
 

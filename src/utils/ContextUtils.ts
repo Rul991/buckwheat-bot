@@ -7,9 +7,10 @@ import { ChatMember } from 'telegraf/types'
 import Logging from './Logging'
 import LinkedChatService from '../classes/db/services/linkedChat/LinkedChatService'
 import ExceptionUtils from './ExceptionUtils'
+import { Link, TextContext } from './values/types'
 
 export default class ContextUtils {
-    static async getUser(chatId?: number, id?: number, firstName?: string) {
+    static async getUser(chatId?: number, id?: number, firstName?: string): Promise<Link> {
         const usedId = id ?? 0
         const usedChatId = chatId ?? 0
 
@@ -28,6 +29,14 @@ export default class ContextUtils {
         await ExceptionUtils.handle(async () => {
             await ctx.answerPreCheckoutQuery(ok, text)
         })
+    }
+
+    static async answerPrecheckoutFromResource(ctx: Context, ok: boolean, path?: string) {
+        const text = path && await FileUtils.readPugFromResource(
+            path
+        )
+
+        return await this.answerPrecheckout(ctx, ok, text)
     }
 
     static async getUserFromContext(ctx: Context) {
@@ -51,6 +60,25 @@ export default class ContextUtils {
         })
 
         return dice
+    }
+
+    static hasBotReply(ctx: TextContext) {
+        const {reply_to_message: reply} = ctx.message
+        return Boolean(reply?.from?.is_bot)
+    }
+
+    static getUserOrBotId(ctx: TextContext) {
+        const isBot = this.hasBotReply(ctx)
+
+        if(isBot) return ctx.message.reply_to_message!.from!.id
+        return ctx.from.id
+    }
+
+    static getUserOrBotFirstName(ctx: TextContext) {
+        const isBot = this.hasBotReply(ctx)
+
+        if(isBot) return ctx.message.reply_to_message!.from!.first_name
+        return ctx.from.first_name
     }
 
     static getLinkUrl(id: number): string {
@@ -92,5 +120,13 @@ export default class ContextUtils {
             Logging.error(e)
             return null
         }
+    }
+
+    static async showAlertIfIdNotEqual(ctx: Context, id: number): Promise<boolean> {
+        if(id != ctx.from?.id) {
+            await ContextUtils.showAlertFromFile(ctx)
+            return true
+        }
+        return false
     }
 }

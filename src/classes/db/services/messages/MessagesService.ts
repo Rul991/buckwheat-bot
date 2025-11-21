@@ -1,4 +1,4 @@
-import Messages from '../../../../interfaces/schemas/Messages'
+import Messages from '../../../../interfaces/schemas/user/Messages'
 import MessagesRepository from '../../repositories/MessagesRepository'
 
 export default class MessagesService {

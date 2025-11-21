@@ -1,4 +1,4 @@
-import { Telegraf } from 'telegraf'
+import { session, Telegraf } from 'telegraf'
 import Logging from '../../utils/Logging'
 import { CHAT_ID, DOMAIN, HOOK_PORT, MODE, SECRET_PATH } from '../../utils/values/consts'
 import FileUtils from '../../utils/FileUtils'
@@ -65,6 +65,8 @@ export default class Bot {
     }
 
     async launch(isWebHook = false, callback = async () => {}): Promise<void> {
+        this._bot.use(session())
+
         this._handlers.forEach(handler => 
             handler.setup(this._bot)
         )

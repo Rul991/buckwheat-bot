@@ -13,22 +13,23 @@ export default class DivorceCommand extends BuckwheatCommand {
             'развод',
             'расстаться'
         ]
-        this._replySupport = true
         this._description = 'выполняю услуги ЗАГСа'
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
+        const id = ctx.from.id
+        const chatId = await LinkedChatService.getCurrent(ctx, id)
         if(!chatId) return
 
-        const reply = ctx.message.reply_to_message?.from
-        const userId = ctx.from.id
-        const replyId = reply ? reply.id : userId
+        const partnerId = (await MarriageService.get(chatId, id)).partnerId
 
-        const isDivorced = await MarriageService.divorce(chatId, userId, replyId)
+        const isDivorced = Boolean(
+            partnerId && await MarriageService.divorce(chatId, id, partnerId)
+        )
+        
         const changeValues = {
-            user: await ContextUtils.getUser(chatId, userId),
-            reply: await ContextUtils.getUser(chatId, replyId),
+            user: await ContextUtils.getUser(chatId, id),
+            reply: await ContextUtils.getUser(chatId, partnerId),
         }
 
         if(isDivorced) {

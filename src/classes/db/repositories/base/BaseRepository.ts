@@ -1,4 +1,5 @@
 import { Model, RootFilterQuery, UpdateWriteOpResult } from 'mongoose'
+import { FIRST_INDEX } from '../../../../utils/values/consts'
 
 export default abstract class BaseRepository<K, T extends typeof Model<K>> {
     protected _Model: T
@@ -18,16 +19,20 @@ export default abstract class BaseRepository<K, T extends typeof Model<K>> {
         return obj
     }
 
+    async findByFilter(filter: RootFilterQuery<K>): Promise<K | null> {
+        return await this._Model.findOne(filter).exec()
+    }
+
     async findOne(...filter: any): Promise<K | null> {
-        return await this._Model.findOne(filter[0])
+        return await this.findByFilter(filter[FIRST_INDEX])
     }
 
     async findMany(...filter: any): Promise<K[]> {
-        return await this._Model.find(filter[0] ?? {})
+        return await this._Model.find(filter[FIRST_INDEX] ?? {}).exec()
     }
 
     async deleteOne(...filter: any): Promise<K | null> {
-        return await this._Model.findOneAndDelete(filter[0])
+        return await this._Model.findOneAndDelete(filter[FIRST_INDEX]).exec()
     }
 
     /**
@@ -35,7 +40,7 @@ export default abstract class BaseRepository<K, T extends typeof Model<K>> {
      */
 
     async updateOne(...values: any): Promise<K | null> {
-        return await this._Model.findOneAndUpdate(values[0], values[1])
+        return await this._Model.findOneAndUpdate(values[FIRST_INDEX], values[1]).exec()
     }
 
     /**
@@ -45,6 +50,6 @@ export default abstract class BaseRepository<K, T extends typeof Model<K>> {
      */
 
     async updateMany(...values: any): Promise<UpdateWriteOpResult> {
-        return await this._Model.updateMany(values[0], values[1])
+        return await this._Model.updateMany(values[FIRST_INDEX], values[1]).exec()
     }
 }

@@ -1,4 +1,4 @@
-import Items from '../../../../interfaces/schemas/Items'
+import Items from '../../../../interfaces/schemas/items/Items'
 import ItemsRepository from '../../repositories/ItemsRepository'
 
 export default class ItemsService {

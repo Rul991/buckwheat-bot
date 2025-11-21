@@ -28,8 +28,29 @@ export default class InfoCommand extends BuckwheatCommand {
         },
 
         {
+            chance: 40,
+            texts: [
+                'Скорее нет, чем да!'
+            ]
+        },
+
+        {
             chance: 50,
             texts: ['Может да, а может нет, а может...']
+        },
+
+        {
+            chance: 60,
+            texts: [
+                'Скорее да, чем нет!'
+            ]
+        },
+
+        {
+            chance: 80,
+            texts: [
+                'Похоже на правду!'
+            ]
         },
 
         {

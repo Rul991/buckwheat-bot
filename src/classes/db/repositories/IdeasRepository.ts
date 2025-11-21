@@ -1,4 +1,4 @@
-import Ideas from '../../../interfaces/schemas/Ideas'
+import Ideas from '../../../interfaces/schemas/ideas/Ideas'
 import IdeasModel from '../models/IdeasModel'
 import Repository from './base/Repository'
 

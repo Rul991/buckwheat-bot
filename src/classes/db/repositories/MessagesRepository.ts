@@ -1,4 +1,4 @@
-import Messages from '../../../interfaces/schemas/Messages'
+import Messages from '../../../interfaces/schemas/user/Messages'
 import MessagesModel from '../models/MessagesModel'
 import ChatIdRepository from './base/ChatIdRepository'
 

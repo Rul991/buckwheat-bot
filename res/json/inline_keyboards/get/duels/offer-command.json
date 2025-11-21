@@ -1,0 +1,13 @@
+[
+    [
+        {
+            "text": "Да",
+            "callback_data": "duelno_@{yes}"
+        },
+
+        {
+            "text": "Нет",
+            "callback_data": "deletemessage_@{no}"
+        }
+    ]
+]

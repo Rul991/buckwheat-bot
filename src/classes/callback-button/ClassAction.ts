@@ -1,26 +1,38 @@
+import { JSONSchemaType } from 'ajv'
+import ClassData from '../../interfaces/callback-button-data/ClassData'
 import ClassUtils from '../../utils/ClassUtils'
 import ContextUtils from '../../utils/ContextUtils'
 import MessageUtils from '../../utils/MessageUtils'
-import { CallbackButtonContext, ClassTypes } from '../../utils/values/types'
+import { CallbackButtonContext } from '../../utils/values/types'
 import LinkedChatService from '../db/services/linkedChat/LinkedChatService'
 import UserClassService from '../db/services/user/UserClassService'
 import CallbackButtonAction from './CallbackButtonAction'
+import FileUtils from '../../utils/FileUtils'
 
-export default class ClassAction extends CallbackButtonAction {
+export default class ClassAction extends CallbackButtonAction<ClassData> {
+    protected _schema: JSONSchemaType<ClassData> = {
+        type: 'object',
+        properties: {
+            classType: {
+                type: 'string'
+            },
+            userId: {
+                type: 'number'
+            }
+        },
+        required: ['classType', 'userId']
+    }
+
     constructor() {
         super()
         this._name = 'class'
     }
 
-    async execute(ctx: CallbackButtonContext, data: string): Promise<void> {
+    async execute(ctx: CallbackButtonContext, data: ClassData): Promise<string | void> {
         const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return
-                
+        if(!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
 
-        const splittedData = data.split('_')
-
-        const classType: ClassTypes = splittedData[0] as any
-        const userId = +splittedData[1]
+        const {userId, classType} = data
 
         if(userId == ctx.from.id) {
             await UserClassService.update(chatId, ctx.from.id, classType)

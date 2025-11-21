@@ -2,7 +2,7 @@
     [
         {
             "text": "Просмотреть",
-            "callback_data": "ideachange_1_-1_@"
+            "callback_data": "ideachange_{\"increase\": 1, \"current\": -1}_@"
         }
     ]
 ]

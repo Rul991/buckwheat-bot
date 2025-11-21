@@ -84,10 +84,15 @@ export default class FileUtils {
         let text = await this.readToString(join(this._resourceFolder, path))
         
         try {
-            return render(
+            let result = render(
                 text, 
-                options.changeValues ?? {}
+                {
+                    ...(options.changeValues ?? {}),
+                    filename: './res/text/.'
+                }
             )
+
+            return result
         }
         catch(e) {
             Logging.error('Pug parsing error:', e)

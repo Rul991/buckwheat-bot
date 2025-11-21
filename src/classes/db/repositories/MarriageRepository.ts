@@ -1,4 +1,4 @@
-import Marriage from '../../../interfaces/schemas/Marriage'
+import Marriage from '../../../interfaces/schemas/other/Marriage'
 import MarriageModel from '../models/MarriageModel'
 import ChatIdRepository from './base/ChatIdRepository'
 

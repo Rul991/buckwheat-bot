@@ -1,4 +1,4 @@
-import { HOURS_IN_DAY, INFINITY_SYMB, MILLISECONDS_IN_DAY, MILLISECONDS_IN_SECOND, MINUTES_IN_HOUR, SECONDS_IN_MINUTE } from './values/consts'
+import { HOURS_IN_DAY, INFINITY_SYMB, MAX_TIME_WORD, MILLISECONDS_IN_DAY, MILLISECONDS_IN_SECOND, MINUTES_IN_HOUR, NOT_FOUND_INDEX, SECONDS_IN_MINUTE } from './values/consts'
 
 export default class TimeUtils {
     private static _nameToNumber = {
@@ -12,7 +12,7 @@ export default class TimeUtils {
     private static _maxTime = 366 * this._nameToNumber['д']
 
     static parseTimeToMilliseconds(time: string): number {
-        if(time == 'навсегда') return 0
+        if(time == MAX_TIME_WORD) return 0
 
         let date = ''
         let dateNumber = 0
@@ -33,7 +33,7 @@ export default class TimeUtils {
         const additionalTime =  +date * dateNumber
         
         if(!additionalTime)
-            return -1
+            return NOT_FOUND_INDEX
         else if(additionalTime > this._maxTime || additionalTime < this._minTime)
             return 0
         else 
@@ -84,7 +84,21 @@ export default class TimeUtils {
         )
     }
 
-    static getUntilDate(ms: number): number {
-        return (ms + Date.now()) / 1000
+    static getElapsed(ms: number): number {
+        return Date.now() - ms
+    }
+
+    static getUntilDate(time: number): number {
+        return (time + Date.now()) / 1000
+    }
+
+    static isTimeExpired(time: number, needTime: number): boolean {
+        return TimeUtils.getElapsed(time) >= needTime
+    }
+
+    static sleep(ms: number): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            setTimeout(() => resolve(), ms)
+        })
     }
 }

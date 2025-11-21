@@ -1,4 +1,3 @@
-import { Context } from 'telegraf'
 import BaseAction from '../base/BaseAction'
 import { PreCheckoutQueryContext, SuccessfulPaymentContext } from '../../../utils/values/types'
 import { PreCheckoutQuery, SuccessfulPayment } from 'telegraf/types'

@@ -1,48 +1,26 @@
-import { Context } from 'telegraf'
-import { MaybeString, TextContext } from '../../../../utils/values/types'
-import BuckwheatCommand from '../../base/BuckwheatCommand'
-import ContextUtils from '../../../../utils/ContextUtils'
-import { MAX_DESCRIPTION_LENGTH } from '../../../../utils/values/consts'
+import { HasOtherChangeProfileMessage, NoOtherChangeProfileMessage } from '../../../../utils/values/types'
+import { DEFAULT_DESCRIPTION, MAX_DESCRIPTION_LENGTH } from '../../../../utils/values/consts'
 import UserDescriptionService from '../../../db/services/user/UserDescriptionService'
-import MessageUtils from '../../../../utils/MessageUtils'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import ChangeProfileCommand from './ChangeProfileCommand'
 
-export default class ChangeDescriptionCommand extends BuckwheatCommand {
+export default class ChangeDescriptionCommand extends ChangeProfileCommand {
+    protected _folderName: string = 'change-description'
+    protected _maxLength: number = MAX_DESCRIPTION_LENGTH
+    
     constructor() {
         super()
         this._name = 'описание'
         this._description = 'меняю вам описание профиля в беседе'
-        this._needData = true
         this._argumentText = 'описание'
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return
-        const description = other ?? ''
+    protected async _sendMessageIfNoOther(options: NoOtherChangeProfileMessage): Promise<void> {
+        const { chatId, id } = options
+        await UserDescriptionService.update(chatId, id, DEFAULT_DESCRIPTION)
+        await super._sendMessageIfNoOther(options)
+    }
 
-        if(description.length > MAX_DESCRIPTION_LENGTH) {
-            await MessageUtils.answerMessageFromResource(
-                ctx, 
-                'text/commands/change-description/big.pug', 
-                {changeValues: {max: MAX_DESCRIPTION_LENGTH.toString()}}
-            )
-            return
-        }
-
-        await UserDescriptionService.update(chatId, ctx.from.id, description)
-
-        if(description.length) {
-            await MessageUtils.answerMessageFromResource(
-                ctx, 
-                'text/commands/change-description/changed.pug'
-            )
-        }
-        else {
-            await MessageUtils.answerMessageFromResource(
-                ctx, 
-                'text/commands/change-description/cleared.pug'
-            )
-        }
+    protected async _updateProfile({ other, chatId, id, }: HasOtherChangeProfileMessage): Promise<void> {
+        await UserDescriptionService.update(chatId, id, other)
     }
 }

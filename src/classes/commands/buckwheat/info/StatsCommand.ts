@@ -17,7 +17,7 @@ export default class StatsCommand extends BuckwheatCommand {
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         const chats = await ChatService.getAll()
-        const uniqueUsers = await UserProfileService.getUniqueUsers()
+        const {uniqueUsers, users} = await UserProfileService.getStats()
 
         await MessageUtils.answerMessageFromResource(
             ctx,
@@ -25,7 +25,8 @@ export default class StatsCommand extends BuckwheatCommand {
             {
                 changeValues: {
                     chats: chats.length,
-                    users: uniqueUsers.length
+                    uniqueUsers: uniqueUsers.length,
+                    users: users.length,
                 }
             }
         )

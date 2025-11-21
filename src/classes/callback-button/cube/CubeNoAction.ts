@@ -1,25 +1,28 @@
+import { JSONSchemaType } from 'ajv'
+import CubeData from '../../../interfaces/callback-button-data/CubeData'
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import { CallbackButtonContext } from '../../../utils/values/types'
-import CubePlayingService from '../../db/services/cube/CubePlayingService'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import CallbackButtonAction from '../CallbackButtonAction'
+import { cubeDataSchema } from '../../../utils/values/schemas'
+import FileUtils from '../../../utils/FileUtils'
 
-export default class CubeNoAction extends CallbackButtonAction {
+export default class CubeNoAction extends CallbackButtonAction<CubeData> {
+    protected _schema: JSONSchemaType<CubeData> = cubeDataSchema
     constructor() {
         super()
         this._name = 'cubeno'
     }
 
-    async execute(ctx: CallbackButtonContext, data: string): Promise<void> {
-        const [replyId, userId] = data.split('_').map(v => +v)
+    async execute(ctx: CallbackButtonContext, data: CubeData): Promise<string | void> {
+        const {r: replyId, u: userId} = data
         
         const chatId = await LinkedChatService.getCurrent(ctx, replyId)
-        if(!chatId) return
+        if(!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
         const changeValues = await ContextUtils.getUserFromContext(ctx)
 
         const doCallback = async (filename: string) => {
-            await CubePlayingService.set(chatId, userId, false)
             await MessageUtils.editMarkup(ctx)
             await MessageUtils.answerMessageFromResource(
                 ctx,

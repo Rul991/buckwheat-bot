@@ -1,3 +1,5 @@
+import { Progress } from './values/types'
+
 export default class StringUtils {
     static spaceRegexp = /\s+/
 
@@ -30,6 +32,10 @@ export default class StringUtils {
         return strings.map(str => str.trim())
     }
 
+    static splitAndTrim(text: string, sep = ''): string[] {
+        return text.split(sep).map(v => v.trim())
+    }
+
     static toFormattedNumber(number: number): string {
         if(number >= 1e+21) {
             const zeroCount = Math.floor(Math.log10(number))
@@ -59,7 +65,36 @@ export default class StringUtils {
         }
     }
 
+    static getProgress({
+        symbols: {half, full, empty, maxCount}, 
+        progress: {current, max}, 
+    }: Progress): string {
+        const rawSymbolCount = current / max * maxCount
+        const symbolsCount = (rawSymbolCount - (rawSymbolCount % 0.5))
+
+        const fullSymbolsCount = Math.floor(symbolsCount)
+        const hasHalf = Boolean(symbolsCount % 1)
+
+        return current > 0 ?
+            `${full.repeat(Math.min(fullSymbolsCount, maxCount - +hasHalf))}${hasHalf ? half : ''}` :
+            empty
+    }
+
+    static getProgressWithNums(progress: Progress): string {
+        const {current, max} = progress.progress
+        return `${this.getProgress(progress)} (${current} / ${max})`
+    }
+
     static getNumberFromString(str: string): number {
-        return +str.replaceAll(',', '.').replaceAll(/[^0-9.e+-]/g, '')
+        const rawNumber = +str
+            .replaceAll(',', '.')
+            .replaceAll(' ', '')
+
+        if(isNaN(rawNumber)) {
+            return 0
+        }
+        else {
+            return rawNumber
+        }
     }
 }

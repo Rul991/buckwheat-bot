@@ -3,7 +3,7 @@ import CapsCommand from '../classes/commands/conditional/CapsCommand'
 import NoCommand from '../classes/commands/conditional/NoCommand'
 import TestCommand from '../classes/commands/buckwheat/dev/TestCommand'
 import { DOMAIN, MODE, TOKEN } from '../utils/values/consts'
-import Validator from '../utils/Validator'
+import StartValidator from '../utils/StartValidator'
 import StartCommand from '../classes/commands/telegram/StartCommand'
 import EchoCommand from '../classes/commands/buckwheat/game/EchoCommand'
 import SimpleBuckwheatCommand from '../classes/commands/base/SimpleBuckwheatCommand'
@@ -30,11 +30,11 @@ import CubeNoAction from '../classes/callback-button/cube/CubeNoAction'
 import UpdateCommand from '../classes/commands/buckwheat/dev/UpdateCommand'
 import AntiSpamAction from '../classes/actions/every/AntiSpamAction'
 import RuleCommand from '../classes/commands/buckwheat/chat/RuleCommand'
-import RuleChangeAction from '../classes/callback-button/scrollers/RuleChangeAction'
+import RuleChangeAction from '../classes/callback-button/scrollers/page/RuleChangeAction'
 import WorkCommand from '../classes/commands/buckwheat/money/WorkCommand'
 import { env } from 'process'
 import CommandsCommand from '../classes/commands/buckwheat/info/CommandsCommand'
-import DonateCommand from '../classes/commands/buckwheat/dev/DonateCommand'
+import DonateCommand from '../classes/commands/buckwheat/fee/DonateCommand'
 import HelloCommand from '../classes/commands/buckwheat/chat/HelloCommand'
 import HelloMemberAction from '../classes/actions/new-member/HelloMemberAction'
 import TopCommand from '../classes/commands/buckwheat/top/TopCommand'
@@ -55,7 +55,7 @@ import IdeaCommand from '../classes/commands/buckwheat/info/IdeaCommand'
 import IdeaChangeAction from '../classes/callback-button/ideas/IdeaChangeAction'
 import DeleteIdeaAction from '../classes/callback-button/ideas/DeleteIdeaAction'
 import VoteAction from '../classes/callback-button/ideas/VoteAction'
-import SaveCommand from '../classes/commands/buckwheat/game/SaveCommand'
+import SaveCommand from '../classes/commands/buckwheat/duel/SaveCommand'
 import InfoCommand from '../classes/commands/buckwheat/game/InfoCommand'
 import MoneyDropCommand from '../classes/commands/buckwheat/game/MoneyDropCommand'
 import RoleplayCommand from '../classes/commands/buckwheat/game/RoleplayCommand'
@@ -66,14 +66,14 @@ import LinkCommand from '../classes/commands/buckwheat/profile/LinkCommand'
 import InventoryItemsUtils from '../utils/InventoryItemsUtils'
 import AddLeftInDatabaseAction from '../classes/actions/left-member/AddLeftInDatabaseAction'
 import RandomCommand from '../classes/commands/buckwheat/other/RandomCommand'
-import CommandsChangeAction from '../classes/callback-button/scrollers/CommandsChangeAction'
+import CommandsChangeAction from '../classes/callback-button/scrollers/page/CommandsChangeAction'
 import DiceDice from '../classes/dice/DiceDice'
 import StatsCommand from '../classes/commands/buckwheat/info/StatsCommand'
 import DebtMemberAction from '../classes/actions/new-member/DebtMemberAction'
 import ChannelCommand from '../classes/commands/buckwheat/info/ChannelCommand'
 import LevelCommand from '../classes/commands/buckwheat/level/LevelCommand'
 import RouletteCommand from '../classes/commands/buckwheat/game/RouletteCommand'
-import RoleplayChangeAction from '../classes/callback-button/scrollers/RoleplayChangeAction'
+import RoleplayChangeAction from '../classes/callback-button/scrollers/page/RoleplayChangeAction'
 import MarriageCommand from '../classes/commands/buckwheat/marriage/MarriageCommand'
 import MarryCommand from '../classes/commands/buckwheat/marriage/MarryCommand'
 import MarryYesAction from '../classes/callback-button/marry/MarryYesAction'
@@ -83,7 +83,7 @@ import WipeCommand from '../classes/commands/buckwheat/admins/WipeCommand'
 import ChooseCommand from '../classes/commands/buckwheat/game/ChooseCommand'
 import AddAwardCommand from '../classes/commands/award/AddAwardCommand'
 import GetAwardCommand from '../classes/commands/award/GetAwardCommand'
-import AwardsChangeAction from '../classes/callback-button/scrollers/AwardsChangeAction'
+import AwardsChangeAction from '../classes/callback-button/scrollers/page/AwardsChangeAction'
 import ChatCommand from '../classes/commands/buckwheat/chat/ChatCommand'
 import DeleteMessageAction from '../classes/callback-button/DeleteMessageAction'
 import PremiumCommand from '../classes/commands/buckwheat/chat/PremiumCommand'
@@ -97,6 +97,35 @@ import NewMemberHandler from '../classes/main/handlers/NewMemberHandler'
 import PhotoHandler from '../classes/main/handlers/PhotoHandler'
 import PaymentHandler from '../classes/main/handlers/PaymentHandler'
 import SubscriptionAction from '../classes/actions/payment/SubscriptionAction'
+import DonateAction from '../classes/actions/payment/DonateAction'
+import PaySupportCommand from '../classes/commands/telegram/PaySupportCommand'
+import CharsCommand from '../classes/commands/buckwheat/duel/CharsCommand'
+import DuelCommand from '../classes/commands/buckwheat/duel/DuelCommand'
+import DuelNoAction from '../classes/callback-button/duels/DuelNoAction'
+import DuelYesAction from '../classes/callback-button/duels/DuelYesAction'
+import WipeAction from '../classes/callback-button/WipeAction'
+import HelpCommand from '../classes/commands/telegram/HelpCommand'
+import SkillsCommand from '../classes/commands/buckwheat/duel/SkillsCommand'
+import SkillViewAction from '../classes/callback-button/skills/SkillViewAction'
+import SkillMenuAction from '../classes/callback-button/skills/SkillMenuAction'
+import SkillChangeAction from '../classes/callback-button/skills/SkillChangeAction'
+import SkillAddAction from '../classes/callback-button/skills/SkillAddAction'
+import SkillRemoveAction from '../classes/callback-button/skills/SkillRemoveAction'
+import TestAction from '../classes/callback-button/TestAction'
+import DuelStartAction from '../classes/callback-button/duels/DuelStartAction'
+import DuelAwayAction from '../classes/callback-button/duels/DuelAwayAction'
+import IsPremiumCommand from '../classes/commands/conditional/IsPremiumCommand'
+import OnDuelCommand from '../classes/commands/conditional/OnDuelCommand'
+import DuelFightAction from '../classes/callback-button/duels/DuelFightAction'
+import DuelSkillAction from '../classes/callback-button/duels/DuelSkillAction'
+import SkillUseAction from '../classes/callback-button/duels/SkillUseAction'
+import DuelEffectsAction from '../classes/callback-button/duels/DuelEffectsAction'
+import SkillAlertAction from '../classes/callback-button/skills/SkillAlertAction'
+import InventoryItemService from '../classes/db/services/items/InventoryItemService'
+import EffectsCommand from '../classes/commands/buckwheat/duel/EffectsCommand'
+import EffectChangeAction from '../classes/callback-button/effects/EffectChangeAction'
+import FileUtils from '../utils/FileUtils'
+import NotAllowedChatAction from '../classes/actions/every/NotAllowedChatAction'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = { name: string, isMustDefined: boolean }
@@ -115,10 +144,13 @@ const isEnvVarsValidate = () => {
         createVariable('HOOK_PORT', false),
         createVariable('SECRET_TOKEN', false),
         createVariable('SECRET_PATH', false),
+        createVariable('DB_USERNAME', false),
+        createVariable('DB_PASSWORD', false),
+        createVariable('ALLOWED_CHATS', false),
     ]
 
     for (const variable of variables) {
-        if (!Validator.isEnvVariableDefined(env[variable.name])) {
+        if (!StartValidator.isEnvVariableDefined(env[variable.name])) {
             const message = `undefined ${variable.name}`
 
             if (!variable.isMustDefined) {
@@ -173,6 +205,7 @@ const launchBot = async (bot: Bot) => {
     // every message 
     bot.addActions(
         new WrongChatAction(), // it should be first
+        new NotAllowedChatAction(), // it should be second
         new AntiSpamAction(),
         new NewMessagesAction(),
         new RandomPrizeMessageAction(),
@@ -190,6 +223,7 @@ const launchBot = async (bot: Bot) => {
 
     // callback button 
     bot.addActions(
+        new TestAction(),
         new CubeYesAction(),
         new CubeNoAction(),
         new RuleChangeAction(),
@@ -206,7 +240,23 @@ const launchBot = async (bot: Bot) => {
         new AwardsChangeAction(),
         new MarryYesAction(),
         new MarryNoAction(),
-        new DeleteMessageAction()
+        new DeleteMessageAction(),
+        new DuelNoAction(),
+        new DuelYesAction(),
+        new DuelStartAction(),
+        new DuelAwayAction(),
+        new DuelFightAction(),
+        new DuelSkillAction(),
+        new DuelEffectsAction(),
+        new WipeAction(),
+        new SkillMenuAction(),
+        new SkillViewAction(),
+        new SkillChangeAction(),
+        new SkillAddAction(),
+        new SkillRemoveAction(),
+        new SkillUseAction(),
+        new SkillAlertAction(),
+        new EffectChangeAction(),
     )
 
     // dice 
@@ -222,29 +272,34 @@ const launchBot = async (bot: Bot) => {
         new DebtMemberAction(),
     )
 
+    // payment
     bot.addActions(
-        new SubscriptionAction()
+        new SubscriptionAction(),
+        new DonateAction()
     )
 
     // conditional
     bot.addActions(
         new CapsCommand(),
         new NoCommand(),
-        new CustomRoleplayCommand()
+        new OnDuelCommand(),
+        new IsPremiumCommand(),
+        new CustomRoleplayCommand(),
     )
 
     // buckwheat
     bot.addActions(
+        new PremiumCommand(),
+        new DonateCommand(),
         new CommandsCommand(),
         new ProfileCommand(),
-        new PremiumCommand(),
+        new CreatorCommand(),
         new BalanceCommand(),
         new ChangeNameCommand(),
         new ChangeDescriptionCommand(),
         new TestCommand(),
         new EchoCommand(),
         new TransferCommand(),
-        new CreatorCommand(),
         new RankCommand(),
         new MuteCommand(),
         new UnmuteCommand(),
@@ -255,7 +310,6 @@ const launchBot = async (bot: Bot) => {
         new UpdateCommand(),
         new RuleCommand(),
         new WorkCommand(),
-        new DonateCommand(),
         new HelloCommand(),
         new TopCommand(),
         new ShopCommand(),
@@ -264,7 +318,6 @@ const launchBot = async (bot: Bot) => {
         new GreedBoxCommand(),
         new CookieCommand(),
         new IdeaCommand(),
-        new SaveCommand(),
         new InfoCommand(),
         new MoneyDropCommand(),
         new RoleplayCommand(),
@@ -272,23 +325,30 @@ const launchBot = async (bot: Bot) => {
         new LevelCommand(),
         new LinkCommand(),
         new RandomCommand(),
-        new StatsCommand(),
         new ChannelCommand(),
         new RouletteCommand(),
         new MarriageCommand(),
         new MarryCommand(),
         new DivorceCommand(),
         new WipeCommand(),
+        new ChooseCommand(),
+        new SaveCommand(),
+        new CharsCommand(),
+        new DuelCommand(),
+        new SkillsCommand(),
+        new EffectsCommand(),
+        new ChatCommand(),
+        new StatsCommand(),
         new AddAwardCommand(),
         new GetAwardCommand(),
-        new ChooseCommand(),
-        new ChatCommand(),
         ...await getSimpleCommands(),
     )
 
     // tg
     bot.addActions(
-        new StartCommand()
+        new StartCommand(),
+        new PaySupportCommand(),
+        new HelpCommand()
     )
 
     console.log('Start launching!')
@@ -300,14 +360,13 @@ const test = async (): Promise<void | boolean> => {
 }
 
 const main = async () => {
+    if (!await InventoryItemsUtils.setup()) return
+    if (!isEnvVarsValidate()) return
+    await connectDatabase()
+
     if (MODE == 'dev') {
         if (await test()) return
     }
-
-    if (!isEnvVarsValidate()) return
-    await connectDatabase()
-    
-    if(!await InventoryItemsUtils.setup()) return
 
     const bot = new Bot(TOKEN)
     await launchBot(bot)

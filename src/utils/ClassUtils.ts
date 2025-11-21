@@ -2,6 +2,8 @@ import { ClassTypes, ClassRecord } from './values/types'
 
 export default class ClassUtils {
     static defaultClassName: 'unknown' = 'unknown'
+    static nonPlayerClassNames: ClassTypes[] = ['unknown', 'boss', 'bot']
+    static playerClassNames: ClassTypes[] = ['bard', 'engineer', 'knight', 'sorcerer', 'thief']
 
     private static _visibleClassNames = {
         knight: 'Рыцарь',
@@ -9,12 +11,12 @@ export default class ClassUtils {
         sorcerer: 'Маг',
         engineer: 'Инженер',
         bard: 'Бард',
-        boss: 'Финальный босс'
     }
 
     private static _classNames: ClassRecord = {
         ...this._visibleClassNames,
         bot: 'НПС',
+        boss: 'Финальный босс',
         [this.defaultClassName]: 'Не выбрано'
     }
 
@@ -30,11 +32,11 @@ export default class ClassUtils {
     }
     
     static getEmoji(type: ClassTypes): string {
-        return this._classEmojies[type]
+        return this._classEmojies[type] ?? this._classEmojies[this.defaultClassName]
     }
 
     static getName(type: ClassTypes): string {
-        return this._classNames[type]
+        return this._classNames[type] ?? this._classNames[this.defaultClassName]
     }
 
     static getNames(): ClassRecord {
@@ -52,5 +54,9 @@ export default class ClassUtils {
             }, 
             {} as Record<ClassTypes, string[]>
         )
+    }
+
+    static isPlayer(type: ClassTypes) {
+        return ClassUtils.playerClassNames.some(v => v == type)
     }
 }

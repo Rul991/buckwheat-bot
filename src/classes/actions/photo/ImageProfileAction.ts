@@ -1,4 +1,5 @@
 import MessageUtils from '../../../utils/MessageUtils'
+import { FIRST_INDEX } from '../../../utils/values/consts'
 import { PhotoContext, MaybeString } from '../../../utils/values/types'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import UserImageService from '../../db/services/user/UserImageService'
@@ -17,7 +18,7 @@ export default class ImageProfileAction extends PhotoAction {
         await UserImageService.update(
             chatId,
             ctx.from.id, 
-            ctx.message.photo[0].file_id
+            ctx.message.photo[FIRST_INDEX].file_id
         )
 
         await MessageUtils.answerMessageFromResource(

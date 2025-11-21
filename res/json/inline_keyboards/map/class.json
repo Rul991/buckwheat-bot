@@ -1,4 +1,13 @@
 {
-    "text": "@",
-    "data": "class_@"
+    "definition": {
+        "class": {
+            "text": "@",
+            "data": "class_@"
+        }
+    },
+    
+    "values": 
+    [
+        "class"
+    ]
 }

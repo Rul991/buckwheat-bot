@@ -1,7 +1,6 @@
 import { CATALOG_BOOST, LEVEL_BOOST, LEVEL_UP_MONEY, WORK_TIME } from '../../../../utils/values/consts'
 import { ClassTypes, MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
-import UserRankService from '../../../db/services/user/UserRankService'
 import { MAX_WORK, MIN_WORK } from '../../../../utils/values/consts'
 import CasinoAddService from '../../../db/services/casino/CasinoAddService'
 import MessageUtils from '../../../../utils/MessageUtils'
@@ -16,21 +15,24 @@ import ClassUtils from '../../../../utils/ClassUtils'
 import ExperienceService from '../../../db/services/level/ExperienceService'
 import LevelUtils from '../../../../utils/level/LevelUtils'
 import LevelService from '../../../db/services/level/LevelService'
-import RankUtils from '../../../../utils/RankUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import PremiumChatService from '../../../db/services/chat/PremiumChatService'
 
+type Boost = {
+    value: boolean,
+    procents?: number
+}
+
 type TotalMoney = {
     money: number
-    isPremium: boolean
-    hasUp: boolean
+    boosts: Boost[]
 }
 
 export default class WorkCommand extends BuckwheatCommand {
-    constructor() {
+    constructor () {
         super()
         this._name = 'работа'
-        this._description = 'даю тебе деньги за твою работу\nчем выше ранг, тем больше денег ты получаешь'
+        this._description = 'даю тебе деньги за твою работу'
         this._aliases = [
             'фарма',
             'ферма',
@@ -40,49 +42,86 @@ export default class WorkCommand extends BuckwheatCommand {
 
     private _fromBooleanToBoost(bool: boolean, procents = 0.25) {
         return (+bool * procents) + 1
-    } 
+    }
 
-    private _getTotalMoney({money, isPremium, hasUp}: TotalMoney) {
+    private _getMoney({ money, boosts }: TotalMoney) {
         return Math.ceil(
-            this._fromBooleanToBoost(hasUp) * 
-            money * 
-            this._fromBooleanToBoost(isPremium)
+            money *
+            boosts.reduce((prev, { value, procents }) => {
+                return prev * this._fromBooleanToBoost(value, procents)
+            }, 1)
         )
     }
 
-    private static async _getWorkTypes(): Promise<Record<ClassTypes, string[]>> {
-        return await FileUtils.readJsonFromResource<Record<ClassTypes, string[]>>('json/other/work_types.json') ?? ClassUtils.getArray()
+    private async _getBoosts(chatId: number, id: number): Promise<Boost[]> {
+        const isPremium = await PremiumChatService.isPremium(chatId)
+        const [hasUp] = await InventoryItemService.use(chatId, id, 'workUp')
+
+        return [
+            { value: isPremium },
+            { value: hasUp },
+        ]
     }
-    
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const id = ctx.from.id
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return
-        const rank = await UserRankService.get(chatId, id)
-        
+
+    private async _getTotalMoney(chatId: number, id: number) {
+        const money = RandomUtils.range(MIN_WORK, MAX_WORK)
+        const boosts = await this._getBoosts(chatId, id)
+
+        return this._getMoney({
+            money,
+            boosts
+        })
+    }
+
+    private async _getExperience(chatId: number, id: number) {
+        const currentLevelUp = 1
+        const multiplier = 17
+        const max = 625
+
+        const currentLevel = await LevelService.get(chatId, id)
+        const rawExperience = RandomUtils.range(
+            multiplier,
+            Math.min(
+                max,
+                multiplier * (currentLevel + currentLevelUp)
+            )
+        )
+        const [_, count] = await InventoryItemService.use(chatId, id, 'levelBoost')
+
+        return Math.ceil(rawExperience * (1 + (count * LEVEL_BOOST / 100)))
+    }
+
+    private async _getWorkQuests(): Promise<Record<ClassTypes, string[]>> {
+        return await FileUtils.readJsonFromResource<Record<ClassTypes, string[]>>('json/other/work_types.json') ??
+            ClassUtils.getArray()
+    }
+
+    private async _getWorkTime(chatId: number, id: number) {
         const [hasCatalog] = await InventoryItemService.use(chatId, id, 'workCatalog')
-        const workTime = WORK_TIME / (hasCatalog ? CATALOG_BOOST : 1)
+        return WORK_TIME / (hasCatalog ? CATALOG_BOOST : 1)
+    }
 
-        const money = RandomUtils.range(MIN_WORK, MAX_WORK) * Math.max(rank + 1, RankUtils.moderator)
-        const elapsed = await WorkTimeService.getElapsedTime(chatId, id, workTime)
-
-        const workTypes = await WorkCommand._getWorkTypes()
-        const isUnknown = RandomUtils.chance(0.5)
+    private async _getQuest(chatId: number, id: number) {
+        const workTypes = await this._getWorkQuests()
+        const isUnknown = RandomUtils.halfChance()
 
         const userClass = await UserClassService.get(chatId, id)
         const quests = workTypes[isUnknown ? ClassUtils.defaultClassName : userClass]
-        const quest = RandomUtils.choose(quests) ?? 'Неизвестный квест'
+        return RandomUtils.choose(quests) ?? 'Неизвестный квест'
+    }
 
-        if(!elapsed) {
-            const isPremium = await PremiumChatService.isPremium(chatId)
-            const [hasUp] = await InventoryItemService.use(chatId, id, 'workUp')
-            const totalMoney = this._getTotalMoney({money, isPremium, hasUp})
+    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
+        const id = ctx.from.id
+        const chatId = await LinkedChatService.getCurrent(ctx)
+        if (!chatId) return
 
-            const currentLevel = await LevelService.get(chatId, id)
-            const rawExperience = RandomUtils.range(3, Math.min(100, 3 * currentLevel))
-            const [_, count] = await InventoryItemService.use(chatId, id, 'levelBoost')
+        const workTime = await this._getWorkTime(chatId, id)
+        const quest = await this._getQuest(chatId, id)
+        const elapsed = await WorkTimeService.getElapsedTime(chatId, id, workTime)
 
-            const experience = Math.ceil(rawExperience * (1 + (count * LEVEL_BOOST / 100)))
+        if (!elapsed) {
+            const totalMoney = await this._getTotalMoney(chatId, id)
+            const experience = await this._getExperience(chatId, id)
             const newLevel = await ExperienceService.isLevelUpAfterAdding(chatId, id, experience)
 
             await CasinoAddService.money(chatId, id, totalMoney)
@@ -99,7 +138,7 @@ export default class WorkCommand extends BuckwheatCommand {
                 }
             )
 
-            if(newLevel) {
+            if (newLevel) {
                 await CasinoAddService.money(chatId, id, newLevel * LEVEL_UP_MONEY)
                 await LevelUtils.sendLevelUpMessage(ctx, newLevel)
             }

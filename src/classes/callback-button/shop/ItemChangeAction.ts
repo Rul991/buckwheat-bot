@@ -1,22 +1,23 @@
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
 import ShopItems from '../../../utils/ShopItems'
-import { AsyncOrSync, CallbackButtonContext, RequiredShopItemWithLength, ScrollerEditMessageResult, ScrollerSendMessageOptions } from '../../../utils/values/types'
+import { AsyncOrSync, CallbackButtonContext, ShopItemWithLength, ScrollerEditMessageResult, ScrollerSendMessageOptions } from '../../../utils/values/types'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import StringUtils from '../../../utils/StringUtils'
-import ScrollerAction from '../scrollers/ScrollerAction'
+import ScrollerAction from '../scrollers/page/ScrollerAction'
+import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 
-export default class ItemChangeAction extends ScrollerAction<RequiredShopItemWithLength> {
+export default class ItemChangeAction extends ScrollerAction<ShopItemWithLength> {
     constructor() {
         super()
         this._name = 'itemchange'
     }
 
-    protected _getObjects(_: CallbackButtonContext): AsyncOrSync<RequiredShopItemWithLength[]> {
+    protected _getObjects(_: CallbackButtonContext): AsyncOrSync<ShopItemWithLength[]> {
         return []
     }
 
-    protected _getLength(_ctx: CallbackButtonContext, _objects: RequiredShopItemWithLength[]): AsyncOrSync<number> {
+    protected _getLength(_ctx: CallbackButtonContext, _objects: ShopItemWithLength[]): AsyncOrSync<number> {
         return ShopItems.len()
     }
 
@@ -26,42 +27,21 @@ export default class ItemChangeAction extends ScrollerAction<RequiredShopItemWit
             data,
             currentPage: index,
             length
-        }: ScrollerSendMessageOptions<RequiredShopItemWithLength>
+        }: ScrollerSendMessageOptions<ShopItemWithLength>
     ): Promise<ScrollerEditMessageResult> {
-        const item = await ShopItems.get(index)
-        if(!item) return await FileUtils.readPugFromResource('text/alerts/wrong-item.pug')
-
         const [userId, count] = data.split('_')
             .slice(2)
             .map(v => +v)
+        if(await ContextUtils.showAlertIfIdNotEqual(ctx, userId)) return null
 
-        if(userId != ctx.from.id) {
-            ContextUtils.showAlertFromFile(ctx)
-            return null
-        }
+        const chatId = await LinkedChatService.getCurrent(ctx, userId)
+        if(!chatId) return null
 
-        const totalCount = ShopItems.getCount(item, count)
-        const totalPrice = ShopItems.getFormattedPriceByCount(item, count)
-
-        return {
-            text: await FileUtils.readPugFromResource(
-                'text/commands/shop/shop.pug',
-                {
-                    changeValues: {
-                        ...item,
-                        count: StringUtils.toFormattedNumber(totalCount),
-                        price: StringUtils.toFormattedNumber(item.price),
-                        totalPrice,
-                        index,
-                        length
-                    }
-                }
-            ),
-            options: {
-                reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get('shop', `${index}_${userId}_${count}`)
-                },
-            }
-        }
+        return await ShopItems.getShopMessage({
+            index,
+            chatId,
+            userId,
+            count
+        })
     }
 }

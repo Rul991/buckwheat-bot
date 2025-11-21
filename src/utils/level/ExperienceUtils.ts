@@ -10,7 +10,7 @@ export default class ExperienceUtils {
     }
 
     static get(level: number): number {
-        return Math.round((level * 10) ** 1.5) - 32
+        return Math.ceil((level * 10) ** LevelUtils.multiplier) - LevelUtils.firstLevelExperience
     }
 
     static add(currentExperience: number, newExperience: number): number {

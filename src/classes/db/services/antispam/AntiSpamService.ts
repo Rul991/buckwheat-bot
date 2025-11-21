@@ -1,4 +1,5 @@
-import AntiSpam from '../../../../interfaces/schemas/AntiSpam'
+import AntiSpam from '../../../../interfaces/schemas/other/AntiSpam'
+import TimeUtils from '../../../../utils/TimeUtils'
 import { MAX_MESSAGES_PER_TIME, NOT_SPAM_TIME } from '../../../../utils/values/consts'
 import AntiSpamRepository from '../../repositories/AntiSpamRepository'
 
@@ -27,8 +28,7 @@ export default class AntiSpamService {
 
     static async updateTimeIfNeed(id: number): Promise<boolean> {
         const time = await AntiSpamService.get(id, 'lastMessageGroupTime')
-
-        if(Date.now() - time >= NOT_SPAM_TIME) {
+        if(TimeUtils.isTimeExpired(time, NOT_SPAM_TIME)) {
             await AntiSpamRepository.updateOne(id, {lastMessageGroupTime: Date.now(), lastMessagesCount: 0})
             return true
         }

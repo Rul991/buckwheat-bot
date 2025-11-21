@@ -1,6 +1,7 @@
 import MathUtils from '../../../../utils/MathUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import StringUtils from '../../../../utils/StringUtils'
+import { MAX_GREED_BOX } from '../../../../utils/values/consts'
 import { TextContext, MaybeString } from '../../../../utils/values/types'
 import CasinoAddService from '../../../db/services/casino/CasinoAddService'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
@@ -14,6 +15,7 @@ export default class GreedBoxCommand extends BuckwheatCommand {
         this._description = 'шкатулка жадности дает деньги ее владельцу'
         this._argumentText = 'деньги'
         this._needData = true
+        this._isPremium = true
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
@@ -22,7 +24,7 @@ export default class GreedBoxCommand extends BuckwheatCommand {
 
         const rawMoney = StringUtils.getNumberFromString(other ?? '1')
         const money = other && !isNaN(rawMoney) ? 
-            MathUtils.clamp(Math.ceil(rawMoney), 1, Number.MAX_SAFE_INTEGER) : 
+            MathUtils.clamp(Math.ceil(rawMoney), 1, MAX_GREED_BOX) : 
             -1
         const [hasBox] = await InventoryItemService.use(chatId, ctx.from.id, 'greedBox')
 

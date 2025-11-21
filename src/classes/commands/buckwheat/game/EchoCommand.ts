@@ -14,12 +14,13 @@ export default class EchoCommand extends BuckwheatCommand {
         this._description = 'повторяю текст'
         this._needData = true
         this._argumentText = 'текст'
+        this._isPremium = true
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         const chatId = await LinkedChatService.getCurrent(ctx)
         if(!chatId) return
-        
+
         const rank = await UserRankService.get(chatId, ctx.from.id)
         const chatMember = await ctx.telegram.getChatMember(chatId, ctx.from.id)
 

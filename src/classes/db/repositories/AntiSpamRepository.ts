@@ -1,4 +1,4 @@
-import AntiSpam from '../../../interfaces/schemas/AntiSpam'
+import AntiSpam from '../../../interfaces/schemas/other/AntiSpam'
 import AntiSpamModel from '../models/AntiSpamModel'
 import IdRepository from './base/IdRepository'
 

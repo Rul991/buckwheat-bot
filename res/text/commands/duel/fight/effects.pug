@@ -1,0 +1,16 @@
+include utils/mixins.pug
+
+b 📌 Эффекты:
+|
+|
+|
+each effect in effects
+    | Игрока 
+    +link(effect.link, false)
+    | :
+    |
+    each includedEffect in effect.effects
+        +pin(`${includedEffect.name} - ${includedEffect.steps} ⏳`)
+    |
+    |
+    |

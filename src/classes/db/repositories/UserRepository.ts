@@ -1,4 +1,4 @@
-import User from '../../../interfaces/schemas/User'
+import User from '../../../interfaces/schemas/user/User'
 import UserModel from '../models/UserModel'
 import ChatIdRepository from './base/ChatIdRepository'
 

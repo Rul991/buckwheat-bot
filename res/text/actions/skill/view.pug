@@ -1,0 +1,19 @@
+include utils/mixins.pug
+
+mixin effects(title, arr)
+    if arr && arr.length > 0
+        |
+        | #{title}: 
+        +pins(arr)
+        |
+        |
+
+if description && description.length
+    | - #{description}
+    |
+    |
++effects('🔼 Воздействие', executeTexts)
++effects('🔽 Стоимость', costTexts)
+
+if executeTexts.length <= 0 && costTexts.length <= 0
+    | Способностей нет!

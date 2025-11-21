@@ -1,4 +1,4 @@
-import { MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from '../../../utils/values/consts';
+import { MAX_DEBT, MILLISECONDS_IN_SECOND } from '../../../utils/values/consts';
 import { DICE_TIME } from '../../../utils/values/consts'
 import ContextUtils from '../../../utils/ContextUtils'
 import { CallbackButtonContext } from '../../../utils/values/types'
@@ -11,11 +11,25 @@ import StringUtils from '../../../utils/StringUtils'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import CubeWinsService from '../../db/services/cube/CubeWinsService'
 import CubeLosesService from '../../db/services/cube/CubeLosesService'
-import CubePlayingService from '../../db/services/cube/CubePlayingService'
+import CubeData from '../../../interfaces/callback-button-data/CubeData'
+import { JSONSchemaType } from 'ajv'
+import { cubeDataSchema } from '../../../utils/values/schemas'
+import CubeLastMessageService from '../../db/services/cube/CubeLastMessageService'
+import FileUtils from '../../../utils/FileUtils'
 
 type DiceAndId = {dice: number, id: number}
 
-export default class CubeYesAction extends CallbackButtonAction {
+type HasEnoughMoneyOptions = {
+    ctx: CallbackButtonContext
+    chatId: number
+    id: number
+    money: number
+    cost: number
+}
+
+export default class CubeYesAction extends CallbackButtonAction<CubeData> {
+    protected _schema: JSONSchemaType<CubeData> = cubeDataSchema
+
     constructor() {
         super()
         this._name = 'cubeyes'
@@ -44,23 +58,40 @@ export default class CubeYesAction extends CallbackButtonAction {
         return {dice, id}
     }
 
-    async execute(ctx: CallbackButtonContext, data: string): Promise<void> {
-        const [replyId, userId, cost] = data.split('_').map(val => +val)
+    private async _hasNotEnoughMoney({ctx, cost, money, id, chatId}: HasEnoughMoneyOptions) {
+        if(cost - money > MAX_DEBT) {
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/cubes/debt-diff.pug',
+                {
+                    changeValues: await ContextUtils.getUser(chatId, id)
+                }
+            )
+            return true
+        }
+
+        return false
+    }
+
+    async execute(ctx: CallbackButtonContext, data: CubeData): Promise<string | void> {
+        const {r: replyId, u: userId, m: cost} = data
+        
         const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return
+        if(!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
 
         if(chatId && ctx.from.id == replyId) {
-            if(await CubePlayingService.get(chatId, replyId)) {
-                await MessageUtils.answerMessageFromResource(
-                    ctx,
-                    'text/commands/cubes/playing.pug',
-                    {changeValues: await ContextUtils.getUser(chatId, replyId)}
-                )
-                return
-            }
-
-            await CubePlayingService.set(chatId, replyId, true)
             await MessageUtils.editMarkup(ctx)
+
+            const userMoney = await CasinoGetService.money(chatId, userId)
+            const replyMoney = await CasinoGetService.money(chatId, replyId)
+
+            for (const {id, money} of [
+                {money: userMoney, id: userId},
+                {money: replyMoney, id: replyId},
+            ]) {
+                if(await this._hasNotEnoughMoney({ctx, cost, money, id, chatId}))
+                    return
+            }
 
             const userDice = await CubeYesAction._sendDice(ctx, userId)
             const replyDice = await CubeYesAction._sendDice(ctx, replyId)
@@ -70,9 +101,6 @@ export default class CubeYesAction extends CallbackButtonAction {
                     CubeYesAction._createDiceAndId(userId, userDice), 
                     CubeYesAction._createDiceAndId(replyId, replyDice), 
                 )
-
-                await CubePlayingService.set(chatId, userId, false)
-                await CubePlayingService.set(chatId, replyId, false)
 
                 if(!win) {
                     await MessageUtils.answerMessageFromResource(ctx, 'text/commands/cubes/win/tie.pug')
@@ -109,6 +137,12 @@ export default class CubeYesAction extends CallbackButtonAction {
 
                     await CubeWinsService.add(chatId, winnerId)
                     await CubeLosesService.add(chatId, loserId)
+
+                    const ids = [userId]
+
+                    ids.forEach(async id => {
+                        await CubeLastMessageService.set(chatId, id, undefined)
+                    })
 
                     setTimeout(async () => {
                         if(loserMoney < money) {

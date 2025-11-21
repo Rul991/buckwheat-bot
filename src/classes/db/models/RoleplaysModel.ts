@@ -1,4 +1,4 @@
-import Roleplays from '../../../interfaces/schemas/Roleplays'
+import Roleplays from '../../../interfaces/schemas/chat/Roleplays'
 import { createModel } from './modelCreators'
 
 export default createModel<Roleplays>({

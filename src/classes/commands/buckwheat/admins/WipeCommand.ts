@@ -2,12 +2,8 @@ import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import RankUtils from '../../../../utils/RankUtils'
 import { TextContext, MaybeString } from '../../../../utils/values/types'
-import CasinoWipeService from '../../../db/services/casino/CasinoWipeService'
-import InventoryItemService from '../../../db/services/items/InventoryItemService'
-import ItemsService from '../../../db/services/items/ItemsService'
-import LevelService from '../../../db/services/level/LevelService'
 import UserRankService from '../../../db/services/user/UserRankService'
-import WorkService from '../../../db/services/work/WorkService'
+import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class WipeCommand extends BuckwheatCommand {
@@ -15,22 +11,6 @@ export default class WipeCommand extends BuckwheatCommand {
         super()
         this._name = 'вайп'
         this._isShow = false
-    }
-
-    private async _wipe(chatId: number) {
-        await LevelService.wipe(chatId)
-        await ItemsService.wipe(chatId)
-        await WorkService.wipe(chatId)
-        await CasinoWipeService.money(chatId)
-    }
-
-    private async _giveNewGameIfGreedBox(chatId: number) {
-        const userItemId = 'greedBox'
-        const chatItemId = 'newGame'
-
-        if(await InventoryItemService.anyHas(chatId, userItemId)) {
-            await InventoryItemService.add(chatId, chatId, chatItemId)
-        }
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
@@ -59,17 +39,18 @@ export default class WipeCommand extends BuckwheatCommand {
             return
         }
 
-        await this._wipe(chatId)
-        await this._giveNewGameIfGreedBox(chatId)
-
-        const changeValues = {
-            chatTitle: ctx.chat.title
-        }
-
         await MessageUtils.answerMessageFromResource(
             ctx,
-            'text/commands/wipe/wipe.pug',
-            {changeValues}
+            'text/commands/wipe/choose.pug',
+            {
+                inlineKeyboard: await InlineKeyboardManager.get(
+                    'wipe/wipe', 
+                    {
+                        chatId: JSON.stringify({chatId}),
+                        userId: JSON.stringify({userId: id})
+                    }
+                )
+            }
         )
     }
 }

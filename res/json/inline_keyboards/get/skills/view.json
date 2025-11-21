@@ -1,0 +1,15 @@
+[
+    [
+        {
+            "text": "Убрать",
+            "callback_data": "skillremove_@{index}_@{id}"
+        }
+    ],
+
+    [
+        {
+            "text": "Назад",
+            "callback_data": "skillmenu_@{id}"
+        }
+    ]
+]

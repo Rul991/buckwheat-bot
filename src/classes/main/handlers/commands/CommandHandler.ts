@@ -39,9 +39,9 @@ export default class CommandHandler extends BaseHandler<BuckwheatCommand, Condit
         return false
     }
 
-    protected async _onBuckwheatCommand(ctx: TextContext, [_, command, other]: CommandStrings) {
+    protected async _onBuckwheatCommand(ctx: TextContext, [name, command, other]: CommandStrings) {
         const choosedCommand = this._buckwheatCommands[command!.toLowerCase()]
-
+        
         if(!choosedCommand) {
             CommandHandler._wrongCommand.execute(ctx, other)
         }
@@ -61,6 +61,8 @@ export default class CommandHandler extends BaseHandler<BuckwheatCommand, Condit
     setup(bot: Telegraf): void {
         bot.on('text', async ctx => {
             if(ctx.message.forward_origin) return
+
+            
             await CommandUtils.doIfCommand(
                 ctx.text,
                 async (strings) => {

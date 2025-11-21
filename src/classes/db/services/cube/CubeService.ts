@@ -1,4 +1,4 @@
-import Cube from '../../../../interfaces/schemas/Cube'
+import Cube from '../../../../interfaces/schemas/games/Cube'
 import CubeRepository from '../../repositories/CubeRepository'
 
 export default class CubeService {

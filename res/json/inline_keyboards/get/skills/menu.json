@@ -1,0 +1,8 @@
+[
+    [
+        {
+            "text": "Посмотреть",
+            "callback_data": "skillmenu_@"
+        }
+    ]
+]

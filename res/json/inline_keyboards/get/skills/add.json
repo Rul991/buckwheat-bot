@@ -1,0 +1,15 @@
+[
+    [
+        {
+            "text": "Добавить",
+            "callback_data": "skilladd_@{skillId}_@{id}"
+        }
+    ],
+
+    [
+        {
+            "text": "Обратно",
+            "callback_data": "skillchange_{\"current\":-1, \"increase\":1}_@{id}"
+        }
+    ]
+]

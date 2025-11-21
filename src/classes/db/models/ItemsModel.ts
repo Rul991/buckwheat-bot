@@ -1,5 +1,5 @@
-import Items from '../../../interfaces/schemas/Items'
-import InventoryItem from '../../../interfaces/schemas/InventoryItem'
+import Items from '../../../interfaces/schemas/items/Items'
+import InventoryItem from '../../../interfaces/schemas/items/InventoryItem'
 import { createModelWithSubModel } from './modelCreators'
 
 export default createModelWithSubModel<Items, InventoryItem>({

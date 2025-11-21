@@ -1,13 +1,13 @@
 import { MaybeString, TextContext } from '../../../../utils/values/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
-import CasinoGetService from '../../../db/services/casino/CasinoGetService'
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
-import { MAX_DEBT_PRICE } from '../../../../utils/values/consts'
-import CubePlayingService from '../../../db/services/cube/CubePlayingService'
+import CasinoGetService from '../../../db/services/casino/CasinoGetService'
+import CubeLastMessageService from '../../../db/services/cube/CubeLastMessageService'
+import { MAX_DEBT } from '../../../../utils/values/consts'
 
 export default class CubeCommand extends BuckwheatCommand {
     constructor() {
@@ -48,20 +48,11 @@ export default class CubeCommand extends BuckwheatCommand {
                 return
             }
 
-            if(await CubePlayingService.get(chatId, userId)) {
-                await MessageUtils.answerMessageFromResource(
-                    ctx,
-                    'text/commands/cubes/playing.pug',
-                    {changeValues: await ContextUtils.getUser(chatId, userId)}
-                )
-                return
-            }
-
-            const userMoney = await CasinoGetService.money(chatId, userId)
-            const replyMoney = await CasinoGetService.money(chatId, replyId)
-
             const rawMoney = StringUtils.getNumberFromString(other ?? '0')
-            const needMoney = Math.ceil(other && !isNaN(rawMoney) ? rawMoney : 0)
+            const needMoney = Math.min(
+                Math.ceil(other && !isNaN(rawMoney) ? rawMoney : 0),
+                await CasinoGetService.money(chatId, userId) + MAX_DEBT
+            )
 
             if(needMoney < 0) {
                 await MessageUtils.answerMessageFromResource(
@@ -71,36 +62,10 @@ export default class CubeCommand extends BuckwheatCommand {
                 return
             }
 
-            if(userMoney < needMoney) {
-                await MessageUtils.answerMessageFromResource(
-                    ctx,
-                    'text/commands/cubes/not-enough.pug'
-                )
-                return
-            }
-
-            if(needMoney - replyMoney >= MAX_DEBT_PRICE) {
-                await MessageUtils.answerMessageFromResource(
-                    ctx,
-                    'text/commands/cubes/debt-diff.pug'
-                )
-                return
-            }
-
-            if(replyMoney <= 0 && needMoney > 0) {
-                await MessageUtils.answerMessageFromResource(
-                    ctx, 
-                    'text/commands/cubes/zero-money.pug'
-                )
-                return
-            }
-
             const user = await ContextUtils.getUser(chatId, userId)
             const reply = await ContextUtils.getUser(chatId, replyId)
 
-            await CubePlayingService.set(chatId, userId, true)
-
-            await MessageUtils.answerMessageFromResource(
+            const message = await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/cubes/done.pug',
                 {
@@ -109,12 +74,27 @@ export default class CubeCommand extends BuckwheatCommand {
                         userUrl: user.link,
                         replyName: reply.name,
                         userName: user.name,
-                        cost: needMoney > 0 ? `${StringUtils.toFormattedNumber(needMoney)} монет` : 'интерес',
-                        isReplyHasNeedMoney: replyMoney >= needMoney
+                        cost: needMoney > 0 ? `${StringUtils.toFormattedNumber(needMoney)} монет` : 'интерес'
                     },
-                    inlineKeyboard: await InlineKeyboardManager.get('cubes', `${replyId}_${userId}_${needMoney}`)
+                    inlineKeyboard: await InlineKeyboardManager.get('cubes', JSON.stringify({
+                        r: replyId,
+                        u: userId,
+                        m: needMoney
+                    }))
                 }
             )
+
+            const lastMessages = await Promise.all([userId]
+                .map(async id => 
+                    ({id, lastMessage: await CubeLastMessageService.get(chatId, userId)})
+                ))
+
+            for (const {id, lastMessage} of lastMessages) {
+                if(lastMessage) {
+                    await MessageUtils.deleteMessage(ctx, lastMessage)
+                }
+                await CubeLastMessageService.set(chatId, id, message.message_id)
+            }
         }
         else {
             await MessageUtils.answerMessageFromResource(

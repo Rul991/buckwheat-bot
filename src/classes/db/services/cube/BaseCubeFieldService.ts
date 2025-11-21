@@ -1,4 +1,4 @@
-import Cube from '../../../../interfaces/schemas/Cube'
+import Cube from '../../../../interfaces/schemas/games/Cube'
 import CubeRepository from '../../repositories/CubeRepository'
 import CubeService from './CubeService'
 
@@ -16,7 +16,7 @@ export default class BaseCubeFieldService<K extends keyof Cube, V extends Cube[K
     }
 
     async set(chatId: number, id: number, value: V = this._defaultValue): Promise<Cube | null> {
-        return await CubeRepository.updateOne(chatId, id, {[this._key]: value})
+        return await CubeRepository.updateOne(chatId, id, {$set: { [this._key]: value }})
     }
 
     async add(chatId: number, id: number, value = 1): Promise<number | null> {

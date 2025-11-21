@@ -1,4 +1,4 @@
-import Marriage from '../../../../interfaces/schemas/Marriage'
+import Marriage from '../../../../interfaces/schemas/other/Marriage'
 import MarriageRepository from '../../repositories/MarriageRepository'
 
 export default class MarriageService {

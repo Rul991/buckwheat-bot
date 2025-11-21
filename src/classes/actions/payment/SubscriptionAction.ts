@@ -1,10 +1,11 @@
 import { PreCheckoutQuery, SuccessfulPayment } from 'telegraf/types'
 import { PreCheckoutQueryContext, SuccessfulPaymentContext } from '../../../utils/values/types'
 import PaymentAction from './PaymentAction'
-import { MILLISECONDS_IN_MONTH, PREMIUM_PRICE_PER_MONTH } from '../../../utils/values/consts'
+import { FIRST_INDEX, MILLISECONDS_IN_MONTH, PREMIUM_PRICE_PER_MONTH } from '../../../utils/values/consts'
 import PremiumChatService from '../../db/services/chat/PremiumChatService'
 import MessageUtils from '../../../utils/MessageUtils'
 import ContextUtils from '../../../utils/ContextUtils'
+import FileUtils from '../../../utils/FileUtils'
 
 export default class SubscriptionAction extends PaymentAction {
     constructor() {
@@ -16,7 +17,7 @@ export default class SubscriptionAction extends PaymentAction {
         const values = payload.split('_', 3)
 
         return [
-            values[0],
+            values[FIRST_INDEX],
             +values[1],
             +values[2],
         ]
@@ -28,10 +29,9 @@ export default class SubscriptionAction extends PaymentAction {
         return PREMIUM_PRICE_PER_MONTH * months == price
     }
 
-    async precheckout(ctx: PreCheckoutQueryContext, {invoice_payload, total_amount}: PreCheckoutQuery): Promise<string | boolean> {
+    async precheckout(_ctx: PreCheckoutQueryContext, {invoice_payload, total_amount}: PreCheckoutQuery): Promise<string | boolean> {
         const isPrecheckout = this._isPrecheckout(invoice_payload, total_amount)
-        
-        return isPrecheckout ? true : 'Цена неактуальна'
+        return isPrecheckout ? true : await FileUtils.readPugFromResource('text/precheckout/old-price.pug')
     }
     
     async execute(ctx: SuccessfulPaymentContext, payment: SuccessfulPayment): Promise<void> {

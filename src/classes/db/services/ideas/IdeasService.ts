@@ -1,6 +1,6 @@
 import IdeasRepository from '../../repositories/IdeasRepository'
-import Ideas from '../../../../interfaces/schemas/Ideas'
-import Idea from '../../../../interfaces/schemas/Idea'
+import Ideas from '../../../../interfaces/schemas/ideas/Ideas'
+import Idea from '../../../../interfaces/schemas/ideas/Idea'
 import { AsyncOrSync } from '../../../../utils/values/types'
 
 export default class IdeasService {

@@ -1,0 +1,18 @@
+{
+    "definition": {
+        "skill": {
+            "text": "@",
+            "data": "skillview_{\"type\":\"d\"}_@{duel}_@"
+        },
+        "back": {
+            "notEach": true,
+            "text": "Назад",
+            "data": "duelfight_@{duel}"
+        }
+    },
+    "values": 
+    [
+        "skill",
+        "back"
+    ]
+}

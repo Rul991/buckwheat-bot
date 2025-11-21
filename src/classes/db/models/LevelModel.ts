@@ -1,4 +1,4 @@
-import Level from '../../../interfaces/schemas/Level'
+import Level from '../../../interfaces/schemas/user/Level'
 import { createModel } from './modelCreators'
 
 export default createModel<Level>({

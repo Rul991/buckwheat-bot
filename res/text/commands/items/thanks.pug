@@ -1,4 +1,10 @@
-a(href=link) #{name}
+include utils/mixins.pug
+
+- let user = {link, name}
+
+| Игрок 
++link(user, false)
 | , как и обещал:
 |
-b СПАСИБО!!!
+b
+    i СПАСИБО!!!

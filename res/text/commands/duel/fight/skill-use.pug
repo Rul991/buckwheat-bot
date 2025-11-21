@@ -1,0 +1,10 @@
+include utils/mixins.pug
+
+- let attackText = attack == 0 ? 'Критический провал' : attack == 1 ? 'Обычная атака' : 'Критический успех'
+
+b #{attackText}!
+|
+|
+| Применен навык: "
+code #{skillName}
+| "!

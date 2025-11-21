@@ -1,4 +1,4 @@
-import LinkedChat from '../../../interfaces/schemas/LinkedChat'
+import LinkedChat from '../../../interfaces/schemas/user/LinkedChat'
 import LinkedChatModel from '../models/LinkedChatModel'
 import IdRepository from './base/IdRepository'
 

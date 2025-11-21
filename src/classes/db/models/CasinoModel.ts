@@ -1,4 +1,4 @@
-import Casino from '../../../interfaces/schemas/Casino'
+import Casino from '../../../interfaces/schemas/games/Casino'
 import { START_MONEY } from '../../../utils/values/consts'
 import { createModel } from './modelCreators'
 

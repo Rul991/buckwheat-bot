@@ -3,4 +3,6 @@
 a(href=user.link) #{user.name}
 |  #{text} #{!replyYourself ? 'игрока ' : ''}
 a(href=reply.link) #{replyYourself ? 'себя' : reply.name}
+if other && other.length
+    |  со словами: "#{other}"
 | !

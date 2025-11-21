@@ -1,16 +1,16 @@
-import User from '../../../../interfaces/schemas/User'
+import User from '../../../../interfaces/schemas/user/User'
 import UserProfileService from './UserProfileService'
 
 export default class BaseUserService {
-    static async get<T extends User[keyof User]>(chatId: number, id: number, key: keyof User): Promise<T | null> {
+    static async get<Key extends keyof User>(chatId: number, id: number, key: Key): Promise<User[Key] | null> {
         const user = await UserProfileService.create(chatId, id)
-        return user[key] as T
+        return user[key] as User[Key]
     }
 
-    static async update<T>(chatId: number, id: number, key: keyof User, data: T): Promise<T | null> {
+    static async update<Key extends keyof User>(chatId: number, id: number, key: Key, data: User[Key]): Promise<User[Key] | null> {
         const updatedUser = await UserProfileService.update(chatId, id, {[key]: data})
         
         if(!updatedUser) return null
-        else return updatedUser[key] as T
+        else return updatedUser[key] as User[Key]
     }
 }

@@ -2,31 +2,31 @@
     [
         {
             "text": "<<",
-            "callback_data": "ideachange_-1_@"
+            "callback_data": "ideachange_{\"increase\": -1}_@"
         },
 
         {
             "text": ">>",
-            "callback_data": "ideachange_1_@"
+            "callback_data": "ideachange_{\"increase\": 1}_@"
         }
     ],
 
     [
         {
             "text": "👍",
-            "callback_data": "vote_coolVote_@"
+            "callback_data": "vote_{\"isCool\": true}_@"
         },
 
         {
             "text": "👎",
-            "callback_data": "vote_badVote_@"
+            "callback_data": "vote_{\"isCool\": false}_@"
         }
     ],
 
     [
         {
             "text": "Удалить",
-            "callback_data": "deleteidea_@"
+            "callback_data": "deleteidea_{\"increase\": 0}_@"
         }
     ]
 ]

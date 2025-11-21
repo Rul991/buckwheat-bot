@@ -1,4 +1,5 @@
 import MathUtils from './MathUtils'
+import { FIRST_INDEX, NOT_FOUND_INDEX } from './values/consts'
 
 export default class Pager {
     private static _getPageAndIncrease(data: string): [number, number] {
@@ -8,14 +9,14 @@ export default class Pager {
     }
 
     static wrapPages(data: string, length: number): number {
-        if(!length) return -1
+        if(!length) return NOT_FOUND_INDEX
         
         const [addedValue, prevPage] = this._getPageAndIncrease(data)
         const newPage = prevPage + addedValue
-        const resultPage = MathUtils.wrap(newPage, 0, length - 1)
+        const resultPage = MathUtils.wrap(newPage, FIRST_INDEX, length - 1)
 
         if(prevPage == resultPage) {
-            return -1
+            return NOT_FOUND_INDEX
         }
         else {
             return resultPage

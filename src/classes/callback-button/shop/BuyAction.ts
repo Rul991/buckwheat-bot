@@ -1,7 +1,7 @@
 import ContextUtils from '../../../utils/ContextUtils'
 import ShopItems from '../../../utils/ShopItems'
 import MessageUtils from '../../../utils/MessageUtils'
-import { CallbackButtonContext } from '../../../utils/values/types'
+import { CallbackButtonContext, ShopItem, ShopMessageOptions } from '../../../utils/values/types'
 import CasinoAddService from '../../db/services/casino/CasinoAddService'
 import CasinoGetService from '../../db/services/casino/CasinoGetService'
 import CallbackButtonAction from '../CallbackButtonAction'
@@ -10,39 +10,142 @@ import FileUtils from '../../../utils/FileUtils'
 import InventoryItemService from '../../db/services/items/InventoryItemService'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import PremiumChatService from '../../db/services/chat/PremiumChatService'
+import { NOT_FOUND_INDEX } from '../../../utils/values/consts'
 
-export default class BuyAction extends CallbackButtonAction {
-    constructor() {
+type Type = [number, number, number]
+
+type MoneyValuesOptions = {
+    chatId: number,
+    id: number,
+    item: ShopItem,
+    count: number
+}
+
+export default class BuyAction extends CallbackButtonAction<Type> {
+    protected _schema: null = null
+
+    constructor () {
         super()
         this._name = 'buy'
     }
 
-    async execute(ctx: CallbackButtonContext, data: string): Promise<string | void> {
+    protected _getData(raw: string): Type {
+        return raw.split('_', 3).map(v => +v) as Type
+    }
+
+    protected async _getIds(ctx: CallbackButtonContext) {
+        const id = ctx.from.id
+        const botId = ctx.botInfo.id
         const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return
+        if (!chatId) return null
 
-        const [index, _id, count] = data
-            .split('_')
-            .map(val => +val)
+        return {
+            id,
+            botId,
+            chatId
+        }
+    }
 
-        if(index === -1) return
-        
+    protected async _getItem(index: number) {
         const item = await ShopItems.get(index)
-        if(!item) return await FileUtils.readPugFromResource('text/alerts/wrong-item.pug')
+        if (!item) return await FileUtils.readPugFromResource('text/alerts/wrong-item.pug')
 
-        const money = await CasinoGetService.money(chatId, ctx.from.id)
-        const user = await ContextUtils.getUserFromContext(ctx)
+        return item
+    }
 
-        const totalCount = ShopItems.getCount(item, count)
+    protected async _getMoneyValues({
+        chatId,
+        id,
+        item,
+        count: totalCount
+    }: MoneyValuesOptions) {
+        const money = await CasinoGetService.money(chatId, id)
         const totalPrice = totalCount * item.price
 
-        if(totalPrice > money) {
+        return {
+            totalPrice,
+            money
+        }
+    }
+
+    protected async _editMessage(ctx: CallbackButtonContext, shopOptions: ShopMessageOptions) {
+        const shopMessage = await ShopItems.getShopMessage({
+            ...shopOptions,
+            updateIfInfinity: false
+        })
+        if(!shopMessage) return
+
+        const {
+            text,
+            options
+        } = shopMessage
+
+        await MessageUtils.editText(
+            ctx,
+            text,
+            options
+        )
+    }
+
+    async execute(ctx: CallbackButtonContext, data: Type): Promise<string | void> {
+        const ids = await this._getIds(ctx)
+        if (!ids) return
+        const {
+            id,
+            botId,
+            chatId
+        } = ids
+        const [index, _id, rawCount] = data
+        const count = Math.max(1, rawCount)
+
+        if (index === NOT_FOUND_INDEX) return
+
+        const item = await this._getItem(index)
+        if (typeof item == 'string') return item
+
+        const {
+            name
+        } = item
+
+        const user = await ContextUtils.getUserFromContext(ctx)
+        const totalCount = ShopItems.getCount(item, count)
+
+        const hasItemsOptions = {
+            chatId,
+            id,
+            item,
+            count: totalCount
+        }
+
+        const {
+            money,
+            totalPrice
+        } = await this._getMoneyValues(hasItemsOptions)
+
+        const isChatMode = ShopItems.isChatMode(item)
+        const hasRest = await ShopItems.hasEnoughItems(hasItemsOptions)
+
+        if (!hasRest) {
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/shop/no-items.pug',
+                {
+                    changeValues: {
+                        name,
+                        isChatMode
+                    }
+                }
+            )
+            return
+        }
+
+        if (totalPrice > money) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/shop/no-money.pug',
                 {
                     changeValues: {
-                        name: item.name, 
+                        name,
                         elapsedMoney: StringUtils.toFormattedNumber(totalPrice - money),
                         user
                     }
@@ -51,13 +154,13 @@ export default class BuyAction extends CallbackButtonAction {
             return
         }
 
-        if(item.isPremium && !(await PremiumChatService.isPremium(chatId))) {
+        if (item.isPremium && !(await PremiumChatService.isPremium(chatId))) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/shop/no-premium.pug',
                 {
                     changeValues: {
-                        name: item.name
+                        name
                     }
                 }
             )
@@ -71,18 +174,29 @@ export default class BuyAction extends CallbackButtonAction {
             count: totalCount
         })
 
-        if(isBought) {
+        if (isBought) {
             const itemId = 'shopPrecent'
             const owners = await InventoryItemService.getOwners(chatId, itemId)
-            let precents = 100
+            let remainingPrice = totalPrice
 
-            for await (const {id, count} of owners) {
-                precents -= count
-                await CasinoAddService.money(chatId, id, Math.floor(totalPrice * (count / 100)))
+            for await (const { id, count } of owners) {
+                const stake = Math.floor(totalPrice * (count / 100))
+                remainingPrice -= stake
+                await CasinoAddService.money(chatId, id, stake)
             }
 
-            await CasinoAddService.money(chatId, ctx.botInfo.id, Math.ceil(totalPrice * (precents / 100)))
-            await CasinoAddService.money(chatId, ctx.from.id, -totalPrice)
+            await CasinoAddService.money(chatId, botId, remainingPrice)
+            await CasinoAddService.money(chatId, id, -totalPrice)
+
+            await this._editMessage(
+                ctx,
+                {
+                    chatId,
+                    userId: id,
+                    index,
+                    count
+                }
+            )
 
             return await FileUtils.readPugFromResource(
                 'text/alerts/bought.pug',

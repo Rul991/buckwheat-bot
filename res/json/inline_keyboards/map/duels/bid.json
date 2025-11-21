@@ -1,0 +1,32 @@
+{
+    "definition": {
+        "choose": {
+            "text": "@",
+            "data": "bidchoose_@_@{id}"
+        },
+        "nonChoose": {
+            "text": "(Убрать)",
+            "data": "bidchoose_@_{\"bidId\": -1}_@{id}",
+            "notEach": true
+        },
+        "left": {
+            "notEach": true,
+            "text": "<<",
+            "data": "bidchange_-1_@_@{id}"
+        },
+        "right": {
+            "notEach": true,
+            "text": ">>",
+            "data": "bidchange_1_@_@{id}"
+        }
+    },
+    "values": 
+    [
+        "nonChoose",
+        "choose",
+        [
+            "left",
+            "right"
+        ]
+    ]
+}

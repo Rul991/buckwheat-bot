@@ -1,4 +1,4 @@
-import Messages from '../../../interfaces/schemas/Messages'
+import Messages from '../../../interfaces/schemas/user/Messages'
 import { createModel } from './modelCreators'
 
 export default createModel<Messages>({

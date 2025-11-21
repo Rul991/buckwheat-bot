@@ -1,5 +1,5 @@
-import Award from '../../../../interfaces/schemas/Award'
-import Awards from '../../../../interfaces/schemas/Awards'
+import Award from '../../../../interfaces/schemas/awards/Award'
+import Awards from '../../../../interfaces/schemas/awards/Awards'
 import AwardsRepository from '../../repositories/AwardsRepository'
 
 export default class AwardsService {

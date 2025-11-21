@@ -1,6 +1,6 @@
 import { createModelWithSubModel } from './modelCreators'
-import Awards from '../../../interfaces/schemas/Awards'
-import Award from '../../../interfaces/schemas/Award'
+import Awards from '../../../interfaces/schemas/awards/Awards'
+import Award from '../../../interfaces/schemas/awards/Award'
 
 type Type = Awards
 type SubType = Award

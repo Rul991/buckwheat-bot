@@ -1,0 +1,8 @@
+[
+    [
+        {
+            "text": "Просмотреть",
+            "callback_data": "echg_{\"id\":@{id},\"current\":-1,\"increase\":1}"
+        }
+    ]
+]

@@ -4,3 +4,11 @@ a(href=sender.link) #{sender.name || name}
 | перевел #{count} монет игроку 
 a(href=receiver.link) #{receiver.name || name}
 |!
+|
+tg-spoiler
+    if raw < 0
+        | Я заметил, что ты написал лишний минус, поэтому решил его убрать!
+    else if raw == 63
+        | 63!
+    else if raw == 26.02 || raw == 23.02 || raw == 6.08
+        | Похоже на дату, когда началось что-то хорошее!

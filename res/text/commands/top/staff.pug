@@ -5,7 +5,7 @@ each rating in ratings
     | #{rating.emoji} #{rating.rankName}:
     each player in rating.players
         |
-        | #{player.isLeft ? '✖️' : '📍'} 
+        | #{player.isLeft ? '✖️' : '📍'}
         a(href=`tg://user?id=${player.id || id}`) 
             if player.isLeft
                 s #{player.name}
