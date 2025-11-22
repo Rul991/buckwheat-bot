@@ -137,7 +137,7 @@ export default class DuelService {
     static async changeDuelist(duelId: number, userId?: number) {
         return await DuelRepository.updateOne(duelId, {
             step: {
-                duelist: this._getDuelist(duelId, userId)
+                duelist: await this._getDuelist(duelId, userId)
             },
             $inc: {
                 steps: 1

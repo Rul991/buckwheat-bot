@@ -31,6 +31,7 @@ export default class extends ConditionalCommand {
         
         if(duel) {
             const duelId = duel.id
+            console.log(id == duel.step.duelist, id, duel.step.duelist)
             message = await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/duel/fight/other-command.pug',
@@ -39,7 +40,7 @@ export default class extends ConditionalCommand {
                         user: await ContextUtils.getUser(chatId, id)
                     },
                     inlineKeyboard: await InlineKeyboardManager.get(
-                        `duels/away${id == duel.step.duelist ? '-duelist' : ''}`,
+                        `duels/away${id == duel.step.duelist ? '-duel' : ''}`,
                         {
                             id: JSON.stringify({userId: id}),
                             user: JSON.stringify({ v: id, t: 'u' }),

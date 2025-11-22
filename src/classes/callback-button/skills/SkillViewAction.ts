@@ -91,12 +91,12 @@ export default class extends CallbackButtonAction<Data> {
             const skills = await ChosenSkillsService.getSkills(chatId, usedId)
 
             keyboard = await InlineKeyboardManager.get('duels/view', {
-                duel: JSON.stringify({ id: duelId }),
+                duel: JSON.stringify({ duel: duelId }),
                 alert: JSON.stringify({
                     type,
                     id: usedId
                 }),
-                skill: JSON.stringify({ name: skills[index as number] })
+                skill: JSON.stringify({ name: skills[index as number] }),
             })
             isSecret = true
         }

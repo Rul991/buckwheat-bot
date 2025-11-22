@@ -27,9 +27,14 @@ export default class DuelYesAction extends CallbackButtonAction<DuelOfferData> {
         const chatId = await LinkedChatService.getCurrent(ctx, replyId)
         if(!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
 
+        const userOptions = {chatId, ctx, userId, replyId, isUserFirst: false}
+        const replyOptions = {chatId, ctx, userId: replyId, replyId: userId, isUserFirst: true}
+        const lowOptions = await DuelUtils.getLowOptions(replyOptions)
+
         if(await ContextUtils.showAlertIfIdNotEqual(ctx, replyId)) return 
-        if(!await DuelUtils.checkStatsAndSendMessage({chatId, ctx, userId, replyId, isUserFirst: false})) return
-        if(!await DuelUtils.checkStatsAndSendMessage({chatId, ctx, userId: replyId, replyId: userId, isUserFirst: true})) return
+        if(!await DuelUtils.checkStatsAndSendMessage(userOptions)) return
+        if(!await DuelUtils.checkStatsAndSendMessage(replyOptions)) return
+        if(!await DuelUtils.sendOnDuelMessage(lowOptions)) return
 
         const {price: userPrice} = await DuelService.getPriceStats(chatId, userId)
         const {price: replyPrice} = await DuelService.getPriceStats(chatId, replyId)

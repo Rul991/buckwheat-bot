@@ -334,7 +334,7 @@ const launchBot = async (bot: Bot) => {
         new ChooseCommand(),
         new SaveCommand(),
         new CharsCommand(),
-        new DuelCommand(),
+        // new DuelCommand(),
         new SkillsCommand(),
         new EffectsCommand(),
         new ChatCommand(),

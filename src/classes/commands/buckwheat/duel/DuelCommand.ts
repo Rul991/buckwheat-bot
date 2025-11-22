@@ -67,8 +67,12 @@ export default class DuelCommand extends BuckwheatCommand {
 
         const userLink = await ContextUtils.getUser(chatId, userId)
         const replyLink = await ContextUtils.getUser(chatId, replyId)
+
+        const options = {chatId, ctx, userId, replyId, isUserFirst: false}
+        const lowOptions = await DuelUtils.getLowOptions(options)
         
-        if(!await DuelUtils.checkStatsAndSendMessage({chatId, ctx, userId, replyId, isUserFirst: false})) return
+        if(!await DuelUtils.sendOnDuelMessage(lowOptions)) return
+        if(!await DuelUtils.checkStatsAndSendMessage(options)) return
 
         await DuelistService.setField(chatId, userId, 'onDuel', true)
         await MessageUtils.answerMessageFromResource(

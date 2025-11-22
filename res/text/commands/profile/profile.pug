@@ -21,7 +21,7 @@ a(href=link) #{name}
 
 +withTitle(`${emoji} Ранг`, `${userNameRank} / ${status} (${rank})`)
 
-if isLinked || isLeft || isMonkey
+if isLinked || isLeft || (rank <= 0 && isMonkey)
     |
     |
 

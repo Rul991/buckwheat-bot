@@ -72,8 +72,9 @@ export default class DuelUtils {
         return true
     }
 
-    private static async _sendOnDuelMessage({ctx, first, second, userId, chatId}: LowOptions): Promise<boolean> {
+    static async sendOnDuelMessage({ctx, first, second, userId, chatId}: LowOptions): Promise<boolean> {
         const onDuel = await DuelistService.onDuel(chatId, userId)
+        console.log(userId, onDuel)
         if(onDuel) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
@@ -184,13 +185,22 @@ export default class DuelUtils {
         }
     }
 
-    static async checkStatsAndSendMessage({
+    static async checkStatsAndSendMessage(options: StatsOptions): Promise<boolean> {
+        const lowOptions = await this.getLowOptions(options)
+
+        if(!await this._sendLowMoneyMessage(lowOptions)) return false
+        if(!await this._sendLowHpMessage(lowOptions)) return false
+        
+        return true
+    }
+
+    static async getLowOptions({
         ctx, 
         chatId, 
         userId, 
         replyId,
         isUserFirst
-    }: StatsOptions): Promise<boolean> {
+    }: StatsOptions): Promise<LowOptions> {
         const userLink = await ContextUtils.getUser(chatId, userId)
         const replyLink = await ContextUtils.getUser(chatId, replyId)
 
@@ -200,11 +210,7 @@ export default class DuelUtils {
         const second = getLink(!isUserFirst)
         const options = {ctx, first, second, userId, chatId}
 
-        if(!await this._sendLowMoneyMessage(options)) return false
-        if(!await this._sendLowHpMessage(options)) return false
-        if(!await this._sendOnDuelMessage(options)) return false
-        
-        return true
+        return options
     }
 
     static async showAlertIfCantUse(ctx: Context, duelId: number) {
@@ -230,7 +236,7 @@ export default class DuelUtils {
         const {winner, loser, prize, experience} = duelResult
         const {chatId} = options
 
-        await AdminUtils.kick(ctx, loser)
+        // await AdminUtils.kick(ctx, loser)
         await MessageUtils.deleteMessage(ctx)
         return await MessageUtils.answerMessageFromResource(
             ctx,
