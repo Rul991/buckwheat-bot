@@ -6,7 +6,3 @@ type ButtonScrollerData = {
     c: number
     i: number
 }
-
-export default class extends ButtonScrollerAction<Setting[], ButtonScrollerData> {
-    
-}
