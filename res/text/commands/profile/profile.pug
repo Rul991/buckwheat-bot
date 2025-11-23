@@ -1,37 +1,54 @@
-mixin status(condition, text)
+include utils/mixins.pug
+
+mixin status(condition)
     if condition
         |
         |
-        b #{text}
-        |
+        b
+            block
 
-mixin withTitle(title, text)
+mixin withTitle(title)
     |
     | #{title}: 
-    b #{text}
-    |
+    b
+        block
 
 | 💫 
 b #{description}
 |
 |
 | 👾 Это - игрок 
-a(href=link) #{name}
++link({name, link}, false)
 | . 
 
-+withTitle(`${emoji} Ранг`, `${userNameRank} / ${status} (${rank})`)
++withTitle(`${emoji} Ранг`)
+    | #{userNameRank} / #{status} (#{rank})
 
 if isLinked || isLeft || (rank <= 0 && isMonkey)
     |
     |
 
-+status(isLinked, '💬 Привязан к данному чату')
-+status(isLeft, '😵 Вышел из чата')
-+status(rank <= 0 && isMonkey, '🐒 Не справился с кнопкой')
++status(isLinked)
+    | 💬 Привязан к данному чату
++status(isLeft)
+    | 😵 Вышел из чата
++status(rank <= 0 && isMonkey)
+    | 🐒 Не справился с кнопкой    
 |
 |
 
-+withTitle(`${classEmoji} Класс`, className)
-+withTitle('📈 Уровень', `${level}/${maxLevel} (${Math.floor(experiencePrecents * 100)}%)`)
-+withTitle('✉️ Кол-во сообщений', `${messages}`)
-+withTitle('⏰ Появление в чате', `${spawnDate} назад`)
++withTitle(`${classEmoji} Класс`)
+    | #{className}
++withTitle('📈 Уровень')
+    | #{level}/#{maxLevel} (#{Math.floor(experiencePrecents * 100)}%)
++withTitle('✉️ Кол-во сообщений')
+    | #{messages}
++withTitle('⏰ Появление в чате')
+    | #{spawnDate} назад
++withTitle('💍 Семейное положение')
+    if family
+        | в браке с 
+        +link(family.partner)
+        | (#{family.date})
+    else
+        | холост

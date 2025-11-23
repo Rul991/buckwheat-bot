@@ -10,7 +10,6 @@ export default class extends DamageMethod {
         chatId, 
         userId 
     }: MethodExecuteArguments<[number, number]>): Promise<number> {
-        console.log(userId)
         const level = await LevelService.get(chatId, userId)
 
         return damage + perLevel * (level - 1)

@@ -40,7 +40,13 @@ export default abstract class BaseRepository<K, T extends typeof Model<K>> {
      */
 
     async updateOne(...values: any): Promise<K | null> {
-        return await this._Model.findOneAndUpdate(values[FIRST_INDEX], values[1]).exec()
+        return await this._Model.findOneAndUpdate(
+            values[FIRST_INDEX], 
+            values[1],
+            {
+                upsert: true
+            }
+        ).exec()
     }
 
     /**

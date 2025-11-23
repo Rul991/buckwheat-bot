@@ -4,6 +4,9 @@
 - const yesEmoji = '✅'
 - const noEmoji = '❌'
 
+- const baseDiscount = 100
+- const discount = baseDiscount - (hasPremium ? premiumDiscount : 0)
+
 mixin conditionText(condition, emoji, text)
     if condition
         |
@@ -27,6 +30,7 @@ blockquote #{description}
 |
 +param('Осталось', `${isRestInfinity ? infinityEmoji : rest}`)
 +param('Общий склад', `${isChatMode ? yesEmoji : noEmoji}`)
++param('Скидка за премиум', `${premiumDiscount}%`)
 |
 |
-+param('Цена', `${price} * ${count} = ${totalPrice} 💰`)
++param('Цена', `${price} * ${count}${discount < baseDiscount ? ` * ${discount}%`: ``} = ${totalPrice} 💰`)

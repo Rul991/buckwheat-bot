@@ -24,10 +24,9 @@ export default class RoleplaysService {
     static async update(chatId: number, callback: (commands: RoleplayCommand[]) => RoleplayCommand[]): Promise<RoleplayCommand[] | null> {
         const commands = await this.getCommands(chatId)
         const newCommands = callback(commands)
-
-        await RoleplaysRepository.updateOne(chatId, {commands: newCommands})
-
+        
         if(commands.length != newCommands.length) {
+            await RoleplaysRepository.updateOne(chatId, {commands: newCommands})
             return newCommands
         }
         else {

@@ -9,7 +9,7 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import FileUtils from '../../../../utils/FileUtils'
 
-export default abstract class<O, D extends ButtonScrollerData = ButtonScrollerData> extends CallbackButtonAction<D> {
+export default abstract class<O, D extends Record<string, any> = ButtonScrollerData> extends CallbackButtonAction<D> {
     protected _schema: JSONSchemaType<D> = {
         type: 'object',
         properties: {

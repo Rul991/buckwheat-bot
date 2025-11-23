@@ -1,6 +1,6 @@
 import InventoryItemService from '../classes/db/services/items/InventoryItemService'
 import AdminUtils from './AdminUtils'
-import { DEFAULT_MAX_COUNT, DEFAULT_TOTAL_COUNT, DEFAULT_TOTAL_COUNT_MODE, MAX_SHOP_PRECENTS, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './values/consts'
+import { DEFAULT_MAX_COUNT, DEFAULT_PREMIUM_DISCOUNT, DEFAULT_TOTAL_COUNT, DEFAULT_TOTAL_COUNT_MODE, MAX_SHOP_PRECENTS, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './values/consts'
 import MessageUtils from './MessageUtils'
 import { ItemCallbackOptions, ShopItem, ShopItemWithLength, JsonShopItem, ShopItemDescription, ShopMessageOptions } from './values/types'
 import ContextUtils from './ContextUtils'
@@ -309,7 +309,8 @@ export default class ShopItems {
                 maxCount,
                 isPremium,
                 totalCount,
-                totalCountMode
+                totalCountMode,
+                premiumDiscount
             } = item
 
             return {
@@ -318,6 +319,7 @@ export default class ShopItems {
                 isPremium: isPremium ?? false,
                 totalCount: totalCount ?? DEFAULT_TOTAL_COUNT,
                 totalCountMode: totalCountMode ?? DEFAULT_TOTAL_COUNT_MODE,
+                premiumDiscount: premiumDiscount ?? DEFAULT_PREMIUM_DISCOUNT,
                 execute,
                 id: filename
             }
@@ -373,12 +375,22 @@ export default class ShopItems {
         return Math.max(totalCount - count, minValue)
     }
 
-    static getPriceByCount(item: ShopItem, count: number): number {
-        return this.getCount(item, count) * item.price
+    static getPriceByCount(item: ShopItem, count: number, hasPremium: boolean): number {
+        return this.getCount(item, count) * this.getPrice(hasPremium, item)
     }
 
-    static getFormattedPriceByCount(item: ShopItem, count: number): string {
-        return StringUtils.toFormattedNumber(this.getPriceByCount(item, count))
+    static getPrice(hasPremium: boolean, item: ShopItem) {
+        return Math.ceil(
+            item.price * (
+                hasPremium ? 
+                    1 - item.premiumDiscount / 100 :
+                    1
+            )
+        )
+    }
+
+    static getFormattedPriceByCount(item: ShopItem, count: number, hasPremium: boolean, ): string {
+        return StringUtils.toFormattedNumber(this.getPriceByCount(item, count, hasPremium))
     }
 
     static isChatMode(item: ShopItem) {
@@ -394,13 +406,16 @@ export default class ShopItems {
         return await this.getRest(chatId, id, item) >= count
     }
 
-    static async getShopMessage({
-        index,
-        chatId,
-        userId,
-        count,
-        updateIfInfinity = true
-    }: ShopMessageOptions) {
+    static async getShopMessage(options: ShopMessageOptions) {
+        const {
+            index,
+            chatId,
+            userId,
+            count,
+            updateIfInfinity = true,
+            hasPremium
+        } = options
+
         const item = await ShopItems.get(index)
         if(!item) return null
 
@@ -412,7 +427,7 @@ export default class ShopItems {
         }
 
         const totalCount = ShopItems.getCount(item, count)
-        const totalPrice = ShopItems.getFormattedPriceByCount(item, count)
+        const totalPrice = ShopItems.getFormattedPriceByCount(item, count, hasPremium)
         const isChatMode = ShopItems.isChatMode(item)
 
         return {
@@ -429,6 +444,7 @@ export default class ShopItems {
                         index,
                         length: ShopItems.len(),
                         isChatMode,
+                        hasPremium
                     }
                 }
             ),

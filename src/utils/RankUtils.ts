@@ -72,15 +72,15 @@ export default class RankUtils {
     }
 
     static getRankByNumber(rank: number): string {
-        return this._rankNames[this._rankNames.length - rank - 1] ?? this._wrongRankName
+        return this._rankNames[this._rankNames.length - rank - 1] || this._wrongRankName
     }
 
     static getRanksByNumber(rank: number): string {
-        return this._ranksNames[this._ranksNames.length - rank - 1] ?? this._wrongRankName
+        return this._ranksNames[this._ranksNames.length - rank - 1] || this._wrongRankName
     }
 
     static getEmojiByRank(rank: number): string {
-        return this._rankEmoji[this._rankEmoji.length - rank - 1] ?? this._wrongRankEmoji
+        return this._rankEmoji[this._rankEmoji.length - rank - 1] || this._wrongRankEmoji
     }
 
     static canUse(options: CanUseOptions): boolean {
@@ -93,6 +93,6 @@ export default class RankUtils {
 
     static canAdminUse(options: CanAdminUseOptions): boolean {
         const {userRank, adminRank, replyRank} = options
-        return this._canUse(options, userRank >= (adminRank ?? this.admin) && replyRank < userRank)
+        return this._canUse(options, userRank >= (adminRank || this.admin) && replyRank < userRank)
     }
 }

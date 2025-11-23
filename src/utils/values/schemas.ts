@@ -2,7 +2,7 @@ import { JSONSchemaType } from 'ajv'
 import Character from '../../interfaces/duel/Character'
 import Characteristics from '../../interfaces/duel/Characteristics'
 import SimpleCommand from '../../interfaces/other/SimpleComand'
-import { JavascriptTypes, NewInvoiceParameters, JsonShopItem } from './types'
+import { NewInvoiceParameters, JsonShopItem } from './types'
 import Skill from '../../interfaces/duel/Skill'
 import StartUp from '../../interfaces/other/StartUp'
 import CubeData from '../../interfaces/callback-button-data/CubeData'
@@ -10,6 +10,7 @@ import ScrollerWithIdData from '../../interfaces/callback-button-data/ScrollerWi
 import ScrollerData from '../../interfaces/callback-button-data/ScrollerData'
 import UserReplyIdsData from '../../interfaces/callback-button-data/UserReplyIdsData'
 import SkillExecute from '../../interfaces/other/SkillExecute'
+import Setting from '../../interfaces/other/Setting'
 
 export const simpleCommandSchema: JSONSchemaType<SimpleCommand> = {
     type: 'object',
@@ -41,6 +42,27 @@ export const simpleCommandSchema: JSONSchemaType<SimpleCommand> = {
     required: ['name'],
 }
 
+// @ts-ignore
+export const settingSchema: JSONSchemaType<Setting<any>> = {
+    type: 'object',
+    properties: {
+        type: {
+            type: 'string'
+        },
+        title: {
+            type: 'string',
+            nullable: false
+        },
+        default: {
+            
+        },
+        properties: {
+            type: 'object',
+            nullable: true
+        }
+    },
+    required: ['title', 'type'],
+}
 
 export const jsonShopItemSchema: JSONSchemaType<JsonShopItem> = {
     type: 'object',
@@ -70,6 +92,10 @@ export const jsonShopItemSchema: JSONSchemaType<JsonShopItem> = {
             nullable: true
         },
         totalCount: {
+            type: 'number',
+            nullable: true
+        },
+        premiumDiscount: {
             type: 'number',
             nullable: true
         },

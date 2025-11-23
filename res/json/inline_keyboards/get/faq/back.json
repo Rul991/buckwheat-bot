@@ -1,0 +1,8 @@
+[
+    [
+        {
+            "text": "Назад",
+            "callback_data": "faqchange_{\"current\":@{page},\"increase\":1}"
+        }
+    ]
+]

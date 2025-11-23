@@ -18,7 +18,8 @@ type MoneyValuesOptions = {
     chatId: number,
     id: number,
     item: ShopItem,
-    count: number
+    count: number,
+    hasPremium: boolean
 }
 
 export default class BuyAction extends CallbackButtonAction<Type> {
@@ -57,10 +58,11 @@ export default class BuyAction extends CallbackButtonAction<Type> {
         chatId,
         id,
         item,
-        count: totalCount
+        count: totalCount,
+        hasPremium
     }: MoneyValuesOptions) {
         const money = await CasinoGetService.money(chatId, id)
-        const totalPrice = totalCount * item.price
+        const totalPrice = ShopItems.getPriceByCount(item, totalCount, hasPremium)
 
         return {
             totalPrice,
@@ -109,12 +111,14 @@ export default class BuyAction extends CallbackButtonAction<Type> {
 
         const user = await ContextUtils.getUserFromContext(ctx)
         const totalCount = ShopItems.getCount(item, count)
+        const hasPremium = await PremiumChatService.isPremium(chatId)
 
         const hasItemsOptions = {
             chatId,
             id,
             item,
-            count: totalCount
+            count: totalCount,
+            hasPremium
         }
 
         const {
@@ -132,7 +136,8 @@ export default class BuyAction extends CallbackButtonAction<Type> {
                 {
                     changeValues: {
                         name,
-                        isChatMode
+                        isChatMode,
+                        user
                     }
                 }
             )
@@ -194,14 +199,17 @@ export default class BuyAction extends CallbackButtonAction<Type> {
                     chatId,
                     userId: id,
                     index,
-                    count
+                    count,
+                    hasPremium
                 }
             )
 
             return await FileUtils.readPugFromResource(
                 'text/alerts/bought.pug',
                 {
-                    changeValues: item
+                    changeValues: {
+                        ...item
+                    }
                 }
             )
         }

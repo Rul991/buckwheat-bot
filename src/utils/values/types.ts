@@ -107,10 +107,11 @@ export type ShopMessageOptions = {
     chatId: number
     userId: number
     count: number,
-    updateIfInfinity?: boolean
+    updateIfInfinity?: boolean,
+    hasPremium: boolean
 }
 
-export type TotalCountMode = 'user' | 'chat' 
+export type TotalCountMode = 'user' | 'chat'
 export type JsonShopItem =
     {
         id?: string
@@ -119,6 +120,7 @@ export type JsonShopItem =
         emoji: string,
         price: number,
         maxCount?: number,
+        premiumDiscount?: number,
         isPremium?: boolean,
         totalCount?: number,
         totalCountMode?: TotalCountMode,
@@ -254,8 +256,8 @@ export type UseSkillOptions = {
     attack: SkillAttack
 }
 
-export type SkillMethodGetText = { 
-    isExecute: boolean, 
+export type SkillMethodGetText = {
+    isExecute: boolean,
     isSecret?: boolean
 }
 
@@ -301,3 +303,30 @@ export type DeleteEffectsByNameTargetStepsOptions = {
 }
 
 export type HpMana = 'hp' | 'mana'
+export type SettingType = 'string' | 'any' | 'enum' | 'boolean' | 'number'
+
+export type SettingTypeDefault = {
+    string: string
+    any: any
+    enum: any
+    boolean: boolean
+    number: number
+}
+
+export type SettingPropertiesValues = {
+    string: {
+        min?: number
+        max?: number
+    }
+
+    any: {
+
+    }
+
+    enum: {
+        values: any[]
+    }
+
+    boolean: SettingPropertiesValues['any']
+    number: SettingPropertiesValues['string']
+}

@@ -4,5 +4,6 @@
     "emoji": "🎰",
     "price": 250000,
     "maxCount": 1,
-    "totalCount": 1
+    "totalCount": 1,
+    "premiumDiscount": 20
 }

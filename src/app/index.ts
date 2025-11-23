@@ -70,7 +70,6 @@ import CommandsChangeAction from '../classes/callback-button/scrollers/page/Comm
 import DiceDice from '../classes/dice/DiceDice'
 import StatsCommand from '../classes/commands/buckwheat/info/StatsCommand'
 import DebtMemberAction from '../classes/actions/new-member/DebtMemberAction'
-import ChannelCommand from '../classes/commands/buckwheat/info/ChannelCommand'
 import LevelCommand from '../classes/commands/buckwheat/level/LevelCommand'
 import RouletteCommand from '../classes/commands/buckwheat/game/RouletteCommand'
 import RoleplayChangeAction from '../classes/callback-button/scrollers/page/RoleplayChangeAction'
@@ -100,7 +99,6 @@ import SubscriptionAction from '../classes/actions/payment/SubscriptionAction'
 import DonateAction from '../classes/actions/payment/DonateAction'
 import PaySupportCommand from '../classes/commands/telegram/PaySupportCommand'
 import CharsCommand from '../classes/commands/buckwheat/duel/CharsCommand'
-import DuelCommand from '../classes/commands/buckwheat/duel/DuelCommand'
 import DuelNoAction from '../classes/callback-button/duels/DuelNoAction'
 import DuelYesAction from '../classes/callback-button/duels/DuelYesAction'
 import WipeAction from '../classes/callback-button/WipeAction'
@@ -121,11 +119,16 @@ import DuelSkillAction from '../classes/callback-button/duels/DuelSkillAction'
 import SkillUseAction from '../classes/callback-button/duels/SkillUseAction'
 import DuelEffectsAction from '../classes/callback-button/duels/DuelEffectsAction'
 import SkillAlertAction from '../classes/callback-button/skills/SkillAlertAction'
-import InventoryItemService from '../classes/db/services/items/InventoryItemService'
 import EffectsCommand from '../classes/commands/buckwheat/duel/EffectsCommand'
 import EffectChangeAction from '../classes/callback-button/effects/EffectChangeAction'
-import FileUtils from '../utils/FileUtils'
 import NotAllowedChatAction from '../classes/actions/every/NotAllowedChatAction'
+import { disconnect } from 'mongoose'
+import FaqCommand from '../classes/commands/buckwheat/info/FaqCommand'
+import FaqChangeAction from '../classes/callback-button/faq/FaqChangeAction'
+import FaqAction from '../classes/callback-button/faq/FaqAction'
+import DeleteCommand from '../classes/commands/buckwheat/admins/DeleteCommand'
+import ReactionAction from '../classes/actions/every/ReactionAction'
+import SettingUtils from '../utils/SettingUtils'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = { name: string, isMustDefined: boolean }
@@ -209,6 +212,7 @@ const launchBot = async (bot: Bot) => {
         new AntiSpamAction(),
         new NewMessagesAction(),
         new RandomPrizeMessageAction(),
+        new ReactionAction()
     )
 
     // left member 
@@ -257,6 +261,8 @@ const launchBot = async (bot: Bot) => {
         new SkillUseAction(),
         new SkillAlertAction(),
         new EffectChangeAction(),
+        new FaqChangeAction(),
+        new FaqAction()
     )
 
     // dice 
@@ -292,8 +298,9 @@ const launchBot = async (bot: Bot) => {
         new PremiumCommand(),
         new DonateCommand(),
         new CommandsCommand(),
-        new ProfileCommand(),
+        new FaqCommand(),
         new CreatorCommand(),
+        new ProfileCommand(),
         new BalanceCommand(),
         new ChangeNameCommand(),
         new ChangeDescriptionCommand(),
@@ -305,6 +312,7 @@ const launchBot = async (bot: Bot) => {
         new UnmuteCommand(),
         new BanCommand(),
         new UnbanCommand(),
+        new DeleteCommand(),
         new PingCommand(),
         new CubeCommand(),
         new UpdateCommand(),
@@ -325,7 +333,6 @@ const launchBot = async (bot: Bot) => {
         new LevelCommand(),
         new LinkCommand(),
         new RandomCommand(),
-        new ChannelCommand(),
         new RouletteCommand(),
         new MarriageCommand(),
         new MarryCommand(),
@@ -356,7 +363,7 @@ const launchBot = async (bot: Bot) => {
 }
 
 const test = async (): Promise<void | boolean> => {
-
+    
 }
 
 const main = async () => {
@@ -364,8 +371,9 @@ const main = async () => {
     if (!isEnvVarsValidate()) return
     await connectDatabase()
 
-    if (MODE == 'dev') {
-        if (await test()) return
+    if (MODE == 'dev' && await test()) {
+        await disconnect()
+        return
     }
 
     const bot = new Bot(TOKEN)

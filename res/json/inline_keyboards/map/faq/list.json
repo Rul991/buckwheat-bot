@@ -1,0 +1,18 @@
+{
+    "definition": {
+        "faq": {
+            "text": "@",
+            "data": "faq_@"
+        },
+        "arrow": {
+            "text": "@",
+            "data": "faqchange_@"
+        }
+    },
+    
+    "values": 
+    [
+        "faq",
+        ["arrow"]
+    ]
+}

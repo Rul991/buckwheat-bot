@@ -1,6 +1,7 @@
 import { configDotenv } from 'dotenv'
 import { env } from 'process'
 import { ConstSymbol, ModeTypes, TotalCountMode } from './types'
+import { TelegramEmoji } from 'telegraf/types'
 
 configDotenv()
 
@@ -76,7 +77,7 @@ export const CATALOG_BOOST = 3
 
 export const WORK_TIME = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * 3
 export const COOKIE_WORK_TIME = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * -10
-export const STAR_TO_COIN = 10
+export const STAR_TO_COIN = 100
 
 export const DEFAULT_USER_NAME = 'игрок'
 export const DEFAULT_USER_NAME_CAPITAL = DEFAULT_USER_NAME
@@ -101,7 +102,7 @@ export const DICE_ANSWER_CHANCE = 0.1
 export const LEVEL_UP_MONEY = 4
 
 export const DATA_REPLACEABLE_SYMBOL = '@'
-export const MAX_DEBT = 1
+export const MAX_DEBT = 500
 export const MAX_SHOP_COUNT = 50000
 
 export const ROULETTE_CHANCE = 1 / 6
@@ -146,7 +147,23 @@ export const DEFAULT_DESCRIPTION = ''
 export const DEFAULT_MAX_COUNT = 100_000
 export const DEFAULT_TOTAL_COUNT = -1
 export const DEFAULT_TOTAL_COUNT_MODE: TotalCountMode = 'user'
+export const DEFAULT_PREMIUM_DISCOUNT = 0
 
 export const MAX_TIME_WORD = 'навсегда'
 export const DUEL_EXPERIENCE = 150
 export const UNKNOWN_EFFECT = '???'
+
+export const REACTIONS: TelegramEmoji[] = [
+    '👍', '👎', '❤', '🔥', '🥰', '👏', '😁', '🤔', '🤯', '😱', 
+    '🤬', '😢', '🎉', '🤩', '🤮', '💩', '🙏', '👌', '🕊', '🤡', 
+    '🥱', '🥴', '😍', '🐳', '❤‍🔥', '🌚', '🌭', '💯', '🤣', '⚡', 
+    '🍌', '🏆', '💔', '🤨', '😐', '🍓', '🍾', '💋', '🖕', '😈', 
+    '😴', '😭', '🤓', '👻', '👨‍💻', '👀', '🎃', '🙈', '😇', '😨', 
+    '🤝', '✍', '🤗', '🫡', '🎅', '🎄', '☃', '💅', '🤪', '🗿', 
+    '🆒', '💘', '🙉', '🦄', '😘', '💊', '🙊', '😎', '👾', '🤷‍♂', 
+    '🤷', '🤷‍♀', '😡'
+]
+export const REACTION_CHANCE = 0.03
+export const WINSTREAK_PRIZE = 25
+export const WINSTREAK_COUNT = MODE == 'dev' ? 3 : 10
+// export const  

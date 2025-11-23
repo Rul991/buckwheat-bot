@@ -20,6 +20,7 @@ import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService
 import UserOldService from '../../../db/services/user/UserOldService'
 import AnswerOptions from '../../../../interfaces/options/AnswerOptions'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import MarriageService from '../../../db/services/marriage/MarriageService'
 
 export default class ProfileCommand extends BuckwheatCommand {
     constructor() {
@@ -80,7 +81,7 @@ export default class ProfileCommand extends BuckwheatCommand {
                 name = user.name
             }
         }
-        else if('reply_to_message' in ctx.message!) {
+        else if('reply_to_message' in ctx.message) {
             const {id: replyId, first_name} = ctx.message.reply_to_message?.from!
 
             id = replyId
@@ -92,6 +93,27 @@ export default class ProfileCommand extends BuckwheatCommand {
         }
 
         return {id, name}
+    }
+
+    private async _getFamily(chatId: number, id: number) {
+        const marriage = await MarriageService.get(chatId, id)
+        const {
+            partnerId,
+            startedAt
+        } = marriage
+
+        if(!partnerId) {
+            return null
+        }
+
+        const partner = await ContextUtils.getUser(chatId, partnerId)
+        const elapsed = TimeUtils.getElapsed(startedAt ?? Date.now())
+        const date = TimeUtils.formatMillisecondsToTime(elapsed)
+
+        return {
+            partner,
+            date
+        }
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
@@ -126,11 +148,13 @@ export default class ProfileCommand extends BuckwheatCommand {
 
         const isLinked = (await LinkedChatService.getRaw(id)) == ctx.chat.id
         const isLeft = await UserLeftService.get(chatId, id)
+        const family = await this._getFamily(chatId, id)
 
         const path = 'text/commands/profile/profile.pug'
         const changeValues = {
             rank,
             isLeft,
+            family,
             isLinked,
             maxLevel: LevelUtils.max,
             level: LevelUtils.get(experience),

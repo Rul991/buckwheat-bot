@@ -1,0 +1,7 @@
+{
+    "sendPrivate": {
+        "title": "Баквит может отправлять уведомления в лс?",
+        "type": "boolean",
+        "default": false
+    }
+}

@@ -1,4 +1,4 @@
-import { appendFile, readFile, stat, writeFile } from 'fs/promises'
+import { appendFile, readdir, readFile, stat, writeFile } from 'fs/promises'
 import { join } from 'path'
 import FileCache from '../interfaces/other/FileCache'
 import Logging from './Logging'
@@ -97,6 +97,22 @@ export default class FileUtils {
         catch(e) {
             Logging.error('Pug parsing error:', e)
             return ''
+        }
+    }
+
+    static async readFilesFromResourse(path: string) {
+        try {
+            const files = await readdir(
+                join(this._resourceFolder, path), 
+                {withFileTypes: true}
+            )
+            return files
+                .filter(v => v.isFile())
+                .map(v => v.name)
+        }
+        catch(e) {
+            Logging.error('Cant read directory', e)
+            return []
         }
     }
 

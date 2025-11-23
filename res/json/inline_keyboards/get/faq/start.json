@@ -1,0 +1,8 @@
+[
+    [
+        {
+            "text": "Просмотреть",
+            "callback_data": "faqchange_{\"current\":-1,\"increase\":1}"
+        }
+    ]
+]

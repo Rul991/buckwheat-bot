@@ -31,7 +31,7 @@ export default class extends ConditionalCommand {
         
         if(duel) {
             const duelId = duel.id
-            console.log(id == duel.step.duelist, id, duel.step.duelist)
+
             message = await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/duel/fight/other-command.pug',

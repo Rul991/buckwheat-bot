@@ -1,11 +1,9 @@
 import ContextUtils from '../../../utils/ContextUtils'
-import FileUtils from '../../../utils/FileUtils'
 import ShopItems from '../../../utils/ShopItems'
 import { AsyncOrSync, CallbackButtonContext, ShopItemWithLength, ScrollerEditMessageResult, ScrollerSendMessageOptions } from '../../../utils/values/types'
-import InlineKeyboardManager from '../../main/InlineKeyboardManager'
-import StringUtils from '../../../utils/StringUtils'
 import ScrollerAction from '../scrollers/page/ScrollerAction'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
+import PremiumChatService from '../../db/services/chat/PremiumChatService'
 
 export default class ItemChangeAction extends ScrollerAction<ShopItemWithLength> {
     constructor() {
@@ -37,11 +35,13 @@ export default class ItemChangeAction extends ScrollerAction<ShopItemWithLength>
         const chatId = await LinkedChatService.getCurrent(ctx, userId)
         if(!chatId) return null
 
+        const hasPremium = await PremiumChatService.isPremium(chatId)
         return await ShopItems.getShopMessage({
             index,
             chatId,
             userId,
-            count
+            count,
+            hasPremium
         })
     }
 }

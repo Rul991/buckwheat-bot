@@ -74,7 +74,7 @@ export default class DuelUtils {
 
     static async sendOnDuelMessage({ctx, first, second, userId, chatId}: LowOptions): Promise<boolean> {
         const onDuel = await DuelistService.onDuel(chatId, userId)
-        console.log(userId, onDuel)
+
         if(onDuel) {
             await MessageUtils.answerMessageFromResource(
                 ctx,

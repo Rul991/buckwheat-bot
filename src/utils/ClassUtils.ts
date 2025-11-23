@@ -32,11 +32,11 @@ export default class ClassUtils {
     }
     
     static getEmoji(type: ClassTypes): string {
-        return this._classEmojies[type] ?? this._classEmojies[this.defaultClassName]
+        return this._classEmojies[type] || this._classEmojies[this.defaultClassName]
     }
 
     static getName(type: ClassTypes): string {
-        return this._classNames[type] ?? this._classNames[this.defaultClassName]
+        return this._classNames[type] || this._classNames[this.defaultClassName]
     }
 
     static getNames(): ClassRecord {

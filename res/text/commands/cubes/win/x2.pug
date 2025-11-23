@@ -1,6 +1,14 @@
+include utils/mixins.pug
+
+- const user = {name, link}
+
 | Ну и ну, единица!
 |
 if !isFree 
     | Игрок 
-    a(href=link) #{name} 
+    +link(user)
     | получает х2 сумму, а именно #{cost} монет!
+else
+    | Игрок 
+    +link(user)
+    | выиграл!
