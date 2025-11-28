@@ -1,6 +1,6 @@
 import InventoryItemsUtils from '../../../../utils/InventoryItemsUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types'
+import { TextContext, MaybeString } from '../../../../utils/values/types/types'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'

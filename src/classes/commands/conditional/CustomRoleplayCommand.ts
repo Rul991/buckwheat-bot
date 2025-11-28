@@ -1,6 +1,6 @@
 import MessageUtils from '../../../utils/MessageUtils'
 import RoleplayUtils from '../../../utils/RoleplayUtils'
-import { TextContext, CommandStrings, MaybeString } from '../../../utils/values/types'
+import { TextContext, CommandStrings, MaybeString } from '../../../utils/values/types/types'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import RoleplaysService from '../../db/services/rp/RoleplaysService'
 import ConditionalCommand from '../base/ConditionalCommand'

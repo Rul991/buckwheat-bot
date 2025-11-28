@@ -1,4 +1,4 @@
-import { ButtonScrollerEditMessageResult, ButtonScrollerFullOptions, ButtonScrollerOptions } from '../../../utils/values/types'
+import { ButtonScrollerEditMessageResult, ButtonScrollerFullOptions, ButtonScrollerOptions } from '../../../utils/values/types/types'
 import UserClassService from '../../db/services/user/UserClassService'
 import ChosenSkillsService from '../../db/services/choosedSkills/ChosenSkillsService'
 import FileUtils from '../../../utils/FileUtils'

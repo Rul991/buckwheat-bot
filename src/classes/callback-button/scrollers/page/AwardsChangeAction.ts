@@ -1,7 +1,7 @@
 import Award from '../../../../interfaces/schemas/awards/Award'
 import ContextUtils from '../../../../utils/ContextUtils'
 import FileUtils from '../../../../utils/FileUtils'
-import { CallbackButtonContext, ScrollerSendMessageOptions, ScrollerEditMessageResult, AsyncOrSync } from '../../../../utils/values/types'
+import { CallbackButtonContext, ScrollerSendMessageOptions, ScrollerEditMessageResult, AsyncOrSync, ScrollerGetObjectsOptions } from '../../../../utils/values/types/types'
 import AwardsService from '../../../db/services/awards/AwardsService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
@@ -30,7 +30,7 @@ export default class AwardsChangeAction extends ScrollerAction<Award> {
         return id
     }
 
-    protected async _getObjects(ctx: CallbackButtonContext, id: number): Promise<Award[]> {
+    protected async _getObjects(ctx: CallbackButtonContext, { id }: ScrollerGetObjectsOptions): Promise<Award[]> {
         const chatId = await LinkedChatService.getCurrent(ctx, id)
         if(!chatId) return []
 

@@ -1,5 +1,5 @@
 import { User } from 'telegraf/types'
-import { NewMemberContext } from '../../../utils/values/types'
+import { NewMemberContext } from '../../../utils/values/types/types'
 import NewMemberAction from './NewMemberAction'
 import CasinoAccountService from '../../db/services/casino/CasinoAccountService'
 import ItemsService from '../../db/services/items/ItemsService'

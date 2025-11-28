@@ -1,7 +1,7 @@
 import SkillAttack from '../../enums/SkillAttack'
 import FileUtils from '../../utils/FileUtils'
 import { CLONE_SKILL_NAME, DAMAGE_UP_SKILL_NAME, DEFEND_SKILL_NAME, INVULNERABLE_SKILL_NAME, SKIP_DAMAGE_SKILL_NAME } from '../../utils/values/consts'
-import { JavascriptTypes, MethodExecuteArguments, SkillMethodGetText } from '../../utils/values/types'
+import { JavascriptTypes, MethodExecuteArguments, SkillMethodGetText } from '../../utils/values/types/types'
 import DuelService from '../db/services/duel/DuelService'
 import EffectService from '../db/services/duel/EffectService'
 import DuelistService from '../db/services/duelist/DuelistService'

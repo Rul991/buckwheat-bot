@@ -1,0 +1,13 @@
+[
+    [
+        {
+            "text": "<<",
+            "callback_data": "topch_-1_@{page}_@{type}"
+        },
+
+        {
+            "text": ">>",
+            "callback_data": "topch_1_@{page}_@{type}"
+        }
+    ]
+]

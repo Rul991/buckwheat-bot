@@ -1,6 +1,6 @@
 import FileUtils from '../../utils/FileUtils'
 import { HP_SYMBOLS } from '../../utils/values/consts'
-import { JavascriptTypes, MethodExecuteArguments, AsyncOrSync, SkillMethodGetText } from '../../utils/values/types'
+import { JavascriptTypes, MethodExecuteArguments, AsyncOrSync, SkillMethodGetText } from '../../utils/values/types/types'
 import DuelistService from '../db/services/duelist/DuelistService'
 import SkillMethod from './SkillMethod'
 

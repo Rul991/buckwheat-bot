@@ -1,7 +1,7 @@
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import RankUtils from '../../../../utils/RankUtils'
-import { TextContext, MaybeString, HasOtherChangeProfileMessage, NoOtherChangeProfileMessage } from '../../../../utils/values/types'
+import { TextContext, MaybeString, HasOtherChangeProfileMessage, NoOtherChangeProfileMessage } from '../../../../utils/values/types/types'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import UserNameService from '../../../db/services/user/UserNameService'
 import UserRankService from '../../../db/services/user/UserRankService'

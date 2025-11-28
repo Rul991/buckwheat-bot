@@ -1,13 +1,24 @@
 import { RANDOM_PRIZE_CHANCE } from '../../../utils/values/consts'
 import MessageUtils from '../../../utils/MessageUtils'
 import RandomUtils from '../../../utils/RandomUtils'
-import { MessageContext } from '../../../utils/values/types'
+import { MessageContext } from '../../../utils/values/types/types'
 import EveryMessageAction from './EveryMessageAction'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'
+import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
+import CasinoGetService from '../../db/services/casino/CasinoGetService'
+import ChatSettingsService from '../../db/services/settings/ChatSettingsService'
 
 export default class RandomPrizeMessageAction extends EveryMessageAction {
     async execute(ctx: MessageContext): Promise<void | true> {
-        const needSend = RandomUtils.chance(RANDOM_PRIZE_CHANCE)
+        const id = ctx.botInfo.id
+        const chatId = await LinkedChatService.getCurrent(ctx, id)
+        if(!chatId) return
+
+        const canSend = await ChatSettingsService.get<'boolean'>(chatId, 'spawnBox')
+        if(!canSend) return
+
+        const money = await CasinoGetService.money(chatId, id)
+        const needSend = money > 0 && RandomUtils.chance(RANDOM_PRIZE_CHANCE)
 
         if(needSend) {
             await MessageUtils.answerMessageFromResource(

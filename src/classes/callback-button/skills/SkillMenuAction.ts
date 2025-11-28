@@ -1,5 +1,5 @@
 import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext, CallbackButtonValue } from '../../../utils/values/types'
+import { CallbackButtonContext, CallbackButtonValue } from '../../../utils/values/types/types'
 import CallbackButtonAction from '../CallbackButtonAction'
 import MessageUtils from '../../../utils/MessageUtils'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'

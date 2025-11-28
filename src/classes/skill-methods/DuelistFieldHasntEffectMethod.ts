@@ -1,5 +1,5 @@
 import FileUtils from '../../utils/FileUtils'
-import { JavascriptTypes, MethodExecuteArguments, SkillMethodGetText } from '../../utils/values/types'
+import { JavascriptTypes, MethodExecuteArguments, SkillMethodGetText } from '../../utils/values/types/types'
 import DuelService from '../db/services/duel/DuelService'
 import EffectService from '../db/services/duel/EffectService'
 import DuelistFieldAddMethod from './DuelistFieldAddMethod'

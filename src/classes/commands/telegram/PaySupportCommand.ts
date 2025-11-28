@@ -1,5 +1,5 @@
 import MessageUtils from '../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../utils/values/types'
+import { TextContext, MaybeString } from '../../../utils/values/types/types'
 import TelegramCommand from '../base/TelegramCommand'
 
 export default class PaySupportCommand extends TelegramCommand {

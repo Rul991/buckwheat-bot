@@ -1,11 +1,17 @@
 import { FIRST_INDEX, NOT_FOUND_INDEX } from './values/consts'
 
+type Grid = {
+    width: number
+}
 
-type Matrice = {
+type NumberGrid = Grid & {
     min: number,
     max: number,
     step?: number
-    width: number
+}
+
+type ObjectsGrid<T> = Grid & {
+    objects: T[]
 }
 
 export default class ArrayUtils {
@@ -40,19 +46,32 @@ export default class ArrayUtils {
         return result
     }
 
-    static matrice({
+    static numberGrid({
         min,
         max,
-        step = 1,
+        step,
         width,
-    }: Matrice) {
-        const result: number[][] = []
-        let temp: number[] = []
+    }: NumberGrid): number[][] {
+        return this.objectsGrid({
+            objects: this.range(min, max, step),
+            width
+        })
+    }
 
-        for(let i = min; i <= max; i += step) {
-            temp.push(i)
-            if(temp.length >= width || i >= max) {
-                result.push(Array.from(temp))
+    static objectsGrid<T>({
+        objects,
+        width
+    }: ObjectsGrid<T>): T[][] {
+        const result: T[][] = []
+        const lastIndex = objects.length - 1
+        let temp: T[] = []
+
+        for (let i = 0; i <= lastIndex; i++) {
+            const object = objects[i]
+            temp.push(object)
+
+            if(temp.length >= width || i >= lastIndex) {
+                result.push(temp)
                 temp = []
             }
         }

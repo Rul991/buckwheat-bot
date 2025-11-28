@@ -1,6 +1,6 @@
 import CommandDescriptionUtils from '../../../utils/CommandDescriptionUtils'
 import MessageUtils from '../../../utils/MessageUtils'
-import { TextContext, CommandStrings, MaybeString } from '../../../utils/values/types'
+import { TextContext, CommandStrings, MaybeString } from '../../../utils/values/types/types'
 import PremiumChatService from '../../db/services/chat/PremiumChatService'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import ConditionalCommand from '../base/ConditionalCommand'

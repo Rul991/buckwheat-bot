@@ -1,6 +1,6 @@
 import MessageUtils from '../../../utils/MessageUtils'
 import { FIRST_INDEX } from '../../../utils/values/consts'
-import { PhotoContext, MaybeString } from '../../../utils/values/types'
+import { PhotoContext, MaybeString } from '../../../utils/values/types/types'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import UserImageService from '../../db/services/user/UserImageService'
 import PhotoAction from './PhotoAction'

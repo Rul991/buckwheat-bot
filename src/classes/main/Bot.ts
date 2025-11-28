@@ -1,4 +1,5 @@
-import { session, Telegraf } from 'telegraf'
+import { Context, Telegraf } from 'telegraf'
+import { session } from 'telegraf/session'
 import Logging from '../../utils/Logging'
 import { CHAT_ID, DOMAIN, HOOK_PORT, MODE, SECRET_PATH } from '../../utils/values/consts'
 import FileUtils from '../../utils/FileUtils'
@@ -6,18 +7,19 @@ import BaseHandler from './handlers/BaseHandler'
 import MessageUtils from '../../utils/MessageUtils'
 import express from 'express'
 import BaseAction from '../actions/base/BaseAction'
+import { MyTelegraf, SceneContextData } from '../../utils/values/types/types'
 
-export default class Bot {    
-    private _bot: Telegraf
+export default class Bot {
+    private _bot: MyTelegraf
     private _handlers: BaseHandler<any, any>[]
 
-    constructor(token: string) {
+    constructor (token: string) {
         this._bot = new Telegraf(token)
 
         this._handlers = []
     }
 
-    get bot(): Telegraf {
+    get bot(): MyTelegraf {
         return this._bot
     }
 
@@ -28,7 +30,7 @@ export default class Bot {
     addActions(...actions: BaseAction[]): void {
         for (const action of actions) {
             for (const handler of this._handlers) {
-                if(handler.isNeedType(action)) {
+                if (handler.isNeedType(action)) {
                     handler.add(action)
                     break
                 }
@@ -38,15 +40,15 @@ export default class Bot {
 
     private async _launchCallback(): Promise<void> {
         console.log(`Listened at https://t.me/${this._bot.botInfo?.username} (!)`)
-        if(MODE == 'prod') {
+        if (MODE == 'prod') {
             this._bot.telegram.sendMessage(
-                CHAT_ID!, 
+                CHAT_ID!,
                 await FileUtils.readPugFromResource('text/commands/update/after_restart.pug')
             )
         }
     }
 
-    private async _startWebHook(callback = async () => {}) {
+    private async _startWebHook(callback = async () => { }) {
         const app = express()
 
         app.use(this._bot.webhookCallback(SECRET_PATH))
@@ -55,21 +57,21 @@ export default class Bot {
         app.listen(HOOK_PORT!, '0.0.0.0', 0, callback)
     }
 
-    private async _startLongPolling(callback = async () => {}) {
+    private async _startLongPolling(callback = async () => { }) {
         await this._bot.launch(
             {
                 dropPendingUpdates: true
-            }, 
+            },
             callback
         )
     }
 
-    async launch(isWebHook = false, callback = async () => {}): Promise<void> {
+    async launch(isWebHook = false, callback = async () => { }): Promise<void> {
         this._bot.use(session())
 
-        this._handlers.forEach(handler => 
-            handler.setup(this._bot)
-        )
+        for (const handler of this._handlers) {
+            await handler.setup(this._bot)
+        }
 
         this._bot.catch(async (e, ctx) => {
             Logging.error(e)
@@ -89,7 +91,7 @@ export default class Bot {
             await callback()
         }
 
-        if(isWebHook) {
+        if (isWebHook) {
             this._startWebHook(launchCallback)
         }
         else {

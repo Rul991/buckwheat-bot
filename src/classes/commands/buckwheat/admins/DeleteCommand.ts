@@ -1,6 +1,6 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import RankUtils from '../../../../utils/RankUtils'
-import { TextContext } from '../../../../utils/values/types'
+import { TextContext } from '../../../../utils/values/types/types'
 import AdminCommand from './AdminCommand'
 
 export default class extends AdminCommand {

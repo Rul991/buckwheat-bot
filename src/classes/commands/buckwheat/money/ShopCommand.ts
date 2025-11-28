@@ -1,6 +1,6 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import { MAX_SHOP_COUNT } from '../../../../utils/values/consts'
-import { TextContext, MaybeString } from '../../../../utils/values/types'
+import { TextContext, MaybeString } from '../../../../utils/values/types/types'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'

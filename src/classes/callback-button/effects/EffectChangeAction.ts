@@ -1,18 +1,47 @@
-import ButtonScrollerData from '../../../interfaces/callback-button-data/ButtonScrollerData'
+import { JSONSchemaType } from 'ajv'
 import ClassUtils from '../../../utils/ClassUtils'
 import SkillUtils from '../../../utils/SkillUtils'
-import { ButtonScrollerOptions, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult, CallbackButtonValue } from '../../../utils/values/types'
+import { ButtonScrollerOptions, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult, CallbackButtonValue, CurrentIncreaseId } from '../../../utils/values/types/types'
 import UserClassService from '../../db/services/user/UserClassService'
 import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
 
 type Data = CallbackButtonValue
+type ButtonScrollerData = {
+    c: number,
+    i: number,
+    id?: number
+}
 
-export default class extends ButtonScrollerAction<Data> {
+export default class extends ButtonScrollerAction<Data, ButtonScrollerData> {
     protected _filename: string = 'effects/classes'
+    protected _schema: JSONSchemaType<ButtonScrollerData> = {
+        type: 'object',
+        required: ['c', 'i'],
+        properties: {
+            c: {
+                type: 'number'
+            },
+            i: {
+                type: 'number'
+            },
+            id: {
+                type: 'number',
+                nullable: true
+            }
+        }
+    }
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'echg'
+    }
+
+    protected _getCurrentIncreaseIdNames(): CurrentIncreaseId<ButtonScrollerData> {
+        return {
+            current: 'c',
+            increase: 'i',
+            id: 'id'
+        }
     }
 
     protected async _getObjects({
@@ -46,7 +75,7 @@ export default class extends ButtonScrollerAction<Data> {
             values: {
                 globals: {
                     id: JSON.stringify(id),
-                    objId: JSON.stringify({id}),
+                    objId: JSON.stringify({ id }),
                 },
                 values: {
                     class: slicedObjects

@@ -1,6 +1,6 @@
 import DuelUtils from '../../utils/DuelUtils'
 import FileUtils from '../../utils/FileUtils'
-import { JavascriptTypes, MethodExecuteArguments, AsyncOrSync, SkillMethodGetText } from '../../utils/values/types'
+import { JavascriptTypes, MethodExecuteArguments, AsyncOrSync, SkillMethodGetText } from '../../utils/values/types/types'
 import DuelService from '../db/services/duel/DuelService'
 import SkillMethod from './SkillMethod'
 

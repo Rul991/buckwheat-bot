@@ -1,6 +1,6 @@
 import { JSONSchemaType } from 'ajv'
 import DuelOfferData from '../../../interfaces/callback-button-data/DuelOfferData'
-import { CallbackButtonContext } from '../../../utils/values/types'
+import { CallbackButtonContext } from '../../../utils/values/types/types'
 import CallbackButtonAction from '../CallbackButtonAction'
 import { userReplyIdsDataSchema } from '../../../utils/values/schemas'
 import ContextUtils from '../../../utils/ContextUtils'

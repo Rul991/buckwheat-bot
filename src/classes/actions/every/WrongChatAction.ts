@@ -1,5 +1,5 @@
 import EveryMessageAction from './EveryMessageAction'
-import { MessageContext } from '../../../utils/values/types'
+import { MessageContext } from '../../../utils/values/types/types'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import MessageUtils from '../../../utils/MessageUtils'
 

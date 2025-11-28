@@ -1,6 +1,6 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import RankUtils from '../../../../utils/RankUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types'
+import { TextContext, MaybeString } from '../../../../utils/values/types/types'
 import HelloService from '../../../db/services/chat/HelloService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import UserRankService from '../../../db/services/user/UserRankService'

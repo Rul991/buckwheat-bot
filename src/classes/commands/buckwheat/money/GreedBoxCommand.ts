@@ -2,10 +2,11 @@ import MathUtils from '../../../../utils/MathUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import { MAX_GREED_BOX } from '../../../../utils/values/consts'
-import { TextContext, MaybeString } from '../../../../utils/values/types'
+import { TextContext, MaybeString } from '../../../../utils/values/types/types'
 import CasinoAddService from '../../../db/services/casino/CasinoAddService'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import ChatSettingsService from '../../../db/services/settings/ChatSettingsService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class GreedBoxCommand extends BuckwheatCommand {
@@ -19,14 +20,28 @@ export default class GreedBoxCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
+        const id = ctx.from.id
+        const chatId = await LinkedChatService.getCurrent(ctx, id)
         if(!chatId) return
+
+        const greedBoxAllow = await ChatSettingsService.get<'boolean'>(
+            chatId, 
+            'useGreedBox'
+        )
+
+        if(!greedBoxAllow) {
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/greedBox/deny.pug'
+            )
+            return
+        }
 
         const rawMoney = StringUtils.getNumberFromString(other ?? '1')
         const money = other && !isNaN(rawMoney) ? 
             MathUtils.clamp(Math.ceil(rawMoney), 1, MAX_GREED_BOX) : 
             -1
-        const [hasBox] = await InventoryItemService.use(chatId, ctx.from.id, 'greedBox')
+        const [hasBox] = await InventoryItemService.use(chatId, id, 'greedBox')
 
         if(!hasBox) {
             await MessageUtils.answerMessageFromResource(
@@ -44,7 +59,7 @@ export default class GreedBoxCommand extends BuckwheatCommand {
             return
         }
 
-        await CasinoAddService.money(chatId, ctx.from.id, money)
+        await CasinoAddService.money(chatId, id, money)
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/greedBox/done.pug',

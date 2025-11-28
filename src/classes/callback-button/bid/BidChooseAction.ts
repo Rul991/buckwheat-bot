@@ -1,5 +1,5 @@
 import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../utils/values/types'
+import { CallbackButtonContext } from '../../../utils/values/types/types'
 import CallbackButtonAction from '../CallbackButtonAction'
 import { userReplyIdsDataSchema } from '../../../utils/values/schemas'
 import UserReplyIdsData from '../../../interfaces/callback-button-data/UserReplyIdsData'

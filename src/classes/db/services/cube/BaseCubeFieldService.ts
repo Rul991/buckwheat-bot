@@ -2,6 +2,11 @@ import Cube from '../../../../interfaces/schemas/games/Cube'
 import CubeRepository from '../../repositories/CubeRepository'
 import CubeService from './CubeService'
 
+type GetAllWithIdResult<K extends keyof Cube> = {
+    id: number
+    value: Cube[K]
+}
+
 export default class BaseCubeFieldService<K extends keyof Cube, V extends Cube[K]> {
     protected _key: K
     protected _defaultValue: V
@@ -9,6 +14,14 @@ export default class BaseCubeFieldService<K extends keyof Cube, V extends Cube[K
     constructor(key: K, defaultValue: V) {
         this._key = key
         this._defaultValue = defaultValue
+    }
+
+    async getAllWithId(chatId: number): Promise<GetAllWithIdResult<K>[]> {
+        return (await CubeRepository.findManyInChat(chatId))
+            .map(({
+                id,
+                [this._key]: value
+            }) => ({id, value}))
     }
 
     async get(chatId: number, id: number): Promise<V> {

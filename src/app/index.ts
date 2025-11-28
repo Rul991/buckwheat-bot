@@ -69,7 +69,7 @@ import RandomCommand from '../classes/commands/buckwheat/other/RandomCommand'
 import CommandsChangeAction from '../classes/callback-button/scrollers/page/CommandsChangeAction'
 import DiceDice from '../classes/dice/DiceDice'
 import StatsCommand from '../classes/commands/buckwheat/info/StatsCommand'
-import DebtMemberAction from '../classes/actions/new-member/DebtMemberAction'
+import DebtMemberAction from '../classes/actions/new-member/ReturnMemberAction'
 import LevelCommand from '../classes/commands/buckwheat/level/LevelCommand'
 import RouletteCommand from '../classes/commands/buckwheat/game/RouletteCommand'
 import RoleplayChangeAction from '../classes/callback-button/scrollers/page/RoleplayChangeAction'
@@ -128,7 +128,14 @@ import FaqChangeAction from '../classes/callback-button/faq/FaqChangeAction'
 import FaqAction from '../classes/callback-button/faq/FaqAction'
 import DeleteCommand from '../classes/commands/buckwheat/admins/DeleteCommand'
 import ReactionAction from '../classes/actions/every/ReactionAction'
-import SettingUtils from '../utils/SettingUtils'
+import SettingsChangeAction from '../classes/callback-button/settings/SettingsChangeAction'
+import SettingsCommand from '../classes/commands/buckwheat/settings/SettingsCommand'
+import SettingsShowAction from '../classes/callback-button/settings/SettingsShowAction'
+import SettingSetAction from '../classes/callback-button/settings/SettingSetAction'
+import SceneActionHandler from '../classes/main/handlers/SceneActionHandler'
+import NumberSettingInputAction from '../classes/actions/scenes/NumberSettingInputAction'
+import TimeUtils from '../utils/TimeUtils'
+import TopChangeAction from '../classes/callback-button/top/TopChangeAction'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = { name: string, isMustDefined: boolean }
@@ -194,6 +201,7 @@ const getSimpleCommands = async () => {
 const launchBot = async (bot: Bot) => {
     // handlers
     bot.addHandlers(
+        new SceneActionHandler(),
         new EveryMessageHandler(),
         new TelegramCommandHandler(),
         new CommandHandler(),
@@ -202,13 +210,13 @@ const launchBot = async (bot: Bot) => {
         new NewMemberHandler(),
         new PhotoHandler(),
         new LeftMemberHandler(),
-        new PaymentHandler()
+        new PaymentHandler(),
     )
 
     // every message 
     bot.addActions(
-        new WrongChatAction(), // it should be first
-        new NotAllowedChatAction(), // it should be second
+        new NotAllowedChatAction(), // it should be first
+        new WrongChatAction(), // it should be second
         new AntiSpamAction(),
         new NewMessagesAction(),
         new RandomPrizeMessageAction(),
@@ -262,7 +270,11 @@ const launchBot = async (bot: Bot) => {
         new SkillAlertAction(),
         new EffectChangeAction(),
         new FaqChangeAction(),
-        new FaqAction()
+        new FaqAction(),
+        new SettingsChangeAction(),
+        new SettingsShowAction(),
+        new SettingSetAction(),
+        new TopChangeAction()
     )
 
     // dice 
@@ -274,8 +286,8 @@ const launchBot = async (bot: Bot) => {
     // new member 
     bot.addActions(
         new AddInDatabaseAction(),
-        new HelloMemberAction(),
         new DebtMemberAction(),
+        new HelloMemberAction(),
     )
 
     // payment
@@ -301,6 +313,7 @@ const launchBot = async (bot: Bot) => {
         new FaqCommand(),
         new CreatorCommand(),
         new ProfileCommand(),
+        new SettingsCommand(),
         new BalanceCommand(),
         new ChangeNameCommand(),
         new ChangeDescriptionCommand(),
@@ -356,6 +369,11 @@ const launchBot = async (bot: Bot) => {
         new StartCommand(),
         new PaySupportCommand(),
         new HelpCommand()
+    )
+
+    // scenes
+    bot.addActions(
+        new NumberSettingInputAction()
     )
 
     console.log('Start launching!')

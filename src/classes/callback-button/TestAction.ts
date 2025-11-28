@@ -1,5 +1,5 @@
 import { JSONSchemaType } from 'ajv'
-import { AsyncOrSync, CallbackButtonContext } from '../../utils/values/types'
+import { AsyncOrSync, CallbackButtonContext } from '../../utils/values/types/types'
 import CallbackButtonAction from './CallbackButtonAction'
 import { MODE } from '../../utils/values/consts'
 import LinkedChatService from '../db/services/linkedChat/LinkedChatService'

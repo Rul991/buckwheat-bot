@@ -1,5 +1,5 @@
 import FileUtils from '../../../../utils/FileUtils'
-import { CallbackButtonContext, ScrollerSendMessageOptions, ScrollerEditMessageResult } from '../../../../utils/values/types'
+import { CallbackButtonContext, ScrollerSendMessageOptions, ScrollerEditMessageResult } from '../../../../utils/values/types/types'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import RoleplaysService from '../../../db/services/rp/RoleplaysService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'

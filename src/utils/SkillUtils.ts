@@ -31,7 +31,7 @@ import DuelUtils from './DuelUtils'
 import FileUtils from './FileUtils'
 import Logging from './Logging'
 import { HP_SYMBOLS, MANA_SYMBOLS } from './values/consts'
-import { CallbackButtonContext, ClassTypes, DuelFilename, JavascriptTypes, UseSkillOptions } from './values/types'
+import { CallbackButtonContext, ClassTypes, DuelFilename, JavascriptTypes, UseSkillOptions } from './values/types/types'
 
 type MethodName = 'preCheck' | 'execute'
 type SkillMethodName = 'cost' | 'execute'

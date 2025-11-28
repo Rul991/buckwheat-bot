@@ -1,5 +1,5 @@
 import { CATALOG_BOOST, LEVEL_BOOST, LEVEL_UP_MONEY, WORK_TIME } from '../../../../utils/values/consts'
-import { ClassTypes, MaybeString, TextContext } from '../../../../utils/values/types'
+import { ClassTypes, MaybeString, TextContext } from '../../../../utils/values/types/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import { MAX_WORK, MIN_WORK } from '../../../../utils/values/consts'
 import CasinoAddService from '../../../db/services/casino/CasinoAddService'
@@ -17,6 +17,7 @@ import LevelUtils from '../../../../utils/level/LevelUtils'
 import LevelService from '../../../db/services/level/LevelService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import PremiumChatService from '../../../db/services/chat/PremiumChatService'
+import ChatSettingsService from '../../../db/services/settings/ChatSettingsService'
 
 type Boost = {
     value: boolean,
@@ -114,6 +115,20 @@ export default class WorkCommand extends BuckwheatCommand {
         const id = ctx.from.id
         const chatId = await LinkedChatService.getCurrent(ctx)
         if (!chatId) return
+        const user = await ContextUtils.getUser(chatId, id)
+
+        if(ctx.chat.type != 'private' && await ChatSettingsService.get<'boolean'>(chatId, 'cantWorkInChat')) {
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/work/deny.pug',
+                {
+                    changeValues: {
+                        user
+                    }
+                }
+            )
+            return
+        }
 
         const workTime = await this._getWorkTime(chatId, id)
         const quest = await this._getQuest(chatId, id)

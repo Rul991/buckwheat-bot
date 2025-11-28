@@ -1,4 +1,4 @@
-import { HasOtherChangeProfileMessage, NoOtherChangeProfileMessage } from '../../../../utils/values/types'
+import { HasOtherChangeProfileMessage, NoOtherChangeProfileMessage } from '../../../../utils/values/types/types'
 import { DEFAULT_DESCRIPTION, MAX_DESCRIPTION_LENGTH } from '../../../../utils/values/consts'
 import UserDescriptionService from '../../../db/services/user/UserDescriptionService'
 import ChangeProfileCommand from './ChangeProfileCommand'

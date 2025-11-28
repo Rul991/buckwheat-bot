@@ -1,0 +1,19 @@
+{
+    "definition": {
+        "values": {
+            "text": "@",
+            "data": "set_@"
+        },
+        "back": {
+            "text": "Назад",
+            "data": "setch_{\"c\":@{page},\"i\":1,\"id\":@{id}}",
+            "notEach": true
+        }
+    },
+    
+    "values": 
+    [
+        ["values"],
+        "back"
+    ]
+}

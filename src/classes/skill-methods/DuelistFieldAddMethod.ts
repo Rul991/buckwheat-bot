@@ -1,7 +1,7 @@
 import SkillAttack from '../../enums/SkillAttack'
 import Duelist from '../../interfaces/schemas/duels/Duelist'
 import SkillMethodUtils from '../../utils/SkillMethodTextsUtils'
-import { JavascriptTypes, MethodExecuteArguments, AsyncOrSync, TypeKeys, SkillMethodGetText, HpMana } from '../../utils/values/types'
+import { JavascriptTypes, MethodExecuteArguments, AsyncOrSync, TypeKeys, SkillMethodGetText, HpMana } from '../../utils/values/types/types'
 import DuelistService from '../db/services/duelist/DuelistService'
 import SkillMethod from './SkillMethod'
 

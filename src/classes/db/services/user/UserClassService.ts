@@ -1,5 +1,5 @@
 import ClassUtils from '../../../../utils/ClassUtils'
-import { ClassTypes } from '../../../../utils/values/types'
+import { ClassTypes } from '../../../../utils/values/types/types'
 import BaseUserService from './BaseUserService'
 
 export default class UserClassService {

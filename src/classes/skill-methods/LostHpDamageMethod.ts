@@ -1,4 +1,4 @@
-import { MethodExecuteArguments, SkillMethodGetText } from '../../utils/values/types'
+import { MethodExecuteArguments, SkillMethodGetText } from '../../utils/values/types/types'
 import DuelistService from '../db/services/duelist/DuelistService'
 import DamageMethod from './DamageMethod'
 

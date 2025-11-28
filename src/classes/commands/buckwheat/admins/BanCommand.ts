@@ -1,6 +1,6 @@
 import AdminCommand from './AdminCommand'
 import AdminUtils from '../../../../utils/AdminUtils'
-import { TextContext } from '../../../../utils/values/types'
+import { TextContext } from '../../../../utils/values/types/types'
 
 export default class MuteCommand extends AdminCommand {
     constructor() {

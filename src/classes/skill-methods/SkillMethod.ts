@@ -1,5 +1,5 @@
 import { REVERSE_SKILL_NAME, SKIP_SKILL_SKILL_NAME, ZERO_SKILL_SKILL_NAME } from '../../utils/values/consts'
-import { JavascriptTypes, MethodExecuteArguments, AsyncOrSync, SkillMethodGetText } from '../../utils/values/types'
+import { JavascriptTypes, MethodExecuteArguments, AsyncOrSync, SkillMethodGetText } from '../../utils/values/types/types'
 import DuelService from '../db/services/duel/DuelService'
 import EffectService from '../db/services/duel/EffectService'
 

@@ -1,8 +1,8 @@
 import StringUtils from './StringUtils'
-import { NameObject } from './values/types'
+import { SubCommandObject } from './values/types/types'
 
 export default class SubCommandUtils {
-    static getSubCommandAndData<Command extends NameObject>(
+    static getSubCommandAndData<Command extends SubCommandObject>(
         text?: string, 
         availableCommands: Command[] = []
     ): [Command, string] | ('no-text' | 'not-exist') {
@@ -25,7 +25,7 @@ export default class SubCommandUtils {
         return [command, data]
     }
 
-    static getArgumentText<T extends NameObject>(arr: T[]) {
+    static getArgumentText<T extends SubCommandObject>(arr: T[]) {
         return arr
             .reduce((prev, curr, i) => 
                 `${prev}${curr.name}${i < arr.length - 1 ? ' | ' : ''}`, 

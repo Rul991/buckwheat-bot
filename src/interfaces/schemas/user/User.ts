@@ -1,4 +1,4 @@
-import { ClassTypes } from '../../../utils/values/types'
+import { ClassTypes } from '../../../utils/values/types/types'
 
 export default interface User {
     id: number

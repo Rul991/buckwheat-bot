@@ -1,5 +1,6 @@
-import { Telegraf } from 'telegraf'
+import { Context, Telegraf } from 'telegraf'
 import BaseAction from '../../actions/base/BaseAction'
+import { AsyncOrSync, MyTelegraf, SceneContextData } from '../../../utils/values/types/types'
 
 export default abstract class BaseHandler<
     T extends InstanceType<N>, 
@@ -33,5 +34,5 @@ export default abstract class BaseHandler<
         }
     }
 
-    abstract setup(bot: Telegraf): void
+    abstract setup(bot: MyTelegraf): AsyncOrSync
 }

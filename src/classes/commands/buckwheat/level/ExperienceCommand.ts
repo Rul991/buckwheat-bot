@@ -1,6 +1,6 @@
 import ExperienceUtils from '../../../../utils/level/ExperienceUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types'
+import { TextContext, MaybeString } from '../../../../utils/values/types/types'
 import ExperienceService from '../../../db/services/level/ExperienceService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'

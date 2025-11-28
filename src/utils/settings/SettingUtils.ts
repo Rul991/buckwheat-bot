@@ -1,8 +1,9 @@
 import { join } from 'path'
-import Setting from '../interfaces/other/Setting'
-import FileUtils from './FileUtils'
-import ObjectValidator from './ObjectValidator'
-import { settingSchema } from './values/schemas'
+import Setting from '../../interfaces/other/Setting'
+import FileUtils from '../FileUtils'
+import ObjectValidator from '../ObjectValidator'
+import { settingSchema } from '../values/schemas'
+import { SettingType } from '../values/types/types'
 
 type Settings = Record<string, Setting<any>>
 
@@ -27,7 +28,7 @@ export default class {
         return result
     }
 
-    static async getSetting(filename: string, settingId: string): Promise<Setting<any> | null> {
+    static async getSetting<K extends SettingType = "any">(filename: string, settingId: string): Promise<Setting<K> | null> {
         const settings = await this.getSettings(filename)
         return settings[settingId] ?? null
     }

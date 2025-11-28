@@ -1,6 +1,6 @@
 import FileUtils from '../../utils/FileUtils'
 import { FIRST_INDEX } from '../../utils/values/consts'
-import { JavascriptTypes, MethodExecuteArguments, SkillMethodGetText } from '../../utils/values/types'
+import { JavascriptTypes, MethodExecuteArguments, SkillMethodGetText } from '../../utils/values/types/types'
 import ChosenSkillsService from '../db/services/choosedSkills/ChosenSkillsService'
 import SkillMethod from './SkillMethod'
 

@@ -1,5 +1,5 @@
 import BaseAction from '../base/BaseAction'
-import { MessageContext } from '../../../utils/values/types'
+import { MessageContext } from '../../../utils/values/types/types'
 
 export default abstract class EveryMessageAction extends BaseAction {
     protected _canUsePrivate: boolean = false

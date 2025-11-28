@@ -1,5 +1,5 @@
 import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../utils/values/types'
+import { CallbackButtonContext } from '../../../utils/values/types/types'
 import CallbackButtonAction from '../CallbackButtonAction'
 import DuelUtils from '../../../utils/DuelUtils'
 import MessageUtils from '../../../utils/MessageUtils'

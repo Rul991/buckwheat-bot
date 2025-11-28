@@ -51,4 +51,8 @@ export default class {
         )
         return await this.getPrize(chatId, id)
     }
+
+    static async getAll(chatId: number) {
+        return await RouletteRepository.findManyInChat(chatId)
+    }
 }

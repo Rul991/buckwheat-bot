@@ -1,6 +1,6 @@
 import FileUtils from '../../../../utils/FileUtils'
 import { FIRST_INDEX } from '../../../../utils/values/consts'
-import { CallbackButtonContext, ScrollerEditMessage, ScrollerSendMessageOptions } from '../../../../utils/values/types'
+import { CallbackButtonContext, ScrollerEditMessage, ScrollerSendMessageOptions } from '../../../../utils/values/types/types'
 import RulesService from '../../../db/services/chat/RulesService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'

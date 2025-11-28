@@ -1,4 +1,4 @@
-import { JavascriptTypes, MethodExecuteArguments } from '../../utils/values/types'
+import { JavascriptTypes, MethodExecuteArguments } from '../../utils/values/types/types'
 import LevelService from '../db/services/level/LevelService'
 import EffectMethod from './EffectMethod'
 

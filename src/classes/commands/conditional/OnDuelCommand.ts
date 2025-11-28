@@ -1,7 +1,7 @@
 import { Message } from 'telegraf/types'
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
-import { TextContext, CommandStrings, MaybeString } from '../../../utils/values/types'
+import { TextContext, CommandStrings, MaybeString } from '../../../utils/values/types/types'
 import DuelService from '../../db/services/duel/DuelService'
 import DuelistService from '../../db/services/duelist/DuelistService'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'

@@ -1,5 +1,5 @@
 import RankUtils from '../../../../utils/RankUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types'
+import { TextContext, MaybeString } from '../../../../utils/values/types/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default abstract class extends BuckwheatCommand {

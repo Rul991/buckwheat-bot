@@ -2,7 +2,7 @@ import { Telegraf } from 'telegraf'
 import BaseHandler from '../BaseHandler'
 import BuckwheatCommand from '../../../commands/base/BuckwheatCommand'
 import ConditionalCommand from '../../../commands/base/ConditionalCommand'
-import { CommandStrings, TextContext } from '../../../../utils/values/types'
+import { CommandStrings, MyTelegraf, TextContext } from '../../../../utils/values/types/types'
 import WrongCommand from '../../../commands/buckwheat/WrongCommand'
 import CommandDescriptionUtils from '../../../../utils/CommandDescriptionUtils'
 import CommandUtils from '../../../../utils/CommandUtils'
@@ -58,7 +58,7 @@ export default class CommandHandler extends BaseHandler<BuckwheatCommand, Condit
         }
     }
 
-    setup(bot: Telegraf): void {
+    setup(bot: MyTelegraf): void {
         bot.on('text', async ctx => {
             if(ctx.message.forward_origin) return
 

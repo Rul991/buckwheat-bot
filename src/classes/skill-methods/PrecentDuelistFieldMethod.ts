@@ -1,6 +1,6 @@
 import DuelUtils from '../../utils/DuelUtils'
 import SkillMethodUtils from '../../utils/SkillMethodTextsUtils'
-import { JavascriptTypes, MethodExecuteArguments, AsyncOrSync, SkillMethodGetText, HpMana } from '../../utils/values/types'
+import { JavascriptTypes, MethodExecuteArguments, AsyncOrSync, SkillMethodGetText, HpMana } from '../../utils/values/types/types'
 import DuelistService from '../db/services/duelist/DuelistService'
 import LevelService from '../db/services/level/LevelService'
 import UserClassService from '../db/services/user/UserClassService'

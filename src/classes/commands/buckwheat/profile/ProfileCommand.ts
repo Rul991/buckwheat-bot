@@ -1,5 +1,5 @@
 import { FIRST_INDEX, MILLISECONDS_IN_DAY } from './../../../../utils/values/consts';
-import { MaybeString, TextContext } from '../../../../utils/values/types'
+import { MaybeString, TextContext } from '../../../../utils/values/types/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserProfileService from '../../../db/services/user/UserProfileService'
 import ContextUtils from '../../../../utils/ContextUtils'

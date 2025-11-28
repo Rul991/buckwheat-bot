@@ -1,7 +1,7 @@
 import ContextUtils from '../../../utils/ContextUtils'
 import ShopItems from '../../../utils/ShopItems'
 import MessageUtils from '../../../utils/MessageUtils'
-import { CallbackButtonContext, ShopItem, ShopMessageOptions } from '../../../utils/values/types'
+import { CallbackButtonContext, ShopItem, ShopMessageOptions } from '../../../utils/values/types/types'
 import CasinoAddService from '../../db/services/casino/CasinoAddService'
 import CasinoGetService from '../../db/services/casino/CasinoGetService'
 import CallbackButtonAction from '../CallbackButtonAction'

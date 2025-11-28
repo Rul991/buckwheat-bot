@@ -1,4 +1,3 @@
-import Logging from './Logging'
 import { FIRST_INDEX } from './values/consts'
 
 export default class RandomUtils {
@@ -7,10 +6,9 @@ export default class RandomUtils {
     }
 
     static chance(chance: number): boolean {
-        if (chance < 0 || chance > 1) {
-            Logging.warn('chance not in range', chance)
-            return false
-        }
+        if(chance <= 0) return false
+        else if(chance >= 1) return true
+        
         return Math.random() <= chance
     }
 

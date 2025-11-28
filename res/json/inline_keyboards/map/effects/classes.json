@@ -6,13 +6,18 @@
         },
         "arrow": {
             "text": "@",
-            "data": "echg_@_@{objId}"
+            "data": "echg_@"
+        },
+        "pageNav": {
+            "text": "@",
+            "data": "echg_@"
         }
     },
     
     "values": 
     [
         "class",
-        ["arrow"]
+        ["arrow"],
+        ["pageNav"]
     ]
 }

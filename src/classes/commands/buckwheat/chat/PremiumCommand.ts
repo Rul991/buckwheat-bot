@@ -1,6 +1,6 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import { MAX_MONTHS_PER_BUY, PREMIUM_PRICE_PER_MONTH } from '../../../../utils/values/consts'
-import { TextContext, MaybeString } from '../../../../utils/values/types'
+import { TextContext, MaybeString } from '../../../../utils/values/types/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class PremiumCommand extends BuckwheatCommand {
@@ -10,6 +10,9 @@ export default class PremiumCommand extends BuckwheatCommand {
         this._description = 'продаю вам премиум для чата'
         this._needData = true
         this._argumentText = 'кол-во месяцев'
+        this._aliases = [
+            'прем'
+        ]
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {

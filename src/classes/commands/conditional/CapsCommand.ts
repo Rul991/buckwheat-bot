@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { CommandStrings, MaybeString, TextContext } from '../../../utils/values/types'
+import { CommandStrings, MaybeString, TextContext } from '../../../utils/values/types/types'
 import ContextUtils from '../../../utils/ContextUtils'
 import ConditionalCommand from '../base/ConditionalCommand'
 import MessageUtils from '../../../utils/MessageUtils'

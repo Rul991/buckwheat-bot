@@ -1,7 +1,7 @@
 import ExperienceUtils from '../../../../utils/level/ExperienceUtils'
 import LevelUtils from '../../../../utils/level/LevelUtils'
 import { DUEL_EXPERIENCE } from '../../../../utils/values/consts'
-import { FirstSecond } from '../../../../utils/values/types'
+import { ExperienceWithId, FirstSecond, TopLevelObject } from '../../../../utils/values/types/types'
 import LevelRepository from '../../repositories/LevelRepository'
 import InventoryItemService from '../items/InventoryItemService'
 import LevelService from './LevelService'
@@ -11,6 +11,18 @@ export default class ExperienceService {
         const experience = await LevelService.create(chatId, id)
 
         return experience.experience ?? ExperienceUtils.min
+    }
+
+    static async getAllWithId(chatId: number): Promise<ExperienceWithId[]> {
+        const levels = await LevelRepository.findManyInChat(chatId)
+
+        return levels
+            .map(
+                lv => ({
+                    id: lv.id, 
+                    experience: lv.experience ?? ExperienceUtils.min
+                })
+            )
     }
 
     static async set(chatId: number, id: number, experience: number): Promise<number> {

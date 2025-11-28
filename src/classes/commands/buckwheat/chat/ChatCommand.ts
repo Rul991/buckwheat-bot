@@ -1,6 +1,6 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import TimeUtils from '../../../../utils/TimeUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types'
+import { TextContext, MaybeString } from '../../../../utils/values/types/types'
 import ChatService from '../../../db/services/chat/ChatService'
 import PremiumChatService from '../../../db/services/chat/PremiumChatService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'

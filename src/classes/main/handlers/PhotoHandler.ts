@@ -2,13 +2,14 @@ import { Telegraf } from 'telegraf'
 import PhotoAction from '../../actions/photo/PhotoAction'
 import BaseHandler from './BaseHandler'
 import CommandUtils from '../../../utils/CommandUtils'
+import { MyTelegraf } from '../../../utils/values/types/types'
 
 export default class PhotoHandler extends BaseHandler<PhotoAction, Record<string, PhotoAction>, typeof PhotoAction> {
     constructor() {
         super({}, PhotoAction)
     }
 
-    setup(bot: Telegraf): void {
+    setup(bot: MyTelegraf): void {
         bot.on('photo', async ctx => {
             await CommandUtils.doIfCommand(
                 ctx.message.caption ?? '',

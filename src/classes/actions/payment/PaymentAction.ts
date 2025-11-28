@@ -1,5 +1,5 @@
 import BaseAction from '../base/BaseAction'
-import { PreCheckoutQueryContext, SuccessfulPaymentContext } from '../../../utils/values/types'
+import { PreCheckoutQueryContext, SuccessfulPaymentContext } from '../../../utils/values/types/types'
 import { PreCheckoutQuery, SuccessfulPayment } from 'telegraf/types'
 
 export default abstract class PaymentAction extends BaseAction {

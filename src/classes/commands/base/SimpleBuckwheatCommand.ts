@@ -1,4 +1,4 @@
-import { MaybeString, TextContext } from '../../../utils/values/types'
+import { MaybeString, TextContext } from '../../../utils/values/types/types'
 import BuckwheatCommand from './BuckwheatCommand'
 import FileUtils from '../../../utils/FileUtils'
 import SimpleCommand from '../../../interfaces/other/SimpleComand'
@@ -96,13 +96,14 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
         }
     }
 
-    constructor({name, src, text, avoidOther}: SimpleCommand) {
+    constructor({name, src, text, avoidOther, aliases}: SimpleCommand) {
         super()
 
         this._name = name
         this._sources = this._getAllText(src)
         this._texts = this._getAllText(text)
         this._avoidOther = avoidOther
+        this._aliases = aliases ?? []
 
         this._isShow = false
     }

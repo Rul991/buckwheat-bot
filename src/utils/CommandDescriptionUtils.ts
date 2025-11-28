@@ -1,4 +1,4 @@
-import { CommandDescription } from './values/types'
+import { CommandDescription } from './values/types/types'
 
 export default class CommandDescriptionUtils {
     private static _commandDescriptions: CommandDescription[] = []

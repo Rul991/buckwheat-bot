@@ -1,7 +1,7 @@
 import { JSONSchemaType } from 'ajv'
 import VoteData from '../../../interfaces/callback-button-data/VoteData'
 import IdeaUtils from '../../../utils/IdeaUtils'
-import { CallbackButtonContext } from '../../../utils/values/types'
+import { CallbackButtonContext } from '../../../utils/values/types/types'
 import IdeasService from '../../db/services/ideas/IdeasService'
 import CallbackButtonAction from '../CallbackButtonAction'
 import IdeaChangeAction from './IdeaChangeAction'

@@ -1,6 +1,6 @@
 import FileUtils from '../../utils/FileUtils'
 import RandomUtils from '../../utils/RandomUtils'
-import { JavascriptTypes, MethodExecuteArguments, SkillMethodGetText } from '../../utils/values/types'
+import { JavascriptTypes, MethodExecuteArguments, SkillMethodGetText } from '../../utils/values/types/types'
 import DamageMethod from './DamageMethod'
 
 export default class extends DamageMethod {

@@ -8,6 +8,10 @@
             "text": "@",
             "data": "skillchange_@_@{id}"
         },
+        "pageNav": {
+            "text": "@",
+            "data": "skillchange_@_@{id}"
+        },
         "back": {
             "text": "-",
             "notEach": true,
@@ -17,8 +21,9 @@
 
     "values": 
     [
-        "add",
         ["arrow"],
+        ["pageNav"],
+        "add",
         "back"
     ]
 }

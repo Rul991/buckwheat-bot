@@ -1,4 +1,4 @@
-import { Progress } from './values/types'
+import { Progress } from './values/types/types'
 
 export default class StringUtils {
     static spaceRegexp = /\s+/
@@ -34,6 +34,18 @@ export default class StringUtils {
 
     static splitAndTrim(text: string, sep = ''): string[] {
         return text.split(sep).map(v => v.trim())
+    }
+
+    static getShowValue(defaultValue: any) {
+        if(typeof defaultValue == 'boolean') {
+            return defaultValue ? '✅' : '❌'
+        }
+        else if(typeof defaultValue == 'number') {
+            return StringUtils.toFormattedNumber(defaultValue)
+        }
+        else {
+            return `${defaultValue}`
+        }
     }
 
     static toFormattedNumber(number: number): string {

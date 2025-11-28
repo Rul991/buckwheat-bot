@@ -1,5 +1,5 @@
 import FileUtils from '../../utils/FileUtils'
-import { JavascriptTypes, MethodExecuteArguments, AsyncOrSync, SkillMethodGetText } from '../../utils/values/types'
+import { JavascriptTypes, MethodExecuteArguments, AsyncOrSync, SkillMethodGetText } from '../../utils/values/types/types'
 import CasinoAddService from '../db/services/casino/CasinoAddService'
 import CasinoGetService from '../db/services/casino/CasinoGetService'
 import SkillMethod from './SkillMethod'

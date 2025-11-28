@@ -1,4 +1,4 @@
-import { MaybeString, TextContext } from '../../../../utils/values/types'
+import { MaybeString, TextContext } from '../../../../utils/values/types/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import { DEV_ID, MODE } from '../../../../utils/values/consts'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
@@ -11,6 +11,8 @@ import ArrayUtils from '../../../../utils/ArrayUtils'
 import { InlineKeyboardButton } from 'telegraf/types'
 import MathUtils from '../../../../utils/MathUtils'
 import StringUtils from '../../../../utils/StringUtils'
+import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import ContextUtils from '../../../../utils/ContextUtils'
 
 type SecretFunctionOptions = {
     ctx: TextContext
@@ -30,12 +32,11 @@ export default class TestCommand extends BuckwheatCommand {
         ctx,
         other
     }: SecretFunctionOptions) {
-        let range: number[][] = ArrayUtils.matrice({
-            min: 0,
-            max: 100,
-            step: 5,
-            width: 8
-        })
+        let range: number[] = ArrayUtils.range(
+            0,
+            100,
+            5
+        )
 
         if (!other) {
             await MessageUtils.answer(
@@ -46,34 +47,34 @@ export default class TestCommand extends BuckwheatCommand {
         }
         else if (other == 'money') {
             range = [
-                [
                     -150_000,
                     0,
                     150_000
-                ]
             ]
         }
         else if(other == 'level') {
-            range = range.map(arr => {
-                return arr.map(v => MathUtils.clamp(
-                    v, 
-                    LevelUtils.min, 
-                    LevelUtils.max
-                ))
-            })
+            range = range.map(v => MathUtils.clamp(
+                v, 
+                LevelUtils.min, 
+                LevelUtils.max
+            ))
         }
 
         await MessageUtils.answer(
             ctx,
             'Держи кнопочки:',
             {
-                inlineKeyboard: range.map(arr => {
-                    return arr.map(v => {
-                        return {
-                            callback_data: `test_{"type":"${other}","value":${v}}`,
+                inlineKeyboard: await InlineKeyboardManager.map('test', {
+                    values: {
+                        btn: range.map(v => ({
+                            data: JSON.stringify({
+                                type: other,
+                                value: v
+                            }),
                             text: StringUtils.toFormattedNumber(v)
-                        } as InlineKeyboardButton
-                    })
+                        }))
+                    },
+                    maxWidth: 3
                 })
             }
         )

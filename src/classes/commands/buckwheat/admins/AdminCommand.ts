@@ -1,4 +1,4 @@
-import { MaybeString, TextContext } from '../../../../utils/values/types'
+import { MaybeString, TextContext } from '../../../../utils/values/types/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
@@ -35,7 +35,10 @@ export default abstract class AdminCommand extends BuckwheatCommand {
 
             const isCreator = await ContextUtils.isCreator(ctx)
             const [textTime, reason] = other ? StringUtils.splitByCommands(other, 1) : ['навсегда', '']
-            const time = TimeUtils.parseTimeToMilliseconds(textTime)
+            const time = Math.min(
+                TimeUtils.parseTimeToMilliseconds(textTime),
+                await TimeUtils.getMaxAdminTime(chatId)
+            )
 
             if(!RankUtils.canAdminUse({
                 userRank: adminRank, 

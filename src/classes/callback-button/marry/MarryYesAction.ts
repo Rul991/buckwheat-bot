@@ -3,7 +3,7 @@ import UserReplyIdsData from '../../../interfaces/callback-button-data/UserReply
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import { userReplyIdsDataSchema } from '../../../utils/values/schemas'
-import { CallbackButtonContext } from '../../../utils/values/types'
+import { CallbackButtonContext } from '../../../utils/values/types/types'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import MarriageService from '../../db/services/marriage/MarriageService'
 import CallbackButtonAction from '../CallbackButtonAction'

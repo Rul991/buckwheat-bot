@@ -1,5 +1,5 @@
 import { PreCheckoutQuery, SuccessfulPayment } from 'telegraf/types'
-import { PreCheckoutQueryContext, SuccessfulPaymentContext } from '../../../utils/values/types'
+import { PreCheckoutQueryContext, SuccessfulPaymentContext } from '../../../utils/values/types/types'
 import PaymentAction from './PaymentAction'
 import { FIRST_INDEX, MILLISECONDS_IN_MONTH, PREMIUM_PRICE_PER_MONTH } from '../../../utils/values/consts'
 import PremiumChatService from '../../db/services/chat/PremiumChatService'

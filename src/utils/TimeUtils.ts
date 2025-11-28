@@ -1,3 +1,4 @@
+import ChatSettingsService from '../classes/db/services/settings/ChatSettingsService'
 import { HOURS_IN_DAY, INFINITY_SYMB, MAX_TIME_WORD, MILLISECONDS_IN_DAY, MILLISECONDS_IN_SECOND, MINUTES_IN_HOUR, NOT_FOUND_INDEX, SECONDS_IN_MINUTE } from './values/consts'
 
 export default class TimeUtils {
@@ -8,8 +9,17 @@ export default class TimeUtils {
         'д': HOURS_IN_DAY * MINUTES_IN_HOUR * SECONDS_IN_MINUTE * MILLISECONDS_IN_SECOND,
     }
 
-    private static _minTime = 30_000
-    private static _maxTime = 366 * this._nameToNumber['д']
+    static minTime = 30_000
+    static maxTime = 365 * this._nameToNumber['д']
+
+    static async getMaxAdminTime(chatId: number) {
+        const setting = await ChatSettingsService.get<'number'>(
+            chatId,
+            'maxAdminTime'
+        )
+
+        return (setting ?? (this.maxTime / MILLISECONDS_IN_SECOND)) * MILLISECONDS_IN_SECOND
+    }
 
     static parseTimeToMilliseconds(time: string): number {
         if(time == MAX_TIME_WORD) return 0
@@ -34,7 +44,7 @@ export default class TimeUtils {
         
         if(!additionalTime)
             return NOT_FOUND_INDEX
-        else if(additionalTime > this._maxTime || additionalTime < this._minTime)
+        else if(additionalTime > this.maxTime || additionalTime < this.minTime)
             return 0
         else 
             return additionalTime

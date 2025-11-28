@@ -1,7 +1,7 @@
 import ButtonScrollerData from '../../../interfaces/callback-button-data/ButtonScrollerData'
 import FaqUtils from '../../../utils/FaqUtils'
 import FileUtils from '../../../utils/FileUtils'
-import { ButtonScrollerOptions, ButtonScrollerFullOptions, AsyncOrSync, ButtonScrollerEditMessageResult } from '../../../utils/values/types'
+import { ButtonScrollerOptions, ButtonScrollerFullOptions, AsyncOrSync, ButtonScrollerEditMessageResult } from '../../../utils/values/types/types'
 import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
 
 export default class extends ButtonScrollerAction<string> {

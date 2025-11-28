@@ -1,4 +1,4 @@
-import { ClassTypes, ClassRecord } from './values/types'
+import { ClassTypes, ClassRecord } from './values/types/types'
 
 export default class ClassUtils {
     static defaultClassName: 'unknown' = 'unknown'

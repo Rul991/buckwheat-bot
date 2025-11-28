@@ -1,8 +1,9 @@
 import { Context } from 'telegraf'
 import TimeUtils from './TimeUtils'
 import Logging from './Logging'
-import { ChatMember } from 'telegraf/types'
 import { KICK_TIME } from './values/consts'
+import LinkedChatService from '../classes/db/services/linkedChat/LinkedChatService'
+import UserLeftService from '../classes/db/services/user/UserLeftService'
 
 export default class AdminUtils {
     static async mute(ctx: Context, id: number, ms: number = 0) {
@@ -33,6 +34,10 @@ export default class AdminUtils {
 
     static async ban(ctx: Context, id: number, ms: number): Promise<boolean> {
         try {
+            const chatId = await LinkedChatService.getCurrent(ctx, id)
+            if(chatId) {
+                await UserLeftService.update(chatId, id, true)
+            }
             return await ctx.banChatMember(id,  TimeUtils.getUntilDate(ms))
         }
         catch(e) {
@@ -42,12 +47,12 @@ export default class AdminUtils {
     }
 
     static async kick(ctx: Context, id: number): Promise<boolean> {
-        return await this.ban(ctx, id, KICK_TIME)
+        return await this.unban(ctx, id, false)
     }
 
-    static async unban(ctx: Context, id: number) {
+    static async unban(ctx: Context, id: number, onlyIfBanned = true) {
         try {
-            return await ctx.unbanChatMember(id, {only_if_banned: true})
+            return await ctx.unbanChatMember(id, {only_if_banned: onlyIfBanned})
         }
         catch(e) {
             Logging.error('cant unban', e)

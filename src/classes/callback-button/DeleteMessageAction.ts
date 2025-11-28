@@ -1,7 +1,7 @@
 import { JSONSchemaType } from 'ajv'
 import DeleteMessageData from '../../interfaces/callback-button-data/DeleteMessageData'
 import MessageUtils from '../../utils/MessageUtils'
-import { CallbackButtonContext } from '../../utils/values/types'
+import { CallbackButtonContext } from '../../utils/values/types/types'
 import CallbackButtonAction from './CallbackButtonAction'
 import ContextUtils from '../../utils/ContextUtils'
 

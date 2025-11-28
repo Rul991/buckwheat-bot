@@ -1,4 +1,7 @@
 {
     "name": "сын",
+    "aliases": [
+        "сынище"
+    ],
     "src": "text/simple/son.pug"
 }

@@ -1,7 +1,7 @@
 import InventoryItem from '../interfaces/schemas/items/InventoryItem'
 import { INFINITY_SYMB } from './values/consts'
 import Logging from './Logging'
-import { InventoryItemDescription, InventoryItemType } from './values/types'
+import { InventoryItemDescription, InventoryItemType } from './values/types/types'
 import FileUtils from './FileUtils'
 import StringUtils from './StringUtils'
 

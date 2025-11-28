@@ -7,7 +7,7 @@ import { ChatMember } from 'telegraf/types'
 import Logging from './Logging'
 import LinkedChatService from '../classes/db/services/linkedChat/LinkedChatService'
 import ExceptionUtils from './ExceptionUtils'
-import { Link, TextContext } from './values/types'
+import { Link, TextContext } from './values/types/types'
 
 export default class ContextUtils {
     static async getUser(chatId?: number, id?: number, firstName?: string): Promise<Link> {

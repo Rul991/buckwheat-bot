@@ -7,12 +7,17 @@
         "arrow": {
             "text": "@",
             "data": "faqchange_@"
+        },
+        "pageNav": {
+            "text": "@",
+            "data": "faqchange_@"
         }
     },
     
     "values": 
     [
         "faq",
-        ["arrow"]
+        ["arrow"],
+        ["pageNav"]
     ]
 }

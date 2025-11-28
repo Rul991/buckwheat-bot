@@ -1,7 +1,7 @@
 import ClassUtils from '../../../../utils/ClassUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { MODE } from '../../../../utils/values/consts'
-import { TextContext, MaybeString } from '../../../../utils/values/types'
+import { TextContext, MaybeString } from '../../../../utils/values/types/types'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import UserClassService from '../../../db/services/user/UserClassService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'

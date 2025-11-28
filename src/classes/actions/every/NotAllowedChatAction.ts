@@ -1,6 +1,6 @@
 import MessageUtils from '../../../utils/MessageUtils'
 import { ALLOWED_CHATS, MODE } from '../../../utils/values/consts'
-import { MessageContext } from '../../../utils/values/types'
+import { MessageContext } from '../../../utils/values/types/types'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import EveryMessageAction from './EveryMessageAction'
 

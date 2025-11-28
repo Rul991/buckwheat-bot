@@ -1,6 +1,6 @@
 import { STAR_TO_COIN } from '../../../../utils/values/consts'
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types'
+import { TextContext, MaybeString } from '../../../../utils/values/types/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import StringUtils from '../../../../utils/StringUtils'
 import MathUtils from '../../../../utils/MathUtils'

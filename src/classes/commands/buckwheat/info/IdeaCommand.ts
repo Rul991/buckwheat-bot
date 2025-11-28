@@ -1,5 +1,5 @@
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types'
+import { TextContext, MaybeString } from '../../../../utils/values/types/types'
 import IdeasService from '../../../db/services/ideas/IdeasService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'

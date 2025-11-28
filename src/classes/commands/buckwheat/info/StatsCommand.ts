@@ -1,5 +1,5 @@
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types'
+import { TextContext, MaybeString } from '../../../../utils/values/types/types'
 import ChatService from '../../../db/services/chat/ChatService'
 import UserProfileService from '../../../db/services/user/UserProfileService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'

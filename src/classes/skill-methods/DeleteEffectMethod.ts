@@ -1,7 +1,7 @@
 import FileUtils from '../../utils/FileUtils'
 import SkillUtils from '../../utils/SkillUtils'
 import { UNKNOWN_EFFECT } from '../../utils/values/consts'
-import { JavascriptTypes, MethodExecuteArguments, SkillMethodGetText } from '../../utils/values/types'
+import { JavascriptTypes, MethodExecuteArguments, SkillMethodGetText } from '../../utils/values/types/types'
 import EffectService from '../db/services/duel/EffectService'
 import SkillMethod from './SkillMethod'
 

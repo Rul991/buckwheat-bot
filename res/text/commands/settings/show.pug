@@ -1,0 +1,30 @@
+include utils/mixins.pug
+
+- let showProperties = [`Текущее значение: ${defaultValue}`]
+
+- for(const key in properties) {
+    - const obj = properties[key]
+    
+    - if(key == 'min') {
+        - showProperties.push(`Минимальное значение: ${obj}`)
+    - }
+    - else if(key == 'max') {
+        - showProperties.push(`Максимальное значение: ${obj}`)
+    - }
+- }
+
+mixin title(title, emoji = '⚙️')
+    |
+    | #{emoji} 
+    b #{title.toUpperCase()}
+    |
+
++title(title)
+|
+|
+blockquote
+    | #{description}
+|
+|
++title('свойства:', '🔍')
++pins(showProperties)

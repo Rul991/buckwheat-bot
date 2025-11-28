@@ -3,4 +3,5 @@ export default interface SimpleCommand {
     src?: string | string[]
     text?: string | string[]
     avoidOther?: boolean
+    aliases?: string[]
 }

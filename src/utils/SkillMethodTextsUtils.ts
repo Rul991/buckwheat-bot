@@ -2,7 +2,7 @@ import ReplaceOptions from '../interfaces/options/ReplaceOptions'
 import FileUtils from './FileUtils'
 import SkillUtils from './SkillUtils'
 import { UNKNOWN_EFFECT } from './values/consts'
-import { ClassTypes } from './values/types'
+import { ClassTypes } from './values/types/types'
 
 type CharMessageWithAdditionalSymbolOptions = {
     value: number

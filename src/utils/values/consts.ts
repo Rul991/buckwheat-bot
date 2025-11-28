@@ -1,6 +1,6 @@
 import { configDotenv } from 'dotenv'
 import { env } from 'process'
-import { ConstSymbol, ModeTypes, TotalCountMode } from './types'
+import { ConstSymbol, ModeTypes, TotalCountMode } from './types/types'
 import { TelegramEmoji } from 'telegraf/types'
 
 configDotenv()
@@ -87,7 +87,7 @@ export const DEFAULT_USER_NAME_CAPITAL = DEFAULT_USER_NAME
     )
 
 export const MAX_MESSAGES_PER_TIME = 7
-export const NOT_SPAM_TIME = MILLISECONDS_IN_SECOND * MAX_MESSAGES_PER_TIME * 2
+export const NOT_SPAM_TIME = MAX_MESSAGES_PER_TIME * 2
 
 export const VOTE_TIME = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY * 3
 export const MONEY_DROP_TIME = 2500
@@ -98,7 +98,7 @@ export const MAX_SHOP_PRECENTS = 100
 
 export const COMMANDS_PER_PAGE = 5
 
-export const DICE_ANSWER_CHANCE = 0.1
+export const DICE_ANSWER_CHANCE = 10
 export const LEVEL_UP_MONEY = 4
 
 export const DATA_REPLACEABLE_SYMBOL = '@'
@@ -166,4 +166,12 @@ export const REACTIONS: TelegramEmoji[] = [
 export const REACTION_CHANCE = 0.03
 export const WINSTREAK_PRIZE = 25
 export const WINSTREAK_COUNT = MODE == 'dev' ? 3 : 10
-// export const  
+export const MAX_BUTTONS_IN_HORISONTAL = 6
+export const DEFAULT_MUTE_TIME = 60_000
+export const DENY_NUMBER = 0
+
+export const DENY_SYMBOL = '❌'
+export const ALLOW_SYMBOL = '✅'
+
+export const SET_STRING_PHRASE = '+s'
+export const SET_NUMBER_PHRASE = '+n'

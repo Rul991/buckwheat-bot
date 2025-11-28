@@ -1,23 +1,37 @@
-mixin user_mixin(user, text, i)
-    | #{i + 1}. 
-    a(href=`tg://user?id=${id || user.id}`)=user.name
-    |  - #{text}
+include utils/mixins.pug
+
+- let number = page * perPage
+- const fullTitle = rawTitle || `Топ самых ${property} игроков`
+
+mixin line(user, value)
+    - number++
+    | #{user.isLeft ? '✖️' : ` ${number}`}. 
+    +link(user)
+    | - 
+    i #{value}
+    |
     |
 
-b #{unit} Топ самых #{title} игроков:
+code (#{page + 1} / #{length})
+b  #{emoji} #{fullTitle}:
 |
 |
 |
-- for(let i = 0; i < sorted.length; i++) {
-    - let element = sorted[i]
-    - let user = users.find(user => user.id == element.id)
-    - let text = `${element[key]}`
+each obj in sorted
+    - let user = obj.user
+    - let value = obj.value
+    - let isLeft = user.isLeft
 
-    if user
-        if user.isLeft
-            s
-                +user_mixin(user, text, i)
-        else
-            +user_mixin(user, text, i)
-        |
-- }
+    if isLeft
+        s
+            +line(
+                {
+                    name: user.name, 
+                    link: 'https://t.me/buckwheat_channel',
+                    isLeft: true
+                }, 
+                value
+            )
+    else
+        +line(user, value)
+    |

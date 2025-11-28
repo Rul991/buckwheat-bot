@@ -2,7 +2,7 @@ import InventoryItemService from '../classes/db/services/items/InventoryItemServ
 import AdminUtils from './AdminUtils'
 import { DEFAULT_MAX_COUNT, DEFAULT_PREMIUM_DISCOUNT, DEFAULT_TOTAL_COUNT, DEFAULT_TOTAL_COUNT_MODE, MAX_SHOP_PRECENTS, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './values/consts'
 import MessageUtils from './MessageUtils'
-import { ItemCallbackOptions, ShopItem, ShopItemWithLength, JsonShopItem, ShopItemDescription, ShopMessageOptions } from './values/types'
+import { ItemCallbackOptions, ShopItem, ShopItemWithLength, JsonShopItem, ShopItemDescription, ShopMessageOptions } from './values/types/types'
 import ContextUtils from './ContextUtils'
 import FileUtils from './FileUtils'
 import LevelService from '../classes/db/services/level/LevelService'

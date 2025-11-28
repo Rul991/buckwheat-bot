@@ -1,10 +1,13 @@
-import { Context, NarrowedContext } from 'telegraf'
+import { Context, NarrowedContext, Scenes, Telegraf } from 'telegraf'
 import { CallbackQuery, InlineKeyboardMarkup, LinkPreviewOptions, Message, MessageEntity, ParseMode, Update } from 'telegraf/types'
-import CurrentMax from '../../interfaces/other/CurrentMax'
-import Duel from '../../interfaces/schemas/duels/Duel'
-import ButtonScrollerData from '../../interfaces/callback-button-data/ButtonScrollerData'
-import Skill from '../../interfaces/duel/Skill'
-import SkillAttack from '../../enums/SkillAttack'
+import CurrentMax from '../../../interfaces/other/CurrentMax'
+import Duel from '../../../interfaces/schemas/duels/Duel'
+import ButtonScrollerData from '../../../interfaces/callback-button-data/ButtonScrollerData'
+import Skill from '../../../interfaces/duel/Skill'
+import SkillAttack from '../../../enums/SkillAttack'
+import Setting from '../../../interfaces/other/Setting'
+import { SceneSession, WizardSessionData } from 'telegraf/scenes'
+import { SessionContext } from 'telegraf/session'
 
 export type MaybeString = string | undefined
 export type CommandStrings = [string, MaybeString, MaybeString]
@@ -19,41 +22,52 @@ export type CommandDescription = {
     isPremium: boolean,
 }
 
+export type SceneContextData<D extends {} = {}> = {
+    scene: Scenes.SceneContextScene<
+            SessionContext<SceneSession<
+                Partial<D> & WizardSessionData
+            >
+        >, Partial<D> & Scenes.WizardSessionData
+    > & {
+        state: Partial<D>
+    }
+}
+
 export type TextContext = Context<{
     message: Update.New & Update.NonChannel & Message.TextMessage
     update_id: number
-}> & Omit<Context<Update>, keyof Context<Update>>
+}> & Omit<Context<Update>, keyof Context<Update>> & SceneContextData
 
 export type CallbackButtonContext = Context<Update.CallbackQueryUpdate<CallbackQuery>>
-    & Omit<Context<Update>, keyof Context<Update>>
+    & Omit<Context<Update>, keyof Context<Update>> & SceneContextData
 
 export type DiceContext = NarrowedContext<Context<Update>, {
     message: Update.New & Update.NonChannel & Message.DiceMessage
     update_id: number
-}>
+}> & SceneContextData
 
 export type NewMemberContext = NarrowedContext<Context<Update>, {
     message: Update.New & Update.NonChannel & Message.NewChatMembersMessage
     update_id: number
-}>
+}> & SceneContextData
 
 export type LeftMemberContext = NarrowedContext<Context<Update>, {
     message: Update.New & Update.NonChannel & Message.LeftChatMemberMessage
     update_id: number
-}>
+}> & SceneContextData
 
 export type PhotoContext = NarrowedContext<Context<Update>, {
     message: Update.New & Update.NonChannel & Message.PhotoMessage
     update_id: number
-}>
+}> & SceneContextData
 
-export type PreCheckoutQueryContext = NarrowedContext<Context<Update>, Update.PreCheckoutQueryUpdate>
+export type PreCheckoutQueryContext = NarrowedContext<Context<Update>, Update.PreCheckoutQueryUpdate> & SceneContextData
 export type SuccessfulPaymentContext = NarrowedContext<Context<Update>, {
     message: Update.New & Update.NonChannel & Message.SuccessfulPaymentMessage
     update_id: number
-}>
+}> & SceneContextData
 
-export type MessageContext = NarrowedContext<Context<Update>, Update.MessageUpdate<Message>>
+export type MessageContext<D extends {} = any> = NarrowedContext<Context<Update>, Update.MessageUpdate<Message>> & SceneContextData<D>
 
 export type DiceValues = '🎲' | '🎯' | '🏀' | '⚽' | '🎳' | '🎰'
 export type ModeTypes = 'prod' | 'dev'
@@ -63,8 +77,6 @@ export type InventoryItemDescription = {
     type: InventoryItemType
 }
 export type InventoryItemType = 'consumable' | 'oneInfinity' | 'manyInfinity'
-
-export type Constructor<T> = any
 export type AsyncOrSync<T = void> = Promise<T> | T
 
 export type PlayerTypes = 'knight' | 'thief' | 'sorcerer' | 'engineer' | 'bard'
@@ -78,8 +90,20 @@ export type ExtraEditMessageText = {
     parse_mode?: ParseMode
 }
 
-export type NameObject = { name: string }
+export type SubCommandObject = {
+    name: string
+}
+export type SubCommandExecuteCallbackObject = {
+    execute: (ctx: TextContext, other: string) => Promise<boolean>
+}
+
+export type FullSubCommandObject = SubCommandObject & SubCommandExecuteCallbackObject
+
 export type TopLevelObject = { id: number, level: number }
+export type ExperienceWithId = {
+    id: number
+    experience: number
+}
 
 export type AnyRecord = Record<string, any>
 export type ObjectOrArray<T> = T | T[]
@@ -89,6 +113,7 @@ export type CallbackButtonGlobals = Record<string, ToStringObject>
 export type CallbackButtonMapValues = {
     globals?: CallbackButtonGlobals,
     values: Record<string, CallbackButtonValue[]>
+    maxWidth?: number
 }
 export type ToStringObject = { toString: () => string }
 export type Link = { name: string, link: string }
@@ -136,13 +161,16 @@ export type ShopItemDescription = {
 export type ShopItem = Required<JsonShopItem>
 export type ShopItemWithLength = ShopItem & { length: number, index: number }
 
+export type ScrollerGetObjectsOptions = {
+    data: string
+    id: number
+}
+
 export type ScrollerSendMessageOptions<T> = {
     currentPage: number
     length: number
     objects: T[]
-    data: string
-    id: number
-}
+} & ScrollerGetObjectsOptions
 
 export type ScrollerEditMessage = {
     text: string,
@@ -330,3 +358,15 @@ export type SettingPropertiesValues = {
     boolean: SettingPropertiesValues['any']
     number: SettingPropertiesValues['string']
 }
+
+export type SettingWithId<T extends SettingType = any> = Setting<T> & {
+    id: string
+}
+
+export type CurrentIncreaseId<D extends Record<string, any>> = {
+    current: keyof D
+    increase: keyof D
+    id?: keyof D
+}
+
+export type MyTelegraf = Telegraf<Context & SceneContextData>

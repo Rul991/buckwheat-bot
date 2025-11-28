@@ -1,7 +1,7 @@
 import { Telegraf } from 'telegraf'
 import PaymentAction from '../../actions/payment/PaymentAction'
 import BaseHandler from './BaseHandler'
-import { PreCheckoutQueryContext, SuccessfulPaymentContext } from '../../../utils/values/types'
+import { MyTelegraf, PreCheckoutQueryContext, SuccessfulPaymentContext } from '../../../utils/values/types/types'
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
 
@@ -25,7 +25,7 @@ export default class PaymentHandler extends BaseHandler<PaymentAction, Record<st
         return null
     }
 
-    setup(bot: Telegraf): void {
+    setup(bot: MyTelegraf): void {
         bot.on('pre_checkout_query', async ctx => {
             const action = this._searchAction(ctx)
             

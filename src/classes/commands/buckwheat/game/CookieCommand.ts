@@ -1,7 +1,7 @@
 import { BAD_COOKIE_CHANCE, COOKIE_WORK_TIME } from '../../../../utils/values/consts'
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types'
+import { TextContext, MaybeString } from '../../../../utils/values/types/types'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
 import WorkTimeService from '../../../db/services/work/WorkTimeService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'

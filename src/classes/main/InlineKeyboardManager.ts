@@ -1,7 +1,9 @@
 import FileUtils from '../../utils/FileUtils'
-import { CallbackButtonMapValues, CallbackButtonValue, ObjectOrArray, CallbackButtonGlobals } from '../../utils/values/types'
-import { DATA_REPLACEABLE_SYMBOL } from '../../utils/values/consts'
+import { CallbackButtonMapValues, CallbackButtonValue, ObjectOrArray, CallbackButtonGlobals } from '../../utils/values/types/types'
+import { DATA_REPLACEABLE_SYMBOL, MAX_BUTTONS_IN_HORISONTAL } from '../../utils/values/consts'
 import { InlineKeyboardButton } from 'telegraf/types'
+import ArrayUtils from '../../utils/ArrayUtils'
+import NumberByteConverter from '../../utils/NumberToBytesConverter'
 
 type GetCallback<T, K> = (keyboard: T) => K
 type GetOptions<T, K> = {
@@ -47,6 +49,16 @@ export default class InlineKeyboardManager {
             )
     }
 
+    private static _optimizeData(result: Result[][]): Result[][] {
+        // for (const arr of result) {
+        //     for (const v of arr) {
+        //         v.callback_data = NumberByteConverter.replaceNumberToBytes(v.callback_data)
+        //     }
+        // }
+
+        return result
+    }
+
     private static async _get<T, K = T>(
         {
             name,
@@ -66,7 +78,7 @@ export default class InlineKeyboardManager {
     }
 
     static async get(name: string, data?: string | CallbackButtonGlobals): Promise<Result[][]> {
-        return await this._get<Result[][]>({
+        const result = await this._get<Result[][]>({
             name,
             callback: keyboard => {
                 return keyboard.map(arr => 
@@ -83,6 +95,8 @@ export default class InlineKeyboardManager {
             },
             isArray: true
         }) ?? []
+        
+        return this._optimizeData(result)
     }
 
     static async map(name: string, values: CallbackButtonMapValues): Promise<Result[][]> {
@@ -93,6 +107,10 @@ export default class InlineKeyboardManager {
             name,
             callback: keyboard => {
                 const resultKeyboard: Result[][] = []
+                const {
+                    maxWidth = MAX_BUTTONS_IN_HORISONTAL
+                } = values
+
                 for (const button of keyboard.values) {
                     const isArray = button instanceof Array
                     const buttonArray = isArray ? button : [button]
@@ -141,15 +159,18 @@ export default class InlineKeyboardManager {
                     }
 
                     if(subResult.length) {
-                        resultKeyboard.push(subResult)
+                        resultKeyboard.push(...ArrayUtils.objectsGrid({
+                            objects: subResult,
+                            width: maxWidth
+                        }))
                     }
                 }
 
                 return resultKeyboard
             },
             folder: 'map'
-        })
+        }) ?? []
 
-        return keyboard ? keyboard : []
+        return this._optimizeData(keyboard)
     }
 }

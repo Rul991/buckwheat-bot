@@ -1,4 +1,4 @@
-import { LeftMemberContext } from '../../../utils/values/types'
+import { LeftMemberContext } from '../../../utils/values/types/types'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import UserLeftService from '../../db/services/user/UserLeftService'
 import LeftMemberAction from './LeftMemberAction'

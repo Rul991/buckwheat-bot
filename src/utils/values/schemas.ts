@@ -2,7 +2,7 @@ import { JSONSchemaType } from 'ajv'
 import Character from '../../interfaces/duel/Character'
 import Characteristics from '../../interfaces/duel/Characteristics'
 import SimpleCommand from '../../interfaces/other/SimpleComand'
-import { NewInvoiceParameters, JsonShopItem } from './types'
+import { NewInvoiceParameters, JsonShopItem } from './types/types'
 import Skill from '../../interfaces/duel/Skill'
 import StartUp from '../../interfaces/other/StartUp'
 import CubeData from '../../interfaces/callback-button-data/CubeData'
@@ -34,6 +34,13 @@ export const simpleCommandSchema: JSONSchemaType<SimpleCommand> = {
             ],
             nullable: true
         },
+        aliases: {
+            type: 'array',
+            items: {
+                type: 'string'
+            },
+            nullable: true
+        },
         avoidOther: {
             type: 'boolean',
             nullable: true
@@ -52,6 +59,9 @@ export const settingSchema: JSONSchemaType<Setting<any>> = {
         title: {
             type: 'string',
             nullable: false
+        },
+        description: {
+            type: 'string',
         },
         default: {
             

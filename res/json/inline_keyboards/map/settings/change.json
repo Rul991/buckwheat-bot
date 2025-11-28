@@ -1,0 +1,23 @@
+{
+    "definition": {
+        "settings": {
+            "text": "@",
+            "data": "setsh_@"
+        },
+        "arrow": {
+            "text": "@",
+            "data": "setch_@"
+        },
+        "pageNav": {
+            "text": "@",
+            "data": "setch_@"
+        }
+    },
+    
+    "values": 
+    [
+        "settings",
+        ["arrow"],
+        ["pageNav"]
+    ]
+}

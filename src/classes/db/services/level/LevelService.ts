@@ -1,9 +1,7 @@
 import Level from '../../../../interfaces/schemas/user/Level'
-import ArrayUtils from '../../../../utils/ArrayUtils'
 import ExperienceUtils from '../../../../utils/level/ExperienceUtils'
 import LevelUtils from '../../../../utils/level/LevelUtils'
-import { DEFAULT_FILTER_LENGTH } from '../../../../utils/values/consts'
-import { TopLevelObject } from '../../../../utils/values/types'
+import { TopLevelObject } from '../../../../utils/values/types/types'
 import LevelRepository from '../../repositories/LevelRepository'
 
 export default class LevelService {
@@ -17,13 +15,6 @@ export default class LevelService {
         const level = await this.create(chatId, id)
 
         return LevelUtils.get(level.experience ?? ExperienceUtils.min)
-    }
-
-    static async getAllSorted(chatId: number): Promise<TopLevelObject[]> {
-        const levels = await LevelRepository.findManyInChat(chatId)
-
-        return ArrayUtils.filterAndSort(levels, 'experience', DEFAULT_FILTER_LENGTH)
-            .map(lv => ({id: lv.id, level: LevelUtils.get(lv.experience ?? ExperienceUtils.min)}))
     }
 
     static async wipe(chatId: number): Promise<void> {

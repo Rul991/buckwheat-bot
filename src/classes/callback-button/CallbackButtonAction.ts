@@ -1,5 +1,5 @@
 import BaseAction from '../actions/base/BaseAction'
-import { CallbackButtonContext } from '../../utils/values/types'
+import { CallbackButtonContext } from '../../utils/values/types/types'
 import { JSONSchemaType } from 'ajv'
 import Logging from '../../utils/Logging'
 import ObjectValidator from '../../utils/ObjectValidator'

@@ -1,7 +1,7 @@
 import { InlineKeyboardButton } from 'telegraf/types'
 import ClassUtils from '../../../../utils/ClassUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString, ClassTypes, CallbackButtonValue } from '../../../../utils/values/types'
+import { TextContext, MaybeString, ClassTypes, CallbackButtonValue } from '../../../../utils/values/types/types'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'

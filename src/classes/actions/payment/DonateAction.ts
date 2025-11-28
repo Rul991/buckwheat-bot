@@ -1,5 +1,5 @@
 import { PreCheckoutQuery, SuccessfulPayment } from 'telegraf/types'
-import { PreCheckoutQueryContext, SuccessfulPaymentContext } from '../../../utils/values/types'
+import { PreCheckoutQueryContext, SuccessfulPaymentContext } from '../../../utils/values/types/types'
 import PaymentAction from './PaymentAction'
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'

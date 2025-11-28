@@ -5,9 +5,10 @@ import CasinoAccountService from '../db/services/casino/CasinoAccountService'
 import CasinoAddService from '../db/services/casino/CasinoAddService'
 import Casino from '../../interfaces/schemas/games/Casino'
 import MessageUtils from '../../utils/MessageUtils'
-import { DiceContext } from '../../utils/values/types'
+import { DiceContext } from '../../utils/values/types/types'
 import InventoryItemService from '../db/services/items/InventoryItemService'
 import LinkedChatService from '../db/services/linkedChat/LinkedChatService'
+import ChatSettingsService from '../db/services/settings/ChatSettingsService'
 
 type ChangeValues = { name: string, link: string }
 
@@ -116,7 +117,15 @@ export default class CasinoDice extends BaseDice {
     }
 
     async execute(ctx: DiceContext, value: number): Promise<void> {
-        if(ctx.chat.type != 'private') {
+        const id = ctx.from.id
+        const chatId = await LinkedChatService.getCurrent(ctx)
+        if(!chatId) return
+
+        const onlyNotPrivate = await ChatSettingsService.get<'boolean'>(
+            chatId, 
+            'privateCasino'
+        )
+        if(onlyNotPrivate && ctx.chat.type != 'private') {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/dice/cant.pug'
@@ -124,9 +133,6 @@ export default class CasinoDice extends BaseDice {
             return
         }
 
-        const id = ctx.from.id
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return
         const values = await ContextUtils.getUserFromContext(ctx)
 
         if (ctx.message && 'forward_date' in ctx.message) {

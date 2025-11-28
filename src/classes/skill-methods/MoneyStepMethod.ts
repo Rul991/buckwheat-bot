@@ -1,4 +1,4 @@
-import { MethodExecuteArguments } from '../../utils/values/types'
+import { MethodExecuteArguments } from '../../utils/values/types/types'
 import LevelService from '../db/services/level/LevelService'
 import MoneyMethod from './MoneyMethod'
 

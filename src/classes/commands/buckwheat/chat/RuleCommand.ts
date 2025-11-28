@@ -1,4 +1,4 @@
-import { MaybeString, NameObject, TextContext } from '../../../../utils/values/types'
+import { MaybeString, SubCommandObject, TextContext } from '../../../../utils/values/types/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import MessageUtils from '../../../../utils/MessageUtils'
 import UserRankService from '../../../db/services/user/UserRankService'
@@ -15,7 +15,7 @@ type RuleSubCommand = {
     sendMessage: (options: {ctx: TextContext, changeValues: Record<string, any>}) => Promise<void>
     title: string,
     description: string
-} & NameObject
+} & SubCommandObject
 
 export default class RuleCommand extends BuckwheatCommand {
     private _subCommands: RuleSubCommand[] = [

@@ -1,7 +1,7 @@
 import LinkedChatService from '../classes/db/services/linkedChat/LinkedChatService'
 import ContextUtils from './ContextUtils'
 import FileUtils from './FileUtils'
-import { MaybeString, TextContext } from './values/types'
+import { MaybeString, TextContext } from './values/types/types'
 
 export default class RoleplayUtils {
     static async getMessage(ctx: TextContext, text: string, other?: MaybeString): Promise<string> {

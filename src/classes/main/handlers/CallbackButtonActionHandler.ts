@@ -4,6 +4,9 @@ import Logging from '../../../utils/Logging'
 import CallbackButtonAction from '../../callback-button/CallbackButtonAction'
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
+import NumberByteConverter from '../../../utils/NumberToBytesConverter'
+import TimeUtils from '../../../utils/TimeUtils'
+import { CallbackButtonContext, MyTelegraf } from '../../../utils/values/types/types'
 
 export default class CallbackButtonActionHandler extends BaseHandler<
     CallbackButtonAction<unknown>, 
@@ -15,7 +18,7 @@ export default class CallbackButtonActionHandler extends BaseHandler<
         super({}, CallbackButtonAction)
     }
 
-    setup(bot: Telegraf): void {
+    setup(bot: MyTelegraf): void {
         bot.action(/^([^_]+)_(.+)$/, async ctx => {
             const [_, name, rawData] = ctx.match
             Logging.log('button:', name, rawData, this._container)
@@ -24,7 +27,8 @@ export default class CallbackButtonActionHandler extends BaseHandler<
 
             const action = this._container[name]
             if(action) {
-                const data = action.getData(rawData)
+                const numberiziedData = rawData//NumberByteConverter.replaceBytesToNumber(rawData)
+                const data = action.getData(numberiziedData)
 
                 if(action.schema && !action.isValid(data)) {
                     await ContextUtils.showCallbackMessage(
@@ -37,7 +41,11 @@ export default class CallbackButtonActionHandler extends BaseHandler<
                     return
                 }
 
-                const text = await action.execute(ctx, data) ?? undefined
+                await TimeUtils.sleep(1000)
+                const text = await action.execute(
+                    ctx as any, 
+                    data
+                ) ?? undefined
                 await ctx.answerCbQuery(text)
             }
             else {

@@ -1,7 +1,7 @@
 import { MAX_DEBT, MILLISECONDS_IN_SECOND } from '../../../utils/values/consts';
 import { DICE_TIME } from '../../../utils/values/consts'
 import ContextUtils from '../../../utils/ContextUtils'
-import { CallbackButtonContext } from '../../../utils/values/types'
+import { CallbackButtonContext } from '../../../utils/values/types/types'
 import CallbackButtonAction from '../CallbackButtonAction'
 import MessageUtils from '../../../utils/MessageUtils'
 import CasinoGetService from '../../db/services/casino/CasinoGetService'

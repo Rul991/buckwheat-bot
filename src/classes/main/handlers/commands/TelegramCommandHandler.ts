@@ -3,6 +3,7 @@ import BaseHandler from '../BaseHandler'
 import TelegramCommand from '../../../commands/base/TelegramCommand'
 import { BotCommand } from 'telegraf/types'
 import StringUtils from '../../../../utils/StringUtils'
+import { MyTelegraf } from '../../../../utils/values/types/types'
 
 export default class TelegramCommandHandler extends BaseHandler<TelegramCommand, TelegramCommand[], typeof TelegramCommand> {
     private _botCommands: BotCommand[]
@@ -19,7 +20,7 @@ export default class TelegramCommandHandler extends BaseHandler<TelegramCommand,
         }
     }
 
-    setup(bot: Telegraf): void {
+    setup(bot: MyTelegraf): void {
         for (const command of this._container) {
             this._addCommand(command)
             bot.command(command.name, async ctx => {

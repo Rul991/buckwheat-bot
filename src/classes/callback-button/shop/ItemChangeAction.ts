@@ -1,6 +1,6 @@
 import ContextUtils from '../../../utils/ContextUtils'
 import ShopItems from '../../../utils/ShopItems'
-import { AsyncOrSync, CallbackButtonContext, ShopItemWithLength, ScrollerEditMessageResult, ScrollerSendMessageOptions } from '../../../utils/values/types'
+import { AsyncOrSync, CallbackButtonContext, ShopItemWithLength, ScrollerEditMessageResult, ScrollerSendMessageOptions } from '../../../utils/values/types/types'
 import ScrollerAction from '../scrollers/page/ScrollerAction'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import PremiumChatService from '../../db/services/chat/PremiumChatService'

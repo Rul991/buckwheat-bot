@@ -1,7 +1,7 @@
 import ReplaceOptions from '../../interfaces/options/ReplaceOptions'
 import SkillUtils from '../../utils/SkillUtils'
 import { UNKNOWN_EFFECT } from '../../utils/values/consts'
-import { JavascriptTypes, MethodExecuteArguments } from '../../utils/values/types'
+import { JavascriptTypes, MethodExecuteArguments } from '../../utils/values/types/types'
 import DuelService from '../db/services/duel/DuelService'
 import EffectService from '../db/services/duel/EffectService'
 import UserClassService from '../db/services/user/UserClassService'

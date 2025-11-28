@@ -1,6 +1,6 @@
 import FileUtils from '../../utils/FileUtils'
 import SkillUtils from '../../utils/SkillUtils'
-import { JavascriptTypes, MethodExecuteArguments, SkillMethodGetText } from '../../utils/values/types'
+import { JavascriptTypes, MethodExecuteArguments, SkillMethodGetText } from '../../utils/values/types/types'
 import LastStepService from '../db/services/duel/LastStepService'
 import UserClassService from '../db/services/user/UserClassService'
 import DamageMethod from './DamageMethod'

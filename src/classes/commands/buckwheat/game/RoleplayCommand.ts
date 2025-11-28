@@ -2,14 +2,14 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import SubCommandUtils from '../../../../utils/SubCommandUtils'
 import { FIRST_INDEX } from '../../../../utils/values/consts'
-import { TextContext, MaybeString, NameObject } from '../../../../utils/values/types'
+import { TextContext, MaybeString, SubCommandObject } from '../../../../utils/values/types/types'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import RoleplaysService from '../../../db/services/rp/RoleplaysService'
 import UserRankService from '../../../db/services/user/UserRankService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
-type SubCommand = NameObject & {
+type SubCommand = SubCommandObject & {
     execute: (ctx: TextContext, text: MaybeString) => Promise<boolean>
     minimumRank?: number
     needData?: boolean,

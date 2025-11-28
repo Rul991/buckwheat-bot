@@ -1,7 +1,8 @@
 import AntiSpam from '../../../../interfaces/schemas/other/AntiSpam'
 import TimeUtils from '../../../../utils/TimeUtils'
-import { MAX_MESSAGES_PER_TIME, NOT_SPAM_TIME } from '../../../../utils/values/consts'
+import { DENY_NUMBER, MAX_MESSAGES_PER_TIME, MILLISECONDS_IN_SECOND, NOT_SPAM_TIME } from '../../../../utils/values/consts'
 import AntiSpamRepository from '../../repositories/AntiSpamRepository'
+import ChatSettingsService from '../settings/ChatSettingsService'
 
 export default class AntiSpamService {
     static async get(id: number, key: keyof AntiSpam): Promise<number> {
@@ -26,20 +27,36 @@ export default class AntiSpamService {
         else return spam[key]!
     }
 
-    static async updateTimeIfNeed(id: number): Promise<boolean> {
+    static async updateTimeIfNeed(chatId: number, id: number): Promise<boolean> {
         const time = await AntiSpamService.get(id, 'lastMessageGroupTime')
-        if(TimeUtils.isTimeExpired(time, NOT_SPAM_TIME)) {
-            await AntiSpamRepository.updateOne(id, {lastMessageGroupTime: Date.now(), lastMessagesCount: 0})
+        const notSpamTime = (await ChatSettingsService.get<'number'>(
+            chatId,
+            'notSpamTime'
+        ) ?? NOT_SPAM_TIME) * MILLISECONDS_IN_SECOND
+
+        if(notSpamTime == DENY_NUMBER)
+            return true
+
+        if(TimeUtils.isTimeExpired(time, notSpamTime)) {
+            await AntiSpamRepository.updateOne(id, {
+                lastMessageGroupTime: Date.now(), 
+                lastMessagesCount: 0
+            })
+
             return true
         }
 
         return false
     }
 
-    static async isSpamming(id: number): Promise<boolean> {
-        await this.updateTimeIfNeed(id)
+    static async isSpamming(chatId: number, id: number): Promise<boolean> {
+        await this.updateTimeIfNeed(chatId, id)
         const count = await AntiSpamService.get(id, 'lastMessagesCount')
+        const maxCount = await ChatSettingsService.get<'number'>(
+            chatId, 
+            'messagePerTime'
+        ) ?? MAX_MESSAGES_PER_TIME
 
-        return count >= MAX_MESSAGES_PER_TIME
+        return maxCount != DENY_NUMBER && count >= maxCount
     }
 }
