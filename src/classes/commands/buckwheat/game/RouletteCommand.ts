@@ -3,7 +3,7 @@ import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import RandomUtils from '../../../../utils/RandomUtils'
 import StringUtils from '../../../../utils/StringUtils'
-import { ROULETTE_CHANCE } from '../../../../utils/values/consts'
+import { KICK_TIME, ROULETTE_CHANCE } from '../../../../utils/values/consts'
 import { TextContext, MaybeString } from '../../../../utils/values/types/types'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import RouletteService from '../../../db/services/roulette/RouletteService'
@@ -42,7 +42,7 @@ export default class RouletteCommand extends BuckwheatCommand {
         }
 
         if(isKilled) {
-            const isKicked = await AdminUtils.kick(ctx, ctx.from.id)
+            const isKicked = await AdminUtils.ban(ctx, ctx.from.id, KICK_TIME)
 
             if(isKicked) {
                 await MessageUtils.answerMessageFromResource(

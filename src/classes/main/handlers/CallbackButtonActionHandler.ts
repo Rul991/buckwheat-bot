@@ -41,7 +41,6 @@ export default class CallbackButtonActionHandler extends BaseHandler<
                     return
                 }
 
-                await TimeUtils.sleep(1000)
                 const text = await action.execute(
                     ctx as any, 
                     data
