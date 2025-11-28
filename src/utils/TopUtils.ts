@@ -82,6 +82,7 @@ export default class {
             },
             getUnsortedValues: async chatId => {
                 return (await ExperienceService.getAllWithId(chatId))
+                    .filter(({experience}) => experience && experience > 0)
                     .map(({id, experience}) => {
                         return {
                             id,
@@ -127,6 +128,7 @@ export default class {
             },
             getUnsortedValues: async chatId => {
                 return (await MessagesService.getAll(chatId))
+                    .filter(({total}) => total && total > 0)
                     .map(({id, total}) => {
                         return {
                             id,

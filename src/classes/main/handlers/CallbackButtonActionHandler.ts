@@ -21,7 +21,7 @@ export default class CallbackButtonActionHandler extends BaseHandler<
     setup(bot: MyTelegraf): void {
         bot.action(/^([^_]+)_(.+)$/, async ctx => {
             const [_, name, rawData] = ctx.match
-            Logging.log('button:', name, rawData, this._container)
+            Logging.log('button:', name, rawData, ctx.from.id)
 
             if(!name) return
 

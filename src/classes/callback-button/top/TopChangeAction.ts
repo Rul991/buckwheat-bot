@@ -1,11 +1,13 @@
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
+import MessageUtils from '../../../utils/MessageUtils'
 import StringUtils from '../../../utils/StringUtils'
 import TopUtils from '../../../utils/TopUtils'
 import { CallbackButtonContext, AsyncOrSync, ScrollerSendMessageOptions, ScrollerEditMessageResult, Link, ScrollerGetObjectsOptions } from '../../../utils/values/types/types'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import ChatSettingsService from '../../db/services/settings/ChatSettingsService'
 import UserProfileService from '../../db/services/user/UserProfileService'
+import UserRankService from '../../db/services/user/UserRankService'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import ScrollerAction from '../scrollers/page/ScrollerAction'
 
@@ -15,6 +17,8 @@ type Object = {
 }
 
 export default class extends ScrollerAction<Object> {
+    protected _minimumRank = 1
+
     protected async _getObjects(ctx: CallbackButtonContext, { id, data }: ScrollerGetObjectsOptions): Promise<Object[]> {
         const chatId = await LinkedChatService.getCurrent(ctx, id)
         if(!chatId) return []
@@ -59,6 +63,19 @@ export default class extends ScrollerAction<Object> {
         const id = ctx.from.id
         const chatId = await LinkedChatService.getCurrent(ctx, id)
         if(!chatId) return null
+
+        if(!await UserRankService.has(chatId, id, this._minimumRank)) {
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/other/rank-issue.pug',
+                {
+                    changeValues: {
+                        rank: this._minimumRank
+                    }
+                }
+            )
+            return null
+        }
         
         const {
             currentPage,
