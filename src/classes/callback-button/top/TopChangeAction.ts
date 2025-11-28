@@ -65,14 +65,17 @@ export default class extends ScrollerAction<Object> {
         if(!chatId) return null
 
         if(!await UserRankService.has(chatId, id, this._minimumRank)) {
-            await MessageUtils.answerMessageFromResource(
+            await ContextUtils.showCallbackMessage(
                 ctx,
-                'text/other/rank-issue.pug',
-                {
-                    changeValues: {
-                        rank: this._minimumRank
+                await FileUtils.readPugFromResource(
+                    'text/other/rank-issue.pug',
+                    {
+                        changeValues: {
+                            rank: this._minimumRank
+                        }
                     }
-                }
+                ),
+                true
             )
             return null
         }

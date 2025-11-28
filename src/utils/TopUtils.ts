@@ -70,7 +70,8 @@ export default class {
                 property: 'богатых'
             },
             getUnsortedValues: async (chatId) => {
-                return await CasinoGetAllService.money(chatId)
+                return (await CasinoGetAllService.money(chatId))
+                    .filter(({value}) => value != 0)
             }
         },
 
