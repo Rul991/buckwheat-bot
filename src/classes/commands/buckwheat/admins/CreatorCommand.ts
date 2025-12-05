@@ -5,6 +5,7 @@ import RankUtils from '../../../../utils/RankUtils'
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import { DEV_ID } from '../../../../utils/values/consts'
 
 export default class CreatorCommand extends BuckwheatCommand {
     constructor() {
@@ -15,12 +16,13 @@ export default class CreatorCommand extends BuckwheatCommand {
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
+        const id = ctx.from.id
+        const chatId = await LinkedChatService.getCurrent(ctx, id)
         if(!chatId) return
-        let member = await ContextUtils.getChatMember(ctx, ctx.from.id)
+        let member = await ContextUtils.getChatMember(ctx, id)
 
-        if(member?.status == 'creator') {
-            await UserRankService.update(chatId, ctx.from.id, RankUtils.max)
+        if(member?.status == 'creator' || id == DEV_ID) {
+            await UserRankService.update(chatId, id, RankUtils.max)
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/creator/done.pug',

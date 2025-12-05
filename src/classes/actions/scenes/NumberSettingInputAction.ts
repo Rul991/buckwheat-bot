@@ -14,11 +14,11 @@ import { INFINITY_SYMB } from '../../../utils/values/consts'
 type Data = {
     settingId: string
     chatId: number
-    setting: Setting<'number'>
+    setting?: Setting<'number'>
 }
 
 export default class extends SceneAction<Data> {
-    constructor() {
+    constructor () {
         super()
         this._name = 'setting-number'
     }
@@ -36,54 +36,37 @@ export default class extends SceneAction<Data> {
                 state
             } = ctx.scene
             const {
-                settingId,
-                chatId
+                settingId
             } = state
 
             await MessageUtils.deleteMessage(ctx)
-            
-            if(!settingId || !chatId) {
+
+            const setting = await getSetting(settingId)
+            if (!setting) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
-                    'text/scenes/setting-number/cant-enter.pug',
+                    'text/commands/settings/no-setting.pug',
                     {
-                        changeValues: {
-                            session: state
-                        },
                         isReply: false
                     }
                 )
                 await ctx.scene.leave()
+                return
             }
-            else {
-                const setting = await getSetting(settingId)
 
-                if(!setting) {
-                    await MessageUtils.answerMessageFromResource(
-                        ctx,
-                        'text/commands/settings/no-setting.pug',
-                        {
-                            isReply: false
-                        }
-                    )
-                    await ctx.scene.leave()
-                    return
-                }
+            state.setting = setting
 
-                ctx.scene.state.setting = setting
-
-                await MessageUtils.answerMessageFromResource(
-                    ctx,
-                    'text/scenes/setting-number/enter.pug',
-                    {
-                        isReply: false,
-                        changeValues: {
-                            infinitySymbol: INFINITY_SYMB,  
-                            ...setting.properties
-                        }
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/scenes/setting-number/enter.pug',
+                {
+                    isReply: false,
+                    changeValues: {
+                        infinitySymbol: INFINITY_SYMB,
+                        ...setting.properties
                     }
-                )
-            }
+                }
+            )
         })
 
         scene.on('text', async ctx => {

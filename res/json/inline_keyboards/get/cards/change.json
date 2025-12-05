@@ -1,0 +1,12 @@
+[
+    [
+        {
+            "text": "<<",
+            "callback_data": "cshw_-1_@{page}_@{id}"
+        },
+        {
+            "text": ">>",
+            "callback_data": "cshw_1_@{page}_@{id}"
+        }
+    ]
+]

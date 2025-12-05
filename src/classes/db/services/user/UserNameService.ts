@@ -1,4 +1,4 @@
-import { DEFAULT_USER_NAME } from '../../../../utils/values/consts'
+import { DEFAULT_USER_NAME, MAX_NAME_LENGTH } from '../../../../utils/values/consts'
 import UserRepository from '../../repositories/UserRepository'
 import BaseUserService from './BaseUserService'
 
@@ -23,12 +23,17 @@ export default class UserNameService {
 
     static async getUniqueName(chatId: number, name: string): Promise<string> {
         const names = await this.getAllByName(chatId, name)
+        let result = name
 
         if(names.length > 0) {
-            return `${name}${names.length}`
+            result = `${name}${names.length}`
         }
-        else {
-            return name
-        }
+
+        const min = Math.max(
+            result.length - MAX_NAME_LENGTH,
+            1
+        ) - 1
+
+        return result.substring(min)
     }
 }

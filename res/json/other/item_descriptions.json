@@ -57,5 +57,10 @@
     "effectBook": {
         "name": "Книга с эффектами",
         "type": "oneInfinity"
+    },
+
+    "cardBox": {
+        "name": "Набор с карточками",
+        "type": "consumable"
     }
 }

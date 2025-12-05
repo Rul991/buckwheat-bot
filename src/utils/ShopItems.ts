@@ -1,5 +1,4 @@
 import InventoryItemService from '../classes/db/services/items/InventoryItemService'
-import AdminUtils from './AdminUtils'
 import { DEFAULT_MAX_COUNT, DEFAULT_PREMIUM_DISCOUNT, DEFAULT_TOTAL_COUNT, DEFAULT_TOTAL_COUNT_MODE, MAX_SHOP_PRECENTS, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './values/consts'
 import MessageUtils from './MessageUtils'
 import { ItemCallbackOptions, ShopItem, ShopItemWithLength, JsonShopItem, ShopItemDescription, ShopMessageOptions } from './values/types/types'
@@ -12,6 +11,7 @@ import LinkedChatService from '../classes/db/services/linkedChat/LinkedChatServi
 import ObjectValidator from './ObjectValidator'
 import { jsonShopItemSchema } from './values/schemas'
 import InlineKeyboardManager from '../classes/main/InlineKeyboardManager'
+import CasinoGetService from '../classes/db/services/casino/CasinoGetService'
 
 type ItemDescriptionKey = string
 
@@ -20,6 +20,25 @@ type HasEnoughItemsOptions = {
     id: number
     item: ShopItem
     count: number
+}
+
+const buyCard = async ({
+    ctx,
+    count,
+    cardCount
+}: ItemCallbackOptions & { cardCount: number }) => {
+    const totalCount = cardCount * count
+    const id = ctx.from.id
+    const chatId = await LinkedChatService.getCurrent(ctx, id)
+    if(!chatId) return false
+
+    const [isBought] = await InventoryItemService.add(
+        chatId,
+        id,
+        'cardBox',
+        totalCount
+    )
+    return isBought
 }
 
 export default class ShopItems {
@@ -55,9 +74,9 @@ export default class ShopItems {
 
                 await InventoryItemService.add(chatId, ctx.from.id, 'workUp')
                 await ContextUtils.showCallbackMessageFromFile(
-                        ctx,
-                        'text/commands/items/work/workUp.pug'
-                    )
+                    ctx,
+                    'text/commands/items/work/workUp.pug'
+                )
 
                 return true
             },
@@ -238,6 +257,36 @@ export default class ShopItems {
             filename: 'effectBook'
         },
 
+        {
+            filename: "cards/1",
+            execute: async (options) => {
+                return await buyCard({
+                    ...options,
+                    cardCount: 1
+                })
+            }
+        },
+
+        {
+            filename: "cards/3",
+            execute: async (options) => {
+                return await buyCard({
+                    ...options,
+                    cardCount: 3
+                })
+            }
+        },
+
+        {
+            filename: "cards/5",
+            execute: async (options) => {
+                return await buyCard({
+                    ...options,
+                    cardCount: 5
+                })
+            }
+        }
+
         // {
         //     execute: async ({ ctx }) => {
         //         const id = ctx.from.id
@@ -332,7 +381,7 @@ export default class ShopItems {
         const description = this._itemDescriptions[id]
         if (!description) return null
 
-        const item = description.item ?? 
+        const item = description.item ??
             await this._valid(description)
         if (!item) return null
 
@@ -355,20 +404,20 @@ export default class ShopItems {
         const maxCount = item.maxCount <= 0 ? Number.MAX_SAFE_INTEGER : item.maxCount
         const totalCount = item.totalCount <= DEFAULT_TOTAL_COUNT ? Infinity : item.totalCount
         return Math.min(
-            count, 
-            maxCount, 
+            count,
+            maxCount,
             totalCount
         )
     }
 
     static async getRest(chatId: number, id: number, item: ShopItem) {
-        if(item.totalCount === DEFAULT_TOTAL_COUNT) return Infinity
+        if (item.totalCount === DEFAULT_TOTAL_COUNT) return Infinity
         const minValue = 0
 
         const { totalCount, id: itemId } = item
         const isChatMode = this.isChatMode(item)
 
-        const count = isChatMode ? 
+        const count = isChatMode ?
             await InventoryItemService.getTotalCount(chatId, itemId) :
             (await InventoryItemService.get(chatId, id, itemId))?.count ?? minValue
 
@@ -382,14 +431,14 @@ export default class ShopItems {
     static getPrice(hasPremium: boolean, item: ShopItem) {
         return Math.ceil(
             item.price * (
-                hasPremium ? 
+                hasPremium ?
                     1 - item.premiumDiscount / 100 :
                     1
             )
         )
     }
 
-    static getFormattedPriceByCount(item: ShopItem, count: number, hasPremium: boolean, ): string {
+    static getFormattedPriceByCount(item: ShopItem, count: number, hasPremium: boolean,): string {
         return StringUtils.toFormattedNumber(this.getPriceByCount(item, count, hasPremium))
     }
 
@@ -407,28 +456,29 @@ export default class ShopItems {
     }
 
     static async getShopMessage(options: ShopMessageOptions) {
+        const updateIfInfinity = true
         const {
             index,
             chatId,
             userId,
             count,
-            updateIfInfinity = true,
             hasPremium
         } = options
 
         const item = await ShopItems.get(index)
-        if(!item) return null
+        if (!item) return null
 
         const rest = await ShopItems.getRest(chatId, userId, item)
         const isRestInfinity = !isFinite(rest)
 
-        if(isRestInfinity && !updateIfInfinity) {
+        if (isRestInfinity && !updateIfInfinity) {
             return null
         }
 
         const totalCount = ShopItems.getCount(item, count)
         const totalPrice = ShopItems.getFormattedPriceByCount(item, count, hasPremium)
         const isChatMode = ShopItems.isChatMode(item)
+        const balance = await CasinoGetService.money(chatId, userId)
 
         return {
             text: await FileUtils.readPugFromResource(
@@ -444,7 +494,8 @@ export default class ShopItems {
                         index,
                         length: ShopItems.len(),
                         isChatMode,
-                        hasPremium
+                        hasPremium,
+                        balance: StringUtils.toFormattedNumber(balance)
                     }
                 }
             ),

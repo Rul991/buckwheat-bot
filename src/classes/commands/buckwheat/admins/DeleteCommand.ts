@@ -9,7 +9,7 @@ export default class extends AdminCommand {
 
         this._name = 'удалить'
         this._description = 'удаляю сообщение'
-        this._argumentText = '0 <причина>'
+        this._argumentText = '<причина>'
         this._needData = true
         this._replySupport = true
 

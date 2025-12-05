@@ -5,7 +5,6 @@ import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import TopUtils from '../../../../utils/TopUtils'
 import RankUtils from '../../../../utils/RankUtils'
 import UserRankService from '../../../db/services/user/UserRankService'
-import FileUtils from '../../../../utils/FileUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 
 export default class TopCommand extends BuckwheatCommand {
@@ -13,7 +12,7 @@ export default class TopCommand extends BuckwheatCommand {
         super()
         this._name = 'топ'
         this._description = 'показываю топ игроков по разным параметрам'
-        this._minimumRank = RankUtils.min + 1
+        this._minimumRank = RankUtils.min
     }
 
     async execute(ctx: TextContext, _: MaybeString): Promise<void> {

@@ -1,0 +1,35 @@
+- const CARD_EMOJI = '🃏'
+
+mixin name(name)
+    i
+        u #{name}
+
+mixin description(description)
+    blockquote #{description}
+
+mixin blockParam(emoji, text)
+    b #{emoji} #{text} 
+    block
+    |
+    |
+
+mixin param(emoji, text, value)
+    +blockParam(emoji, text)
+        | #{value}
+
+mixin middle(description, emoji, rarityName)
+    |
+    |
+    +description(description)
+    |
+    |
+    |
+    +param(emoji, 'Редкость:', rarityName)
+    |
+
+mixin noCard(isBold = true)
+    - const text = `${CARD_EMOJI} Карточки в упаковке не оказалось :(`
+    if isBold
+        b #{text}
+    else 
+        | #{text}

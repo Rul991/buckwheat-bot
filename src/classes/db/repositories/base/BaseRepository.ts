@@ -50,6 +50,17 @@ export default abstract class BaseRepository<K, T extends typeof Model<K>> {
     }
 
     /**
+     * first values must be filter, second must be data
+     */
+
+    async getOrCreate(...values: any): Promise<K> {
+        const found = await this.findByFilter(this._getFilter(values[0]))
+        if(found) return found
+
+        return this.create(values[1])
+    }
+
+    /**
      * first argument is filter
      * 
      * second argument is update query

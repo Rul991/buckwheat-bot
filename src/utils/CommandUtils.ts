@@ -3,6 +3,7 @@ import { AsyncOrSync, CommandStrings } from './values/types/types'
 
 export default class CommandUtils {
     private static _botNames: string[] = ['баквит', 'гречка', 'баквид']
+    private static _availableSymbols: string[] = ['', ',', '*']
 
     static getCommandStrings(text: string): CommandStrings {
         return StringUtils.splitByCommands(text, 2) as CommandStrings
@@ -13,9 +14,11 @@ export default class CommandUtils {
         const lowerFirstWord = firstWord.toLowerCase()
 
         for (const name of this._botNames) {
-            if(lowerFirstWord == name || lowerFirstWord == `${name},`) {
-                isCommand = true
-                break
+            for (const symbol of this._availableSymbols) {
+                if (lowerFirstWord == `${name}${symbol}`) {
+                    isCommand = true
+                    break
+                }
             }
         }
 
@@ -26,7 +29,7 @@ export default class CommandUtils {
         const strings = this.getCommandStrings(text)
         const [firstWord] = strings
 
-        if(this.isCommand(firstWord)) {
+        if (this.isCommand(firstWord)) {
             await callback(strings)
             return strings
         }

@@ -17,27 +17,30 @@ import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 
 export default class AddInDatabaseAction extends NewMemberAction {
     private async _updateIfBot(ctx: NewMemberContext, from: User, chatId: number): Promise<void> {
-        if(!from.is_bot) return
-        if(from.id == ctx.botInfo.id) {
+        if (!from.is_bot) return
+        if (from.id == ctx.botInfo.id) {
             this._updateIfBuckwheat(ctx, from, chatId)
             return
         }
 
         await Promise.allSettled(
             [
-                UserClassService.update(chatId, from.id, 'bot')
+                UserClassService.update(chatId, from.id, 'bot'),
+                UserRankService.update(chatId, from.id, RankUtils.moderator)
             ]
         )
     }
 
-    private async _updateIfBuckwheat(_: NewMemberContext, from: User, chatId: number): Promise<void> {
+    private async _updateIfBuckwheat(ctx: NewMemberContext, from: User, chatId: number): Promise<void> {
         const { id } = from
 
         const currentName = await UserNameService.get(chatId, id)
+        const firstName = ctx.botInfo.first_name
+
+        if (currentName !== firstName) return
+
         const needName = 'Баквит'
         const description = 'Я ваш проводник в данном чате'
-
-        if (currentName === needName) return
 
         await UserNameService.update(chatId, id, needName)
         await UserDescriptionService.update(chatId, id, description)
@@ -46,7 +49,7 @@ export default class AddInDatabaseAction extends NewMemberAction {
     }
 
     private async _addInDatabase(ctx: NewMemberContext, from: User, chatId: number): Promise<void> {
-        const {id, first_name} = from
+        const { id, first_name } = from
 
         await Promise.allSettled([
             UserProfileService.create(chatId, id, await UserNameService.getUniqueName(chatId, first_name)),
@@ -63,9 +66,9 @@ export default class AddInDatabaseAction extends NewMemberAction {
     }
 
     async execute(ctx: NewMemberContext): Promise<void> {
-        for await(const from of ctx.message.new_chat_members) {
+        for await (const from of ctx.message.new_chat_members) {
             const chatId = await LinkedChatService.getCurrent(ctx)
-            if(!chatId) continue
+            if (!chatId) continue
             await this._addInDatabase(ctx, from, chatId)
         }
     }

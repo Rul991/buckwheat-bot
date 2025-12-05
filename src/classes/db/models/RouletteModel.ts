@@ -6,6 +6,7 @@ export default createModel<Roulette>({
     definition: {
         id: { type: Number, required: true },
         chatId: { type: Number, required: true },
-        winStreak: { type: Number, default: 0 }
+        winStreak: { type: Number, default: 0 },
+        maxWinStreak: { type: Number, default: 0 },
     }
 })

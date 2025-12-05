@@ -1,11 +1,13 @@
 include utils/mixins.pug
 
+- const medals = ['🥇', '🥈', '🥉']
+
 - let number = page * perPage
 - const fullTitle = rawTitle || `Топ самых ${property} игроков`
 
 mixin line(user, value)
-    - number++
-    | #{user.isLeft ? '✖️' : ` ${number}`}. 
+    - const index = ++number
+    | #{user.isLeft ? '✖️' : index <= medals.length && hasWinner ? medals[index - 1] : `${index}`.padStart(3, '0')}. 
     +link(user)
     | - 
     i #{value}
@@ -35,3 +37,8 @@ each obj in sorted
     else
         +line(user, value)
     |
+|
+|
+if isNumbers && rawTotalCount > 0
+    b 🎖 Суммарно#{totalName ? ` ${totalName}` : ''} на этой странице: 
+    code #{totalCount}

@@ -1,20 +1,14 @@
 import { JSONSchemaType } from 'ajv'
 import ButtonScrollerData from '../../../../interfaces/callback-button-data/ButtonScrollerData'
-import { AsyncOrSync, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult, ButtonScrollerOptions, ButtonScrollerSlice, CallbackButtonContext, CallbackButtonValue, CurrentIncreaseId } from '../../../../utils/values/types/types'
+import { AsyncOrSync, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult, ButtonScrollerOptions, ButtonScrollerSlice, CallbackButtonContext, CallbackButtonValue, CurrentIncreaseIdNames, CreateNavButtonsOptions } from '../../../../utils/values/types/types'
 import CallbackButtonAction from '../../CallbackButtonAction'
 import ContextUtils from '../../../../utils/ContextUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
-import { FIRST_INDEX, MAX_BUTTONS_IN_HORISONTAL, MAX_BUTTONS_PER_PAGE, NOT_FOUND_INDEX } from '../../../../utils/values/consts'
+import { FIRST_INDEX, MAX_BUTTONS_IN_HORISONTAL, MAX_BUTTONS_PER_PAGE } from '../../../../utils/values/consts'
 import MessageUtils from '../../../../utils/MessageUtils'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import FileUtils from '../../../../utils/FileUtils'
-
-type CreateButtonOptions = {
-    text: string,
-    current: number,
-    increase: number
-    id?: number
-}
+import NavigationButtonUtils from '../../../../utils/NavigationButtonUtils'
 
 export default abstract class<O, D extends Record<string, any> = ButtonScrollerData> extends CallbackButtonAction<D> {
     protected _schema: JSONSchemaType<D> = {
@@ -52,35 +46,15 @@ export default abstract class<O, D extends Record<string, any> = ButtonScrollerD
             increase
         } = this._getCurrentIncreaseIdNames()
 
-        return data[current] + data[increase]
+        const result = data[current] + data[increase]
+        return isNaN(result) ? FIRST_INDEX : result
     }
 
-    protected _getCurrentIncreaseIdNames(): CurrentIncreaseId<D> {
+    protected _getCurrentIncreaseIdNames(): CurrentIncreaseIdNames<D> {
         return {
             current: 'current',
-            increase: 'increase'
-        }
-    }
-
-    protected _createNavButton({
-        text,
-        current: currentValue,
-        increase: increaseValue,
-        id,
-    }: CreateButtonOptions): CallbackButtonValue {
-        const {
-            id: idName,
-            current,
-            increase
-        } = this._getCurrentIncreaseIdNames()
-
-        return {
-            text,
-            data: JSON.stringify({
-                [current]: currentValue,
-                [increase]: increaseValue,
-                ...(id ? {[idName as string]: id} : {})
-            })
+            increase: 'increase',
+            id: 'id'
         }
     }
 
@@ -89,46 +63,33 @@ export default abstract class<O, D extends Record<string, any> = ButtonScrollerD
         objects,
         id
     }: ButtonScrollerFullOptions<O, D>): CallbackButtonValue[] {
-        const pageNav: CallbackButtonValue[] = []
         const length = objects.length
-
-        const lastPage = Math.ceil(
-            length / this._buttonsPerPage
-        )
-        const lastPageIndex = lastPage - 1
-        const needEdgeButtons = lastPageIndex > 1
         
         const {
             new: newPage
         } = this._getSlice(data)
-        const currentPage = newPage + 1
 
-        if(needEdgeButtons && newPage > FIRST_INDEX) {
-            pageNav.push(this._createNavButton({
-                text: `${FIRST_INDEX}`,
-                current: NOT_FOUND_INDEX,
-                increase: 1,
-                id
-            }))
-        }
+        const {
+            id: idName,
+            current,
+            increase
+        } = this._getCurrentIncreaseIdNames()
 
-        pageNav.push(this._createNavButton({
-            text: `${currentPage} / ${lastPage}`,
-            current: newPage + 1,
-            increase: -1,
-            id
-        }))
+        return NavigationButtonUtils.getPageNav({
+            buttonsPerPage: this._buttonsPerPage,
+            current: current as string,
+            increase: increase as string,
+            id: {
+                name: idName as string,
+                value: id
+            },
+            length,
+            pageIndex: newPage
+        })
+    }
 
-        if(needEdgeButtons && newPage < lastPageIndex) {
-            pageNav.push(this._createNavButton({
-                text: `${lastPage}`,
-                current: lastPage,
-                increase: -1,
-                id
-            }))
-        }
-
-        return pageNav
+    protected _createNavButton(options: CreateNavButtonsOptions): CallbackButtonValue {
+        return NavigationButtonUtils.createNavButton(options)
     }
 
     protected _getArrows({
@@ -136,33 +97,33 @@ export default abstract class<O, D extends Record<string, any> = ButtonScrollerD
         objects,
         id
     }: ButtonScrollerFullOptions<O, D>): CallbackButtonValue[] {
-        const arrows: CallbackButtonValue[] = []
         const length = objects.length
 
         const {
             start,
             end,
-            new: newPage
+            new: pageIndex
         } = this._getSlice(data)
-        
-        const addArrow = (onLeft: boolean) => {
-            arrows.push(this._createNavButton({
-                text: onLeft ? '<<' : '>>',
-                current: newPage,
-                increase: onLeft ? -1 : 1,
-                id
-            }))
-        }
 
-        if(start > FIRST_INDEX) {
-            addArrow(true)
-        }
+        const {
+            id: idName,
+            current,
+            increase
+        } = this._getCurrentIncreaseIdNames()
 
-        if(end < length) {
-            addArrow(false)
-        }
-
-        return arrows
+        return NavigationButtonUtils.getArrows({
+            length,
+            start,
+            end,
+            pageIndex,
+            id: {
+                name: idName as string,
+                value: id
+            },
+            increase: increase as string,
+            current: current as string,
+            buttonsPerPage: this._buttonsPerPage
+        })
     }
 
     protected _getSlicedObjects(objects: O[], options: ButtonScrollerOptions<D>): AsyncOrSync<O[]> {
@@ -210,10 +171,15 @@ export default abstract class<O, D extends Record<string, any> = ButtonScrollerD
             slicedObjects
         }
 
+        const editedText = await this._editText(fullOptions)
+        if(typeof editedText == 'string') {
+            return editedText
+        }
+
         const {
             text,
             values
-        } = await this._editText(fullOptions)
+        } = editedText
 
         const {
             globals,

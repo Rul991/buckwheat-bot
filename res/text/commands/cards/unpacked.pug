@@ -1,0 +1,11 @@
+include utils/card.pug
+
+if card
+    b #{CARD_EMOJI} Найдена#{!isDuplicate ? ' новая': ''} карточка 
+        +name(card.name)
+        | !
+    +middle(card.description, emoji, rarityName)
+    if isDuplicate
+        +param('❕', 'Дубликат', '')
+else
+    +noCard()

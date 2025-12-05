@@ -1,9 +1,10 @@
 import { appendFile, readdir, readFile, stat, writeFile } from 'fs/promises'
-import { join } from 'path'
+import { basename, join } from 'path'
 import FileCache from '../interfaces/other/FileCache'
 import Logging from './Logging'
 import ReplaceOptions from '../interfaces/options/ReplaceOptions'
 import { render } from 'pug'
+import { MODE } from './values/consts'
 
 export default class FileUtils {
     private static _cache: Record<string, FileCache> = {}
@@ -14,12 +15,14 @@ export default class FileUtils {
             let isCached = false
             const cachedValue = this._cache[path] ?? {}
 
-            const stats = await stat(path)
-            if(stats.ctimeMs == cachedValue.lastEdited) {
-                isCached = true
-            }
-            else {
-                cachedValue.lastEdited = stats.ctimeMs
+            if(MODE == 'dev') {
+                const stats = await stat(path)
+                if(stats.ctimeMs == cachedValue.lastEdited) {
+                    isCached = true
+                }
+                else {
+                    cachedValue.lastEdited = stats.ctimeMs
+                }
             }
 
             let result: string
@@ -88,7 +91,8 @@ export default class FileUtils {
                 text, 
                 {
                     ...(options.changeValues ?? {}),
-                    filename: './res/text/.'
+                    filename: './res/text/.',
+                    _basename: basename(path, '.pug')
                 }
             )
 

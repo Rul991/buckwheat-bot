@@ -1,0 +1,6 @@
+include utils/card.pug
+
+if name
+    | #{CARD_EMOJI} Распакована карточка ''#{name}''!
+else
+    +noCard(false)

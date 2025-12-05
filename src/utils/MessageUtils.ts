@@ -5,7 +5,7 @@ import FileUtils from './FileUtils'
 import Logging from './Logging'
 import AnswerOptions from '../interfaces/options/AnswerOptions'
 import FileAnswerOptions from '../interfaces/options/FileAnswerOptions'
-import { DiceValues, ExtraEditMessageText, NewInvoiceParameters } from './values/types/types'
+import { DiceValues, ExtraEditMessageMedia, ExtraEditMessageText, InputMediaWrapCaption, NewInvoiceParameters } from './values/types/types'
 import ExceptionUtils from './ExceptionUtils'
 import ObjectValidator from './ObjectValidator'
 import { invoiceSchema } from './values/schemas'
@@ -160,6 +160,7 @@ export default class MessageUtils {
     ): Promise<boolean> {
         return await ExceptionUtils.handle(async () => {
             const extra = await this._getMessageOptions(ctx, options)
+
             if(extra.chatId == -1) {
                 Logging.error(`Cant send photo '${photoId}', chat id equal -1`)
                 return
@@ -177,6 +178,16 @@ export default class MessageUtils {
         })
     }
 
+    private static _updateEditOptions(ctx: Context, options?: ExtraEditMessageText) {
+        return {
+            ...options,
+            parse_mode: PARSE_MODE,
+            reply_parameters: ctx.message ? {
+                message_id: ctx.message.message_id
+            } : undefined
+        } as ExtraEditMessageText
+    }
+
     static async editMarkup(ctx: Context, markup?: InlineKeyboardMarkup): Promise<boolean> {
         return await ExceptionUtils.handle(async () => {
             await ctx.editMessageReplyMarkup(markup)
@@ -185,20 +196,33 @@ export default class MessageUtils {
 
     static async editText(ctx: Context, text: string, options?: ExtraEditMessageText): Promise<boolean> {
         try {
-            await ctx.editMessageText(text, {parse_mode: PARSE_MODE, ...options})
+            await ctx.editMessageText(text, this._updateEditOptions(ctx, options))
             return true
         }
-        catch {
-            await ctx.reply(text, {
-                ...options,
-                parse_mode: PARSE_MODE,
-                reply_parameters: ctx.message ? {
-                    message_id: ctx.message.message_id
-                } : undefined
-            })
+        catch(e) {
+            Logging.error(e)
+
+            await ctx.reply(text, this._updateEditOptions(ctx, options))
             await this.deleteMessage(ctx)
             return false
         }
+    }
+
+    static async editMedia(
+        ctx: Context, 
+        media: InputMediaWrapCaption,
+        options?: ExtraEditMessageMedia,
+    ) {
+        return await ExceptionUtils.handle(async () => {
+            const usedOptions = this._updateEditOptions(ctx, options)
+            await ctx.editMessageMedia(
+                {
+                    ...media,
+                    ...usedOptions
+                },
+                usedOptions
+            )
+        })
     }
 
     static async react(ctx: Context, reaction: TelegramEmoji): Promise<boolean> {

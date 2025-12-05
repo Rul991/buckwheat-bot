@@ -1,12 +1,9 @@
-import { Telegraf } from 'telegraf'
 import BaseHandler from './BaseHandler'
 import Logging from '../../../utils/Logging'
 import CallbackButtonAction from '../../callback-button/CallbackButtonAction'
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
-import NumberByteConverter from '../../../utils/NumberToBytesConverter'
-import TimeUtils from '../../../utils/TimeUtils'
-import { CallbackButtonContext, MyTelegraf } from '../../../utils/values/types/types'
+import { MyTelegraf } from '../../../utils/values/types/types'
 
 export default class CallbackButtonActionHandler extends BaseHandler<
     CallbackButtonAction<unknown>, 

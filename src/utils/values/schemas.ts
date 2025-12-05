@@ -2,7 +2,7 @@ import { JSONSchemaType } from 'ajv'
 import Character from '../../interfaces/duel/Character'
 import Characteristics from '../../interfaces/duel/Characteristics'
 import SimpleCommand from '../../interfaces/other/SimpleComand'
-import { NewInvoiceParameters, JsonShopItem } from './types/types'
+import { NewInvoiceParameters, JsonShopItem, InventoryItemDescription, TinyCurrentIncreaseId } from './types/types'
 import Skill from '../../interfaces/duel/Skill'
 import StartUp from '../../interfaces/other/StartUp'
 import CubeData from '../../interfaces/callback-button-data/CubeData'
@@ -126,7 +126,7 @@ export const jsonShopItemSchema: JSONSchemaType<JsonShopItem> = {
     ]
 }
 
-
+// @ts-ignore
 export const invoiceSchema: JSONSchemaType<NewInvoiceParameters> = {
     type: 'object',
     properties: {
@@ -148,7 +148,6 @@ export const invoiceSchema: JSONSchemaType<NewInvoiceParameters> = {
                     amount: { type: 'number' }
                 },
                 required: ['label', 'amount'],
-                
             }
         },
         max_tip_amount: {
@@ -341,4 +340,35 @@ export const userReplyIdsDataSchema: JSONSchemaType<UserReplyIdsData> = {
         reply: {type: 'number'},
     },
     required: ['reply', 'user']
+}
+
+export const inventoryItemDescriptionSchema: JSONSchemaType<InventoryItemDescription> = {
+    type: 'object',
+    properties: {
+        name: {
+            type: 'string'
+        },
+        type: {
+            type: 'string',
+            enum: ['consumable', 'manyInfinity', 'oneInfinity']
+        }
+    },
+    required: ['name', 'type']
+}
+
+export const tinyCurrentIncreaseIdSchema: JSONSchemaType<TinyCurrentIncreaseId> = {
+    type: 'object',
+    properties: {
+        c: {
+            type: 'number'
+        },
+        i: {
+            type: 'number'
+        },
+        id: {
+            type: 'number',
+            nullable: true
+        }
+    },
+    required: ['c', 'i']
 }

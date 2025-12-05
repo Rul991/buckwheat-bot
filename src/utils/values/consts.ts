@@ -175,3 +175,12 @@ export const ALLOW_SYMBOL = '✅'
 
 export const SET_STRING_PHRASE = '+s'
 export const SET_NUMBER_PHRASE = '+n'
+
+export const MAX_CARD_NAME_LENGTH = MAX_NAME_LENGTH
+export const MAX_CARD_DESCRIPTION_LENGTH = MAX_DESCRIPTION_LENGTH
+
+export const BROADCAST_TIME = 5_000
+
+export const MIN_CARD_PRICE = 1
+export const MAX_CARD_PRICE = 26_02_2025
+export const UNKNOWN_CARD_TITLE = '???'

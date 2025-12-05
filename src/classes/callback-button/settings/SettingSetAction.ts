@@ -10,6 +10,7 @@ import { SET_NUMBER_PHRASE, SET_STRING_PHRASE } from '../../../utils/values/cons
 import ChatSettingsService from '../../db/services/settings/ChatSettingsService'
 import StringUtils from '../../../utils/StringUtils'
 import SettingShowUtils from '../../../utils/settings/SettingShowUtils'
+import NumberSettingInputAction from '../../actions/scenes/NumberSettingInputAction'
 
 type Data = {
     id: number
@@ -44,7 +45,7 @@ export default class extends CallbackButtonAction<Data> {
     }
     protected _minimumRank: number = RankUtils.max
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'set'
     }
@@ -57,12 +58,12 @@ export default class extends CallbackButtonAction<Data> {
             p: page
         } = data
 
-        if(await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return
+        if (await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return
 
         const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
+        if (!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
 
-        if(!await UserRankService.has(chatId, id, this._minimumRank)) {
+        if (!await UserRankService.has(chatId, id, this._minimumRank)) {
             return await FileUtils.readPugFromResource(
                 'text/other/rank-issue.pug',
                 {
@@ -78,17 +79,14 @@ export default class extends CallbackButtonAction<Data> {
             chatId
         }
 
-        if(value == SET_NUMBER_PHRASE) {
+        if (value == SET_NUMBER_PHRASE) {
             await ctx.scene.enter(
                 'setting-number',
                 initialState
             )
         }
-        else if(value == SET_STRING_PHRASE) {
-            await ctx.scene.enter(
-                'setting-string',
-                initialState
-            )
+        else if (value == SET_STRING_PHRASE) {
+
         }
         else {
             await ChatSettingsService.set(chatId, settingId, value)

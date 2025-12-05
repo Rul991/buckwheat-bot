@@ -4,6 +4,8 @@ import Logging from './Logging'
 import { InventoryItemDescription, InventoryItemType } from './values/types/types'
 import FileUtils from './FileUtils'
 import StringUtils from './StringUtils'
+import ObjectValidator from './ObjectValidator'
+import { inventoryItemDescriptionSchema } from './values/schemas'
 
 type ItemsRecord = Record<string, InventoryItemDescription>
 
@@ -11,10 +13,7 @@ export default class InventoryItemsUtils {
     private static _items: ItemsRecord = {}
 
     private static _isValid(item: InventoryItemDescription) {
-        return (
-            typeof item.name == 'string' &&
-            typeof item.type == 'string'
-        )
+        return ObjectValidator.isValidatedObject(item, inventoryItemDescriptionSchema)
     }
 
     static async setup(): Promise<boolean> {

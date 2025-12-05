@@ -1,5 +1,5 @@
-import { Context, NarrowedContext, Scenes, Telegraf } from 'telegraf'
-import { CallbackQuery, InlineKeyboardMarkup, LinkPreviewOptions, Message, MessageEntity, ParseMode, Update } from 'telegraf/types'
+import { Context, NarrowedContext, Scenes, Telegraf, Types } from 'telegraf'
+import { CallbackQuery, InlineKeyboardMarkup, InputMedia, LinkPreviewOptions, Message, MessageEntity, ParseMode, Update } from 'telegraf/types'
 import CurrentMax from '../../../interfaces/other/CurrentMax'
 import Duel from '../../../interfaces/schemas/duels/Duel'
 import ButtonScrollerData from '../../../interfaces/callback-button-data/ButtonScrollerData'
@@ -8,6 +8,7 @@ import SkillAttack from '../../../enums/SkillAttack'
 import Setting from '../../../interfaces/other/Setting'
 import { SceneSession, WizardSessionData } from 'telegraf/scenes'
 import { SessionContext } from 'telegraf/session'
+import SceneAction from '../../../classes/actions/scenes/SceneAction'
 
 export type MaybeString = string | undefined
 export type CommandStrings = [string, MaybeString, MaybeString]
@@ -25,11 +26,11 @@ export type CommandDescription = {
 export type SceneContextData<D extends {} = {}> = {
     scene: Scenes.SceneContextScene<
             SessionContext<SceneSession<
-                Partial<D> & WizardSessionData
+                D & WizardSessionData
             >
-        >, Partial<D> & Scenes.WizardSessionData
+        >, D & Scenes.WizardSessionData
     > & {
-        state: Partial<D>
+        state: D
     }
 }
 
@@ -83,12 +84,9 @@ export type PlayerTypes = 'knight' | 'thief' | 'sorcerer' | 'engineer' | 'bard'
 export type ClassTypes = PlayerTypes | 'unknown' | 'boss' | 'bot'
 export type ClassRecord = Record<ClassTypes, string>
 
-export type ExtraEditMessageText = {
-    reply_markup?: InlineKeyboardMarkup
-    entities?: MessageEntity[],
-    link_preview_options?: LinkPreviewOptions,
-    parse_mode?: ParseMode
-}
+export type ExtraEditMessageText = Types.ExtraEditMessageText
+export type ExtraEditMessageMedia = Types.ExtraEditMessageMedia
+export type InputMediaWrapCaption = Types.WrapCaption<InputMedia>
 
 export type SubCommandObject = {
     name: string
@@ -161,19 +159,20 @@ export type ShopItemDescription = {
 export type ShopItem = Required<JsonShopItem>
 export type ShopItemWithLength = ShopItem & { length: number, index: number }
 
-export type ScrollerGetObjectsOptions = {
-    data: string
+export type ScrollerGetObjectsOptions<D = string> = {
+    data: D
     id: number
 }
 
-export type ScrollerSendMessageOptions<T> = {
+export type ScrollerSendMessageOptions<T, D = string> = {
     currentPage: number
     length: number
     objects: T[]
-} & ScrollerGetObjectsOptions
+} & ScrollerGetObjectsOptions<D>
 
 export type ScrollerEditMessage = {
     text: string,
+    media?: InputMediaWrapCaption
     options?: ExtraEditMessageText
 }
 export type ScrollerEditMessageResult = ScrollerEditMessage | string | null
@@ -183,31 +182,7 @@ export type Ids = {
     id: number
 }
 
-export type NewInvoiceParameters = {
-    title: string
-    description: string
-    payload: string
-    prices: readonly {
-        label: string
-        amount: number
-    }[]
-    max_tip_amount?: number | undefined
-    suggested_tip_amounts?: number[] | undefined
-    start_parameter?: string | undefined
-    provider_data?: string | undefined
-    photo_url?: string | undefined
-    photo_size?: number | undefined
-    photo_width?: number | undefined
-    photo_height?: number | undefined
-    need_name?: boolean | undefined
-    need_phone_number?: boolean | undefined
-    need_email?: boolean | undefined
-    need_shipping_address?: boolean | undefined
-    send_phone_number_to_provider?: boolean | undefined
-    send_email_to_provider?: boolean | undefined
-    is_flexible?: boolean | undefined
-    protect_content?: boolean | undefined
-}
+export type NewInvoiceParameters = Types.NewInvoiceParameters
 
 export type Progress = {
     symbols: {
@@ -309,7 +284,7 @@ export type ButtonScrollerOptions<D> = {
 export type ButtonScrollerEditMessageResult = {
     text?: string
     values: CallbackButtonMapValues
-}
+} | string
 
 export type ButtonScrollerFullOptions<O, D> = ButtonScrollerOptions<D> & {
     objects: O[]
@@ -363,10 +338,41 @@ export type SettingWithId<T extends SettingType = any> = Setting<T> & {
     id: string
 }
 
-export type CurrentIncreaseId<D extends Record<string, any>> = {
+export type CurrentIncreaseIdNames<D extends Record<string, any>> = {
     current: keyof D
     increase: keyof D
     id?: keyof D
 }
 
+export type TinyCurrentIncreaseId = {
+    c: number,
+    i: number,
+    id?: number
+}
+
 export type MyTelegraf = Telegraf<Context & SceneContextData>
+
+export type ExtractSceneActionData<T extends SceneAction<any>> =
+    T extends SceneAction<infer D> ? D : never
+
+export type CreateNavNumberField = {
+    name: string
+    value: number
+}
+
+export type CreateNavButtonsOptions = {
+    current: CreateNavNumberField
+    increase: CreateNavNumberField
+    id?: CreateNavNumberField
+    text: string
+}
+
+export type GetPageNavOptions = {
+    length: number
+    buttonsPerPage: number
+    pageIndex: number
+    current: string
+    increase: string
+    id?: CreateNavButtonsOptions['id']
+    createNavButton?: (options: CreateNavButtonsOptions) => CallbackButtonValue
+}

@@ -122,6 +122,13 @@ export default class ContextUtils {
         }
     }
 
+    static async isLeft(ctx: Context, id: number) {
+        const user = await this.getChatMember(ctx, id)
+        const status = user?.status ?? 'left'
+
+        return status == 'kicked' || status == 'left'
+    }
+
     static async showAlertIfIdNotEqual(ctx: Context, id: number): Promise<boolean> {
         if(id != ctx.from?.id) {
             await ContextUtils.showAlertFromFile(ctx)

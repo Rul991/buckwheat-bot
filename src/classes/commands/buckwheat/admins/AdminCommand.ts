@@ -7,6 +7,7 @@ import TimeUtils from '../../../../utils/TimeUtils'
 import UserRankService from '../../../db/services/user/UserRankService'
 import StringUtils from '../../../../utils/StringUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
 
 export default abstract class AdminCommand extends BuckwheatCommand {
     protected _folder: string
@@ -23,6 +24,10 @@ export default abstract class AdminCommand extends BuckwheatCommand {
     protected abstract _do(ctx: TextContext, replyId: number, time: number): Promise<boolean>
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+        const changeValues = {
+            isUndo: this._isUndoCommand
+        }
+
         if(ctx.message.reply_to_message && ctx.message.reply_to_message.from) {
             const replyId = ctx.message.reply_to_message.from.id
             const adminId = ctx.from.id
@@ -34,11 +39,12 @@ export default abstract class AdminCommand extends BuckwheatCommand {
             const replyRank = await UserRankService.get(chatId, replyId)
 
             const isCreator = await ContextUtils.isCreator(ctx)
-            const [textTime, reason] = other ? StringUtils.splitByCommands(other, 1) : ['навсегда', '']
+            const [textTime, rawReason] = other ? StringUtils.splitByCommands(other, 1) : ['навсегда', '']
             const time = Math.min(
                 TimeUtils.parseTimeToMilliseconds(textTime),
                 await TimeUtils.getMaxAdminTime(chatId)
             )
+            const reason = time == NOT_FOUND_INDEX ? `${textTime} ${rawReason ?? ''}` : rawReason
 
             if(!RankUtils.canAdminUse({
                 userRank: adminRank, 
@@ -57,7 +63,10 @@ export default abstract class AdminCommand extends BuckwheatCommand {
             if(replyId == adminId) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
-                    `text/commands/${this._folder}/cancel.pug`
+                    `text/commands/${this._folder}/cancel.pug`,
+                    {
+                        changeValues
+                    }
                 )
                 return
             }
@@ -67,7 +76,10 @@ export default abstract class AdminCommand extends BuckwheatCommand {
             if(!isDone) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
-                    `text/commands/${this._folder}/error.pug`
+                    `text/commands/${this._folder}/error.pug`,
+                    {
+                        changeValues
+                    }
                 )
                 return
             }
@@ -94,7 +106,10 @@ export default abstract class AdminCommand extends BuckwheatCommand {
         else {
             await MessageUtils.answerMessageFromResource(
                 ctx,
-                `text/commands/${this._folder}/no-reply.pug`
+                `text/commands/${this._folder}/no-reply.pug`,
+                {
+                    changeValues
+                }
             )
         }
     }

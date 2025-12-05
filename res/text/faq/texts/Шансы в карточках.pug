@@ -1,0 +1,27 @@
+include utils/mixins.pug
+
+mixin chance(emoji, title, chance)
+    | ➖ #{emoji} 
+    code #{title}
+    |   -    ~
+    u #{chance}
+    | %
+    |
+
+mixin chances(arr)
+    - const maxTitleLength = Math.max(...arr.map(v => v[1].length))
+    each obj in arr
+        if obj.length >= 3
+            +chance(obj[0], obj[1].padEnd(maxTitleLength, ' '), obj[2])
+            |
+
++faq('🍀 Шансы в карточках')
+    +chances([
+        ['⚪️', 'Базовый', 60],
+        ['🔵', 'Необычный', 24],
+        ['🟢', 'Редкий', 9.5],
+        ['🟣', 'Эпический', 3.8],
+        ['🟡', 'Легендарный', 1.5],
+        ['🔴', 'Уникальный', 1],
+    ])
+

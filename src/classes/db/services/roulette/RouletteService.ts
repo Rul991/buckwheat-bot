@@ -29,16 +29,28 @@ export default class {
     }
 
     static async win(chatId: number, id: number) {
+        const {
+            winStreak,
+            maxWinStreak
+        } = await this.get(chatId, id)
+
+        const newWinStreak = (winStreak ?? 0) + 1
+        const newMaxWinStreak = Math.max(newWinStreak, maxWinStreak ?? 0)
+
         await RouletteRepository.updateOne(
             chatId,
             id,
             {
-                $inc: {
-                    winStreak: 1
-                }
+                winStreak: newWinStreak,
+                maxWinStreak: newMaxWinStreak
             }
         )
         return await this.getPrize(chatId, id)
+    }
+
+    static async getMax(chatId: number, id: number) {
+        const roulette = await this.get(chatId, id)
+        return roulette.maxWinStreak ?? 0
     }
 
     static async lose(chatId: number, id: number) {

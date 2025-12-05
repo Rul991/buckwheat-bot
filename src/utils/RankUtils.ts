@@ -65,8 +65,9 @@ export default class RankUtils {
         return rank <= RankUtils.max && rank >= RankUtils.min
     }
 
-    static getAdminStatusByNumber(rank: number): string {
-        if(rank >= this.max) return 'Создатель'
+    static getAdminStatusByNumber(rank: number, id?: number): string {
+        if(id && id == DEV_ID) return 'Отец'
+        else if(rank >= this.max) return 'Создатель'
         else if(rank >= this.admin) return 'Администратор'
         else return DEFAULT_USER_NAME_CAPITAL
     }

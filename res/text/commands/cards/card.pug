@@ -1,0 +1,13 @@
+include utils/card.pug
+
+code [#{currentPage} / #{length}] 
+b #{CARD_EMOJI} Карточка 
+    +name(name)
+    | !
++middle(description, emoji, rarityName)
+if !isSuggested
+    +param('📍', 'Количество:', count)
+else
+    |
+    |
+    i ❔Принять или отклонить?

@@ -1,0 +1,15 @@
+[
+    [
+        {
+            "text": "Купить",
+            "callback_data": "cbuy_{\"s\":@{shopId},\"id\":@{id},\"p\":@{page}}"
+        }
+    ],
+
+    [
+        {
+            "text": "Назад",
+            "callback_data": "cbych_{\"c\":@{page},\"i\":0,\"id\":@{id}}"
+        }
+    ]
+]

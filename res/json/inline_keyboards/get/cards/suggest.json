@@ -1,0 +1,25 @@
+[
+    [
+        {
+            "text": "✅",
+            "callback_data": "cadd_{\"a\":1,\"id\":@{id},\"c\":@{cardId},\"p\":@{page}}"
+        },
+
+        {
+            "text": "❌",
+            "callback_data": "cadd_{\"a\":0,\"id\":@{id},\"c\":@{cardId},\"p\":@{page}}"
+        }
+    ],
+
+    [
+        {
+            "text": "<<",
+            "callback_data": "csush_-1_@{page}_@{id}"
+        },
+
+        {
+            "text": ">>",
+            "callback_data": "csush_1_@{page}_@{id}"
+        }
+    ]
+]

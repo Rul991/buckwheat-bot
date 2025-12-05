@@ -1,5 +1,6 @@
 - const premiumEmoji = '👑'
 - const infinityEmoji = '♾️'
+- const moneyEmoji = '💰'
 
 - const yesEmoji = '✅'
 - const noEmoji = '❌'
@@ -14,10 +15,14 @@ mixin conditionText(condition, emoji, text)
         | 
         |
 
-mixin param(title, value)
+mixin param(title, value, bold = false)
     |
     |
-    i #{title}: 
+    if bold
+        b
+            i #{title}: 
+    else
+        i #{title}: 
     | #{value}
 
 | [#{index + 1}/#{length}] #{emoji}
@@ -33,4 +38,5 @@ blockquote #{description}
 +param('Скидка за премиум', `${premiumDiscount}%`)
 |
 |
-+param('Цена', `${price} * ${count}${discount < baseDiscount ? ` * ${discount}%`: ``} = ${totalPrice} 💰`)
++param('Цена', `${price} * ${count}${discount < baseDiscount ? ` * ${discount}%`: ``} = ${totalPrice} ${moneyEmoji}`)
++param('Твой баланс', `${balance} ${moneyEmoji}`, true)

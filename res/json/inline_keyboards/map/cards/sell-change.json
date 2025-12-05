@@ -1,0 +1,23 @@
+{
+    "definition": {
+        "card": {
+            "text": "@",
+            "data": "csell_@"
+        },
+        "arrow": {
+            "text": "@",
+            "data": "csech_@"
+        },
+        "pageNav": {
+            "text": "@",
+            "data": "csech_@"
+        }
+    },
+    
+    "values": 
+    [
+        "card",
+        ["arrow"],
+        ["pageNav"]
+    ]
+}

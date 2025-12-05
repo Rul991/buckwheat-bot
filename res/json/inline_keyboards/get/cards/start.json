@@ -1,0 +1,43 @@
+[
+    [
+        {
+            "text": "🃏 Коллекция",
+            "callback_data": "cshw_1_-1_@{collection}"
+        }
+    ],
+
+    [
+        {
+            "text": "🛒 Рынок",
+            "callback_data": "cshp_@{json}"
+        }
+    ],
+
+    [
+        {
+            "text": "📦 Распаковать",
+            "callback_data": "cunpk_@{json}"
+        }
+    ],
+
+    [
+        {
+            "text": "💡 Предложить",
+            "callback_data": "csug_@{json}"
+        }
+    ],
+
+    [
+        {
+            "text": "📓 Предложенные",
+            "callback_data": "csush_1_-1_@{collection}"
+        }
+    ],
+    
+    [
+        {
+            "text": "📈 Статистика",
+            "callback_data": "cstat_@{json}"
+        }
+    ]
+]

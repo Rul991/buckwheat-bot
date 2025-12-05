@@ -98,6 +98,9 @@ export default class HelloMemberAction extends NewMemberAction {
             if(hasButton) {
                 await AdminUtils.mute(ctx, id)
             }
+            else {
+                await UserOldService.update(chatId, id, true)
+            }
             
             await MessageUtils.answerMessageFromResource(
                 ctx,

@@ -1,9 +1,10 @@
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
-import MessageUtils from '../../../utils/MessageUtils'
+import RandomUtils from '../../../utils/RandomUtils'
+import RankUtils from '../../../utils/RankUtils'
 import StringUtils from '../../../utils/StringUtils'
 import TopUtils from '../../../utils/TopUtils'
-import { CallbackButtonContext, AsyncOrSync, ScrollerSendMessageOptions, ScrollerEditMessageResult, Link, ScrollerGetObjectsOptions } from '../../../utils/values/types/types'
+import { CallbackButtonContext, ScrollerSendMessageOptions, ScrollerEditMessageResult, ScrollerGetObjectsOptions } from '../../../utils/values/types/types'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import ChatSettingsService from '../../db/services/settings/ChatSettingsService'
 import UserProfileService from '../../db/services/user/UserProfileService'
@@ -17,7 +18,7 @@ type Object = {
 }
 
 export default class extends ScrollerAction<Object> {
-    protected _minimumRank = 1
+    protected _minimumRank = RankUtils.min
 
     protected async _getObjects(ctx: CallbackButtonContext, { id, data }: ScrollerGetObjectsOptions): Promise<Object[]> {
         const chatId = await LinkedChatService.getCurrent(ctx, id)
@@ -90,23 +91,27 @@ export default class extends ScrollerAction<Object> {
         const type = this._getType(data)
         const {
             changeValues,
-            emoji
+            emoji,
+            name,
+            hasTotalCount = true,
+            hasWinner = hasTotalCount
         } = TopUtils.getSubCommand(type)
 
+        const isPrivate = ctx.chat?.type == 'private'
         const botId = ctx.botInfo.id
-        const isUsePlayerId = await ChatSettingsService.get<'boolean'>(chatId, 'pingInTop')
+        const isUsePlayerId = isPrivate ||
+            await ChatSettingsService.get<'boolean'>(chatId, 'pingInTop')
 
         const sorted = await Promise.all(
             objects.map(async ({id: objId, value}) => {
                 const {
                     name,
-                    isLeft,
                     id
                 } = await UserProfileService.create(chatId, objId)
                 return {
                     user: {
                         name,
-                        isLeft,
+                        isLeft: false,
                         link: ContextUtils.getLinkUrl(isUsePlayerId ? id : botId)
                     },
                     value: typeof value == 'string' ? 
@@ -115,6 +120,16 @@ export default class extends ScrollerAction<Object> {
                 }
             })
         )
+
+        let isNumbers = true
+        const totalCount = hasTotalCount ? objects.reduce((prev, {value}) => {
+            if(typeof value == 'number') {
+                return prev + value
+            }
+
+            isNumbers = false
+            return prev
+        }, 0) : 0
 
         return {
             text: await FileUtils.readPugFromResource(
@@ -126,7 +141,12 @@ export default class extends ScrollerAction<Object> {
                         sorted,
                         page: currentPage,
                         perPage: this._objectsPerPage,
-                        length
+                        length,
+                        isNumbers,
+                        rawTotalCount: totalCount,
+                        totalCount: StringUtils.toFormattedNumber(totalCount),
+                        totalName: name,
+                        hasWinner
                     }
                 }
             ),

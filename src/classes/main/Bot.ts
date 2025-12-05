@@ -1,20 +1,32 @@
-import { Context, Telegraf } from 'telegraf'
+import { Telegraf } from 'telegraf'
 import { session } from 'telegraf/session'
 import Logging from '../../utils/Logging'
-import { CHAT_ID, DOMAIN, HOOK_PORT, MODE, SECRET_PATH } from '../../utils/values/consts'
+import { CHAT_ID, DOMAIN, HOOK_PORT, MILLISECONDS_IN_SECOND, MODE, SECRET_PATH } from '../../utils/values/consts'
 import FileUtils from '../../utils/FileUtils'
 import BaseHandler from './handlers/BaseHandler'
 import MessageUtils from '../../utils/MessageUtils'
 import express from 'express'
 import BaseAction from '../actions/base/BaseAction'
-import { MyTelegraf, SceneContextData } from '../../utils/values/types/types'
+import { MyTelegraf } from '../../utils/values/types/types'
+import PQueue from 'p-queue'
 
 export default class Bot {
     private _bot: MyTelegraf
     private _handlers: BaseHandler<any, any>[]
 
+    private readonly _maxRequests: number = 10
+    private readonly _concurrency: number = this._maxRequests
+    private readonly _queue = new PQueue({
+        concurrency: this._concurrency,
+        interval: MILLISECONDS_IN_SECOND / this._maxRequests,
+        intervalCap: this._maxRequests,
+        autoStart: true
+    })
+
     constructor (token: string) {
-        this._bot = new Telegraf(token)
+        this._bot = new Telegraf(
+            token
+        )
 
         this._handlers = []
     }
@@ -60,7 +72,8 @@ export default class Bot {
     private async _startLongPolling(callback = async () => { }) {
         await this._bot.launch(
             {
-                dropPendingUpdates: true
+                dropPendingUpdates: true,
+                
             },
             callback
         )
@@ -68,6 +81,11 @@ export default class Bot {
 
     async launch(isWebHook = false, callback = async () => { }): Promise<void> {
         this._bot.use(session())
+        this._bot.use(async (_ctx, next) => {
+            await this._queue.add(async _options => {
+                await next()
+            })
+        })
 
         for (const handler of this._handlers) {
             await handler.setup(this._bot)

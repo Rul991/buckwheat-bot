@@ -1,8 +1,8 @@
 import { ClassTypes, ClassRecord } from './values/types/types'
 
 export default class ClassUtils {
-    static defaultClassName: 'unknown' = 'unknown'
-    static nonPlayerClassNames: ClassTypes[] = ['unknown', 'boss', 'bot']
+    static readonly defaultClassName = 'unknown'
+    static nonPlayerClassNames: ClassTypes[] = [this.defaultClassName, 'boss', 'bot']
     static playerClassNames: ClassTypes[] = ['bard', 'engineer', 'knight', 'sorcerer', 'thief']
 
     private static _visibleClassNames = {

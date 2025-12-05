@@ -1,0 +1,9 @@
+include utils/mixins.pug
+include utils/card.pug
+
+b #{CARD_EMOJI} Карточка 
+    +name(name)
+    | !
++middle(description, emoji, rarityName)
+|
+i 🤑 Введите цену (от #{minPrice} до #{maxPrice}):

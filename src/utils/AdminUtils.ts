@@ -1,11 +1,17 @@
 import { Context } from 'telegraf'
 import TimeUtils from './TimeUtils'
 import Logging from './Logging'
-import { KICK_TIME } from './values/consts'
 import LinkedChatService from '../classes/db/services/linkedChat/LinkedChatService'
 import UserLeftService from '../classes/db/services/user/UserLeftService'
 
 export default class AdminUtils {
+    private static async _setLeft(ctx: Context, id: number, value: boolean) {
+        const chatId = await LinkedChatService.getCurrent(ctx, id)
+        if(chatId) {
+            await UserLeftService.update(chatId, id, value)
+        }
+    }
+
     static async mute(ctx: Context, id: number, ms: number = 0) {
         try {
             return await ctx.restrictChatMember(id, {
@@ -34,11 +40,9 @@ export default class AdminUtils {
 
     static async ban(ctx: Context, id: number, ms: number): Promise<boolean> {
         try {
-            const chatId = await LinkedChatService.getCurrent(ctx, id)
-            if(chatId) {
-                await UserLeftService.update(chatId, id, true)
-            }
-            return await ctx.banChatMember(id,  TimeUtils.getUntilDate(ms))
+            const isRestricted = await ctx.banChatMember(id,  TimeUtils.getUntilDate(ms))
+            if(isRestricted) await this._setLeft(ctx, id, true)
+            return isRestricted
         }
         catch(e) {
             Logging.error('cant ban', e)
@@ -47,7 +51,9 @@ export default class AdminUtils {
     }
 
     static async kick(ctx: Context, id: number): Promise<boolean> {
-        return await this.unban(ctx, id, false)
+        const isRestricted = await this.unban(ctx,  id, false)
+        if(isRestricted) await this._setLeft(ctx, id, true)
+        return isRestricted
     }
 
     static async unban(ctx: Context, id: number, onlyIfBanned = true) {

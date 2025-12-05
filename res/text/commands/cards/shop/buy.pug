@@ -1,0 +1,13 @@
+include utils/mixins.pug
+include utils/card.pug
+
+b #{CARD_EMOJI} Карточка 
+    +name(name)
+    | !
++middle(description, emoji, rarityName)
++param('💰', 'Цена:', price)
++blockParam('👾', 'Продавец:')
+    +link(seller)
+|
+|
+i 🤑 Покупаете?

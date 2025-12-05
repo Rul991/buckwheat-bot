@@ -9,10 +9,11 @@ import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService
 import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
 
 export default class TransferCommand extends BuckwheatCommand {
-    private static _filenames = ['no-receiver', 'self', 'empty', 'wrong', 'negative']
+    private static _filenames = ['bot', 'no-receiver', 'self', 'empty', 'wrong', 'negative']
 
     private static _getIdByCondition(ctx: TextContext, other: MaybeString): number {
         const conditions = [
+            ctx.from.is_bot,
             !('reply_to_message' in ctx.message!),
             ctx.from?.id == ctx.message?.reply_to_message?.from?.id,
             !other,

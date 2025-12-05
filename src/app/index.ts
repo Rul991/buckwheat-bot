@@ -103,7 +103,6 @@ import DuelNoAction from '../classes/callback-button/duels/DuelNoAction'
 import DuelYesAction from '../classes/callback-button/duels/DuelYesAction'
 import WipeAction from '../classes/callback-button/WipeAction'
 import HelpCommand from '../classes/commands/telegram/HelpCommand'
-import SkillsCommand from '../classes/commands/buckwheat/duel/SkillsCommand'
 import SkillViewAction from '../classes/callback-button/skills/SkillViewAction'
 import SkillMenuAction from '../classes/callback-button/skills/SkillMenuAction'
 import SkillChangeAction from '../classes/callback-button/skills/SkillChangeAction'
@@ -119,7 +118,6 @@ import DuelSkillAction from '../classes/callback-button/duels/DuelSkillAction'
 import SkillUseAction from '../classes/callback-button/duels/SkillUseAction'
 import DuelEffectsAction from '../classes/callback-button/duels/DuelEffectsAction'
 import SkillAlertAction from '../classes/callback-button/skills/SkillAlertAction'
-import EffectsCommand from '../classes/commands/buckwheat/duel/EffectsCommand'
 import EffectChangeAction from '../classes/callback-button/effects/EffectChangeAction'
 import NotAllowedChatAction from '../classes/actions/every/NotAllowedChatAction'
 import { disconnect } from 'mongoose'
@@ -134,8 +132,23 @@ import SettingsShowAction from '../classes/callback-button/settings/SettingsShow
 import SettingSetAction from '../classes/callback-button/settings/SettingSetAction'
 import SceneActionHandler from '../classes/main/handlers/SceneActionHandler'
 import NumberSettingInputAction from '../classes/actions/scenes/NumberSettingInputAction'
-import TimeUtils from '../utils/TimeUtils'
 import TopChangeAction from '../classes/callback-button/top/TopChangeAction'
+import BroadcastCommand from '../classes/commands/buckwheat/dev/BroadcastCommand'
+import CardCommand from '../classes/commands/buckwheat/card/CardCommand'
+import CardChangeAction from '../classes/callback-button/card/menu/CardChangeAction'
+import SuggestedCardChangeAction from '../classes/callback-button/card/suggest/SuggestedCardChangeAction'
+import SuggestCardAction from '../classes/actions/scenes/SuggestCardAction'
+import SuggestedCardAddAction from '../classes/callback-button/card/suggest/SuggestedCardAddAction'
+import SuggestCardEnterAction from '../classes/callback-button/card/suggest/SuggestCardEnterAction'
+import CardStatsAction from '../classes/callback-button/card/menu/CardStatsAction'
+import UnpackCardAction from '../classes/callback-button/card/menu/UnpackCardAction'
+import CardShopAction from '../classes/callback-button/card/menu/CardShopAction'
+import CardBuyChangeAction from '../classes/callback-button/card/shop/buy/CardBuyChangeAction'
+import CardBuyAction from '../classes/callback-button/card/shop/buy/CardBuyAction'
+import CardSellChangeAction from '../classes/callback-button/card/shop/sell/CardSellChangeAction'
+import CardBuyShowAction from '../classes/callback-button/card/shop/buy/CardBuyShowAction'
+import CardPriceSellAction from '../classes/actions/scenes/CardPriceSellAction'
+import CardSellAction from '../classes/callback-button/card/shop/sell/CardSellAction'
 
 const isEnvVarsValidate = () => {
     type EnvVariable = { name: string, isMustDefined: boolean }
@@ -274,7 +287,19 @@ const launchBot = async (bot: Bot) => {
         new SettingsChangeAction(),
         new SettingsShowAction(),
         new SettingSetAction(),
-        new TopChangeAction()
+        new TopChangeAction(),
+        new CardChangeAction(),
+        new SuggestedCardChangeAction(),
+        new SuggestedCardAddAction(),
+        new SuggestCardEnterAction(),
+        new CardStatsAction(),
+        new UnpackCardAction(),
+        new CardShopAction(),
+        new CardBuyChangeAction(),
+        new CardBuyShowAction(),
+        new CardBuyAction(),
+        new CardSellChangeAction(),
+        new CardSellAction(),
     )
 
     // dice 
@@ -355,12 +380,14 @@ const launchBot = async (bot: Bot) => {
         new SaveCommand(),
         new CharsCommand(),
         // new DuelCommand(),
-        new SkillsCommand(),
-        new EffectsCommand(),
+        // new SkillsCommand(),
+        // new EffectsCommand(),
         new ChatCommand(),
         new StatsCommand(),
         new AddAwardCommand(),
         new GetAwardCommand(),
+        new BroadcastCommand(),
+        new CardCommand(),
         ...await getSimpleCommands(),
     )
 
@@ -373,7 +400,9 @@ const launchBot = async (bot: Bot) => {
 
     // scenes
     bot.addActions(
-        new NumberSettingInputAction()
+        new NumberSettingInputAction(),
+        new SuggestCardAction(),
+        new CardPriceSellAction(),
     )
 
     console.log('Start launching!')

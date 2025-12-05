@@ -1,7 +1,7 @@
+import CardsService from '../classes/db/services/card/CardsService'
 import CasinoGetAllService from '../classes/db/services/casino/CasinoGetAllService'
 import CubeWinsService from '../classes/db/services/cube/CubeWinsService'
 import ExperienceService from '../classes/db/services/level/ExperienceService'
-import LevelService from '../classes/db/services/level/LevelService'
 import MessagesService from '../classes/db/services/messages/MessagesService'
 import RouletteService from '../classes/db/services/roulette/RouletteService'
 import UserProfileService from '../classes/db/services/user/UserProfileService'
@@ -18,6 +18,9 @@ type GetUnsortedValuesResult = {
 type SubCommand = {
     title: string
     emoji: string
+    name?: string
+    hasTotalCount?: boolean
+    hasWinner?: boolean
     changeValues: {
         property: string
     } | {
@@ -37,13 +40,14 @@ export default class {
         staff: {
             title: 'Иерархия',
             emoji: '👑',
+            hasTotalCount: false,
             changeValues: {
                 rawTitle: 'Иерархия чата'
             },
             getUnsortedValues: async chatId => {
                 return (await UserRankService.getAllWithId(chatId))
-                    .filter(({rank}) => rank > RankUtils.min)
-                    .map(({id, rank}) => {
+                    .filter(({ rank }) => rank > RankUtils.min)
+                    .map(({ id, rank }) => {
                         return {
                             id,
                             value: rank
@@ -51,7 +55,7 @@ export default class {
                     })
             },
             handleSortedValues: async values => {
-                return values.map(({id, value}) => {
+                return values.map(({ id, value }) => {
                     const rank = value as number
                     const rankName = RankUtils.getRankByNumber(rank)
                     const rankEmoji = RankUtils.getEmojiByRank(rank)
@@ -66,25 +70,29 @@ export default class {
         money: {
             title: 'Богатство',
             emoji: '💰',
+            name: 'монет',
             changeValues: {
                 property: 'богатых'
             },
             getUnsortedValues: async (chatId) => {
                 return (await CasinoGetAllService.money(chatId))
-                    .filter(({value}) => value != 0)
+                    .filter(({ value }) => value != 0)
             }
         },
 
         level: {
             title: 'Уровень',
             emoji: '📈',
+            name: 'уровней',
+            hasTotalCount: false,
+            hasWinner: true,
             changeValues: {
-                property: 'прокаченных'
+                property: 'прокачанных'
             },
             getUnsortedValues: async chatId => {
                 return (await ExperienceService.getAllWithId(chatId))
-                    .filter(({experience}) => experience && experience > 0)
-                    .map(({id, experience}) => {
+                    .filter(({ experience }) => experience && experience > 0)
+                    .map(({ id, experience }) => {
                         return {
                             id,
                             value: experience
@@ -92,7 +100,7 @@ export default class {
                     })
             },
             handleSortedValues: async values => {
-                return values.map(({id, value}) => {
+                return values.map(({ id, value }) => {
                     return {
                         id,
                         value: LevelUtils.get(value as number)
@@ -104,6 +112,7 @@ export default class {
         classes: {
             title: 'Классы',
             emoji: '👾',
+            hasTotalCount: false,
             changeValues: {
                 rawTitle: 'Классы игроков'
             },
@@ -111,8 +120,8 @@ export default class {
                 const users = await UserProfileService.getAll(chatId)
 
                 return users
-                    .filter(({className}) => className && className != ClassUtils.defaultClassName)
-                    .map(({id, className}) => {
+                    .filter(({ className }) => className && className != ClassUtils.defaultClassName)
+                    .map(({ id, className }) => {
                         return {
                             id,
                             value: ClassUtils.getName(className ?? ClassUtils.defaultClassName)
@@ -124,13 +133,14 @@ export default class {
         chat: {
             title: 'Сообщения',
             emoji: '💬',
+            name: 'сообщений',
             changeValues: {
                 property: 'общительных'
             },
             getUnsortedValues: async chatId => {
                 return (await MessagesService.getAll(chatId))
-                    .filter(({total}) => total && total > 0)
-                    .map(({id, total}) => {
+                    .filter(({ total }) => total && total > 0)
+                    .map(({ id, total }) => {
                         return {
                             id,
                             value: total ?? 0
@@ -141,14 +151,16 @@ export default class {
 
         roulette: {
             title: 'Рулетка',
+            name: 'побед',
             emoji: '🔫',
             changeValues: {
                 property: 'везучих'
             },
             getUnsortedValues: async chatId => {
                 return (await RouletteService.getAll(chatId))
-                    .filter(({winStreak}) => winStreak && winStreak > 0)
-                    .map(({id, winStreak}) => {
+                    .filter(({ maxWinStreak: winStreak }) => 
+                        winStreak && winStreak > 0)
+                    .map(({ id, maxWinStreak: winStreak }) => {
                         return {
                             id,
                             value: winStreak ?? 0
@@ -160,14 +172,28 @@ export default class {
         cubeWin: {
             title: 'Побед в кубах',
             emoji: '🎲',
+            name: 'побед',
             changeValues: {
                 property: 'азартных'
             },
             getUnsortedValues: async chatId => {
                 return (await CubeWinsService.getAllWithId(chatId))
                     .filter((
-                        {value}) => value !== undefined && value > 0
+                        { value }) => value !== undefined && value > 0
                     ) as GetUnsortedValuesResult[]
+            }
+        },
+
+        cards: {
+            title: 'Карточки',
+            emoji: '🃏',
+            changeValues: {
+                rawTitle: 'Топ коллекционеров'
+            },
+            getUnsortedValues: async chatId => {
+                return (await CardsService.getAllCardsWithId(chatId))
+                    .filter(({ cards }) => cards > 0)
+                    .map(({ id, cards: value }) => ({ id, value }))
             }
         }
     }

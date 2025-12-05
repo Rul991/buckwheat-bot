@@ -24,16 +24,14 @@ b #{description}
 +withTitle(`${emoji} Ранг`)
     | #{userNameRank} / #{status} (#{rank})
 
-if isLinked || isLeft || (rank <= 0 && isMonkey)
+if isLinked || isLeft
     |
     |
 
 +status(isLinked)
     | 💬 Привязан к данному чату
 +status(isLeft)
-    | 😵 Вышел из чата
-+status(rank <= 0 && isMonkey)
-    | 🐒 Не справился с кнопкой    
+    | 😵 Вышел из чата  
 |
 |
 

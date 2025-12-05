@@ -18,6 +18,7 @@ export default class UserRankService {
     }
 
     static async has(chatId: number, id: number, needRank: number): Promise<boolean> {
+        if(needRank == 0) return true
         const rank = await this.get(chatId, id)
 
         return rank >= needRank

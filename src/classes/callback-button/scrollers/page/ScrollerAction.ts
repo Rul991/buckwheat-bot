@@ -6,10 +6,10 @@ import CallbackButtonAction from '../../CallbackButtonAction'
 import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
 import FileUtils from '../../../../utils/FileUtils'
 
-export default abstract class ScrollerAction<T> extends CallbackButtonAction<string> {
+export default abstract class ScrollerAction<T, D = string> extends CallbackButtonAction<string> {
     protected _objectsPerPage: number = 0
     protected _schema: JSONSchemaType<string> = { type: 'string' }
-    protected abstract _getObjects(ctx: CallbackButtonContext, { id }: ScrollerGetObjectsOptions): AsyncOrSync<T[]>
+    protected abstract _getObjects(ctx: CallbackButtonContext, { id }: ScrollerGetObjectsOptions<D>): AsyncOrSync<T[]>
 
     protected _getSlicedObjects(objects: T[], currentPage: number): T[] {
         if (this._objectsPerPage <= 0) return objects
@@ -24,7 +24,11 @@ export default abstract class ScrollerAction<T> extends CallbackButtonAction<str
         return raw
     }
 
-    protected _getId(ctx: CallbackButtonContext, data: string): AsyncOrSync<number> {
+    protected _convertDataToObject(raw: string): D {
+        return raw as D
+    }
+
+    protected _getId(ctx: CallbackButtonContext, data: D): AsyncOrSync<number> {
         return ctx.from.id
     }
 
@@ -33,11 +37,12 @@ export default abstract class ScrollerAction<T> extends CallbackButtonAction<str
         return Math.ceil(objects.length / this._objectsPerPage)
     }
 
-    protected abstract _editMessage(ctx: CallbackButtonContext, options: ScrollerSendMessageOptions<T>): Promise<ScrollerEditMessageResult>
+    protected abstract _editMessage(ctx: CallbackButtonContext, options: ScrollerSendMessageOptions<T, D>): Promise<ScrollerEditMessageResult>
 
     async execute(ctx: CallbackButtonContext, data: string): Promise<string | void> {
-        const id = await this._getId(ctx, data)
-        const objects = await this._getObjects(ctx, { id, data })
+        const convertedData = this._convertDataToObject(data)
+        const id = await this._getId(ctx, convertedData)
+        const objects = await this._getObjects(ctx, { id, data: convertedData })
         const length = await this._getLength(ctx, objects)
 
         const currentPage = Pager.wrapPages(data, length)
@@ -48,7 +53,7 @@ export default abstract class ScrollerAction<T> extends CallbackButtonAction<str
             currentPage,
             length,
             objects: this._getSlicedObjects(objects, currentPage),
-            data,
+            data: convertedData,
             id
         })
 
@@ -57,11 +62,24 @@ export default abstract class ScrollerAction<T> extends CallbackButtonAction<str
         else if (editedMessage === null)
             return
 
-        const { text, options } = editedMessage
-        await MessageUtils.editText(
-            ctx,
-            text,
-            options
-        )
+        const { text, options, media } = editedMessage
+
+        if(media) {
+            await MessageUtils.editMedia(
+                ctx,
+                {
+                    ...media,
+                    caption: text,
+                },
+                options
+            )
+        }
+        else {
+            await MessageUtils.editText(
+                ctx,
+                text,
+                options
+            )
+        }
     }
 }

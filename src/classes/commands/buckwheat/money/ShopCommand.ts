@@ -10,6 +10,10 @@ export default class ShopCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'магазин'
+        this._aliases = [
+            'магаз',
+            'купить'
+        ]
         this._description = 'открываю магазин\nЕсли дописать в конце число, то я продам вам именно столько товара за раз'
         this._needData = true
         this._argumentText = 'количество товаров'

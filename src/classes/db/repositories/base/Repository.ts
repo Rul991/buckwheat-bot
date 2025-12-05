@@ -21,4 +21,8 @@ export default class Repository<T extends typeof Model, K> extends BaseRepositor
     async updateMany(data: UpdateQuery<K>, filter?: RootFilterQuery<K>): Promise<UpdateWriteOpResult> {
         return await super.updateMany(this._getFilter(filter), data)
     }
+
+    async getOrCreate(data: K): Promise<K> {
+        return await super.getOrCreate({}, data)
+    }
 }

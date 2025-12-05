@@ -1,4 +1,4 @@
-import { FIRST_INDEX, MILLISECONDS_IN_DAY } from './../../../../utils/values/consts';
+import { FIRST_INDEX } from './../../../../utils/values/consts';
 import { MaybeString, TextContext } from '../../../../utils/values/types/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserProfileService from '../../../db/services/user/UserProfileService'
@@ -14,11 +14,8 @@ import ExperienceUtils from '../../../../utils/level/ExperienceUtils'
 import ExperienceService from '../../../db/services/level/ExperienceService'
 import StringUtils from '../../../../utils/StringUtils'
 import TimeUtils from '../../../../utils/TimeUtils'
-import UserLeftService from '../../../db/services/user/UserLeftService'
 import Logging from '../../../../utils/Logging'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
-import UserOldService from '../../../db/services/user/UserOldService'
-import AnswerOptions from '../../../../interfaces/options/AnswerOptions'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import MarriageService from '../../../db/services/marriage/MarriageService'
 
@@ -116,6 +113,10 @@ export default class ProfileCommand extends BuckwheatCommand {
         }
     }
 
+    private async _getLeft(ctx: TextContext, id: number) {
+        return await ContextUtils.isLeft(ctx, id)
+    }
+
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
         let idAndName = await this._getIdAndName(ctx, other)
 
@@ -147,7 +148,7 @@ export default class ProfileCommand extends BuckwheatCommand {
         const afterFirstMessage = TimeUtils.getElapsed(messages.firstMessage ?? 0)
 
         const isLinked = (await LinkedChatService.getRaw(id)) == ctx.chat.id
-        const isLeft = await UserLeftService.get(chatId, id)
+        const isLeft = await this._getLeft(ctx, id)
         const family = await this._getFamily(chatId, id)
 
         const path = 'text/commands/profile/profile.pug'
@@ -162,13 +163,12 @@ export default class ProfileCommand extends BuckwheatCommand {
             emoji: RankUtils.getEmojiByRank(rank),
             userNameRank: RankUtils.getRankByNumber(rank),
             className: ClassUtils.getName(classType),
-            status: RankUtils.getAdminStatusByNumber(rank),
+            status: RankUtils.getAdminStatusByNumber(rank, id),
             classEmoji: ClassUtils.getEmoji(classType),
             description: user.description?.toUpperCase() || '...',
             spawnDate: TimeUtils.formatMillisecondsToTime(afterFirstMessage),
             messages: StringUtils.toFormattedNumber(messages.total ?? 0),
-            experiencePrecents: ExperienceUtils.precents(experience),
-            isMonkey: !(await UserOldService.get(chatId, id))
+            experiencePrecents: ExperienceUtils.precents(experience)
         }
 
         const inlineKeyboard =  await InlineKeyboardManager.get('awards/start', `${id}`)

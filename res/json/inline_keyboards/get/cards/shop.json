@@ -1,0 +1,13 @@
+[
+    [
+        {
+            "text": "🃏 Купить",
+            "callback_data": "cbych_@{data}"
+        },
+
+        {
+            "text": "💲 Продать",
+            "callback_data": "csech_@{data}"
+        }
+    ]
+]

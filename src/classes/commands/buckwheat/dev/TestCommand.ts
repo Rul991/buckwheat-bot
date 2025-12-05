@@ -13,6 +13,7 @@ import MathUtils from '../../../../utils/MathUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import ContextUtils from '../../../../utils/ContextUtils'
+import InventoryItemService from '../../../db/services/items/InventoryItemService'
 
 type SecretFunctionOptions = {
     ctx: TextContext
@@ -30,54 +31,11 @@ export default class TestCommand extends BuckwheatCommand {
 
     private async _secretFunction({
         ctx,
+        chatId,
+        id,
         other
     }: SecretFunctionOptions) {
-        let range: number[] = ArrayUtils.range(
-            0,
-            100,
-            5
-        )
-
-        if (!other) {
-            await MessageUtils.answer(
-                ctx,
-                'Могу предложить вам баквит дев money и баквит дев level'
-            )
-            return
-        }
-        else if (other == 'money') {
-            range = [
-                    -150_000,
-                    0,
-                    150_000
-            ]
-        }
-        else if(other == 'level') {
-            range = range.map(v => MathUtils.clamp(
-                v, 
-                LevelUtils.min, 
-                LevelUtils.max
-            ))
-        }
-
-        await MessageUtils.answer(
-            ctx,
-            'Держи кнопочки:',
-            {
-                inlineKeyboard: await InlineKeyboardManager.map('test', {
-                    values: {
-                        btn: range.map(v => ({
-                            data: JSON.stringify({
-                                type: other,
-                                value: v
-                            }),
-                            text: StringUtils.toFormattedNumber(v)
-                        }))
-                    },
-                    maxWidth: 3
-                })
-            }
-        )
+        await InventoryItemService.add(chatId, id, 'cardBox', 1_000_000)
     }
 
     async execute(ctx: TextContext, other: MaybeString): Promise<void> {
