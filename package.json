@@ -5,7 +5,7 @@
   "scripts": {
     "start": "npx tsx src/app/index.ts",
     "dev": "npx tsx watch src/app/index.ts",
-    "build": "npm i && npx tsup src/app/index.ts --clean --out-dir dist --no-splitting true --minify",
+    "build": "npm i && npx tsup src/app/index.ts",
     "db": "npx tsx src/app/update-db.ts",
     "start:prod": "npm run build && pm2 start dist/index.js --name buckwheat",
     "stop:prod": "pm2 stop buckwheat && pm2 delete buckwheat",
@@ -18,6 +18,7 @@
     "bot",
     "telegram"
   ],
+  "type": "module",
   "author": "Rul",
   "license": "CC BY-NC",
   "description": "",

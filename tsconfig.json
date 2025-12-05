@@ -1,10 +1,13 @@
 {
     "compilerOptions": {
-        "target": "ES6",
-        "module": "nodenext",
-        "moduleResolution": "nodenext",
+        "target": "ES2022",
+        "module": "esnext",
+        "moduleResolution": "bundler",
         "strict": true,
         "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "resolvePackageJsonImports": true,
+        "resolvePackageJsonExports": true,
         "outDir": "./dist",
         "rootDir": "./src",
         "declaration": true,
