@@ -1,8 +1,8 @@
 {
-    "name": "Бесплатный кик",
-    "description": "Раздаю кик на 1м",
+    "name": "Бан",
+    "description": "Продаю бан навсегда",
     "emoji": "❗️",
-    "price": 0,
-    "maxCount": 10,
-    "totalCount": 0
+    "price": 1,
+    "maxCount": 1,
+    "totalCount": 1
 }

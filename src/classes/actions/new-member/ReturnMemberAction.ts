@@ -1,4 +1,5 @@
 import MessageUtils from '../../../utils/MessageUtils'
+import StringUtils from '../../../utils/StringUtils'
 import { NewMemberContext } from '../../../utils/values/types/types'
 import CasinoGetService from '../../db/services/casino/CasinoGetService'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
@@ -19,7 +20,7 @@ export default class extends NewMemberAction {
                     'text/new-member/debt-enter.pug',
                     {
                         changeValues: {
-                            money
+                            money: StringUtils.toFormattedNumber(money)
                         }
                     }
                 )

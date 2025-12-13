@@ -1,5 +1,5 @@
 import InventoryItemService from '../classes/db/services/items/InventoryItemService'
-import { DEFAULT_MAX_COUNT, DEFAULT_PREMIUM_DISCOUNT, DEFAULT_TOTAL_COUNT, DEFAULT_TOTAL_COUNT_MODE, MAX_SHOP_PRECENTS, MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from './values/consts'
+import { DEFAULT_MAX_COUNT, DEFAULT_PREMIUM_DISCOUNT, DEFAULT_TOTAL_COUNT, DEFAULT_TOTAL_COUNT_MODE, FOREVER, MILLISECONDS_IN_SECOND } from './values/consts'
 import MessageUtils from './MessageUtils'
 import { ItemCallbackOptions, ShopItem, ShopItemWithLength, JsonShopItem, ShopItemDescription, ShopMessageOptions } from './values/types/types'
 import ContextUtils from './ContextUtils'
@@ -12,6 +12,7 @@ import ObjectValidator from './ObjectValidator'
 import { jsonShopItemSchema } from './values/schemas'
 import InlineKeyboardManager from '../classes/main/InlineKeyboardManager'
 import CasinoGetService from '../classes/db/services/casino/CasinoGetService'
+import AdminUtils from './AdminUtils'
 
 type ItemDescriptionKey = string
 
@@ -133,8 +134,26 @@ export default class ShopItems {
         },
 
         {
-            execute: async ({ ctx, user, count }) => {
-                return false
+            execute: async ({ ctx, user, item }) => {
+                const id = ctx.from.id
+                const banDelay = MILLISECONDS_IN_SECOND * 5
+
+                await MessageUtils.answerMessageFromResource(
+                    ctx,
+                    'text/commands/items/ban/done.pug',
+                    {
+                        changeValues: {
+                            user,
+                            item: item.name
+                        }
+                    }
+                )
+
+                setTimeout(async () => {
+                    await AdminUtils.ban(ctx, id, FOREVER)
+                }, banDelay)
+
+                return true
             },
             filename: 'ban'
         },

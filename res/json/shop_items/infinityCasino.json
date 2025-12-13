@@ -2,8 +2,8 @@
     "name": "Беспроигрышное казино",
     "description": "Казино перестает забирать деньги",
     "emoji": "🎰",
-    "price": 250000,
+    "price": 75000,
     "maxCount": 1,
     "totalCount": 1,
-    "premiumDiscount": 20
+    "premiumDiscount": 33
 }
