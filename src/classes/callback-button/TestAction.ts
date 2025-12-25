@@ -1,5 +1,6 @@
 import { JSONSchemaType } from 'ajv'
-import { AsyncOrSync, CallbackButtonContext } from '../../utils/values/types/types'
+import { AsyncOrSync } from '../../utils/values/types/types'
+import { CallbackButtonContext } from '../../utils/values/types/contexts'
 import CallbackButtonAction from './CallbackButtonAction'
 import { MODE } from '../../utils/values/consts'
 import LinkedChatService from '../db/services/linkedChat/LinkedChatService'
@@ -10,6 +11,7 @@ import ExperienceService from '../db/services/level/ExperienceService'
 import ContextUtils from '../../utils/ContextUtils'
 import StringUtils from '../../utils/StringUtils'
 import CasinoGetService from '../db/services/casino/CasinoGetService'
+import { CallbackButtonOptions } from '../../utils/values/types/action-options'
 
 type Data = {
     type: 'level' | 'money'
@@ -57,12 +59,8 @@ export default class extends CallbackButtonAction<Data> {
         this._name = 'test'
     }
 
-    async execute(ctx: CallbackButtonContext, data: Data): Promise<string | void> {
+    async execute({ctx, data, id, chatId}: CallbackButtonOptions<Data>): Promise<string | void> {
         if (MODE != 'dev') return
-
-        const id = ctx.from.id
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if (!chatId) return
 
         const {
             type,

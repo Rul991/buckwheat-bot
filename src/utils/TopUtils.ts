@@ -19,6 +19,7 @@ type SubCommand = {
     title: string
     emoji: string
     name?: string
+    topOrRole?: boolean
     hasTotalCount?: boolean
     hasWinner?: boolean
     changeValues: {
@@ -41,6 +42,7 @@ export default class {
             title: 'Иерархия',
             emoji: '👑',
             hasTotalCount: false,
+            topOrRole: false,
             changeValues: {
                 rawTitle: 'Иерархия чата'
             },
@@ -61,7 +63,7 @@ export default class {
                     const rankEmoji = RankUtils.getEmojiByRank(rank)
                     return {
                         id,
-                        value: `${rankName} ${rankEmoji}`
+                        value: `${rankEmoji} ${rankName}`
                     }
                 })
             }
@@ -113,6 +115,7 @@ export default class {
             title: 'Классы',
             emoji: '👾',
             hasTotalCount: false,
+            topOrRole: false,
             changeValues: {
                 rawTitle: 'Классы игроков'
             },
@@ -120,11 +123,17 @@ export default class {
                 const users = await UserProfileService.getAll(chatId)
 
                 return users
-                    .filter(({ className }) => className && className != ClassUtils.defaultClassName)
-                    .map(({ id, className }) => {
+                    .filter(
+                        ({ className }) => 
+                            className && className != ClassUtils.defaultClassName
+                    )
+                    .map(({ id, className: rawClass }) => {
+                        const classType = rawClass ?? ClassUtils.defaultClassName
+                        const emoji = ClassUtils.getEmoji(classType)
+                        const name = ClassUtils.getName(classType)
                         return {
                             id,
-                            value: ClassUtils.getName(className ?? ClassUtils.defaultClassName)
+                            value: `${emoji} ${name}`
                         }
                     })
             }
@@ -158,7 +167,7 @@ export default class {
             },
             getUnsortedValues: async chatId => {
                 return (await RouletteService.getAll(chatId))
-                    .filter(({ maxWinStreak: winStreak }) => 
+                    .filter(({ maxWinStreak: winStreak }) =>
                         winStreak && winStreak > 0)
                     .map(({ id, maxWinStreak: winStreak }) => {
                         return {

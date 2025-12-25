@@ -1,12 +1,14 @@
 import { BAD_COOKIE_CHANCE, COOKIE_WORK_TIME } from '../../../../utils/values/consts'
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
 import WorkTimeService from '../../../db/services/work/WorkTimeService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import RandomUtils from '../../../../utils/RandomUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class CookieCommand extends BuckwheatCommand {
     constructor() {
@@ -19,13 +21,7 @@ export default class CookieCommand extends BuckwheatCommand {
         ]
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return
-        
-        const reply = ctx.message.reply_to_message
-        const userId = ctx.from.id
-
+    async execute({ ctx, chatId, id: userId, replyFrom }: BuckwheatCommandOptions): Promise<void> {
         const [hasCookie] = await InventoryItemService.use(
             chatId,
             userId, 
@@ -40,10 +36,11 @@ export default class CookieCommand extends BuckwheatCommand {
             return
         }
 
-        if(reply?.from) {
+        if(replyFrom) {
+            const replyId = replyFrom.id
             await InventoryItemService.add(
                 chatId,
-                reply.from.id, 
+                replyId, 
                 'cookie'
             )
 
@@ -51,7 +48,7 @@ export default class CookieCommand extends BuckwheatCommand {
                 ctx,
                 'text/commands/cookie/share.pug',
                 {
-                    changeValues: await ContextUtils.getUser(chatId, reply.from.id)
+                    changeValues: await ContextUtils.getUser(chatId, replyId)
                 }
             )
         }

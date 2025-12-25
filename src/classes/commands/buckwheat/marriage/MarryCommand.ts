@@ -1,6 +1,8 @@
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import MarriageService from '../../../db/services/marriage/MarriageService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
@@ -18,14 +20,9 @@ export default class MarryCommand extends BuckwheatCommand {
         this._description = 'выполняю услуги ЗАГСа'
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const replyFrom = ctx.message.reply_to_message?.from
-        const userId = ctx.from.id
-        const replyId = replyFrom ? replyFrom.id : userId
+    async execute({ ctx, id: userId, chatId, replyOrUserFrom }: BuckwheatCommandOptions): Promise<void> {
+        const replyId = replyOrUserFrom.id
         
-        const chatId = await LinkedChatService.getCurrent(ctx, replyId)
-        if(!chatId) return
-
         if(await MarriageService.hasPartner(chatId, userId)) {
             await MessageUtils.answerMessageFromResource(
                 ctx,

@@ -1,5 +1,7 @@
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import UserClassService from '../../../db/services/user/UserClassService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
@@ -17,11 +19,7 @@ export default class SkillsCommand extends BuckwheatCommand {
         this._description = 'позволяю работать с навыками'
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const id = ctx.from.id
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return
-
+    async execute({ ctx, chatId, id }: BuckwheatCommandOptions): Promise<void> {
         if(!await UserClassService.isPlayer(chatId, id)) {
             await MessageUtils.answerMessageFromResource(
                 ctx,

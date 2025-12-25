@@ -2,7 +2,9 @@ import MathUtils from '../../../../utils/MathUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import { MAX_GREED_BOX } from '../../../../utils/values/consts'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import CasinoAddService from '../../../db/services/casino/CasinoAddService'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
@@ -19,11 +21,7 @@ export default class GreedBoxCommand extends BuckwheatCommand {
         this._isPremium = true
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const id = ctx.from.id
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return
-
+    async execute({ ctx, other, id, chatId }: BuckwheatCommandOptions): Promise<void> {
         const greedBoxAllow = await ChatSettingsService.get<'boolean'>(
             chatId, 
             'useGreedBox'

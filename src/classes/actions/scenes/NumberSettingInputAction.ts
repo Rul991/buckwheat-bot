@@ -1,7 +1,8 @@
 import { Context } from 'telegraf'
 import { BaseScene } from 'telegraf/scenes'
 import { Update } from 'telegraf/types'
-import { AsyncOrSync, SceneContextData } from '../../../utils/values/types/types'
+import { AsyncOrSync } from '../../../utils/values/types/types'
+import { ContextData } from '../../../utils/values/types/contexts'
 import SceneAction from './SceneAction'
 import MessageUtils from '../../../utils/MessageUtils'
 import StringUtils from '../../../utils/StringUtils'
@@ -10,6 +11,7 @@ import SettingUtils from '../../../utils/settings/SettingUtils'
 import Setting from '../../../interfaces/other/Setting'
 import MathUtils from '../../../utils/MathUtils'
 import { INFINITY_SYMB } from '../../../utils/values/consts'
+import { SceneOptions } from '../../../utils/values/types/action-options'
 
 type Data = {
     settingId: string
@@ -23,7 +25,7 @@ export default class extends SceneAction<Data> {
         this._name = 'setting-number'
     }
 
-    protected _execute(scene: BaseScene<Context<Update> & SceneContextData<Data>>): AsyncOrSync {
+    protected _execute({ scene }: SceneOptions<Data>): AsyncOrSync {
         const getSetting = async (key: string) => {
             return await SettingUtils.getSetting<'number'>(
                 'chat',

@@ -1,11 +1,13 @@
 import { Context } from 'telegraf'
-import { MaybeString, TextContext } from '../../../../utils/values/types/types'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class RankCommand extends BuckwheatCommand {
     private static async _answerMyRank(ctx: Context, chatId: number, userId: number): Promise<void> {
@@ -24,7 +26,7 @@ export default class RankCommand extends BuckwheatCommand {
     }
 
     private static async _answerIfWrongData(ctx: Context, data: string): Promise<boolean> {
-        if(isNaN(+data)) {
+        if (isNaN(+data)) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/rank/wrong.pug'
@@ -36,7 +38,7 @@ export default class RankCommand extends BuckwheatCommand {
     }
 
     private static async _answerIfRankOutBounds(ctx: Context, rank: number): Promise<boolean> {
-        if(!RankUtils.isRankInBounds(rank)) {
+        if (!RankUtils.isRankInBounds(rank)) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/rank/out-bounds.pug'
@@ -48,7 +50,7 @@ export default class RankCommand extends BuckwheatCommand {
     }
 
     private static async _answerIfNotAdmin(ctx: Context, rank: number): Promise<boolean> {
-        if(rank < RankUtils.admin) {
+        if (rank < RankUtils.admin) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/rank/not-admin.pug'
@@ -62,7 +64,7 @@ export default class RankCommand extends BuckwheatCommand {
     private static async _answerIfLowRank(ctx: Context, myRank: number, rank: number, replyRank: number): Promise<boolean> {
         const isCreator = await ContextUtils.isCreator(ctx)
 
-        if((myRank < rank || myRank <= replyRank) && !isCreator) {
+        if ((myRank < rank || myRank <= replyRank) && !isCreator) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/rank/low-rank.pug'
@@ -73,7 +75,7 @@ export default class RankCommand extends BuckwheatCommand {
         return false
     }
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'ранг'
         this._description = 'изменяю ранг игрока в диапазоне от 0 до 5'
@@ -82,30 +84,23 @@ export default class RankCommand extends BuckwheatCommand {
         this._argumentText = '0-5'
     }
 
-    async execute(ctx: TextContext, data: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return
-
-        const myId = ctx.from.id
-
-        if(ctx.message.reply_to_message && data) {
-            if(await RankCommand._answerIfWrongData(ctx, data)) return
+    async execute({ ctx, other: data, chatId, id: myId, replyFrom }: BuckwheatCommandOptions): Promise<void> {
+        if (data) {
+            if (await RankCommand._answerIfWrongData(ctx, data)) return
             else {
-                const reply = ctx.message.reply_to_message!
+                const replyId = replyFrom?.id ?? 0
                 const rank = +data
-                
-                const replyId = reply.from?.id ?? 0
 
-                if(await RankCommand._answerIfRankOutBounds(ctx, rank)) return
-                
+                if (await RankCommand._answerIfRankOutBounds(ctx, rank)) return
+
                 const myRank = await UserRankService.get(chatId, myId)
                 const replyRank = await UserRankService.get(chatId, replyId)
 
-                if(await RankCommand._answerIfNotAdmin(ctx, myRank)) return
-                if(await RankCommand._answerIfLowRank(ctx, myRank, rank, replyRank)) return
+                if (await RankCommand._answerIfNotAdmin(ctx, myRank)) return
+                if (await RankCommand._answerIfLowRank(ctx, myRank, rank, replyRank)) return
 
                 const mode = replyRank <= rank ? 'up' : 'down'
-                
+
                 await UserRankService.update(chatId, replyId, rank)
                 await MessageUtils.answerMessageFromResource(
                     ctx,

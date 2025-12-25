@@ -1,8 +1,9 @@
 import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
 import { userReplyIdsDataSchema } from '../../../utils/values/schemas'
 import UserReplyIdsData from '../../../interfaces/callback-button-data/UserReplyIdsData'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 type Data = UserReplyIdsData & {
     
@@ -16,7 +17,7 @@ export default class BidChooseAction extends CallbackButtonAction<Data> {
         this._name = 'bidchoose'
     }
 
-    async execute(ctx: CallbackButtonContext, {user, reply}: Data): Promise<string | void> {
+    async execute({ctx, data}: CallbackButtonOptions<Data>): Promise<string | void> {
         
     }
 }

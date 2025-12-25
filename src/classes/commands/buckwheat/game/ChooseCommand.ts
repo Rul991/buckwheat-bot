@@ -1,7 +1,9 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import RandomUtils from '../../../../utils/RandomUtils'
 import StringUtils from '../../../../utils/StringUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class ChooseCommand extends BuckwheatCommand {
@@ -21,7 +23,7 @@ export default class ChooseCommand extends BuckwheatCommand {
         return RandomUtils.choose(StringUtils.splitAndTrim(text, this._separator)) ?? 'ничего'
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+    async execute({ ctx, other }: BuckwheatCommandOptions): Promise<void> {
         if(!other) {
             await MessageUtils.answerMessageFromResource(
                 ctx,

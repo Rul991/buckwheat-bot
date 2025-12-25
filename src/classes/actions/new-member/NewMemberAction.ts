@@ -1,11 +1,10 @@
-import { Context } from 'telegraf'
 import BaseAction from '../base/BaseAction'
-import { NewMemberContext } from '../../../utils/values/types/types'
+import { NewMemberOptions } from '../../../utils/values/types/action-options'
 
 export default abstract class NewMemberAction extends BaseAction {
-    constructor() {
+    constructor () {
         super()
     }
 
-    abstract execute(ctx: NewMemberContext): Promise<void>
+    abstract execute(options: NewMemberOptions): Promise<void>
 }

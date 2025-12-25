@@ -1,0 +1,30 @@
+{
+    "definition": {
+        "buy": {
+            "text": "Купить",
+            "data": "buy_@{indexNum}_@{idNum}_@{countNum}_@{pageNum}",
+            "notEach": true
+        },
+        "count": {
+            "text": "@",
+            "data": "itemshow_{\"id\":@{idNum},\"p\":@{pageNum},\"i\":@{indexNum},\"cnt\":@}"
+        },
+        "back": {
+            "text": "Назад",
+            "data": "itemchange_{\"id\":@{idNum},\"c\":@{pageNum},\"i\":0}",
+            "notEach": true
+        },
+        "countTitle": {
+            "text": "Количество:",
+            "data": "counttitle"
+        }
+    },
+    
+    "values": 
+    [
+        "countTitle",
+        ["count"],
+        "buy",
+        "back"
+    ]
+}

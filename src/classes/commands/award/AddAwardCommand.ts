@@ -3,14 +3,16 @@ import MathUtils from '../../../utils/MathUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import RankUtils from '../../../utils/RankUtils'
 import StringUtils from '../../../utils/StringUtils'
-import { TextContext, MaybeString } from '../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../utils/values/types/action-options'
+import { MaybeString } from '../../../utils/values/types/types'
+import { TextContext } from '../../../utils/values/types/contexts'
 import AwardsService from '../../db/services/awards/AwardsService'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import UserRankService from '../../db/services/user/UserRankService'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 
 export default class AddAwardCommand extends BuckwheatCommand {
-    constructor() {
+    constructor () {
         super()
         this._name = 'наградить'
         this._aliases = [
@@ -24,15 +26,11 @@ export default class AddAwardCommand extends BuckwheatCommand {
         this._argumentText = '<0-8> <текст>'
     }
 
-    private _getReplyId(ctx: TextContext): number | undefined {
-        return ctx.message.reply_to_message?.from?.id
-    }
-
     private _getValuesFromOther(ctx: TextContext, other?: string): [number, string] | null {
         const [rawLevel, text] = StringUtils.splitByCommands(other ?? '', 1)
         const level = +rawLevel
 
-        if(!other || isNaN(level)) {
+        if (!other || isNaN(level)) {
             return null
         }
 
@@ -44,10 +42,10 @@ export default class AddAwardCommand extends BuckwheatCommand {
         return rank >= RankUtils.moderator
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const replyId = this._getReplyId(ctx)
+    async execute({ ctx, other, id, chatId, replyFrom }: BuckwheatCommandOptions): Promise<void> {
+        const replyId = replyFrom?.id
 
-        if(!replyId) {
+        if (!replyId) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/award/no-reply.pug'
@@ -55,16 +53,16 @@ export default class AddAwardCommand extends BuckwheatCommand {
             return
         }
 
-        if(replyId == ctx.from.id) {
+        if (replyId == id) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/award/self.pug'
             )
             return
         }
-        
+
         const values = this._getValuesFromOther(ctx, other)
-        if(!values) {
+        if (!values) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/award/wrong.pug'
@@ -73,12 +71,8 @@ export default class AddAwardCommand extends BuckwheatCommand {
         }
         const [level, text] = values
         const rank = MathUtils.clamp(level, 1, 8)
-        
-        const id = ctx.from.id
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return
 
-        if(!await this._hasEnoughRank(chatId, id)) {
+        if (!await this._hasEnoughRank(chatId, id)) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/award/rank-issue.pug'
@@ -94,12 +88,12 @@ export default class AddAwardCommand extends BuckwheatCommand {
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/award/added.pug', {
-                changeValues: {
-                    level: rank,
-                    reply: await ContextUtils.getUser(chatId, replyId),
-                    user: await ContextUtils.getUser(chatId, id)
-                }
+            changeValues: {
+                level: rank,
+                reply: await ContextUtils.getUser(chatId, replyId),
+                user: await ContextUtils.getUser(chatId, id)
             }
+        }
         )
     }
 }

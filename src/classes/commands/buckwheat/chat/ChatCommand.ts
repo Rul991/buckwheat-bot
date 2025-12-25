@@ -1,6 +1,7 @@
 import MessageUtils from '../../../../utils/MessageUtils'
+import StringUtils from '../../../../utils/StringUtils'
 import TimeUtils from '../../../../utils/TimeUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import ChatService from '../../../db/services/chat/ChatService'
 import PremiumChatService from '../../../db/services/chat/PremiumChatService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
@@ -14,14 +15,13 @@ export default class ChatCommand extends BuckwheatCommand {
         this._aliases = ['группа']
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const id = ctx.from.id
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return
-
+    async execute({ ctx, chatId, id }: BuckwheatCommandOptions): Promise<void> {
         const chat = await ChatService.get(chatId)
         const isPremium = await PremiumChatService.isPremium(chatId)
         const untilDate = await PremiumChatService.getUntilDate(chatId)
+
+        const rulesLength = chat.rules?.length ?? 0
+        const hasHello = Boolean(chat.hello)
 
         await MessageUtils.answerMessageFromResource(
             ctx,
@@ -29,9 +29,9 @@ export default class ChatCommand extends BuckwheatCommand {
             {
                 changeValues: {
                     isPremium,
-                    rulesLength: chat.rules?.length ?? 0,
-                    hasHello: Boolean(chat.hello),
-                    untilDate: TimeUtils.formatMillisecondsToTime(untilDate)
+                    hasHello,
+                    untilDate: TimeUtils.formatMillisecondsToTime(untilDate),
+                    rulesLength: StringUtils.toFormattedNumber(rulesLength),
                 }
             }
         )

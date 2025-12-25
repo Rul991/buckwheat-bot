@@ -23,7 +23,8 @@ mixin param(title, value, bold = false)
             i #{title}: 
     else
         i #{title}: 
-    | #{value}
+    code #{value}
+    |
 
 | [#{index + 1}/#{length}] #{emoji}
 code #{name} 
@@ -34,6 +35,9 @@ blockquote #{description}
 +conditionText(isPremium, premiumEmoji, `Премиум-товар`)
 |
 +param('Осталось', `${isRestInfinity ? infinityEmoji : rest}`)
++param('Текущее количество', `${currentCount}`)
+|
+|
 +param('Общий склад', `${isChatMode ? yesEmoji : noEmoji}`)
 +param('Скидка за премиум', `${premiumDiscount}%`)
 |

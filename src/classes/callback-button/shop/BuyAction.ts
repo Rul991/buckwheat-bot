@@ -1,7 +1,8 @@
 import ContextUtils from '../../../utils/ContextUtils'
 import ShopItems from '../../../utils/ShopItems'
 import MessageUtils from '../../../utils/MessageUtils'
-import { CallbackButtonContext, ShopItem, ShopMessageOptions } from '../../../utils/values/types/types'
+import { Link, ShopItem, ShopMessageOptions } from '../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CasinoAddService from '../../db/services/casino/CasinoAddService'
 import CasinoGetService from '../../db/services/casino/CasinoGetService'
 import CallbackButtonAction from '../CallbackButtonAction'
@@ -11,8 +12,9 @@ import InventoryItemService from '../../db/services/items/InventoryItemService'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import PremiumChatService from '../../db/services/chat/PremiumChatService'
 import { NOT_FOUND_INDEX } from '../../../utils/values/consts'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
-type Type = [number, number, number]
+type Data = [number, number, number, number]
 
 type MoneyValuesOptions = {
     chatId: number,
@@ -22,7 +24,18 @@ type MoneyValuesOptions = {
     hasPremium: boolean
 }
 
-export default class BuyAction extends CallbackButtonAction<Type> {
+type GetAlertMessageOptions = {
+    hasRest: boolean
+    money: number
+    totalPrice: number
+    name: string
+    user: Link
+    chatId: number
+    item: ShopItem
+    isChatMode: boolean
+}
+
+export default class BuyAction extends CallbackButtonAction<Data> {
     protected _schema: null = null
 
     constructor () {
@@ -30,14 +43,16 @@ export default class BuyAction extends CallbackButtonAction<Type> {
         this._name = 'buy'
     }
 
-    protected _getData(raw: string): Type {
-        return raw.split('_', 3).map(v => +v) as Type
+    protected _getData(raw: string): Data {
+        return raw
+            .split('_', 4)
+            .map(v => +v) as Data
     }
 
     protected async _getIds(ctx: CallbackButtonContext) {
         const id = ctx.from.id
         const botId = ctx.botInfo.id
-        const chatId = await LinkedChatService.getCurrent(ctx)
+        const chatId = await LinkedChatService.getCurrent(ctx, id)
         if (!chatId) return null
 
         return {
@@ -89,15 +104,64 @@ export default class BuyAction extends CallbackButtonAction<Type> {
         )
     }
 
-    async execute(ctx: CallbackButtonContext, data: Type): Promise<string | void> {
+    protected async _getAlertMessage({
+        name,
+        isChatMode,
+        hasRest,
+        user,
+        totalPrice,
+        money,
+        item,
+        chatId
+    }: GetAlertMessageOptions) {
+        if (!hasRest) {
+            return await FileUtils.readPugFromResource(
+                'text/commands/shop/no-items.pug',
+                {
+                    changeValues: {
+                        name,
+                        isChatMode,
+                        user
+                    }
+                }
+            )
+        }
+
+        if (totalPrice > money) {
+            return await FileUtils.readPugFromResource(
+                'text/commands/shop/no-money.pug',
+                {
+                    changeValues: {
+                        name,
+                        elapsedMoney: StringUtils.toFormattedNumber(totalPrice - money),
+                        user
+                    }
+                }
+            )
+        }
+
+        if (item.isPremium && !(await PremiumChatService.isPremium(chatId))) {
+            return await FileUtils.readPugFromResource(
+                'text/commands/shop/no-premium.pug',
+                {
+                    changeValues: {
+                        name
+                    }
+                }
+            )
+        }
+
+        return ''
+    }
+
+    async execute({ctx, data}: CallbackButtonOptions<Data>): Promise<string | void> {
         const ids = await this._getIds(ctx)
         if (!ids) return
         const {
-            id,
             botId,
             chatId
         } = ids
-        const [index, _id, rawCount] = data
+        const [index, id, rawCount, page] = data
         const count = Math.max(1, rawCount)
 
         if (index === NOT_FOUND_INDEX) return
@@ -109,7 +173,7 @@ export default class BuyAction extends CallbackButtonAction<Type> {
             name
         } = item
 
-        const user = await ContextUtils.getUserFromContext(ctx)
+        const user = await ContextUtils.getUser(chatId, id)
         const totalCount = ShopItems.getCount(item, count)
         const hasPremium = await PremiumChatService.isPremium(chatId)
 
@@ -129,45 +193,22 @@ export default class BuyAction extends CallbackButtonAction<Type> {
         const isChatMode = ShopItems.isChatMode(item)
         const hasRest = await ShopItems.hasEnoughItems(hasItemsOptions)
 
-        if (!hasRest) {
-            await MessageUtils.answerMessageFromResource(
-                ctx,
-                'text/commands/shop/no-items.pug',
-                {
-                    changeValues: {
-                        name,
-                        isChatMode,
-                        user
-                    }
-                }
-            )
-            return
-        }
+        const alertMessage = await this._getAlertMessage({
+            name,
+            isChatMode,
+            hasRest,
+            user,
+            totalPrice,
+            money,
+            item,
+            chatId
+        })
 
-        if (totalPrice > money) {
-            await MessageUtils.answerMessageFromResource(
+        if(alertMessage.length > 0) {
+            await ContextUtils.showCallbackMessage(
                 ctx,
-                'text/commands/shop/no-money.pug',
-                {
-                    changeValues: {
-                        name,
-                        elapsedMoney: StringUtils.toFormattedNumber(totalPrice - money),
-                        user
-                    }
-                }
-            )
-            return
-        }
-
-        if (item.isPremium && !(await PremiumChatService.isPremium(chatId))) {
-            await MessageUtils.answerMessageFromResource(
-                ctx,
-                'text/commands/shop/no-premium.pug',
-                {
-                    changeValues: {
-                        name
-                    }
-                }
+                alertMessage,
+                true
             )
             return
         }
@@ -176,7 +217,9 @@ export default class BuyAction extends CallbackButtonAction<Type> {
             ctx,
             user,
             item,
-            count: totalCount
+            count: totalCount,
+            id,
+            chatId
         })
 
         if (isBought) {
@@ -200,7 +243,7 @@ export default class BuyAction extends CallbackButtonAction<Type> {
                     userId: id,
                     index,
                     count,
-                    hasPremium
+                    page
                 }
             )
 

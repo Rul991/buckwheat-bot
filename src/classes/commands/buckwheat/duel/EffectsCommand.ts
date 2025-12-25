@@ -1,12 +1,14 @@
 import { InlineKeyboardButton } from 'telegraf/types'
 import ClassUtils from '../../../../utils/ClassUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString, ClassTypes, CallbackButtonValue } from '../../../../utils/values/types/types'
+import { MaybeString, ClassTypes, CallbackButtonValue } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import SkillUtils from '../../../../utils/SkillUtils'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class extends BuckwheatCommand {
     constructor() {
@@ -18,12 +20,8 @@ export default class extends BuckwheatCommand {
         ]
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const id = ctx.from.id
+    async execute({ ctx, chatId, id }: BuckwheatCommandOptions): Promise<void> {
         const itemId = 'effectBook'
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return
-
         const [has] = await InventoryItemService.use(chatId, id, itemId)
         const filename = has ? 
             'text/commands/effectBook/start.pug' : 

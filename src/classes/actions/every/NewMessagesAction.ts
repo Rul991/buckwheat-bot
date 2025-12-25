@@ -1,9 +1,10 @@
-import { MessageContext } from '../../../utils/values/types/types'
+import { EveryMessageOptions } from '../../../utils/values/types/action-options'
+import { MessageContext } from '../../../utils/values/types/contexts'
 import MessagesService from '../../db/services/messages/MessagesService'
 import EveryMessageAction from './EveryMessageAction'
 
 export default class NewMessagesAction extends EveryMessageAction {
-    async execute(ctx: MessageContext): Promise<void | true> {
+    async execute({ ctx }: EveryMessageOptions): Promise<void | true> {
         await MessagesService.add(ctx.chat.id, ctx.from.id)
     }
 }

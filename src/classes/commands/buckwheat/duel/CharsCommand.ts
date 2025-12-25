@@ -5,37 +5,37 @@ import DuelUtils from '../../../../utils/DuelUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import { HP_SYMBOLS, MANA_SYMBOLS, MAX_STATS_SYMBOLS_COUNT } from '../../../../utils/values/consts'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import DuelistService from '../../../db/services/duelist/DuelistService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import UserClassService from '../../../db/services/user/UserClassService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class CharsCommand extends BuckwheatCommand {
-    constructor() {
+    constructor () {
         super()
         this._name = 'характеристики'
         this._description = 'показываю ваши характеристики',
-        this._aliases = [
-            'хп',
-            'мана'
-        ]
+            this._aliases = [
+                'хп',
+                'мана'
+            ]
         this._replySupport = true
     }
 
-    private _getId(ctx: TextContext): number {
-        return ctx.message.reply_to_message?.from?.id ?? ctx.from.id
+    private _getId({ replyOrUserFrom }: BuckwheatCommandOptions): number {
+        return replyOrUserFrom.id
     }
-    
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const id = this._getId(ctx)
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return
 
+    async execute(options: BuckwheatCommandOptions): Promise<void> {
+        const { ctx, chatId } = options
+        const id = this._getId(options)
         const className = await UserClassService.get(chatId, id)
         const user = await ContextUtils.getUser(chatId, id)
 
-        if(!await UserClassService.isPlayer(chatId, id)) {
+        if (!await UserClassService.isPlayer(chatId, id)) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/chars/unknown.pug',

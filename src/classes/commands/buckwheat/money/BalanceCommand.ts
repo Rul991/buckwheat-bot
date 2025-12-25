@@ -1,4 +1,5 @@
-import { MaybeString, TextContext } from '../../../../utils/values/types/types'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import CasinoAccountService from '../../../db/services/casino/CasinoAccountService'
 import MessageUtils from '../../../../utils/MessageUtils'
@@ -9,6 +10,7 @@ import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService
 import InventoryItem from '../../../../interfaces/schemas/items/InventoryItem'
 import CubeService from '../../../db/services/cube/CubeService'
 import DuelistService from '../../../db/services/duelist/DuelistService'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class BalanceCommand extends BuckwheatCommand {
     constructor() {
@@ -49,11 +51,7 @@ export default class BalanceCommand extends BuckwheatCommand {
         return casino[key] ?? 0
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return
-
-        const id = ctx.from.id
+    async execute({ ctx, chatId, id }: BuckwheatCommandOptions): Promise<void> {
         const casino = await CasinoAccountService.get(chatId, id)
         const items = await ItemsService.get(chatId, id)
         const cube = await CubeService.get(chatId, id)

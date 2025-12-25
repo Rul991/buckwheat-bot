@@ -126,7 +126,6 @@ export const jsonShopItemSchema: JSONSchemaType<JsonShopItem> = {
     ]
 }
 
-// @ts-ignore
 export const invoiceSchema: JSONSchemaType<NewInvoiceParameters> = {
     type: 'object',
     properties: {

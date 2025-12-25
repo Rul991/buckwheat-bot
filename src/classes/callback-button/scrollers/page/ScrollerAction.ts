@@ -1,10 +1,12 @@
 import { JSONSchemaType } from 'ajv'
 import MessageUtils from '../../../../utils/MessageUtils'
 import Pager from '../../../../utils/Pager'
-import { CallbackButtonContext, AsyncOrSync, ScrollerSendMessageOptions, ScrollerEditMessageResult, ScrollerGetObjectsOptions } from '../../../../utils/values/types/types'
+import { AsyncOrSync, ScrollerSendMessageOptions, ScrollerEditMessageResult, ScrollerGetObjectsOptions } from '../../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import CallbackButtonAction from '../../CallbackButtonAction'
 import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
 import FileUtils from '../../../../utils/FileUtils'
+import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
 
 export default abstract class ScrollerAction<T, D = string> extends CallbackButtonAction<string> {
     protected _objectsPerPage: number = 0
@@ -39,10 +41,10 @@ export default abstract class ScrollerAction<T, D = string> extends CallbackButt
 
     protected abstract _editMessage(ctx: CallbackButtonContext, options: ScrollerSendMessageOptions<T, D>): Promise<ScrollerEditMessageResult>
 
-    async execute(ctx: CallbackButtonContext, data: string): Promise<string | void> {
+    async execute({ctx, data, chatId}: CallbackButtonOptions<string>): Promise<string | void> {
         const convertedData = this._convertDataToObject(data)
         const id = await this._getId(ctx, convertedData)
-        const objects = await this._getObjects(ctx, { id, data: convertedData })
+        const objects = await this._getObjects(ctx, { id, data: convertedData, chatId })
         const length = await this._getLength(ctx, objects)
 
         const currentPage = Pager.wrapPages(data, length)
@@ -54,7 +56,8 @@ export default abstract class ScrollerAction<T, D = string> extends CallbackButt
             length,
             objects: this._getSlicedObjects(objects, currentPage),
             data: convertedData,
-            id
+            id,
+            chatId
         })
 
         if (typeof editedMessage == 'string')

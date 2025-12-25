@@ -1,7 +1,7 @@
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import RankUtils from '../../../../utils/RankUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import UserRankService from '../../../db/services/user/UserRankService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
@@ -13,7 +13,7 @@ export default class WipeCommand extends BuckwheatCommand {
         this._isShow = false
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
+    async execute({ ctx, chatId, id }: BuckwheatCommandOptions): Promise<void> {
         if(ctx.chat.type == 'private') {
             await MessageUtils.answerMessageFromResource(
                 ctx,
@@ -22,8 +22,6 @@ export default class WipeCommand extends BuckwheatCommand {
             return
         }
         
-        const chatId = ctx.chat.id
-        const id = ctx.from.id
         const rank = await UserRankService.get(chatId, id)
 
         if(!RankUtils.canUse({

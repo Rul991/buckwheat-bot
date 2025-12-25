@@ -1,6 +1,7 @@
 import FileUtils from '../../../../utils/FileUtils'
 import { FIRST_INDEX } from '../../../../utils/values/consts'
-import { CallbackButtonContext, ScrollerEditMessage, ScrollerSendMessageOptions } from '../../../../utils/values/types/types'
+import { ScrollerEditMessage, ScrollerGetObjectsOptions, ScrollerSendMessageOptions } from '../../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import RulesService from '../../../db/services/chat/RulesService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
@@ -13,10 +14,7 @@ export default class RuleChangeAction extends ScrollerAction<string> {
         this._objectsPerPage = 1
     }
 
-    protected async _getObjects(ctx: CallbackButtonContext): Promise<string[]> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return []
-
+    protected async _getObjects(ctx: CallbackButtonContext, { chatId }: ScrollerGetObjectsOptions<string>): Promise<string[]> {
         return await RulesService.get(chatId)
     }
 

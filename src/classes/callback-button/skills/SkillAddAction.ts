@@ -1,5 +1,5 @@
 import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
 import ContextUtils from '../../../utils/ContextUtils'
 import DuelUtils from '../../../utils/DuelUtils'
@@ -11,6 +11,7 @@ import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import FileUtils from '../../../utils/FileUtils'
 import ClassUtils from '../../../utils/ClassUtils'
 import SkillUtils from '../../../utils/SkillUtils'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 type Data = {
     skillId: string,
@@ -32,11 +33,8 @@ export default class extends CallbackButtonAction<Data> {
         this._name = 'skilladd'
     }
 
-    async execute(ctx: CallbackButtonContext, {skillId, id}: Data): Promise<string | void> {
+    async execute({ctx, data: {id, skillId}, chatId}: CallbackButtonOptions<Data>): Promise<string | void> {
         if(await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return 
-
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
 
         const type = await UserClassService.get(chatId, id)
         const skill = await SkillUtils.getSkillById(type, skillId)

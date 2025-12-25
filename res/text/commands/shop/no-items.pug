@@ -1,11 +1,4 @@
-include utils/mixins.pug
-
 | Хммм...
-| Игрок 
-+link(user, false)
-| , а товара 
-b
-    u #{name}
-|  в таком объеме то нет!
+| Игрок #{user.name}, а товара ''#{name}'' в таком объеме то нет!
 |
 | Ты#{isChatMode ? ' или другие игроки' : ''} всё выкупил#{isChatMode ? 'и' : ''}!

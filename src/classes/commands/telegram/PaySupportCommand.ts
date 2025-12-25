@@ -1,5 +1,7 @@
 import MessageUtils from '../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../utils/values/types/action-options'
+import { MaybeString } from '../../../utils/values/types/types'
+import { TextContext } from '../../../utils/values/types/contexts'
 import TelegramCommand from '../base/TelegramCommand'
 
 export default class PaySupportCommand extends TelegramCommand {
@@ -9,7 +11,7 @@ export default class PaySupportCommand extends TelegramCommand {
         this._isShow = false
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
+    async execute({ ctx }: BuckwheatCommandOptions): Promise<void> {
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/other/paysupport.pug'

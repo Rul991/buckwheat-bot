@@ -1,24 +1,22 @@
 import MessageUtils from '../../../utils/MessageUtils'
 import { FIRST_INDEX } from '../../../utils/values/consts'
-import { PhotoContext, MaybeString } from '../../../utils/values/types/types'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
+import { PhotoOptions } from '../../../utils/values/types/action-options'
 import UserImageService from '../../db/services/user/UserImageService'
 import PhotoAction from './PhotoAction'
 
 export default class ImageProfileAction extends PhotoAction {
-    constructor() {
+    constructor () {
         super()
         this._name = 'профиль'
     }
 
-    async execute(ctx: PhotoContext, _: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return
+    async execute({ ctx, chatId, id }: PhotoOptions): Promise<void> {
+        const photoId = ctx.message.photo[FIRST_INDEX].file_id
         
         await UserImageService.update(
             chatId,
-            ctx.from.id, 
-            ctx.message.photo[FIRST_INDEX].file_id
+            id,
+            photoId
         )
 
         await MessageUtils.answerMessageFromResource(

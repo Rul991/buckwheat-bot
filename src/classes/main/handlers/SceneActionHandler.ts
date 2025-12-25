@@ -1,4 +1,3 @@
-import { Telegraf } from 'telegraf'
 import BaseHandler from './BaseHandler'
 import SceneAction from '../../actions/scenes/SceneAction'
 import { Stage } from 'telegraf/scenes'

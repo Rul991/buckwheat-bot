@@ -1,7 +1,10 @@
+import { DEV_PREMIUM_PRICE_PER_MONTH } from './../../../../utils/values/consts'
 import MessageUtils from '../../../../utils/MessageUtils'
-import { MAX_MONTHS_PER_BUY, PREMIUM_PRICE_PER_MONTH } from '../../../../utils/values/consts'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import StringUtils from '../../../../utils/StringUtils'
+import { DEV_ID, MAX_MONTHS_PER_BUY, PREMIUM_PRICE_PER_MONTH } from '../../../../utils/values/consts'
+import { MaybeString } from '../../../../utils/values/types/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class PremiumCommand extends BuckwheatCommand {
     constructor() {
@@ -15,7 +18,21 @@ export default class PremiumCommand extends BuckwheatCommand {
         ]
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+    private _getMonths(other: MaybeString) {
+        const rawOther = StringUtils.getNumberFromString(other ?? '1')
+        const months = Math.min(
+            Math.max(1, Math.floor(rawOther)),
+            MAX_MONTHS_PER_BUY
+        )
+
+        return months
+    }
+
+    private _getPrice(id: number, months: number) {
+        return id == DEV_ID ? DEV_PREMIUM_PRICE_PER_MONTH : PREMIUM_PRICE_PER_MONTH * months
+    }
+
+    async execute({ ctx, other, id, chatId }: BuckwheatCommandOptions): Promise<void> {
         if(ctx.chat.type == 'private') {
             await MessageUtils.answerMessageFromResource(
                 ctx,
@@ -24,13 +41,8 @@ export default class PremiumCommand extends BuckwheatCommand {
             return
         }
 
-        const chatId = ctx.chat.id
-
-        const rawOther = +(other ?? '1')
-        const months = Math.min(
-            Math.max(1, isNaN(rawOther) ? 1 : rawOther),
-            MAX_MONTHS_PER_BUY
-        )
+        const months = this._getMonths(other)
+        const price = this._getPrice(id, months)
 
         await MessageUtils.answerMessageFromResource(
             ctx,
@@ -45,7 +57,7 @@ export default class PremiumCommand extends BuckwheatCommand {
                 payload: `sub_${months}_${chatId}`,
                 prices: [{
                     label: `Подписка на ${months} месяцев`,
-                    amount: PREMIUM_PRICE_PER_MONTH * months
+                    amount: price
                 }]
             }
         )

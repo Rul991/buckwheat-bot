@@ -1,4 +1,5 @@
-import { HasOtherChangeProfileMessage, TextContext } from '../../../../utils/values/types/types'
+import { HasOtherChangeProfileMessage } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import { MAX_NAME_LENGTH } from '../../../../utils/values/consts'
 import UserNameService from '../../../db/services/user/UserNameService'
 import MessageUtils from '../../../../utils/MessageUtils'

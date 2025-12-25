@@ -1,7 +1,7 @@
 import { MAX_DEBT, MILLISECONDS_IN_SECOND } from '../../../utils/values/consts';
 import { DICE_TIME } from '../../../utils/values/consts'
 import ContextUtils from '../../../utils/ContextUtils'
-import { CallbackButtonContext } from '../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
 import MessageUtils from '../../../utils/MessageUtils'
 import CasinoGetService from '../../db/services/casino/CasinoGetService'
@@ -16,6 +16,7 @@ import { JSONSchemaType } from 'ajv'
 import { cubeDataSchema } from '../../../utils/values/schemas'
 import CubeLastMessageService from '../../db/services/cube/CubeLastMessageService'
 import FileUtils from '../../../utils/FileUtils'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 type DiceAndId = {dice: number, id: number}
 
@@ -73,12 +74,9 @@ export default class CubeYesAction extends CallbackButtonAction<CubeData> {
         return false
     }
 
-    async execute(ctx: CallbackButtonContext, data: CubeData): Promise<string | void> {
+    async execute({ctx, data, chatId}: CallbackButtonOptions<CubeData>): Promise<string | void> {
         const {r: replyId, u: userId, m: cost} = data
         
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
-
         if(chatId && ctx.from.id == replyId) {
             await MessageUtils.editMarkup(ctx)
 

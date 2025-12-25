@@ -1,5 +1,6 @@
 import { CATALOG_BOOST, LEVEL_BOOST, LEVEL_UP_MONEY, WORK_TIME } from '../../../../utils/values/consts'
-import { ClassTypes, MaybeString, TextContext } from '../../../../utils/values/types/types'
+import { ClassTypes, MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import { MAX_WORK, MIN_WORK } from '../../../../utils/values/consts'
 import CasinoAddService from '../../../db/services/casino/CasinoAddService'
@@ -18,6 +19,7 @@ import LevelService from '../../../db/services/level/LevelService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import PremiumChatService from '../../../db/services/chat/PremiumChatService'
 import ChatSettingsService from '../../../db/services/settings/ChatSettingsService'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 type Boost = {
     value: boolean,
@@ -111,10 +113,7 @@ export default class WorkCommand extends BuckwheatCommand {
         return RandomUtils.choose(quests) ?? 'Неизвестный квест'
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const id = ctx.from.id
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if (!chatId) return
+    async execute({ ctx, chatId, id }: BuckwheatCommandOptions): Promise<void> {
         const user = await ContextUtils.getUser(chatId, id)
 
         if(ctx.chat.type != 'private' && await ChatSettingsService.get<'boolean'>(chatId, 'cantWorkInChat')) {

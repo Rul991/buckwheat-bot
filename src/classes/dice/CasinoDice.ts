@@ -5,10 +5,11 @@ import CasinoAccountService from '../db/services/casino/CasinoAccountService'
 import CasinoAddService from '../db/services/casino/CasinoAddService'
 import Casino from '../../interfaces/schemas/games/Casino'
 import MessageUtils from '../../utils/MessageUtils'
-import { DiceContext } from '../../utils/values/types/types'
+import { DiceContext } from '../../utils/values/types/contexts'
 import InventoryItemService from '../db/services/items/InventoryItemService'
 import LinkedChatService from '../db/services/linkedChat/LinkedChatService'
 import ChatSettingsService from '../db/services/settings/ChatSettingsService'
+import { DiceOptions } from '../../utils/values/types/action-options'
 
 type ChangeValues = { name: string, link: string }
 
@@ -16,7 +17,7 @@ export default class CasinoDice extends BaseDice {
     private static _winCombinations = [1, 22, 43]
     private static _jackpotCombination = 64
 
-    constructor() {
+    constructor () {
         super()
         this._name = '🎰'
     }
@@ -30,20 +31,20 @@ export default class CasinoDice extends BaseDice {
         isWin: boolean
     ): Promise<void> {
         const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return
-        
+        if (!chatId) return
+
         await CasinoAddService.money(chatId, id, count)
         await (isWin ? CasinoAddService.wins(chatId, id, 1) : CasinoAddService.loses(chatId, id, 1))
 
         await MessageUtils.answerMessageFromResource(
-            ctx, 
-            `text/dice/${filename}.pug`, 
+            ctx,
+            `text/dice/${filename}.pug`,
             {
-            changeValues: {
-                ...values,
-                count: Math.abs(count).toString(),
-            }
-        })
+                changeValues: {
+                    ...values,
+                    count: Math.abs(count).toString(),
+                }
+            })
     }
 
     private async _handleCasinoAccount(chatId: number, id: number): Promise<Casino | null> {
@@ -65,42 +66,42 @@ export default class CasinoDice extends BaseDice {
         values: ChangeValues
     ): Promise<void> {
         const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return
+        if (!chatId) return
         const [hasBoost] = await InventoryItemService.use(chatId, id, 'manyCasino')
         const boost = hasBoost ? CASINO_PLUS_BOOST : 1
-        
+
         if (value === CasinoDice._jackpotCombination) {
             await this._sendMessageAndUpdateCasino(
-                ctx, 
-                id, 
-                'jackpot', 
-                JACKPOT_PRIZE * boost, 
-                values, 
+                ctx,
+                id,
+                'jackpot',
+                JACKPOT_PRIZE * boost,
+                values,
                 true
             )
-        } 
+        }
 
         else if (CasinoDice._winCombinations.includes(value)) {
             await this._sendMessageAndUpdateCasino(
-                ctx, 
-                id, 
-                'win', 
-                WIN_PRIZE * boost, 
-                values, 
+                ctx,
+                id,
+                'win',
+                WIN_PRIZE * boost,
+                values,
                 true
             )
-        } 
+        }
 
         else {
             const [hasBoost] = await InventoryItemService.use(chatId, id, 'infinityCasino')
             const boost = hasBoost ? 0 : 1
 
             await this._sendMessageAndUpdateCasino(
-                ctx, 
-                id, 
-                'lose', 
-                LOSE_PRIZE * boost, 
-                values, 
+                ctx,
+                id,
+                'lose',
+                LOSE_PRIZE * boost,
+                values,
                 false
             )
         }
@@ -108,24 +109,24 @@ export default class CasinoDice extends BaseDice {
 
     private async _checkAndNotifyEndGame(ctx: DiceContext, id: number, values: ChangeValues): Promise<void> {
         const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return
+        if (!chatId) return
         const newCasino = await CasinoAccountService.get(chatId, id)
 
         if (newCasino && newCasino.money! <= 0) {
-            await MessageUtils.answerMessageFromResource(ctx, `text/dice/end.pug`, {changeValues: values})
+            await MessageUtils.answerMessageFromResource(ctx, `text/dice/end.pug`, { changeValues: values })
         }
     }
 
-    async execute(ctx: DiceContext, value: number): Promise<void> {
+    async execute({ ctx, value }: DiceOptions): Promise<void> {
         const id = ctx.from.id
         const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return
+        if (!chatId) return
 
         const onlyNotPrivate = await ChatSettingsService.get<'boolean'>(
-            chatId, 
+            chatId,
             'privateCasino'
         )
-        if(onlyNotPrivate && ctx.chat.type != 'private') {
+        if (onlyNotPrivate && ctx.chat.type != 'private') {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/dice/cant.pug'

@@ -1,6 +1,6 @@
 import { JSONSchemaType } from 'ajv'
 import CallbackButtonAction from '../../CallbackButtonAction'
-import { CallbackButtonContext } from '../../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import ContextUtils from '../../../../utils/ContextUtils'
 import FileUtils from '../../../../utils/FileUtils'
 import CardService from '../../../db/services/card/CardService'
@@ -10,6 +10,7 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import CardUtils from '../../../../utils/CardUtils'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
 
 type Data = {
     id: number
@@ -118,7 +119,7 @@ export default class extends CallbackButtonAction<Data> {
         )
     }
 
-    async execute(ctx: CallbackButtonContext, data: Data): Promise<string | void> {
+    async execute({ctx, data, chatId}: CallbackButtonOptions<Data>): Promise<string | void> {
         if (ctx.chat?.type != 'private') {
             return await FileUtils.readPugFromResource(
                 'text/actions/other/only-private.pug'
@@ -129,9 +130,6 @@ export default class extends CallbackButtonAction<Data> {
             id
         } = data
         if (await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return
-
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if (!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id')
 
         const [isUsed] = await InventoryItemService.use(chatId, id, 'cardBox')
 

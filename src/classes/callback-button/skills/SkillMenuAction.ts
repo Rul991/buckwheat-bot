@@ -1,5 +1,6 @@
 import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext, CallbackButtonValue } from '../../../utils/values/types/types'
+import { CallbackButtonValue } from '../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
 import MessageUtils from '../../../utils/MessageUtils'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'
@@ -13,6 +14,7 @@ import ClassUtils from '../../../utils/ClassUtils'
 import SkillUtils from '../../../utils/SkillUtils'
 import ChosenSkillsService from '../../db/services/choosedSkills/ChosenSkillsService'
 import { UNKNOWN_EFFECT } from '../../../utils/values/consts'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 type Data = {
     id: number
@@ -32,12 +34,9 @@ export default class extends CallbackButtonAction<Data> {
         this._name = 'skillmenu'
     }
 
-    async execute(ctx: CallbackButtonContext, {id}: Data): Promise<string | void> {
+    async execute({ctx, data: {id}, chatId}: CallbackButtonOptions<Data>): Promise<string | void> {
         if(await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return 
         
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
-
         const type = await UserClassService.get(chatId, id)
         const chosenSkills = await ChosenSkillsService.get(chatId, id)
 

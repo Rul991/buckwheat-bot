@@ -1,21 +1,21 @@
 import FileUtils from '../../../../utils/FileUtils'
-import { CallbackButtonContext, ScrollerSendMessageOptions, ScrollerEditMessageResult } from '../../../../utils/values/types/types'
+import { ScrollerSendMessageOptions, ScrollerEditMessageResult, ScrollerGetObjectsOptions } from '../../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import RoleplaysService from '../../../db/services/rp/RoleplaysService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import ScrollerAction from './ScrollerAction'
 
-export default class RoleplayChangeAction extends ScrollerAction<[string, string]> {
+type Data = [string, string]
+
+export default class RoleplayChangeAction extends ScrollerAction<Data> {
     constructor() {
         super()
         this._name = 'roleplaychange'
         this._objectsPerPage = 10
     }
 
-    protected async _getObjects(ctx: CallbackButtonContext): Promise<[string, string][]> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return []
-
+    protected async _getObjects(ctx: CallbackButtonContext, { chatId }: ScrollerGetObjectsOptions<string>): Promise<Data[]> {
         return await RoleplaysService.getCommands(chatId)
     }
 
@@ -25,7 +25,7 @@ export default class RoleplayChangeAction extends ScrollerAction<[string, string
             currentPage,
             length,
             objects
-        }: ScrollerSendMessageOptions<[string, string]>
+        }: ScrollerSendMessageOptions<Data>
     ): Promise<ScrollerEditMessageResult> {
         return {
             text: await FileUtils.readPugFromResource(

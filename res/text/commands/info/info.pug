@@ -1,3 +1,7 @@
-b "#{text.replace(text[0], text[0].toUpperCase())}"
-|  случится с шансом #{chance}%!
-| #{description}!
+blockquote #{text.replace(text[0], text[0].toUpperCase())}
+|
+| Вероятность этого - 
+u #{chance}%
+| !
+|
+b #{description}

@@ -1,9 +1,11 @@
 import { MONEY_DROP_TIME } from '../../../../utils/values/consts'
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import CasinoGetService from '../../../db/services/casino/CasinoGetService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class MoneyDropCommand extends BuckwheatCommand {
     constructor() {
@@ -12,11 +14,8 @@ export default class MoneyDropCommand extends BuckwheatCommand {
         this._description = 'кидаю монетку'
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return 
-
-        if(await CasinoGetService.money(chatId, ctx.from.id) <= 0) {
+    async execute({ ctx, chatId, id }: BuckwheatCommandOptions): Promise<void> {
+        if(await CasinoGetService.money(chatId, id) <= 0) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/money-drop/no-money.pug'

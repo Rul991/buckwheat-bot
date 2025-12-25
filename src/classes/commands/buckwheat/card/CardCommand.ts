@@ -1,5 +1,5 @@
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
@@ -16,8 +16,7 @@ export default class extends BuckwheatCommand {
         this._description = 'открываю меню с карточками'
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const id = ctx.from.id
+    async execute({ ctx, id }: BuckwheatCommandOptions): Promise<void> {
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/cards/start.pug',

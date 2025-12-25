@@ -2,32 +2,31 @@ import { EXTRA_RANDOM_NUMBER, EXTRA_RANDOM_PRIZE, MAX_RANDOM_PRIZE, MIN_RANDOM_P
 import ContextUtils from '../../utils/ContextUtils'
 import MessageUtils from '../../utils/MessageUtils'
 import RandomUtils from '../../utils/RandomUtils'
-import { CallbackButtonContext } from '../../utils/values/types/types'
+import { CallbackButtonContext } from '../../utils/values/types/contexts'
 import CasinoAddService from '../db/services/casino/CasinoAddService'
 import CallbackButtonAction from './CallbackButtonAction'
 import LinkedChatService from '../db/services/linkedChat/LinkedChatService'
 import { JSONSchemaType } from 'ajv'
 import CasinoGetService from '../db/services/casino/CasinoGetService'
 import FileUtils from '../../utils/FileUtils'
+import { CallbackButtonOptions } from '../../utils/values/types/action-options'
+
+type Data = string
 
 export default class RandomPrizeButtonAction extends CallbackButtonAction<string> {
-    protected _schema: JSONSchemaType<string> = {type: 'string'}
+    protected _schema: JSONSchemaType<Data> = { type: 'string' }
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'randomprize'
     }
 
-    protected _getData(raw: string): string {
+    protected _getData(raw: string): Data {
         return raw
     }
 
-    async execute(ctx: CallbackButtonContext, _: string): Promise<string | void> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
-
+    async execute({ ctx, chatId, id }: CallbackButtonOptions<Data>): Promise<string | void> {
         const botId = ctx.botInfo.id
-        const id = ctx.from.id
         const name = ctx.from.first_name
 
         const randomMoney = RandomUtils.range(MIN_RANDOM_PRIZE, MAX_RANDOM_PRIZE)
@@ -45,8 +44,8 @@ export default class RandomPrizeButtonAction extends CallbackButtonAction<string
             {
                 changeValues: {
                     ...await ContextUtils.getUser(
-                        chatId, 
-                        id, 
+                        chatId,
+                        id,
                         name
                     ),
                     money

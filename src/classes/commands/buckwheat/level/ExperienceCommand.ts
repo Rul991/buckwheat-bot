@@ -1,6 +1,8 @@
 import ExperienceUtils from '../../../../utils/level/ExperienceUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import ExperienceService from '../../../db/services/level/ExperienceService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
@@ -28,14 +30,11 @@ export default class ExperienceCommand extends BuckwheatCommand {
         return true
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
-
-        if(!chatId || !this._equalKeyWords(other)) {
+    async execute({ ctx, other, chatId, id }: BuckwheatCommandOptions): Promise<void> {
+        if(!this._equalKeyWords(other)) {
             await MessageUtils.sendWrongCommandMessage(ctx)
             return
         }
-
 
         await MessageUtils.answerMessageFromResource(
             ctx,
@@ -43,7 +42,7 @@ export default class ExperienceCommand extends BuckwheatCommand {
             {
                 changeValues: {
                     exp: ExperienceUtils.getNeedExperienceToLevelUp(
-                        await ExperienceService.get(chatId, ctx.from.id)
+                        await ExperienceService.get(chatId, id)
                     )
                 }
             }

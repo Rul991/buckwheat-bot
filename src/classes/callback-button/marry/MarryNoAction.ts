@@ -2,11 +2,12 @@ import { JSONSchemaType } from 'ajv'
 import UserReplyIdsData from '../../../interfaces/callback-button-data/UserReplyIdsData'
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
-import { CallbackButtonContext } from '../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import CallbackButtonAction from '../CallbackButtonAction'
 import { userReplyIdsDataSchema } from '../../../utils/values/schemas'
 import FileUtils from '../../../utils/FileUtils'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 export default class MarryNoAction extends CallbackButtonAction<UserReplyIdsData> {
     protected _schema: JSONSchemaType<UserReplyIdsData> = userReplyIdsDataSchema
@@ -16,10 +17,8 @@ export default class MarryNoAction extends CallbackButtonAction<UserReplyIdsData
         this._name = 'marryno'
     }
 
-    async execute(ctx: CallbackButtonContext, data: UserReplyIdsData): Promise<string | void> {
+    async execute({ctx, data, chatId}: CallbackButtonOptions<UserReplyIdsData>): Promise<string | void> {
         const {user: userId, reply: replyId} = data
-        const chatId = await LinkedChatService.getCurrent(ctx, userId)
-        if(!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
 
         if(await ContextUtils.showAlertIfIdNotEqual(ctx, replyId)) return 
 

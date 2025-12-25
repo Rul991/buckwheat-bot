@@ -1,6 +1,8 @@
 import MessageUtils from '../../../utils/MessageUtils'
 import RoleplayUtils from '../../../utils/RoleplayUtils'
-import { TextContext, CommandStrings, MaybeString } from '../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../utils/values/types/action-options'
+import { CommandStrings, MaybeString } from '../../../utils/values/types/types'
+import { TextContext } from '../../../utils/values/types/contexts'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import RoleplaysService from '../../db/services/rp/RoleplaysService'
 import ConditionalCommand from '../base/ConditionalCommand'
@@ -22,7 +24,7 @@ export default class CustomRoleplayCommand extends ConditionalCommand {
         return Boolean(roleplayCommand)
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+    async execute({ ctx, other }: BuckwheatCommandOptions): Promise<void> {
         if(!this._text) return
         
         await MessageUtils.answer(

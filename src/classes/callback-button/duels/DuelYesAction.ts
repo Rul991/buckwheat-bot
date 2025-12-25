@@ -1,6 +1,6 @@
 import { JSONSchemaType } from 'ajv'
 import DuelOfferData from '../../../interfaces/callback-button-data/DuelOfferData'
-import { CallbackButtonContext } from '../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
 import { userReplyIdsDataSchema } from '../../../utils/values/schemas'
 import MessageUtils from '../../../utils/MessageUtils'
@@ -12,6 +12,7 @@ import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import FileUtils from '../../../utils/FileUtils'
 import CasinoAddService from '../../db/services/casino/CasinoAddService'
 import DuelService from '../../db/services/duel/DuelService'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 export default class DuelYesAction extends CallbackButtonAction<DuelOfferData> {
     protected _schema: JSONSchemaType<DuelOfferData> = userReplyIdsDataSchema
@@ -21,11 +22,8 @@ export default class DuelYesAction extends CallbackButtonAction<DuelOfferData> {
         this._name = 'duelyes'
     }
 
-    async execute(ctx: CallbackButtonContext, data: DuelOfferData): Promise<string | void> {
+    async execute({ctx, data, chatId}: CallbackButtonOptions<DuelOfferData>): Promise<string | void> {
         const { user: userId, reply: replyId } = data
-
-        const chatId = await LinkedChatService.getCurrent(ctx, replyId)
-        if(!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
 
         const userOptions = {chatId, ctx, userId, replyId, isUserFirst: false}
         const replyOptions = {chatId, ctx, userId: replyId, replyId: userId, isUserFirst: true}

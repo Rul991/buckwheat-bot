@@ -1,5 +1,5 @@
 import { User } from 'telegraf/types'
-import { NewMemberContext } from '../../../utils/values/types/types'
+import { NewMemberContext } from '../../../utils/values/types/contexts'
 import NewMemberAction from './NewMemberAction'
 import CasinoAccountService from '../../db/services/casino/CasinoAccountService'
 import ItemsService from '../../db/services/items/ItemsService'
@@ -14,6 +14,7 @@ import UserDescriptionService from '../../db/services/user/UserDescriptionServic
 import UserNameService from '../../db/services/user/UserNameService'
 import UserRankService from '../../db/services/user/UserRankService'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
+import { NewMemberOptions } from '../../../utils/values/types/action-options'
 
 export default class AddInDatabaseAction extends NewMemberAction {
     private async _updateIfBot(ctx: NewMemberContext, from: User, chatId: number): Promise<void> {
@@ -65,10 +66,8 @@ export default class AddInDatabaseAction extends NewMemberAction {
         await this._updateIfBot(ctx, from, chatId)
     }
 
-    async execute(ctx: NewMemberContext): Promise<void> {
+    async execute({ ctx, chatId }: NewMemberOptions): Promise<void> {
         for await (const from of ctx.message.new_chat_members) {
-            const chatId = await LinkedChatService.getCurrent(ctx)
-            if (!chatId) continue
             await this._addInDatabase(ctx, from, chatId)
         }
     }

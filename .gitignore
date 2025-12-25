@@ -9,3 +9,4 @@ tsconfig.tsbuildinfo
 !README.md
 !CHANGELOG.md
 *.xlsx
+yarn.lock

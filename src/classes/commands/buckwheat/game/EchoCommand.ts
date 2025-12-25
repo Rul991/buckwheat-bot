@@ -1,4 +1,5 @@
-import { MaybeString, TextContext } from '../../../../utils/values/types/types'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import MessageUtils from '../../../../utils/MessageUtils'
 import UserRankService from '../../../db/services/user/UserRankService'
@@ -6,6 +7,7 @@ import RankUtils from '../../../../utils/RankUtils'
 import Logging from '../../../../utils/Logging'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import ContextUtils from '../../../../utils/ContextUtils'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class EchoCommand extends BuckwheatCommand {
     constructor() {
@@ -17,12 +19,9 @@ export default class EchoCommand extends BuckwheatCommand {
         this._isPremium = true
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return
-
-        const rank = await UserRankService.get(chatId, ctx.from.id)
-        const chatMember = await ctx.telegram.getChatMember(chatId, ctx.from.id)
+    async execute({ ctx, other, chatId, id }: BuckwheatCommandOptions): Promise<void> {
+        const rank = await UserRankService.get(chatId, id)
+        const chatMember = await ctx.telegram.getChatMember(chatId, id)
 
         if(chatMember.status == 'restricted' || chatMember.status == 'kicked' || chatMember.status == 'left') {
             await MessageUtils.answerMessageFromResource(
@@ -39,7 +38,7 @@ export default class EchoCommand extends BuckwheatCommand {
 
         if(typeof other == 'string' && other.length) {
             Logging.log(
-                `${ctx.from.username ? `@${ctx.from.username}` : ctx.from.first_name}(${ctx.from.id}) echoed "${other}"`
+                `${ctx.from.username ? `@${ctx.from.username}` : ctx.from.first_name}(${id}) echoed "${other}"`
             )
             const isPrivate = ctx.chat.type == 'private'
 

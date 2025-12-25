@@ -1,4 +1,5 @@
-import { MaybeString, TextContext } from '../../../utils/values/types/types'
+import { MaybeString } from '../../../utils/values/types/types'
+import { TextContext } from '../../../utils/values/types/contexts'
 import BuckwheatCommand from './BuckwheatCommand'
 import FileUtils from '../../../utils/FileUtils'
 import SimpleCommand from '../../../interfaces/other/SimpleComand'
@@ -6,6 +7,7 @@ import MessageUtils from '../../../utils/MessageUtils'
 import RandomUtils from '../../../utils/RandomUtils'
 import ObjectValidator from '../../../utils/ObjectValidator'
 import { simpleCommandSchema } from '../../../utils/values/schemas'
+import { BuckwheatCommandOptions } from '../../../utils/values/types/action-options'
 
 export default class SimpleBuckwheatCommand extends BuckwheatCommand {
     static async loadFromJsonResource(path: string): Promise<SimpleBuckwheatCommand> {
@@ -71,7 +73,7 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
         await MessageUtils.answer(ctx, text)
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+    async execute({ ctx, other }: BuckwheatCommandOptions): Promise<void> {
         if(other && this._avoidOther) {
             await MessageUtils.sendWrongCommandMessage(ctx)
             return

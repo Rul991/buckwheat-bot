@@ -34,7 +34,7 @@ export default class AntiSpamService {
             'notSpamTime'
         ) ?? NOT_SPAM_TIME) * MILLISECONDS_IN_SECOND
 
-        if(notSpamTime == DENY_NUMBER)
+        if(notSpamTime == 0)
             return true
 
         if(TimeUtils.isTimeExpired(time, notSpamTime)) {

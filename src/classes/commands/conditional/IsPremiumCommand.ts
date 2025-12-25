@@ -1,6 +1,8 @@
 import CommandDescriptionUtils from '../../../utils/CommandDescriptionUtils'
 import MessageUtils from '../../../utils/MessageUtils'
-import { TextContext, CommandStrings, MaybeString } from '../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../utils/values/types/action-options'
+import { CommandStrings, MaybeString } from '../../../utils/values/types/types'
+import { TextContext } from '../../../utils/values/types/contexts'
 import PremiumChatService from '../../db/services/chat/PremiumChatService'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import ConditionalCommand from '../base/ConditionalCommand'
@@ -21,7 +23,7 @@ export default class extends ConditionalCommand {
         return choosedCommand.isPremium && !(await PremiumChatService.isPremium(chatId))
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
+    async execute({ ctx, other }: BuckwheatCommandOptions): Promise<void> {
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/other/no-premium.pug'

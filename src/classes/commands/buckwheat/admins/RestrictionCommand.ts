@@ -1,5 +1,7 @@
 import RankUtils from '../../../../utils/RankUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default abstract class extends BuckwheatCommand {
@@ -12,7 +14,7 @@ export default abstract class extends BuckwheatCommand {
         this._argumentText = '(снять | дать) [причина]'
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+    async execute({ ctx, other }: BuckwheatCommandOptions): Promise<void> {
         
     }
 }

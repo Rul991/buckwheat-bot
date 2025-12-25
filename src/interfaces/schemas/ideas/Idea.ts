@@ -5,4 +5,5 @@ export default interface Idea {
     coolVote?: number
     badVote?: number
     createdAtTime?: number
+    id?: number
 }

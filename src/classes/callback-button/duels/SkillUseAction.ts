@@ -1,5 +1,6 @@
 import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext, UseSkillOptions } from '../../../utils/values/types/types'
+import { UseSkillOptions } from '../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
 import DuelUtils from '../../../utils/DuelUtils'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
@@ -17,6 +18,7 @@ import EffectService from '../../db/services/duel/EffectService'
 import FileUtils from '../../../utils/FileUtils'
 import LastStepService from '../../db/services/duel/LastStepService'
 import Skill from '../../../interfaces/duel/Skill'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 type Data = {
     name: string
@@ -124,10 +126,7 @@ export default class extends CallbackButtonAction<Data> {
         return attack
     }
 
-    async execute(
-        ctx: CallbackButtonContext,
-        data: Data
-    ): Promise<string | void> {
+    async execute({ctx, data}: CallbackButtonOptions<Data>): Promise<string | void> {
         const {
             name: skillId,
             duel: duelId

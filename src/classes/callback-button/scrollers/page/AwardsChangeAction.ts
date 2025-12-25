@@ -1,7 +1,8 @@
 import Award from '../../../../interfaces/schemas/awards/Award'
 import ContextUtils from '../../../../utils/ContextUtils'
 import FileUtils from '../../../../utils/FileUtils'
-import { CallbackButtonContext, ScrollerSendMessageOptions, ScrollerEditMessageResult, AsyncOrSync, ScrollerGetObjectsOptions } from '../../../../utils/values/types/types'
+import { ScrollerSendMessageOptions, ScrollerEditMessageResult, AsyncOrSync, ScrollerGetObjectsOptions } from '../../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import AwardsService from '../../../db/services/awards/AwardsService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
@@ -30,10 +31,7 @@ export default class AwardsChangeAction extends ScrollerAction<Award> {
         return id
     }
 
-    protected async _getObjects(ctx: CallbackButtonContext, { id }: ScrollerGetObjectsOptions): Promise<Award[]> {
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return []
-
+    protected async _getObjects(ctx: CallbackButtonContext, { id, chatId }: ScrollerGetObjectsOptions): Promise<Award[]> {
         const awards = await AwardsService.get(chatId, id)
         return awards.awards ?? []
     }
@@ -44,12 +42,11 @@ export default class AwardsChangeAction extends ScrollerAction<Award> {
             currentPage,
             objects,
             length,
-            id
+            id,
+            chatId
         }: ScrollerSendMessageOptions<Award>
     ): Promise<ScrollerEditMessageResult> {
         const [object] = objects
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return null
 
         return {
             text: await FileUtils.readPugFromResource(

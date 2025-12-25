@@ -1,8 +1,8 @@
 import BaseAction from '../actions/base/BaseAction'
-import { CallbackButtonContext } from '../../utils/values/types/types'
 import { JSONSchemaType } from 'ajv'
 import Logging from '../../utils/Logging'
 import ObjectValidator from '../../utils/ObjectValidator'
+import { CallbackButtonOptions } from '../../utils/values/types/action-options'
 
 export default abstract class CallbackButtonAction<T> extends BaseAction {
     protected abstract _schema: JSONSchemaType<T> | null
@@ -40,5 +40,5 @@ export default abstract class CallbackButtonAction<T> extends BaseAction {
         }
     }
 
-    abstract execute(ctx: CallbackButtonContext, data: T): Promise<string | void>
+    abstract execute(options: CallbackButtonOptions<T>): Promise<string | void>
 }

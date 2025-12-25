@@ -2,7 +2,8 @@ import AdminUtils from '../../../utils/AdminUtils'
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import { DEV_ID } from '../../../utils/values/consts'
-import { NewMemberContext } from '../../../utils/values/types/types'
+import { NewMemberOptions } from '../../../utils/values/types/action-options'
+import { NewMemberContext } from '../../../utils/values/types/contexts'
 import HelloService from '../../db/services/chat/HelloService'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import ChatSettingsService from '../../db/services/settings/ChatSettingsService'
@@ -54,10 +55,7 @@ export default class HelloMemberAction extends NewMemberAction {
         return false
     }
 
-    async execute(ctx: NewMemberContext): Promise<void> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return
-
+    async execute({ ctx, chatId }: NewMemberOptions): Promise<void> {
         const botName = ctx.botInfo.first_name
         const botId = ctx.botInfo.id
         const chatName = 'title' in ctx.chat ? ctx.chat.title : botName

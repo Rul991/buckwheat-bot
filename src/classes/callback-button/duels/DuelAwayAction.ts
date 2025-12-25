@@ -1,5 +1,5 @@
 import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
 import DuelUtils from '../../../utils/DuelUtils'
 import MessageUtils from '../../../utils/MessageUtils'
@@ -8,8 +8,9 @@ import DuelService from '../../db/services/duel/DuelService'
 import FileUtils from '../../../utils/FileUtils'
 import ContextUtils from '../../../utils/ContextUtils'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
-type Data = {
+export type Data = {
     t: 'd' | 'u',
     v: number,
     end?: boolean
@@ -78,10 +79,8 @@ export default class extends CallbackButtonAction<Data> {
         })
     }
 
-    async execute(ctx: CallbackButtonContext, { t: type, v: id, end }: Data): Promise<string | void> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if (!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
-
+    async execute({ctx, data, chatId}: CallbackButtonOptions<Data>): Promise<string | void> {
+        const { t: type, v: id, end } = data
         const isUserId = type == 'u'
         const duel: { id: number } | null = isUserId ?
             await DuelService.getByUserId(chatId, id) :

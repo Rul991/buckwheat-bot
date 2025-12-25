@@ -1,9 +1,10 @@
 import { JSONSchemaType } from 'ajv'
 import DeleteMessageData from '../../interfaces/callback-button-data/DeleteMessageData'
 import MessageUtils from '../../utils/MessageUtils'
-import { CallbackButtonContext } from '../../utils/values/types/types'
+import { CallbackButtonContext } from '../../utils/values/types/contexts'
 import CallbackButtonAction from './CallbackButtonAction'
 import ContextUtils from '../../utils/ContextUtils'
+import { CallbackButtonOptions } from '../../utils/values/types/action-options'
 
 export default class DeleteMessageAction extends CallbackButtonAction<DeleteMessageData> {
     protected _schema: JSONSchemaType<DeleteMessageData> = {
@@ -24,11 +25,10 @@ export default class DeleteMessageAction extends CallbackButtonAction<DeleteMess
         this._name = 'deletemessage'
     }
 
-    async execute(ctx: CallbackButtonContext, data: DeleteMessageData): Promise<string | void> {
+    async execute({ctx, data, id}: CallbackButtonOptions<DeleteMessageData>): Promise<string | void> {
         let isCanDelete = true
 
         const {userId, isSecure} = data
-        const id = ctx.from.id
         
         if(isSecure) {
             isCanDelete = id == userId

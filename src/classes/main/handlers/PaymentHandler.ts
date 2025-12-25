@@ -1,9 +1,9 @@
-import { Telegraf } from 'telegraf'
 import PaymentAction from '../../actions/payment/PaymentAction'
 import BaseHandler from './BaseHandler'
-import { MyTelegraf, PreCheckoutQueryContext, SuccessfulPaymentContext } from '../../../utils/values/types/types'
+import { MyTelegraf } from '../../../utils/values/types/types'
+import { SuccessfulPaymentContext } from '../../../utils/values/types/contexts'
+import { PreCheckoutQueryContext } from '../../../utils/values/types/contexts'
 import ContextUtils from '../../../utils/ContextUtils'
-import FileUtils from '../../../utils/FileUtils'
 
 export default class PaymentHandler extends BaseHandler<PaymentAction, Record<string, PaymentAction>, typeof PaymentAction> {
     constructor() {
@@ -39,7 +39,10 @@ export default class PaymentHandler extends BaseHandler<PaymentAction, Record<st
             }
             
             const query = ctx.preCheckoutQuery
-            const result = await action.precheckout(ctx, query)
+            const result = await action.precheckout({
+                ctx,
+                query
+            })
 
             if(typeof result == 'string') {
                 await ContextUtils.answerPrecheckout(ctx, false, result)
@@ -57,7 +60,10 @@ export default class PaymentHandler extends BaseHandler<PaymentAction, Record<st
             }
 
             const payment = ctx.message.successful_payment
-            await action.execute(ctx, payment)
+            await action.execute({
+                ctx,
+                payment
+            })
         })
     }
 }

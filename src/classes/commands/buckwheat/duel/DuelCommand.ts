@@ -1,7 +1,9 @@
 import ContextUtils from '../../../../utils/ContextUtils'
 import DuelUtils from '../../../../utils/DuelUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import DuelService from '../../../db/services/duel/DuelService'
 import DuelistService from '../../../db/services/duelist/DuelistService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
@@ -21,7 +23,7 @@ export default class DuelCommand extends BuckwheatCommand {
         this._replySupport = true
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
+    async execute({ ctx, chatId, replyFrom: replyUser }: BuckwheatCommandOptions): Promise<void> {
         if(ctx.chat.type == 'private') {
             await MessageUtils.answerMessageFromResource(
                 ctx,
@@ -29,8 +31,6 @@ export default class DuelCommand extends BuckwheatCommand {
             )
             return
         }
-
-        const replyUser = ctx.message.reply_to_message?.from
 
         if(!replyUser) {
             await MessageUtils.answerMessageFromResource(
@@ -50,9 +50,6 @@ export default class DuelCommand extends BuckwheatCommand {
             )
             return
         }
-
-        const chatId = await LinkedChatService.getCurrent(ctx, userId)
-        if(!chatId) return
 
         if(!await UserClassService.isPlayer(chatId, userId)) {
             await MessageUtils.answerMessageFromResource(

@@ -1,5 +1,6 @@
 import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext, ClassTypes } from '../../../utils/values/types/types'
+import { ClassTypes } from '../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
 import ContextUtils from '../../../utils/ContextUtils'
 import ChoosedSkillsService from '../../db/services/choosedSkills/ChosenSkillsService'
@@ -15,6 +16,7 @@ import { InlineKeyboardButton } from 'telegraf/types'
 import Skill from '../../../interfaces/duel/Skill'
 import ChosenSkillsService from '../../db/services/choosedSkills/ChosenSkillsService'
 import { NOT_FOUND_INDEX } from '../../../utils/values/consts'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 type Types = 'd' | 'v' | 'a'
 
@@ -47,8 +49,8 @@ type SkillMessageOptions = {
 }
 
 type SkillOptions = {
-    chatId: number, 
-    usedId: number, 
+    chatId: number,
+    usedId: number,
     index: number | string
     classType: ClassTypes
 }
@@ -80,7 +82,7 @@ export default class extends CallbackButtonAction<Data> {
         let keyboard: Keyboard = []
         let isSecret = false
 
-        if(type == 'd') {
+        if (type == 'd') {
             const duel = await DuelService.get(id)
             if (!duel) return null
 
@@ -100,10 +102,10 @@ export default class extends CallbackButtonAction<Data> {
             })
             isSecret = true
         }
-        else if(type == 'a') {
+        else if (type == 'a') {
             keyboard = await InlineKeyboardManager.get('skills/add', {
                 id: JSON.stringify({ id }),
-                skillId: JSON.stringify({skillId: index})
+                skillId: JSON.stringify({ skillId: index })
             })
         }
         else {
@@ -126,7 +128,7 @@ export default class extends CallbackButtonAction<Data> {
         getTextsOptions: getTextOptions,
         isSecret
     }: SkillMessageOptions): Promise<void> {
-        const {ctx, skill} = getTextOptions
+        const { ctx, skill } = getTextOptions
 
         const text = await SkillUtils.getViewText(
             {
@@ -155,8 +157,8 @@ export default class extends CallbackButtonAction<Data> {
         usedId
     }: SkillOptions): Promise<Skill | undefined> {
         let skillId: string
-        
-        if(typeof index == 'string') {
+
+        if (typeof index == 'string') {
             skillId = index
         }
         else {
@@ -167,27 +169,25 @@ export default class extends CallbackButtonAction<Data> {
         return await SkillUtils.getSkillById(classType, skillId)
     }
 
-    async execute(ctx: CallbackButtonContext, { id, index, type }: Data): Promise<string | void> {
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if (!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
+    async execute({ ctx, data: { id, index, type }, chatId }: CallbackButtonOptions<Data>): Promise<string | void> {
+        const viewData = await this._getViewData({ id, index, type, chatId })
+        if (!viewData) return await FileUtils.readPugFromResource('text/actions/duel/hasnt.pug')
 
-        const viewData = await this._getViewData({id, index, type, chatId})
-        if(!viewData) return await FileUtils.readPugFromResource('text/actions/duel/hasnt.pug')
-        const {id: usedId, keyboard, isSecret} = viewData
+        const { id: usedId, keyboard, isSecret } = viewData
         if (await ContextUtils.showAlertIfIdNotEqual(ctx, usedId)) return
 
         const classType = await UserClassService.get(chatId, usedId)
         const skill = await this._getSkill({
             chatId,
-            usedId, 
-            index, 
+            usedId,
+            index,
             classType
         })
         if (!skill) return await FileUtils.readPugFromResource('text/actions/skill/hasnt.pug')
 
         const getTextsOptions = { skill, ctx }
         await this._sendSkillMessage({
-            getTextsOptions, 
+            getTextsOptions,
             keyboard,
             isSecret,
             classType

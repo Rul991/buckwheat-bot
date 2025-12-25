@@ -15,8 +15,8 @@ type CanAdminUseOptions = CanUseOptions & {
 }
 
 export default class RankUtils {
-    private static _wrongRankName = 'HH'
-    private static _wrongRankEmoji = '❓'
+    private static _wrongRankName = 'Огузок'
+    private static _wrongRankEmoji = '🐒'
 
     private static _rankNames = [
         'Гнида',

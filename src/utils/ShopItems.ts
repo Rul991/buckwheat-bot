@@ -1,18 +1,19 @@
 import InventoryItemService from '../classes/db/services/items/InventoryItemService'
-import { DEFAULT_MAX_COUNT, DEFAULT_PREMIUM_DISCOUNT, DEFAULT_TOTAL_COUNT, DEFAULT_TOTAL_COUNT_MODE, FOREVER, MILLISECONDS_IN_SECOND } from './values/consts'
+import { DEFAULT_MAX_COUNT, DEFAULT_PREMIUM_DISCOUNT, DEFAULT_TOTAL_COUNT, DEFAULT_TOTAL_COUNT_MODE, FOREVER } from './values/consts'
 import MessageUtils from './MessageUtils'
-import { ItemCallbackOptions, ShopItem, ShopItemWithLength, JsonShopItem, ShopItemDescription, ShopMessageOptions } from './values/types/types'
+import { ItemCallbackOptions, ShopItem, ShopItemWithLength, JsonShopItem, ShopItemDescription, ShopMessageOptions, AsyncOrSync } from './values/types/types'
 import ContextUtils from './ContextUtils'
 import FileUtils from './FileUtils'
 import LevelService from '../classes/db/services/level/LevelService'
 import LevelUtils from './level/LevelUtils'
 import StringUtils from './StringUtils'
-import LinkedChatService from '../classes/db/services/linkedChat/LinkedChatService'
 import ObjectValidator from './ObjectValidator'
 import { jsonShopItemSchema } from './values/schemas'
 import InlineKeyboardManager from '../classes/main/InlineKeyboardManager'
 import CasinoGetService from '../classes/db/services/casino/CasinoGetService'
 import AdminUtils from './AdminUtils'
+import ChatSettingsService from '../classes/db/services/settings/ChatSettingsService'
+import PremiumChatService from '../classes/db/services/chat/PremiumChatService'
 
 type ItemDescriptionKey = string
 
@@ -24,14 +25,12 @@ type HasEnoughItemsOptions = {
 }
 
 const buyCard = async ({
-    ctx,
     count,
-    cardCount
+    cardCount,
+    id,
+    chatId
 }: ItemCallbackOptions & { cardCount: number }) => {
     const totalCount = cardCount * count
-    const id = ctx.from.id
-    const chatId = await LinkedChatService.getCurrent(ctx, id)
-    if(!chatId) return false
 
     const [isBought] = await InventoryItemService.add(
         chatId,
@@ -43,13 +42,31 @@ const buyCard = async ({
 }
 
 export default class ShopItems {
+    private static _getDefaultItem(): ShopItem {
+        return {
+            id: '???',
+            name: '???',
+            description: '???',
+            emoji: '🥀',
+            price: 0,
+            maxCount: 1,
+            premiumDiscount: 0,
+            isPremium: true,
+            totalCount: 0,
+            totalCountMode: 'chat',
+            execute: () => false
+        }
+    }
+
     private static _itemDescriptions: ShopItemDescription[] = [
         {
-            execute: async ({ ctx, count: boughtCount }) => {
-                const chatId = await LinkedChatService.getCurrent(ctx)
-                if (!chatId) return false
-
-                const [_isBought, count] = await InventoryItemService.add(chatId, ctx.from.id, 'cookie', boughtCount)
+            execute: async ({ ctx, count: boughtCount, chatId, id }) => {
+                const [_isBought, count] = await InventoryItemService.add(
+                    chatId,
+                    id,
+                    'cookie',
+                    boughtCount
+                )
 
                 await ContextUtils.showCallbackMessage(
                     ctx,
@@ -69,11 +86,8 @@ export default class ShopItems {
         },
 
         {
-            execute: async ({ ctx }) => {
-                const chatId = await LinkedChatService.getCurrent(ctx)
-                if (!chatId) return false
-
-                await InventoryItemService.add(chatId, ctx.from.id, 'workUp')
+            execute: async ({ ctx, chatId, id }) => {
+                await InventoryItemService.add(chatId, id, 'workUp')
                 await ContextUtils.showCallbackMessageFromFile(
                     ctx,
                     'text/commands/items/work/workUp.pug'
@@ -85,11 +99,8 @@ export default class ShopItems {
         },
 
         {
-            execute: async ({ ctx }) => {
-                const chatId = await LinkedChatService.getCurrent(ctx)
-                if (!chatId) return false
-
-                await InventoryItemService.add(chatId, ctx.from.id, 'workCatalog')
+            execute: async ({ ctx, chatId, id }) => {
+                await InventoryItemService.add(chatId, id, 'workCatalog')
                 await ContextUtils.showCallbackMessageFromFile(
                     ctx,
                     'text/commands/items/work/workCatalog.pug'
@@ -101,11 +112,8 @@ export default class ShopItems {
         },
 
         {
-            execute: async ({ ctx }) => {
-                const chatId = await LinkedChatService.getCurrent(ctx)
-                if (!chatId) return false
-
-                const [isUpdated] = await InventoryItemService.add(chatId, ctx.from.id, 'manyCasino')
+            execute: async ({ ctx, chatId, id }) => {
+                const [isUpdated] = await InventoryItemService.add(chatId, id, 'manyCasino')
                 await ContextUtils.showCallbackMessageFromFile(
                     ctx,
                     'text/commands/items/casino/many.pug'
@@ -117,11 +125,8 @@ export default class ShopItems {
         },
 
         {
-            execute: async ({ ctx }) => {
-                const chatId = await LinkedChatService.getCurrent(ctx)
-                if (!chatId) return false
-
-                const [isUpdated] = await InventoryItemService.add(chatId, ctx.from.id, 'infinityCasino')
+            execute: async ({ ctx, chatId, id }) => {
+                const [isUpdated] = await InventoryItemService.add(chatId, id, 'infinityCasino')
 
                 await ContextUtils.showCallbackMessageFromFile(
                     ctx,
@@ -134,24 +139,49 @@ export default class ShopItems {
         },
 
         {
-            execute: async ({ ctx, user, item }) => {
-                const id = ctx.from.id
-                const banDelay = MILLISECONDS_IN_SECOND * 5
+            execute: async ({ ctx, id, chatId }) => {
+                const hasSetting = await ChatSettingsService.get<'boolean'>(
+                    chatId,
+                    'canBuyUnmute'
+                )
+
+                if (!hasSetting) {
+                    return await FileUtils.readPugFromResource(
+                        'text/commands/items/unmute/has-setting.pug'
+                    )
+                }
+
+                const canUnmute = await AdminUtils.unmute(
+                    ctx,
+                    id
+                )
+
+                if (!canUnmute) {
+                    return await FileUtils.readPugFromResource(
+                        'text/commands/items/unmute/cant-unmute.pug'
+                    )
+                }
+
+                return canUnmute
+            },
+            filename: 'unban'
+        },
+
+        {
+            execute: async ({ ctx, id, user, item }) => {
+                const isBanned = await AdminUtils.ban(ctx, id, FOREVER)
 
                 await MessageUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/items/ban/done.pug',
                     {
                         changeValues: {
+                            isBanned,
                             user,
                             item: item.name
                         }
                     }
                 )
-
-                setTimeout(async () => {
-                    await AdminUtils.ban(ctx, id, FOREVER)
-                }, banDelay)
 
                 return true
             },
@@ -159,18 +189,14 @@ export default class ShopItems {
         },
 
         {
-            execute: async ({ ctx, user }) => {
-                return false
-            },
-            filename: 'unban'
-        },
-
-        {
-            execute: async ({ ctx, item, count }) => {
-                const chatId = await LinkedChatService.getCurrent(ctx)
-                if (!chatId) return false
-
-                const [_, boostCount] = await InventoryItemService.add(chatId, ctx.from.id, 'levelBoost', count)
+            execute: async ({
+                ctx,
+                item,
+                count,
+                id,
+                chatId
+            }) => {
+                const [_, boostCount] = await InventoryItemService.add(chatId, id, 'levelBoost', count)
 
                 await ContextUtils.showCallbackMessage(
                     ctx,
@@ -191,13 +217,10 @@ export default class ShopItems {
         },
 
         {
-            execute: async ({ ctx, user, count }) => {
-                const chatId = await LinkedChatService.getCurrent(ctx)
-                if (!chatId) return false
-
+            execute: async ({ ctx, user, count, chatId, id }) => {
                 const itemId = 'shopPrecent'
 
-                if (await LevelService.get(chatId, ctx.from.id) < LevelUtils.max) {
+                if (await LevelService.get(chatId, id) < LevelUtils.max) {
                     await ContextUtils.showCallbackMessageFromFile(
                         ctx,
                         'text/commands/items/shopPrecent/level-issue.pug'
@@ -206,7 +229,7 @@ export default class ShopItems {
                     return false
                 }
 
-                await InventoryItemService.add(chatId, ctx.from.id, itemId, count)
+                await InventoryItemService.add(chatId, id, itemId, count)
 
                 await MessageUtils.answerMessageFromResource(
                     ctx,
@@ -240,10 +263,8 @@ export default class ShopItems {
         },
 
         {
-            execute: async ({ ctx, user }) => {
-                const chatId = await LinkedChatService.getCurrent(ctx)
-                if (!chatId) return false
-                const [isUpdated] = await InventoryItemService.add(chatId, ctx.from.id, 'greedBox')
+            execute: async ({ ctx, user, chatId, id }) => {
+                const [isUpdated] = await InventoryItemService.add(chatId, id, 'greedBox')
 
                 await MessageUtils.answerMessageFromResource(
                     ctx,
@@ -259,11 +280,7 @@ export default class ShopItems {
         },
 
         {
-            execute: async ({ ctx }) => {
-                const id = ctx.from.id
-                const chatId = await LinkedChatService.getCurrent(ctx, id)
-                if (!chatId) return false
-
+            execute: async ({ ctx, id, chatId }) => {
                 const [isBought] = await InventoryItemService.add(chatId, id, 'effectBook')
                 await ContextUtils.showCallbackMessageFromFile(
                     ctx,
@@ -307,11 +324,7 @@ export default class ShopItems {
         }
 
         // {
-        //     execute: async ({ ctx }) => {
-        //         const id = ctx.from.id
-        //         const chatId = await LinkedChatService.getCurrent(ctx, id)
-        //         if (!chatId) return false
-
+        //     execute: async ({ ctx, id, chatId }) => {
         //         const [hasGreedBox] = await InventoryItemService.use(chatId, id, 'greedBox')
         //         if (hasGreedBox) {
         //             await ContextUtils.showCallbackMessageFromFile(
@@ -335,11 +348,7 @@ export default class ShopItems {
         // },
 
         // {
-        //     execute: async ({ ctx }) => {
-        //         const id = ctx.from.id
-        //         const chatId = await LinkedChatService.getCurrent(ctx, id)
-        //         if (!chatId) return false
-
+        //     execute: async ({ ctx, id, chatId }) => {
         //         const [isBought] = await InventoryItemService.add(chatId, id, 'corporation')
         //         await ContextUtils.showCallbackMessageFromFile(
         //             ctx,
@@ -396,13 +405,13 @@ export default class ShopItems {
         return null
     }
 
-    static async get(id: number): Promise<ShopItem | null> {
+    static async get(id: number): Promise<ShopItem> {
         const description = this._itemDescriptions[id]
-        if (!description) return null
+        if (!description) return this._getDefaultItem()
 
         const item = description.item ??
             await this._valid(description)
-        if (!item) return null
+        if (!item) return this._getDefaultItem()
 
         this._itemDescriptions[id].item = item
         return this._itemDescriptions[id].item
@@ -419,18 +428,24 @@ export default class ShopItems {
         return this._itemDescriptions.length
     }
 
-    static getCount(item: ShopItem, count: number): number {
+    static getMaxCount(item: ShopItem): number {
         const maxCount = item.maxCount <= 0 ? Number.MAX_SAFE_INTEGER : item.maxCount
         const totalCount = item.totalCount <= DEFAULT_TOTAL_COUNT ? Infinity : item.totalCount
         return Math.min(
-            count,
             maxCount,
             totalCount
         )
     }
 
-    static async getRest(chatId: number, id: number, item: ShopItem) {
-        if (item.totalCount === DEFAULT_TOTAL_COUNT) return Infinity
+    static getCount(item: ShopItem, count: number): number {
+        const maxCount = this.getMaxCount(item)
+        return Math.min(
+            count,
+            maxCount
+        )
+    }
+
+    static async getRestAndCurrent(chatId: number, id: number, item: ShopItem) {
         const minValue = 0
 
         const { totalCount, id: itemId } = item
@@ -440,7 +455,12 @@ export default class ShopItems {
             await InventoryItemService.getTotalCount(chatId, itemId) :
             (await InventoryItemService.get(chatId, id, itemId))?.count ?? minValue
 
-        return Math.max(totalCount - count, minValue)
+        return {
+            rest: item.totalCount === DEFAULT_TOTAL_COUNT ?
+                Infinity :
+                Math.max(totalCount - count, minValue),
+            current: count
+        }
     }
 
     static getPriceByCount(item: ShopItem, count: number, hasPremium: boolean): number {
@@ -471,7 +491,21 @@ export default class ShopItems {
         item,
         count
     }: HasEnoughItemsOptions) {
-        return await this.getRest(chatId, id, item) >= count
+        const {
+            rest
+        } = await this.getRestAndCurrent(chatId, id, item)
+        return rest >= count
+    }
+
+    static async getAll(): Promise<ShopItem[]> {
+        const result: ShopItem[] = []
+
+        for (let i = 0; i < this._itemDescriptions.length; i++) {
+            const item = await this.get(i)
+            result.push(item)
+        }
+
+        return result
     }
 
     static async getShopMessage(options: ShopMessageOptions) {
@@ -481,23 +515,37 @@ export default class ShopItems {
             chatId,
             userId,
             count,
-            hasPremium
+            page,
         } = options
 
         const item = await ShopItems.get(index)
         if (!item) return null
 
-        const rest = await ShopItems.getRest(chatId, userId, item)
+        const { rest, current } = await ShopItems.getRestAndCurrent(chatId, userId, item)
         const isRestInfinity = !isFinite(rest)
 
         if (isRestInfinity && !updateIfInfinity) {
             return null
         }
 
+        const hasPremium = await PremiumChatService.isPremium(chatId)
         const totalCount = ShopItems.getCount(item, count)
+        const maxCount = ShopItems.getMaxCount(item)
         const totalPrice = ShopItems.getFormattedPriceByCount(item, count, hasPremium)
         const isChatMode = ShopItems.isChatMode(item)
         const balance = await CasinoGetService.money(chatId, userId)
+
+        const rawCounts = [
+            1, 2, 5, 10, 20, 50,
+            100, 200, 500, 1000,
+            2000, 5000
+        ].sort((a, b) => a - b)
+
+        const counts = rawCounts
+            .filter(v => {
+                return v != count &&
+                    v <= maxCount
+            })
 
         return {
             text: await FileUtils.readPugFromResource(
@@ -514,19 +562,53 @@ export default class ShopItems {
                         length: ShopItems.len(),
                         isChatMode,
                         hasPremium,
-                        balance: StringUtils.toFormattedNumber(balance)
+                        balance: StringUtils.toFormattedNumber(balance),
+                        currentCount: StringUtils.toFormattedNumber(current)
                     }
                 }
             ),
             options: {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get('shop', `${index}_${userId}_${count}`)
+                    inline_keyboard: await InlineKeyboardManager.map('shop/show', {
+                        values: {
+                            count: counts
+                                .map(v => {
+                                    return {
+                                        text: `${v}`,
+                                        data: `${v}`,
+                                    }
+                                }),
+                            countTitle: counts.length > 0 ? [{ text: '', data: '' }] : []
+                        },
+                        globals: {
+                            pageNum: page,
+                            idNum: userId,
+                            indexNum: index,
+                            countNum: count
+                        },
+                        maxWidth: 4
+                    })
                 },
             }
         }
     }
 
     static async execute(item: ShopItem, options: ItemCallbackOptions): Promise<boolean> {
-        return await item.execute(options)
+        const result = await item.execute(options)
+
+        if (typeof result == 'string') {
+            const {
+                ctx
+            } = options
+
+            await ContextUtils.showCallbackMessage(
+                ctx,
+                result,
+                true
+            )
+
+            return false
+        }
+        return result
     }
 }

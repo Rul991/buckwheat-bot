@@ -2,7 +2,7 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import RankUtils from '../../../../utils/RankUtils'
 import TimeUtils from '../../../../utils/TimeUtils'
 import { BROADCAST_TIME, DEV_ID, MODE } from '../../../../utils/values/consts'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import ChatService from '../../../db/services/chat/ChatService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
@@ -15,9 +15,7 @@ export default class extends BuckwheatCommand {
         this._isShow = false
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const id = ctx.from.id
-
+    async execute({ ctx, other, id }: BuckwheatCommandOptions): Promise<void> {
         if(id != DEV_ID) {
             await MessageUtils.sendWrongCommandMessage(ctx)
             return

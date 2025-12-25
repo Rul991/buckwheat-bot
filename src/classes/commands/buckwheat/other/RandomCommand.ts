@@ -1,7 +1,9 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import RandomUtils from '../../../../utils/RandomUtils'
 import StringUtils from '../../../../utils/StringUtils'
-import { MaybeString, TextContext } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class RandomCommand extends BuckwheatCommand {
@@ -31,7 +33,7 @@ export default class RandomCommand extends BuckwheatCommand {
             .map(v => Math.floor(v)) as [number, number]
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+    async execute({ ctx, other }: BuckwheatCommandOptions): Promise<void> {
         const [min, max] = this._getRange(other)
 
         await MessageUtils.answerMessageFromResource(

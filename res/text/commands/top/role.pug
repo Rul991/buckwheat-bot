@@ -1,0 +1,37 @@
+include utils/mixins.pug
+
+- const fullTitle = rawTitle || `Топ самых ${property} игроков`
+- 
+    const values = sorted.reduce((prev, {user, value}) => {
+        if(!prev[value]) prev[value] = []
+
+        prev[value].push(user)
+        return prev
+    }, {})
+
+mixin line(user)
+    |
+    | 📍 
+    +link(user)
+    |
+
+code (#{page + 1} / #{length})
+b  #{emoji} #{fullTitle}:
+|
+|
+- for(let key in values) {
+    - const objects = values[key]
+    |
+    |
+    b #{key}
+    |
+    each obj in objects
+        +line(obj)
+    |
+    |
+- }
+|
+|
+if isNumbers && rawTotalCount > 0
+    b 🎖 Суммарно#{totalName ? ` ${totalName}` : ''} на этой странице: 
+    code #{totalCount}

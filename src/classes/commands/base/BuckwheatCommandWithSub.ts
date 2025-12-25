@@ -1,7 +1,9 @@
 import { FullSubCommandObject } from '../../../utils/values/types/types'
 import BuckwheatCommand from './BuckwheatCommand'
-import { TextContext, MaybeString } from '../../../utils/values/types/types'
+import { MaybeString } from '../../../utils/values/types/types'
+import { TextContext } from '../../../utils/values/types/contexts'
 import SubCommandUtils from '../../../utils/SubCommandUtils'
+import { BuckwheatCommandOptions } from '../../../utils/values/types/action-options'
 
 export default abstract class BuckwheatCommandWithSub<Sub extends FullSubCommandObject> extends BuckwheatCommand {
     protected _subCommands: Sub[]
@@ -21,7 +23,7 @@ export default abstract class BuckwheatCommandWithSub<Sub extends FullSubCommand
         }
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+    async execute({ ctx, other }: BuckwheatCommandOptions): Promise<void> {
         const subCommand = SubCommandUtils.getSubCommandAndData(
             other, 
             this._subCommands

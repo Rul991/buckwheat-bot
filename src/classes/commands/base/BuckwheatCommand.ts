@@ -1,5 +1,6 @@
 import RankUtils from '../../../utils/RankUtils'
-import { CommandDescription, MaybeString, TextContext } from '../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../utils/values/types/action-options'
+import { CommandDescription } from '../../../utils/values/types/types'
 import BaseAction from '../../actions/base/BaseAction'
 
 export default abstract class BuckwheatCommand extends BaseAction {
@@ -12,7 +13,7 @@ export default abstract class BuckwheatCommand extends BaseAction {
     protected _isPremium: boolean = false
     protected _minimumRank: number = RankUtils.min
 
-    abstract execute(ctx: TextContext, other: MaybeString): Promise<void>
+    abstract execute(options: BuckwheatCommandOptions): Promise<void>
 
     get commandDescription(): CommandDescription {
         return {

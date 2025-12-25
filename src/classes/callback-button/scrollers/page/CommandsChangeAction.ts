@@ -1,7 +1,8 @@
 import CommandDescriptionUtils from '../../../../utils/CommandDescriptionUtils'
 import FileUtils from '../../../../utils/FileUtils'
 import { COMMANDS_PER_PAGE } from '../../../../utils/values/consts'
-import { CallbackButtonContext, CommandDescription, ScrollerEditMessage, ScrollerSendMessageOptions } from '../../../../utils/values/types/types'
+import { CommandDescription, ScrollerEditMessage, ScrollerSendMessageOptions } from '../../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import ScrollerAction from './ScrollerAction'
 

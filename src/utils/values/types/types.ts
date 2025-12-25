@@ -1,14 +1,13 @@
-import { Context, NarrowedContext, Scenes, Telegraf, Types } from 'telegraf'
-import { CallbackQuery, InlineKeyboardMarkup, InputMedia, LinkPreviewOptions, Message, MessageEntity, ParseMode, Update } from 'telegraf/types'
+import { Context, Telegraf, Types } from 'telegraf'
+import { InputMedia } from 'telegraf/types'
 import CurrentMax from '../../../interfaces/other/CurrentMax'
 import Duel from '../../../interfaces/schemas/duels/Duel'
 import ButtonScrollerData from '../../../interfaces/callback-button-data/ButtonScrollerData'
 import Skill from '../../../interfaces/duel/Skill'
 import SkillAttack from '../../../enums/SkillAttack'
 import Setting from '../../../interfaces/other/Setting'
-import { SceneSession, WizardSessionData } from 'telegraf/scenes'
-import { SessionContext } from 'telegraf/session'
 import SceneAction from '../../../classes/actions/scenes/SceneAction'
+import { CallbackButtonContext, ContextData, TextContext } from './contexts'
 
 export type MaybeString = string | undefined
 export type CommandStrings = [string, MaybeString, MaybeString]
@@ -23,52 +22,13 @@ export type CommandDescription = {
     isPremium: boolean,
 }
 
-export type SceneContextData<D extends {} = {}> = {
-    scene: Scenes.SceneContextScene<
-            SessionContext<SceneSession<
-                D & WizardSessionData
-            >
-        >, D & Scenes.WizardSessionData
-    > & {
-        state: D
+export type IdContextData = {
+    ids: {
+        chatId: number
+        id: number
+        replyId?: number
     }
 }
-
-export type TextContext = Context<{
-    message: Update.New & Update.NonChannel & Message.TextMessage
-    update_id: number
-}> & Omit<Context<Update>, keyof Context<Update>> & SceneContextData
-
-export type CallbackButtonContext = Context<Update.CallbackQueryUpdate<CallbackQuery>>
-    & Omit<Context<Update>, keyof Context<Update>> & SceneContextData
-
-export type DiceContext = NarrowedContext<Context<Update>, {
-    message: Update.New & Update.NonChannel & Message.DiceMessage
-    update_id: number
-}> & SceneContextData
-
-export type NewMemberContext = NarrowedContext<Context<Update>, {
-    message: Update.New & Update.NonChannel & Message.NewChatMembersMessage
-    update_id: number
-}> & SceneContextData
-
-export type LeftMemberContext = NarrowedContext<Context<Update>, {
-    message: Update.New & Update.NonChannel & Message.LeftChatMemberMessage
-    update_id: number
-}> & SceneContextData
-
-export type PhotoContext = NarrowedContext<Context<Update>, {
-    message: Update.New & Update.NonChannel & Message.PhotoMessage
-    update_id: number
-}> & SceneContextData
-
-export type PreCheckoutQueryContext = NarrowedContext<Context<Update>, Update.PreCheckoutQueryUpdate> & SceneContextData
-export type SuccessfulPaymentContext = NarrowedContext<Context<Update>, {
-    message: Update.New & Update.NonChannel & Message.SuccessfulPaymentMessage
-    update_id: number
-}> & SceneContextData
-
-export type MessageContext<D extends {} = any> = NarrowedContext<Context<Update>, Update.MessageUpdate<Message>> & SceneContextData<D>
 
 export type DiceValues = '🎲' | '🎯' | '🏀' | '⚽' | '🎳' | '🎰'
 export type ModeTypes = 'prod' | 'dev'
@@ -120,18 +80,20 @@ export type ItemCallbackOptions = {
     ctx: CallbackButtonContext,
     user: { link: string, name: string },
     item: ShopItem,
-    count: number
+    count: number,
+    id: number,
+    chatId: number
 }
 
-export type ItemExecuteCallback = (options: ItemCallbackOptions) => AsyncOrSync<boolean>
+export type ItemExecuteCallback = (options: ItemCallbackOptions) => AsyncOrSync<boolean | string>
 
 export type ShopMessageOptions = {
     index: number
     chatId: number
     userId: number
-    count: number,
-    updateIfInfinity?: boolean,
-    hasPremium: boolean
+    count: number
+    page: number
+    updateIfInfinity?: boolean
 }
 
 export type TotalCountMode = 'user' | 'chat'
@@ -162,6 +124,7 @@ export type ShopItemWithLength = ShopItem & { length: number, index: number }
 export type ScrollerGetObjectsOptions<D = string> = {
     data: D
     id: number
+    chatId: number
 }
 
 export type ScrollerSendMessageOptions<T, D = string> = {
@@ -182,8 +145,7 @@ export type Ids = {
     id: number
 }
 
-export type NewInvoiceParameters = Types.NewInvoiceParameters
-
+export type NewInvoiceParameters = Omit<Types.NewInvoiceParameters, 'currency' | 'provider_token'>
 export type Progress = {
     symbols: {
         full: string,
@@ -350,7 +312,7 @@ export type TinyCurrentIncreaseId = {
     id?: number
 }
 
-export type MyTelegraf = Telegraf<Context & SceneContextData>
+export type MyTelegraf = Telegraf<Context & ContextData>
 
 export type ExtractSceneActionData<T extends SceneAction<any>> =
     T extends SceneAction<infer D> ? D : never
@@ -376,3 +338,5 @@ export type GetPageNavOptions = {
     id?: CreateNavButtonsOptions['id']
     createNavButton?: (options: CreateNavButtonsOptions) => CallbackButtonValue
 }
+
+export type MafiaTypes = 'mafia' | 'medic' | 'sheriff' | 'harlot' | 'civilian'

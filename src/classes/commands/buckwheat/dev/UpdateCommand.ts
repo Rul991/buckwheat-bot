@@ -1,9 +1,11 @@
 import { Context } from 'telegraf'
-import { MaybeString, TextContext } from '../../../../utils/values/types/types'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import { DEV_ID } from '../../../../utils/values/consts'
 import { exec } from 'node:child_process'
 import MessageUtils from '../../../../utils/MessageUtils'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class UpdateCommand extends BuckwheatCommand {
     constructor() {
@@ -12,8 +14,8 @@ export default class UpdateCommand extends BuckwheatCommand {
         this._isShow = false
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        if(ctx.from.id == +DEV_ID!) {
+    async execute({ ctx, id }: BuckwheatCommandOptions): Promise<void> {
+        if(id == +DEV_ID!) {
             exec('git pull && npm run restart:prod', async (_, stdout) => {
                 await MessageUtils.answerMessageFromResource(
                     ctx,

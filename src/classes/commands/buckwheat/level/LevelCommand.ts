@@ -1,5 +1,5 @@
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import LevelService from '../../../db/services/level/LevelService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
@@ -15,16 +15,13 @@ export default class LevelCommand extends BuckwheatCommand {
         ]
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return
-
+    async execute({ ctx, chatId, id }: BuckwheatCommandOptions): Promise<void> {
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/level/level.pug',
             {
                 changeValues: {
-                    level: await LevelService.get(chatId, ctx.from.id)
+                    level: await LevelService.get(chatId, id)
                 }
             }
         )

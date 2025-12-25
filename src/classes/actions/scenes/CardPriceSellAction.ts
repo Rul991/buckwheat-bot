@@ -2,7 +2,8 @@ import { Context } from 'telegraf'
 import { BaseScene } from 'telegraf/scenes'
 import { Update } from 'telegraf/types'
 import Card from '../../../interfaces/schemas/card/Card'
-import { SceneContextData, TextContext } from '../../../utils/values/types/types'
+import { TextContext } from '../../../utils/values/types/contexts'
+import { ContextData } from '../../../utils/values/types/contexts'
 import SceneAction from './SceneAction'
 import MessageUtils from '../../../utils/MessageUtils'
 import FileUtils from '../../../utils/FileUtils'
@@ -12,8 +13,9 @@ import StringUtils from '../../../utils/StringUtils'
 import ShopCardService from '../../db/services/card/ShopCardService'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import MathUtils from '../../../utils/MathUtils'
+import { SceneOptions } from '../../../utils/values/types/action-options'
 
-type Data = {
+export type Data = {
     card: Card
 }
 
@@ -52,13 +54,13 @@ export default class extends SceneAction<Data> {
         const price = StringUtils.getNumberFromString(text)
 
         return MathUtils.clamp(
-            price, 
-            MIN_CARD_PRICE, 
+            price,
+            MIN_CARD_PRICE,
             MAX_CARD_PRICE
         )
     }
 
-    protected _execute(scene: BaseScene<Context<Update> & SceneContextData<Data>>): void {
+    protected _execute({ scene }: SceneOptions<Data>): void {
         scene.enter(async ctx => {
             const {
                 card
@@ -93,7 +95,7 @@ export default class extends SceneAction<Data> {
         scene.on('text', async ctx => {
             const id = ctx.from.id
             const chatId = await LinkedChatService.getCurrent(ctx, id)
-            if(!chatId) return
+            if (!chatId) return
 
             const text = ctx.text
             const price = this._getPrice(text)

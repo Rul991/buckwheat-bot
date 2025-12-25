@@ -1,7 +1,8 @@
 import EveryMessageAction from './EveryMessageAction'
-import { MessageContext } from '../../../utils/values/types/types'
+import { MessageContext } from '../../../utils/values/types/contexts'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import MessageUtils from '../../../utils/MessageUtils'
+import { EveryMessageOptions } from '../../../utils/values/types/action-options'
 
 export default class WrongChatAction extends EveryMessageAction {
     constructor() {
@@ -9,7 +10,7 @@ export default class WrongChatAction extends EveryMessageAction {
         this._canUsePrivate = true
     }
 
-    async execute(ctx: MessageContext): Promise<void | true> {
+    async execute({ ctx }: EveryMessageOptions): Promise<void | true> {
         if(ctx.chat.type == 'private') {
             const linkedChat = await LinkedChatService.getRaw(ctx.from.id)
             const hasntLinkedChat = !linkedChat

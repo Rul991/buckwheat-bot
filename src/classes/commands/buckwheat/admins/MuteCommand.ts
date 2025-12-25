@@ -1,8 +1,10 @@
-import { Context } from 'telegraf'
 import AdminCommand from './AdminCommand'
 import AdminUtils from '../../../../utils/AdminUtils'
-import { TextContext } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import RankUtils from '../../../../utils/RankUtils'
+import UserRankService from '../../../db/services/user/UserRankService'
+import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
+import ChatSettingsService from '../../../db/services/settings/ChatSettingsService'
 
 export default class MuteCommand extends AdminCommand {
     constructor() {
@@ -19,7 +21,13 @@ export default class MuteCommand extends AdminCommand {
         this._minimumRank = RankUtils.moderator
     }
 
-    protected async _do(ctx: TextContext, replyId: number, time: number): Promise<boolean> {
-        return await AdminUtils.mute(ctx, replyId, time)
+    protected async _do(ctx: TextContext, replyId: number, time: number, chatId: number): Promise<boolean> {
+        const muted = await AdminUtils.mute(ctx, replyId, time)
+
+        if(muted && await ChatSettingsService.get<'boolean'>(chatId, 'canGetNegativeRank')) {
+            await UserRankService.update(chatId, replyId, NOT_FOUND_INDEX)
+        }
+
+        return muted
     }
 }

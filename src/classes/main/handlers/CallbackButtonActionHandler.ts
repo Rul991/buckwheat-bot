@@ -4,6 +4,8 @@ import CallbackButtonAction from '../../callback-button/CallbackButtonAction'
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
 import { MyTelegraf } from '../../../utils/values/types/types'
+import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 export default class CallbackButtonActionHandler extends BaseHandler<
     CallbackButtonAction<unknown>, 
@@ -13,6 +15,10 @@ export default class CallbackButtonActionHandler extends BaseHandler<
 
     constructor() {
         super({}, CallbackButtonAction)
+    }
+
+    private async _executeAction(action: CallbackButtonAction<any>, options: CallbackButtonOptions<any>) {
+        return await action.execute(options) ?? undefined
     }
 
     setup(bot: MyTelegraf): void {
@@ -38,10 +44,16 @@ export default class CallbackButtonActionHandler extends BaseHandler<
                     return
                 }
 
-                const text = await action.execute(
-                    ctx as any, 
-                    data
-                ) ?? undefined
+                const id = ctx.from.id
+                const chatId = await LinkedChatService.getCurrent(ctx, id)
+                if(!chatId) return
+
+                const text = chatId ? await this._executeAction(action, {
+                    ctx, 
+                    data,
+                    id,
+                    chatId
+                }) : await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
                 await ctx.answerCbQuery(text)
             }
             else {

@@ -2,13 +2,14 @@ import { JSONSchemaType } from 'ajv'
 import ArrayUtils from '../../../utils/ArrayUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import { DEV_ID, NOT_FOUND_INDEX } from '../../../utils/values/consts'
-import { CallbackButtonContext } from '../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import IdeasService from '../../db/services/ideas/IdeasService'
 import CallbackButtonAction from '../CallbackButtonAction'
 import IdeaChangeAction from './IdeaChangeAction'
 import ScrollerWithIdData from '../../../interfaces/callback-button-data/ScrollerWithIdData'
 import { scrollerWithIdDataSchema } from '../../../utils/values/schemas'
 import FileUtils from '../../../utils/FileUtils'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 export default class DeleteIdeaAction extends CallbackButtonAction<ScrollerWithIdData> {
     protected _schema: JSONSchemaType<ScrollerWithIdData> = scrollerWithIdDataSchema
@@ -18,7 +19,7 @@ export default class DeleteIdeaAction extends CallbackButtonAction<ScrollerWithI
         this._name = 'deleteidea'
     }
 
-    async execute(ctx: CallbackButtonContext, data: ScrollerWithIdData): Promise<string | void> {
+    async execute({ctx, data}: CallbackButtonOptions<ScrollerWithIdData>): Promise<string | void> {
         if(ctx.from.id !== DEV_ID) return await FileUtils.readPugFromResource('text/actions/idea/no-dev.pug')
 
         const {current, id} = data

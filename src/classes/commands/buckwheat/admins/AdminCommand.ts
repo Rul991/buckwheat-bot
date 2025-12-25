@@ -1,4 +1,5 @@
-import { MaybeString, TextContext } from '../../../../utils/values/types/types'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
@@ -8,6 +9,7 @@ import UserRankService from '../../../db/services/user/UserRankService'
 import StringUtils from '../../../../utils/StringUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default abstract class AdminCommand extends BuckwheatCommand {
     protected _folder: string
@@ -21,20 +23,17 @@ export default abstract class AdminCommand extends BuckwheatCommand {
         this._minimumRank = RankUtils.admin
     }
 
-    protected abstract _do(ctx: TextContext, replyId: number, time: number): Promise<boolean>
+    protected abstract _do(ctx: TextContext, replyId: number, time: number, chatId: number): Promise<boolean>
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+    async execute({ ctx, other, chatId, replyFrom }: BuckwheatCommandOptions): Promise<void> {
         const changeValues = {
             isUndo: this._isUndoCommand
         }
 
-        if(ctx.message.reply_to_message && ctx.message.reply_to_message.from) {
-            const replyId = ctx.message.reply_to_message.from.id
+        if(replyFrom) {
+            const replyId = replyFrom.id
             const adminId = ctx.from.id
             
-            const chatId = await LinkedChatService.getCurrent(ctx)
-            if(!chatId) return
-
             const adminRank = await UserRankService.get(chatId, adminId)
             const replyRank = await UserRankService.get(chatId, replyId)
 
@@ -71,7 +70,12 @@ export default abstract class AdminCommand extends BuckwheatCommand {
                 return
             }
 
-            const isDone = await this._do(ctx, replyId, time)
+            const isDone = await this._do(
+                ctx, 
+                replyId, 
+                time,
+                chatId
+            )
 
             if(!isDone) {
                 await MessageUtils.answerMessageFromResource(

@@ -149,42 +149,27 @@ import CardSellChangeAction from '../classes/callback-button/card/shop/sell/Card
 import CardBuyShowAction from '../classes/callback-button/card/shop/buy/CardBuyShowAction'
 import CardPriceSellAction from '../classes/actions/scenes/CardPriceSellAction'
 import CardSellAction from '../classes/callback-button/card/shop/sell/CardSellAction'
+import AddProfileAction from '../classes/actions/every/AddProfileAction'
+import ItemShowAction from '../classes/callback-button/shop/ItemShowAction'
+import SummonCommand from '../classes/commands/buckwheat/admins/SummonCommand'
 
 const isEnvVarsValidate = () => {
-    type EnvVariable = { name: string, isMustDefined: boolean }
-
-    const createVariable = (name: string, isMustDefined = true) =>
-        ({ name, isMustDefined } as EnvVariable)
-
-    const variables = [
-        createVariable('BOT_TOKEN'),
-        createVariable('DB_NAME'),
-        createVariable('DB_URL'),
-        createVariable('CHAT_ID'),
-        createVariable('DEV_ID', false),
-        createVariable('MODE', false),
-        createVariable('DOMAIN', false),
-        createVariable('HOOK_PORT', false),
-        createVariable('SECRET_TOKEN', false),
-        createVariable('SECRET_PATH', false),
-        createVariable('DB_USERNAME', false),
-        createVariable('DB_PASSWORD', false),
-        createVariable('ALLOWED_CHATS', false),
-    ]
-
-    for (const variable of variables) {
-        if (!StartValidator.isEnvVariableDefined(env[variable.name])) {
-            const message = `undefined ${variable.name}`
-
-            if (!variable.isMustDefined) {
-                console.warn(message)
-            }
-            else {
-                console.error(message)
-                return false
-            }
-        }
-    }
+    StartValidator.validate([
+        StartValidator.createVariable('BOT_TOKEN'),
+        StartValidator.createVariable('DB_NAME'),
+        StartValidator.createVariable('DB_URL'),
+        StartValidator.createVariable('CHAT_ID'),
+        StartValidator.createVariable('DEV_ID', false),
+        StartValidator.createVariable('MODE', false),
+        StartValidator.createVariable('DOMAIN', false),
+        StartValidator.createVariable('HOOK_PORT', false),
+        StartValidator.createVariable('SECRET_TOKEN', false),
+        StartValidator.createVariable('SECRET_PATH', false),
+        StartValidator.createVariable('DB_USERNAME', false),
+        StartValidator.createVariable('DB_PASSWORD', false),
+        StartValidator.createVariable('ALLOWED_CHATS', false),
+        StartValidator.createVariable('HTTP_PROXY', false),
+    ])
 
     return true
 }
@@ -231,6 +216,7 @@ const launchBot = async (bot: Bot) => {
         new NotAllowedChatAction(), // it should be first
         new WrongChatAction(), // it should be second
         new AntiSpamAction(),
+        new AddProfileAction(),
         new NewMessagesAction(),
         new RandomPrizeMessageAction(),
         new ReactionAction()
@@ -300,6 +286,7 @@ const launchBot = async (bot: Bot) => {
         new CardBuyAction(),
         new CardSellChangeAction(),
         new CardSellAction(),
+        new ItemShowAction()
     )
 
     // dice 
@@ -388,6 +375,7 @@ const launchBot = async (bot: Bot) => {
         new GetAwardCommand(),
         new BroadcastCommand(),
         new CardCommand(),
+        new SummonCommand(),
         ...await getSimpleCommands(),
     )
 
@@ -410,7 +398,7 @@ const launchBot = async (bot: Bot) => {
 }
 
 const test = async (): Promise<void | boolean> => {
-    
+
 }
 
 const main = async () => {

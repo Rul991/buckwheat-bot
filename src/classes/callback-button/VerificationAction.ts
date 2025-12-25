@@ -2,23 +2,26 @@ import { JSONSchemaType } from 'ajv'
 import AdminUtils from '../../utils/AdminUtils'
 import ContextUtils from '../../utils/ContextUtils'
 import MessageUtils from '../../utils/MessageUtils'
-import { CallbackButtonContext } from '../../utils/values/types/types'
+import { CallbackButtonContext } from '../../utils/values/types/contexts'
 import LinkedChatService from '../db/services/linkedChat/LinkedChatService'
 import UserOldService from '../db/services/user/UserOldService'
 import CallbackButtonAction from './CallbackButtonAction'
 import UserRankService from '../db/services/user/UserRankService'
 import RankUtils from '../../utils/RankUtils'
 import FileUtils from '../../utils/FileUtils'
+import { CallbackButtonOptions } from '../../utils/values/types/action-options'
 
-export default class VerificationAction extends CallbackButtonAction<number> {
-    protected _schema: JSONSchemaType<number> = {type: 'number'}
+type Data = number
 
-    constructor() {
+export default class VerificationAction extends CallbackButtonAction<Data> {
+    protected _schema: JSONSchemaType<Data> = { type: 'number' }
+
+    constructor () {
         super()
         this._name = 'verify'
     }
 
-    protected _getData(raw: string): number {
+    protected _getData(raw: string): Data {
         return +raw
     }
 
@@ -36,15 +39,11 @@ export default class VerificationAction extends CallbackButtonAction<number> {
         )
     }
 
-    async execute(ctx: CallbackButtonContext, dataId: number): Promise<string | void> {
-        const id = ctx.from.id
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
-
-        const isCan = ctx.from.id == dataId || 
+    async execute({ ctx, data: dataId, chatId, id }: CallbackButtonOptions<Data>): Promise<string | void> {
+        const isCan = ctx.from.id == dataId ||
             await UserRankService.get(chatId, id) >= RankUtils.moderator
 
-        if(isCan) {
+        if (isCan) {
             await UserOldService.update(chatId, dataId, true)
             await AdminUtils.unmute(ctx, dataId)
             await VerificationAction._sendHelloMessage(ctx, chatId, dataId)

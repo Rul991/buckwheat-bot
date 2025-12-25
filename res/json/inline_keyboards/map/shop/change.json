@@ -1,0 +1,23 @@
+{
+    "definition": {
+        "item": {
+            "text": "@",
+            "data": "itemshow_@"
+        },
+        "arrow": {
+            "text": "@",
+            "data": "itemchange_@"
+        },
+        "pageNav": {
+            "text": "@",
+            "data": "itemchange_@"
+        }
+    },
+    
+    "values": 
+    [
+        "item",
+        ["arrow"],
+        ["pageNav"]
+    ]
+}

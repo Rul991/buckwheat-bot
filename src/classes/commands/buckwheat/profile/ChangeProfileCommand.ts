@@ -1,13 +1,13 @@
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import RankUtils from '../../../../utils/RankUtils'
-import { TextContext, MaybeString, HasOtherChangeProfileMessage, NoOtherChangeProfileMessage } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import { MaybeString, HasOtherChangeProfileMessage, NoOtherChangeProfileMessage } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import UserNameService from '../../../db/services/user/UserNameService'
 import UserRankService from '../../../db/services/user/UserRankService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
-
-
 
 export default abstract class extends BuckwheatCommand {
     protected abstract _folderName: string
@@ -108,11 +108,8 @@ export default abstract class extends BuckwheatCommand {
         await this._sendMessageUpdateProfile(options)
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+    async execute({ ctx, other, chatId }: BuckwheatCommandOptions): Promise<void> {
         const replyId = ContextUtils.getUserOrBotId(ctx)
-        const chatId = await LinkedChatService.getCurrent(ctx, replyId)
-        if (!chatId) return
-        
         const options = {
             ctx,
             chatId,

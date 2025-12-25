@@ -1,6 +1,7 @@
 import RandomUtils from '../../utils/RandomUtils'
 import { DICE_ANSWER_CHANCE } from '../../utils/values/consts'
-import { DiceContext } from '../../utils/values/types/types'
+import { DiceOptions } from '../../utils/values/types/action-options'
+import { DiceContext } from '../../utils/values/types/contexts'
 import LinkedChatService from '../db/services/linkedChat/LinkedChatService'
 import ChatSettingsService from '../db/services/settings/ChatSettingsService'
 import BaseDice from './BaseDice'
@@ -11,7 +12,7 @@ export default class DiceDice extends BaseDice {
         this._name = '🎲'
     }
 
-    async execute(ctx: DiceContext, _: number): Promise<void> {
+    async execute({ ctx }: DiceOptions): Promise<void> {
         const id = ctx.from.id
         const chatId = await LinkedChatService.getCurrent(ctx, id)
         if(!chatId) return

@@ -1,5 +1,6 @@
 import { FIRST_INDEX } from './../../../../utils/values/consts';
-import { MaybeString, TextContext } from '../../../../utils/values/types/types'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import UserProfileService from '../../../db/services/user/UserProfileService'
 import ContextUtils from '../../../../utils/ContextUtils'
@@ -18,6 +19,12 @@ import Logging from '../../../../utils/Logging'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import MarriageService from '../../../db/services/marriage/MarriageService'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+
+type IdAndName = {
+    id: number
+    name: string
+}
 
 export default class ProfileCommand extends BuckwheatCommand {
     constructor() {
@@ -60,7 +67,7 @@ export default class ProfileCommand extends BuckwheatCommand {
         }
     }
 
-    private async _getIdAndName(ctx: TextContext, other: MaybeString): Promise<{id: number, name: string} | null> {
+    private async _getIdAndName({ctx, other, replyFrom}: BuckwheatCommandOptions): Promise<IdAndName | null> {
         let id: number
         let name: string
 
@@ -78,8 +85,8 @@ export default class ProfileCommand extends BuckwheatCommand {
                 name = user.name
             }
         }
-        else if('reply_to_message' in ctx.message) {
-            const {id: replyId, first_name} = ctx.message.reply_to_message?.from!
+        else if(replyFrom) {
+            const {id: replyId, first_name} = replyFrom
 
             id = replyId
             name = first_name
@@ -117,8 +124,9 @@ export default class ProfileCommand extends BuckwheatCommand {
         return await ContextUtils.isLeft(ctx, id)
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        let idAndName = await this._getIdAndName(ctx, other)
+    async execute(options: BuckwheatCommandOptions): Promise<void> {
+        const { ctx, other, chatId } = options
+        let idAndName = await this._getIdAndName(options)
 
         if(!idAndName) {
             await MessageUtils.answerMessageFromResource(
@@ -134,9 +142,6 @@ export default class ProfileCommand extends BuckwheatCommand {
         }
 
         const {id, name} = idAndName
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return
-
         const user = await UserProfileService.create(chatId, id, name)
         const photoId = await this._getPhotoId(ctx, id)
         

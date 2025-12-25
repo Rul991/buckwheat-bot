@@ -57,36 +57,17 @@ export default class MessageUtils {
         if(!text.length) return emptyMessage
         if(chatId == NOT_FOUND_INDEX) return emptyMessage
 
-        let lastMessage: Message.TextMessage = emptyMessage
-
-        for (let i = FIRST_INDEX; i < text.length; i += MAX_MESSAGE_LENGTH) {
-            const partText = text.substring(i, i + MAX_MESSAGE_LENGTH)
-            
-            try {
-                await ctx.sendChatAction('typing')
-                lastMessage = await ctx.telegram.sendMessage(
-                    chatId,
-                    partText, 
-                    messageOptions
-                )
-            }
-            catch(e) {
-                try {
-                    lastMessage = await ctx.telegram.sendMessage(
-                        chatId, 
-                        partText, 
-                        {
-                            ...messageOptions,
-                            parse_mode: undefined
-                        }
-                    )
-                }
-                catch(e) {
-                    Logging.error(e)
-                    return emptyMessage
-                }
-            }
-        }
+        let lastMessage = emptyMessage
+        
+        await ExceptionUtils.handle(async () => {
+            const partText = text.substring(FIRST_INDEX, MAX_MESSAGE_LENGTH)
+            await ctx.sendChatAction('typing')
+            lastMessage = await ctx.telegram.sendMessage(
+                chatId,
+                partText, 
+                messageOptions
+            )
+        })
 
         return lastMessage
     }

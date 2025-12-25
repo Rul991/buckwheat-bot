@@ -1,10 +1,12 @@
 import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext, ClassTypes } from '../../../utils/values/types/types'
+import { ClassTypes } from '../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
 import SkillUtils from '../../../utils/SkillUtils'
 import ContextUtils from '../../../utils/ContextUtils'
 import Skill from '../../../interfaces/duel/Skill'
 import FileUtils from '../../../utils/FileUtils'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 type Data = {
     name: string
@@ -44,7 +46,7 @@ export default class extends CallbackButtonAction<Data> {
         return skill ?? null
     }
 
-    async execute(ctx: CallbackButtonContext, data: Data): Promise<string | void> {
+    async execute({ctx, data}: CallbackButtonOptions<Data>): Promise<string | void> {
         const {
             id
         } = data

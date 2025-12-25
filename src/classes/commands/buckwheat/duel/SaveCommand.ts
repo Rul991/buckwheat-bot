@@ -3,11 +3,20 @@ import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import TimeUtils from '../../../../utils/TimeUtils'
 import { SAVE_COOLDOWN } from '../../../../utils/values/consts'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import DuelistService from '../../../db/services/duelist/DuelistService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import UserClassService from '../../../db/services/user/UserClassService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
+
+type HealOptions = {
+    ctx: TextContext, 
+    isSendMessages: boolean, 
+    chatId: number, 
+    id: number
+}
 
 export default class SaveCommand extends BuckwheatCommand {
     constructor() {
@@ -40,11 +49,12 @@ export default class SaveCommand extends BuckwheatCommand {
         )
     }
 
-    private async _heal(ctx: TextContext, isSendMessages: boolean): Promise<boolean> {
-        const id = ctx.from.id
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return false
-        
+    private async _heal({
+        chatId,
+        id,
+        isSendMessages,
+        ctx
+    }: HealOptions): Promise<boolean> {
         const lastSave = await DuelistService.getField(chatId, id, 'lastSave')
         const isCanSave = lastSave ? Date.now() - SAVE_COOLDOWN >= lastSave : true
 
@@ -68,10 +78,14 @@ export default class SaveCommand extends BuckwheatCommand {
         return isCanSave
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+    async execute({ ctx, other, chatId, id }: BuckwheatCommandOptions): Promise<void> {
         const isLeave = this._isLeave(other)
-
-        const isCanSave = await this._heal(ctx, !isLeave)
+        const isCanSave = await this._heal({
+            ctx, 
+            isSendMessages: !isLeave,
+            chatId,
+            id
+        })
 
         if(isLeave) {
             await this._leave(ctx, isCanSave)

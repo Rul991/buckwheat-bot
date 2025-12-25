@@ -1,5 +1,5 @@
 import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
 import RankUtils from '../../../utils/RankUtils'
 import ContextUtils from '../../../utils/ContextUtils'
@@ -11,6 +11,7 @@ import ChatSettingsService from '../../db/services/settings/ChatSettingsService'
 import StringUtils from '../../../utils/StringUtils'
 import SettingShowUtils from '../../../utils/settings/SettingShowUtils'
 import NumberSettingInputAction from '../../actions/scenes/NumberSettingInputAction'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 type Data = {
     id: number
@@ -50,7 +51,7 @@ export default class extends CallbackButtonAction<Data> {
         this._name = 'set'
     }
 
-    async execute(ctx: CallbackButtonContext, data: Data): Promise<string | void> {
+    async execute({ctx, data, chatId}: CallbackButtonOptions<Data>): Promise<string | void> {
         const {
             id,
             n: settingId,
@@ -59,10 +60,6 @@ export default class extends CallbackButtonAction<Data> {
         } = data
 
         if (await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return
-
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if (!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
-
         if (!await UserRankService.has(chatId, id, this._minimumRank)) {
             return await FileUtils.readPugFromResource(
                 'text/other/rank-issue.pug',

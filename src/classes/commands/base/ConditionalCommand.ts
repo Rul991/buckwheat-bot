@@ -1,9 +1,10 @@
 import { Context } from 'telegraf'
-import { CommandStrings, MaybeString, TextContext } from '../../../utils/values/types/types'
+import { CommandStrings, MaybeString } from '../../../utils/values/types/types'
+import { TextContext } from '../../../utils/values/types/contexts'
 import BuckwheatCommand from './BuckwheatCommand'
 
 export default abstract class ConditionalCommand extends BuckwheatCommand {
-    constructor() {
+    constructor () {
         super()
         this._isShow = false
     }
@@ -11,9 +12,9 @@ export default abstract class ConditionalCommand extends BuckwheatCommand {
     abstract condition(ctx: TextContext, [firstWord, command, other]: CommandStrings): boolean | Promise<boolean>
 
     async executeIfCondition(ctx: TextContext, message: CommandStrings): Promise<boolean> {
-        if(await this.condition(ctx, message)) {
+        if (await this.condition(ctx, message)) {
             const [_word, _command, other] = message
-            await this.execute(ctx, other)
+            await this.execute({ ctx, other })
             return true
         }
 

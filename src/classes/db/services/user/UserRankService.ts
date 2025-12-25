@@ -1,4 +1,3 @@
-import User from '../../../../interfaces/schemas/user/User'
 import RankUtils from '../../../../utils/RankUtils'
 import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
 import UserRepository from '../../repositories/UserRepository'
@@ -11,10 +10,6 @@ export default class UserRankService {
 
     static async update(chatId: number, id: number, rank: number): Promise<number> {
         return (await BaseUserService.update(chatId, id, 'rank', rank)) ?? NOT_FOUND_INDEX
-    }
-
-    static async findAllByRank(chatId: number, rank: number): Promise<User[]> {
-        return await UserRepository.findManyInChat(chatId, {rank})
     }
 
     static async has(chatId: number, id: number, needRank: number): Promise<boolean> {

@@ -1,12 +1,14 @@
 import { Message } from 'telegraf/types'
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
-import { TextContext, CommandStrings, MaybeString } from '../../../utils/values/types/types'
+import { CommandStrings, MaybeString } from '../../../utils/values/types/types'
+import { TextContext } from '../../../utils/values/types/contexts'
 import DuelService from '../../db/services/duel/DuelService'
 import DuelistService from '../../db/services/duelist/DuelistService'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import ConditionalCommand from '../base/ConditionalCommand'
+import { BuckwheatCommandOptions } from '../../../utils/values/types/action-options'
 
 export default class extends ConditionalCommand {
     async condition(ctx: TextContext, [_firstWord, _command, _other]: CommandStrings): Promise<boolean> {
@@ -21,7 +23,7 @@ export default class extends ConditionalCommand {
         ) ?? false
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
+    async execute({ ctx }: BuckwheatCommandOptions): Promise<void> {
         const id = ctx.from.id
         const chatId = await LinkedChatService.getCurrent(ctx, id)
         if(!chatId) return

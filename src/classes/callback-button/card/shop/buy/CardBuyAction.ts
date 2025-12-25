@@ -1,10 +1,11 @@
 import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../../../utils/values/types/contexts'
 import CallbackButtonAction from '../../../CallbackButtonAction'
 import ContextUtils from '../../../../../utils/ContextUtils'
 import ShopCardService from '../../../../db/services/card/ShopCardService'
 import MessageUtils from '../../../../../utils/MessageUtils'
 import InlineKeyboardManager from '../../../../main/InlineKeyboardManager'
+import { CallbackButtonOptions } from '../../../../../utils/values/types/action-options'
 
 type Data = {
     s: number
@@ -34,7 +35,7 @@ export default class extends CallbackButtonAction<Data> {
         this._name = 'cbuy'
     }
 
-    async execute(ctx: CallbackButtonContext, data: Data): Promise<string | void> {
+    async execute({ctx, data}: CallbackButtonOptions<Data>): Promise<string | void> {
         const {
             id,
             s: shopCardId,

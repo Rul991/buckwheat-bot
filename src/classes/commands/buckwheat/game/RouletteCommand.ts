@@ -4,7 +4,9 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import RandomUtils from '../../../../utils/RandomUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import { KICK_TIME, ROULETTE_CHANCE } from '../../../../utils/values/consts'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import RouletteService from '../../../db/services/roulette/RouletteService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
@@ -16,7 +18,7 @@ export default class RouletteCommand extends BuckwheatCommand {
         this._description = 'даю пощекотать нервы'
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
+    async execute({ ctx, id, chatId }: BuckwheatCommandOptions): Promise<void> {
         if(ctx.chat.type == 'private') {
             await MessageUtils.answerMessageFromResource(
                 ctx,
@@ -24,10 +26,6 @@ export default class RouletteCommand extends BuckwheatCommand {
             )
             return
         }
-
-        const id = ctx.from.id
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return
 
         const isKilled = RandomUtils.chance(ROULETTE_CHANCE)
         const {winStreak, prize} = isKilled ? 

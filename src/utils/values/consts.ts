@@ -18,6 +18,8 @@ export const TOKEN = env.BOT_TOKEN!
 export const CHAT_ID = fromEnvToNumber('CHAT_ID')
 export const DEV_ID = fromEnvToNumber('DEV_ID')
 
+export const HTTP_PROXY = env.HTTP_PROXY
+
 export const MODE: ModeTypes = env.MODE == 'dev' || env.MODE == 'prod' ? env.MODE : 'dev'
 export const ALLOWED_CHATS = [
     ...(
@@ -112,7 +114,8 @@ export const DAYS_IN_MONTH = 28
 export const MILLISECONDS_IN_MONTH = MILLISECONDS_IN_DAY * DAYS_IN_MONTH
 export const MAX_MONTHS_PER_BUY = 24
 
-export const PREMIUM_PRICE_PER_MONTH = MODE == 'dev' ? 1 : 75
+export const DEV_PREMIUM_PRICE_PER_MONTH = 1
+export const PREMIUM_PRICE_PER_MONTH = MODE == 'dev' ? DEV_PREMIUM_PRICE_PER_MONTH : 75
 export const SAVE_COOLDOWN = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * 30
 export const MAX_STATS_SYMBOLS_COUNT = 5
 
@@ -168,7 +171,7 @@ export const WINSTREAK_PRIZE = 25
 export const WINSTREAK_COUNT = MODE == 'dev' ? 3 : 10
 export const MAX_BUTTONS_IN_HORISONTAL = 6
 export const DEFAULT_MUTE_TIME = 60_000
-export const DENY_NUMBER = 0
+export const DENY_NUMBER = 1
 
 export const DENY_SYMBOL = '❌'
 export const ALLOW_SYMBOL = '✅'

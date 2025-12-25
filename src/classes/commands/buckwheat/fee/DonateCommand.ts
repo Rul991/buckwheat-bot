@@ -1,10 +1,12 @@
 import { STAR_TO_COIN } from '../../../../utils/values/consts'
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import StringUtils from '../../../../utils/StringUtils'
 import MathUtils from '../../../../utils/MathUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class DonateCommand extends BuckwheatCommand {
     private _starPrice = {
@@ -20,11 +22,7 @@ export default class DonateCommand extends BuckwheatCommand {
         this._argumentText = 'кол-во звезд'
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const id = ctx.from.id
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return
-
+    async execute({ ctx, other, chatId, id }: BuckwheatCommandOptions): Promise<void> {
         const rawRubles = MathUtils.clamp(
             StringUtils.getNumberFromString(other ?? '1'),
             this._starPrice.min,

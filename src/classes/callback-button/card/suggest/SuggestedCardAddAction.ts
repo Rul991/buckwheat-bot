@@ -1,5 +1,5 @@
 import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import CallbackButtonAction from '../../CallbackButtonAction'
 import ContextUtils from '../../../../utils/ContextUtils'
 import { DEV_ID } from '../../../../utils/values/consts'
@@ -8,6 +8,7 @@ import CardUtils from '../../../../utils/CardUtils'
 import CardService from '../../../db/services/card/CardService'
 import MessageUtils from '../../../../utils/MessageUtils'
 import ArrayUtils from '../../../../utils/ArrayUtils'
+import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
 
 type Data = {
     a: 0 | 1,
@@ -42,7 +43,7 @@ export default class extends CallbackButtonAction<Data> {
         this._name = 'cadd'
     }
 
-    async execute(ctx: CallbackButtonContext, data: Data): Promise<string | void> {
+    async execute({ctx, data}: CallbackButtonOptions<Data>): Promise<string | void> {
         const {
             a: isAdd,
             id,

@@ -1,4 +1,5 @@
-import { MaybeString, TextContext } from '../../../../utils/values/types/types'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import ContextUtils from '../../../../utils/ContextUtils'
 import CasinoGetService from '../../../db/services/casino/CasinoGetService'
@@ -7,6 +8,7 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class TransferCommand extends BuckwheatCommand {
     private static _filenames = ['bot', 'no-receiver', 'self', 'empty', 'wrong', 'negative']
@@ -47,9 +49,7 @@ export default class TransferCommand extends BuckwheatCommand {
         ]
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return
+    async execute({ ctx, other, chatId, id, replyFrom }: BuckwheatCommandOptions): Promise<void> {
         const filenameId = TransferCommand._getIdByCondition(ctx, other)
 
         if(filenameId !== NOT_FOUND_INDEX) {
@@ -60,10 +60,8 @@ export default class TransferCommand extends BuckwheatCommand {
         }
         
         else {
-            const sender = ctx.from.id
-            //@ts-ignore
-            const receiver: number | undefined = ctx.message.reply_to_message?.from?.id
-
+            const sender = id
+            const receiver = replyFrom?.id
             if(receiver === undefined) return
 
             const senderMoney = await CasinoGetService.money(chatId, ctx.from.id)

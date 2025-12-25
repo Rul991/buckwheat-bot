@@ -1,8 +1,7 @@
 import BaseAction from '../base/BaseAction'
-import { PreCheckoutQueryContext, SuccessfulPaymentContext } from '../../../utils/values/types/types'
-import { PreCheckoutQuery, SuccessfulPayment } from 'telegraf/types'
+import { PrecheckoutQueryOptions, SuccessfulPaymentOptions } from '../../../utils/values/types/action-options'
 
 export default abstract class PaymentAction extends BaseAction {
-    abstract precheckout(ctx: PreCheckoutQueryContext, query: PreCheckoutQuery): Promise<string | boolean>
-    abstract execute(ctx: SuccessfulPaymentContext, payment: SuccessfulPayment): Promise<void>
+    abstract precheckout(options: PrecheckoutQueryOptions): Promise<string | boolean>
+    abstract execute(options: SuccessfulPaymentOptions): Promise<void>
 }

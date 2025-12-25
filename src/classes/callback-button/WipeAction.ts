@@ -1,5 +1,5 @@
 import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../utils/values/types/types'
+import { CallbackButtonContext } from '../../utils/values/types/contexts'
 import CallbackButtonAction from './CallbackButtonAction'
 import MessageUtils from '../../utils/MessageUtils'
 import CasinoWipeService from '../db/services/casino/CasinoWipeService'
@@ -8,6 +8,7 @@ import ItemsService from '../db/services/items/ItemsService'
 import LevelService from '../db/services/level/LevelService'
 import WorkService from '../db/services/work/WorkService'
 import ContextUtils from '../../utils/ContextUtils'
+import { CallbackButtonOptions } from '../../utils/values/types/action-options'
 
 type Data = {
     chatId: number,
@@ -18,17 +19,17 @@ export default class extends CallbackButtonAction<Data> {
     protected _schema: JSONSchemaType<Data> = {
         type: 'object',
         properties: {
-            chatId: { type: 'number'},
-            userId: { type: 'number'}
+            chatId: { type: 'number' },
+            userId: { type: 'number' }
         },
         required: ['chatId', 'userId']
     }
-    
-    constructor() {
+
+    constructor () {
         super()
         this._name = 'wipe'
     }
-    
+
     private async _wipe(chatId: number): Promise<boolean> {
         await LevelService.wipe(chatId)
         await ItemsService.wipe(chatId)
@@ -42,14 +43,14 @@ export default class extends CallbackButtonAction<Data> {
     private async _giveNewGameIfGreedBox(chatId: number, has: boolean) {
         const chatItemId = 'newGame'
 
-        if(has) {
+        if (has) {
             await InventoryItemService.add(chatId, chatId, chatItemId)
         }
     }
 
-    async execute(ctx: CallbackButtonContext, {chatId, userId}: Data): Promise<string | void> {
-        if(await ContextUtils.showAlertIfIdNotEqual(ctx, userId)) return 
-        
+    async execute({ ctx, data: { chatId, userId } }: CallbackButtonOptions<Data>): Promise<string | void> {
+        if (await ContextUtils.showAlertIfIdNotEqual(ctx, userId)) return
+
         await this._giveNewGameIfGreedBox(
             chatId,
             await this._wipe(chatId)
@@ -62,7 +63,7 @@ export default class extends CallbackButtonAction<Data> {
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/wipe/wipe.pug',
-            {changeValues}
+            { changeValues }
         )
         await MessageUtils.deleteMessage(ctx)
     }

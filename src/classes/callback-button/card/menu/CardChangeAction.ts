@@ -1,7 +1,8 @@
 import InventoryCard from '../../../../interfaces/schemas/card/InventoryCard'
 import CardUtils from '../../../../utils/CardUtils'
 import ContextUtils from '../../../../utils/ContextUtils'
-import { CallbackButtonContext, ScrollerGetObjectsOptions, ScrollerSendMessageOptions, ScrollerEditMessageResult, AsyncOrSync } from '../../../../utils/values/types/types'
+import { ScrollerGetObjectsOptions, ScrollerSendMessageOptions, ScrollerEditMessageResult, AsyncOrSync } from '../../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import CardService from '../../../db/services/card/CardService'
 import CardsService from '../../../db/services/card/CardsService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
@@ -16,9 +17,7 @@ export default class extends ScrollerAction<Data> {
         this._objectsPerPage = 1
     }
 
-    protected async _getObjects(ctx: CallbackButtonContext, { id }: ScrollerGetObjectsOptions): Promise<Data[]> {
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return []
+    protected async _getObjects(ctx: CallbackButtonContext, { id, chatId }: ScrollerGetObjectsOptions): Promise<Data[]> {
         return await CardsService.getCards(chatId, id)
     }
 
@@ -31,12 +30,11 @@ export default class extends ScrollerAction<Data> {
             objects: [inventoryCard],
             currentPage,
             id,
-            length
+            length,
+            chatId
         } = options
 
         if(await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return null
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return null
 
         const {
             id: cardId,

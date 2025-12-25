@@ -27,21 +27,31 @@ export default class RulesService {
         )
     }
 
+    static async extend(chatId: number, index: number, data: string) {
+        let result = true
+        this._updateRules(
+            chatId,
+            (rules) => {
+                const rule = rules[index]
+                if(!rule) {
+                    result = false
+                    return rules
+                }
+
+                rules[index] = `${rule}\n\n${data}`
+
+                return rules
+            }
+        )
+
+        return result
+    }
+
     static async delete(chatId: number, index: number): Promise<void> {
         this._updateRules(
             chatId,
             (rules) => {
                 rules.splice(index, 1)
-                return rules
-            }
-        )
-    }
-
-    static async edit(chatId: number, index: number, data: string): Promise<void> {
-        this._updateRules(
-            chatId,
-            rules => {
-                rules.splice(index, 1, data)
                 return rules
             }
         )

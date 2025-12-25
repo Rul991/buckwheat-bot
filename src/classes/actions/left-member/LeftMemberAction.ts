@@ -1,6 +1,6 @@
-import { LeftMemberContext } from '../../../utils/values/types/types'
+import { LeftMemberOptions } from '../../../utils/values/types/action-options'
 import BaseAction from '../base/BaseAction'
 
 export default abstract class LeftMemberAction extends BaseAction {
-    abstract execute(ctx: LeftMemberContext): Promise<void>
+    abstract execute(options: LeftMemberOptions): Promise<void>
 }

@@ -1,10 +1,11 @@
 import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import SettingShowUtils from '../../../utils/settings/SettingShowUtils'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 type Data = {
     n: string
@@ -34,16 +35,13 @@ export default class extends CallbackButtonAction<Data> {
         super()
         this._name = 'setsh'
     }
-    async execute(ctx: CallbackButtonContext, data: Data): Promise<string | void> {
+    async execute({ctx, data, chatId}: CallbackButtonOptions<Data>): Promise<string | void> {
         const {
             n: settingId,
             id,
             p: page
         } = data
         if (await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return
-
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if (!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
 
         return await SettingShowUtils.editMessage({
             filename: this._filename,

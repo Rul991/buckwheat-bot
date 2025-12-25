@@ -6,13 +6,14 @@ import FileUtils from '../../../utils/FileUtils'
 import IdeaUtils from '../../../utils/IdeaUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import Pager from '../../../utils/Pager'
-import { CallbackButtonContext } from '../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import IdeasService from '../../db/services/ideas/IdeasService'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import CallbackButtonAction from '../CallbackButtonAction'
 import { scrollerWithIdDataSchema } from '../../../utils/values/schemas'
 import TimeUtils from '../../../utils/TimeUtils'
 import { DEV_ID, MODE } from '../../../utils/values/consts'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 export default class IdeaChangeAction extends CallbackButtonAction<ScrollerWithIdData> {
     protected _schema: JSONSchemaType<ScrollerWithIdData> = scrollerWithIdDataSchema
@@ -59,7 +60,7 @@ export default class IdeaChangeAction extends CallbackButtonAction<ScrollerWithI
         )
     }
 
-    async execute(ctx: CallbackButtonContext, data: ScrollerWithIdData): Promise<string | void> {
+    async execute({ctx, data}: CallbackButtonOptions<ScrollerWithIdData>): Promise<string | void> {
         const {id, current, increase} = data
         if(MODE == 'dev' && id != DEV_ID) return 
             await FileUtils.readPugFromResource('text/actions/idea/no-dev.pug')

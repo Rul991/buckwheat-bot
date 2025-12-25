@@ -1,8 +1,9 @@
 import BaseDice from './BaseDice'
-import { DiceContext } from '../../utils/values/types/types'
+import { DiceContext } from '../../utils/values/types/contexts'
+import { DiceOptions } from '../../utils/values/types/action-options'
 
 export default class WrongDice extends BaseDice {
-    async execute(ctx: DiceContext, _: number): Promise<void> {
-        
+    async execute({ }: DiceOptions): Promise<void> {
+
     }
 }

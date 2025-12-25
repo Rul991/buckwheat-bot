@@ -1,7 +1,7 @@
 import { Telegraf } from 'telegraf'
 import { session } from 'telegraf/session'
 import Logging from '../../utils/Logging'
-import { CHAT_ID, DOMAIN, HOOK_PORT, MILLISECONDS_IN_SECOND, MODE, SECRET_PATH } from '../../utils/values/consts'
+import { CHAT_ID, DOMAIN, HOOK_PORT, MILLISECONDS_IN_SECOND, MODE, SECRET_PATH, HTTP_PROXY } from '../../utils/values/consts'
 import FileUtils from '../../utils/FileUtils'
 import BaseHandler from './handlers/BaseHandler'
 import MessageUtils from '../../utils/MessageUtils'
@@ -9,6 +9,7 @@ import express from 'express'
 import BaseAction from '../actions/base/BaseAction'
 import { MyTelegraf } from '../../utils/values/types/types'
 import PQueue from 'p-queue'
+import { HttpsProxyAgent } from 'https-proxy-agent'
 
 export default class Bot {
     private _bot: MyTelegraf
@@ -25,7 +26,12 @@ export default class Bot {
 
     constructor (token: string) {
         this._bot = new Telegraf(
-            token
+            token,
+            {
+                telegram: {
+                    agent: HTTP_PROXY ? new HttpsProxyAgent('http://10.147.17.233:10809') : undefined
+                }
+            }
         )
 
         this._handlers = []

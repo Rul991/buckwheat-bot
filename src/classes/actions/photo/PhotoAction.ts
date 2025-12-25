@@ -1,7 +1,6 @@
-import { Context } from 'telegraf'
 import BaseAction from '../base/BaseAction'
-import { MaybeString, PhotoContext } from '../../../utils/values/types/types'
+import { PhotoOptions } from '../../../utils/values/types/action-options'
 
 export default abstract class PhotoAction extends BaseAction {
-    abstract execute(ctx: PhotoContext, other: MaybeString): Promise<void> 
+    abstract execute(options: PhotoOptions): Promise<void> 
 }

@@ -1,11 +1,12 @@
 import { JSONSchemaType } from 'ajv'
 import VoteData from '../../../interfaces/callback-button-data/VoteData'
 import IdeaUtils from '../../../utils/IdeaUtils'
-import { CallbackButtonContext } from '../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import IdeasService from '../../db/services/ideas/IdeasService'
 import CallbackButtonAction from '../CallbackButtonAction'
 import IdeaChangeAction from './IdeaChangeAction'
 import FileUtils from '../../../utils/FileUtils'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 export default class VoteAction extends CallbackButtonAction<VoteData> {
     protected _schema: JSONSchemaType<VoteData> = {
@@ -23,7 +24,8 @@ export default class VoteAction extends CallbackButtonAction<VoteData> {
         this._name = 'vote'
     }
 
-    async execute(ctx: CallbackButtonContext, {isCool, current, id}: VoteData): Promise<string | void> {
+    async execute({ctx, data}: CallbackButtonOptions<VoteData>): Promise<string | void> {
+        const {isCool, current, id} = data
         const key = isCool ? 'coolVote' : 'badVote'
 
         const ideas = await IdeasService.getIdeas()

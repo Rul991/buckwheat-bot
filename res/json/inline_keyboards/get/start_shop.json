@@ -2,7 +2,7 @@
     [
         {
             "text": "Посмотреть",
-            "callback_data": "itemchange_1_-1_@"
+            "callback_data": "itemchange_{\"c\":-1,\"i\":1}_@"
         }
     ]
 ]

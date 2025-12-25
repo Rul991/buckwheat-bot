@@ -1,7 +1,8 @@
 import Card from '../../../../interfaces/schemas/card/Card'
 import CardUtils from '../../../../utils/CardUtils'
 import ContextUtils from '../../../../utils/ContextUtils'
-import { CallbackButtonContext, ScrollerGetObjectsOptions, AsyncOrSync, ScrollerSendMessageOptions, ScrollerEditMessageResult } from '../../../../utils/values/types/types'
+import { ScrollerGetObjectsOptions, AsyncOrSync, ScrollerSendMessageOptions, ScrollerEditMessageResult } from '../../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import CardService from '../../../db/services/card/CardService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import ScrollerAction from '../../scrollers/page/ScrollerAction'
@@ -32,8 +33,6 @@ export default class extends ScrollerAction<Data> {
         } = options
 
         if(await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return null
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return null
 
         return await CardUtils.getEditedMessage({
             card,

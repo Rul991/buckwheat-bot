@@ -1,4 +1,6 @@
-import { TextContext, MaybeString } from '../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../utils/values/types/action-options'
+import { MaybeString } from '../../../utils/values/types/types'
+import { TextContext } from '../../../utils/values/types/contexts'
 import TelegramCommand from '../base/TelegramCommand'
 import FaqCommand from '../buckwheat/info/FaqCommand'
 
@@ -11,7 +13,7 @@ export default class HelpCommand extends TelegramCommand {
         this._description = 'Команда для получения помощи'
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        return await HelpCommand._faqCommand.execute(ctx, other)
+    async execute(options: BuckwheatCommandOptions): Promise<void> {
+        return await HelpCommand._faqCommand.execute(options)
     }
 }

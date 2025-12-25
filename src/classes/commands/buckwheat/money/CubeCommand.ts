@@ -1,4 +1,5 @@
-import { MaybeString, TextContext } from '../../../../utils/values/types/types'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
@@ -8,6 +9,7 @@ import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import CasinoGetService from '../../../db/services/casino/CasinoGetService'
 import CubeLastMessageService from '../../../db/services/cube/CubeLastMessageService'
 import { MAX_DEBT } from '../../../../utils/values/consts'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class CubeCommand extends BuckwheatCommand {
     constructor() {
@@ -20,26 +22,22 @@ export default class CubeCommand extends BuckwheatCommand {
         this._aliases = ['кубики']
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
-        if(ctx.message && 'reply_to_message' in ctx.message) {
-            if(ctx.message.reply_to_message?.from?.is_bot) {
+    async execute({ ctx, other, id: userId, chatId, replyFrom }: BuckwheatCommandOptions): Promise<void> {
+        if(replyFrom) {
+            if(replyFrom.is_bot) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/cubes/bot.pug',
                     {
                         changeValues: {
-                            name: ctx.message.reply_to_message.from.first_name
+                            name: replyFrom.first_name
                         }
                     }
                 )
                 return
             }
 
-            const chatId = await LinkedChatService.getCurrent(ctx)
-            if(!chatId) return
-            const replyId = ctx.message.reply_to_message?.from?.id ?? 0
-            const userId = ctx.from.id
-
+            const replyId = replyFrom.id
             if(userId == replyId) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,

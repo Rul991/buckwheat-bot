@@ -1,10 +1,9 @@
-import { Context } from 'telegraf'
-import { MaybeString, TextContext } from '../../../utils/values/types/types'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 import MessageUtils from '../../../utils/MessageUtils'
+import { BuckwheatCommandOptions } from '../../../utils/values/types/action-options'
 
 export default class WrongCommand extends BuckwheatCommand {
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
+    async execute({ ctx }: BuckwheatCommandOptions): Promise<void> {
         await MessageUtils.sendWrongCommandMessage(ctx)
     }
 }

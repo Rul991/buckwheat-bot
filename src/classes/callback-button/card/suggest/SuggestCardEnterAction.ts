@@ -1,8 +1,9 @@
 import { JSONSchemaType } from 'ajv'
 import CallbackButtonAction from '../../CallbackButtonAction'
-import { CallbackButtonContext } from '../../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
+import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
 
 type Data = {
     id: number
@@ -24,7 +25,7 @@ export default class extends CallbackButtonAction<Data> {
         this._name = 'csug'
     }
 
-    async execute(ctx: CallbackButtonContext, data: Data): Promise<string | void> {
+    async execute({ctx, data}: CallbackButtonOptions<Data>): Promise<string | void> {
         const {
             id
         } = data

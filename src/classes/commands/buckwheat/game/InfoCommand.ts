@@ -1,6 +1,6 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import RandomUtils from '../../../../utils/RandomUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class InfoCommand extends BuckwheatCommand {
@@ -86,7 +86,7 @@ export default class InfoCommand extends BuckwheatCommand {
         return otherAnswer
     }
 
-    async execute(ctx: TextContext, other: MaybeString): Promise<void> {
+    async execute({ ctx, other }: BuckwheatCommandOptions): Promise<void> {
         const text = other ?? 'ничего'
         const chance = RandomUtils.range(0, 100)
 

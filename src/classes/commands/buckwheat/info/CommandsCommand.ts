@@ -1,6 +1,8 @@
 import CommandDescriptionUtils from '../../../../utils/CommandDescriptionUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
-import { TextContext, MaybeString } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import { MaybeString } from '../../../../utils/values/types/types'
+import { TextContext } from '../../../../utils/values/types/contexts'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
@@ -17,7 +19,7 @@ export default class CommandsCommand extends BuckwheatCommand {
         ]
     }
 
-    async execute(ctx: TextContext, _: MaybeString): Promise<void> {
+    async execute({ ctx }: BuckwheatCommandOptions): Promise<void> {
         const commands = CommandDescriptionUtils
             .getVisible()
 

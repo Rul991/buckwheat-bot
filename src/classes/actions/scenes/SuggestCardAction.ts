@@ -1,7 +1,7 @@
 import { Context } from 'telegraf'
 import { BaseScene } from 'telegraf/scenes'
 import { Update } from 'telegraf/types'
-import { SceneContextData } from '../../../utils/values/types/types'
+import { ContextData } from '../../../utils/values/types/contexts'
 import SceneAction from './SceneAction'
 import Card from '../../../interfaces/schemas/card/Card'
 import { FIRST_INDEX, MAX_DESCRIPTION_LENGTH, MAX_NAME_LENGTH } from '../../../utils/values/consts'
@@ -9,6 +9,7 @@ import CardUtils from '../../../utils/CardUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import CardService from '../../db/services/card/CardService'
 import StringUtils from '../../../utils/StringUtils'
+import { SceneOptions } from '../../../utils/values/types/action-options'
 
 enum WrongParseResult {
     NoValue,
@@ -57,7 +58,7 @@ export default class extends SceneAction<Data> {
         }
     }
 
-    protected async _execute(scene: BaseScene<Context<Update> & SceneContextData<Data>>): Promise<void> {
+    protected async _execute({ scene }: SceneOptions<Data>): Promise<void> {
         scene.enter(async ctx => {
             await MessageUtils.answerMessageFromResource(
                 ctx,

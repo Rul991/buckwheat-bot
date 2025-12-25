@@ -53,7 +53,7 @@ export default class UserProfileService {
     }
 
     static async findByName(chatId: number, name: string): Promise<User | null> {
-        return (await UserRepository.findManyInChat(chatId, {name}))[0] ?? null
+        return (await UserRepository.findByFilter({chatId, name}))
     }
 
     static async getAll(chatId: number): Promise<User[]> {

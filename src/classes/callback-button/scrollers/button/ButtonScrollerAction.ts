@@ -1,6 +1,7 @@
 import { JSONSchemaType } from 'ajv'
 import ButtonScrollerData from '../../../../interfaces/callback-button-data/ButtonScrollerData'
-import { AsyncOrSync, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult, ButtonScrollerOptions, ButtonScrollerSlice, CallbackButtonContext, CallbackButtonValue, CurrentIncreaseIdNames, CreateNavButtonsOptions } from '../../../../utils/values/types/types'
+import { AsyncOrSync, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult, ButtonScrollerOptions, ButtonScrollerSlice, CallbackButtonValue, CurrentIncreaseIdNames, CreateNavButtonsOptions } from '../../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import CallbackButtonAction from '../../CallbackButtonAction'
 import ContextUtils from '../../../../utils/ContextUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
@@ -9,6 +10,7 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import FileUtils from '../../../../utils/FileUtils'
 import NavigationButtonUtils from '../../../../utils/NavigationButtonUtils'
+import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
 
 export default abstract class<O, D extends Record<string, any> = ButtonScrollerData> extends CallbackButtonAction<D> {
     protected _schema: JSONSchemaType<D> = {
@@ -142,16 +144,12 @@ export default abstract class<O, D extends Record<string, any> = ButtonScrollerD
         )
     }
 
-    async execute(ctx: CallbackButtonContext, data: D): Promise<string | void> {
+    async execute({ctx, data, chatId, id}: CallbackButtonOptions<D>): Promise<string | void> {
         const {
             id: needId,
         } = data
         if(needId && await ContextUtils.showAlertIfIdNotEqual(ctx, needId)) return
     
-        const id = ctx.from.id
-        const chatId = await LinkedChatService.getCurrent(ctx, needId)
-        if(!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
-
         const options = {
             chatId,
             id,

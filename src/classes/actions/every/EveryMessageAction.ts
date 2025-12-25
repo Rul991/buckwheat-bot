@@ -1,10 +1,11 @@
 import BaseAction from '../base/BaseAction'
-import { MessageContext } from '../../../utils/values/types/types'
+import { MessageContext } from '../../../utils/values/types/contexts'
+import { EveryMessageOptions } from '../../../utils/values/types/action-options'
 
 export default abstract class EveryMessageAction extends BaseAction {
     protected _canUsePrivate: boolean = false
 
-    abstract execute(ctx: MessageContext): Promise<void | true>
+    abstract execute(options: EveryMessageOptions): Promise<void | true>
 
     get canUsePrivate(): boolean {
         return this._canUsePrivate

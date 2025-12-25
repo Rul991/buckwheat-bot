@@ -1,9 +1,10 @@
 import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../../../utils/values/types/contexts'
 import CallbackButtonAction from '../../../CallbackButtonAction'
 import ContextUtils from '../../../../../utils/ContextUtils'
 import CardService from '../../../../db/services/card/CardService'
 import FileUtils from '../../../../../utils/FileUtils'
+import { CallbackButtonOptions } from '../../../../../utils/values/types/action-options'
 
 type Data = {
     id: number
@@ -29,7 +30,7 @@ export default class extends CallbackButtonAction<Data> {
         this._name = 'csell'
     }
 
-    async execute(ctx: CallbackButtonContext, data: Data): Promise<string | void> {
+    async execute({ctx, data}: CallbackButtonOptions<Data>): Promise<string | void> {
         const {
             c: cardId,
             id

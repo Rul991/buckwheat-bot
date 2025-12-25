@@ -4,7 +4,8 @@ import RandomUtils from '../../../utils/RandomUtils'
 import RankUtils from '../../../utils/RankUtils'
 import StringUtils from '../../../utils/StringUtils'
 import TopUtils from '../../../utils/TopUtils'
-import { CallbackButtonContext, ScrollerSendMessageOptions, ScrollerEditMessageResult, ScrollerGetObjectsOptions } from '../../../utils/values/types/types'
+import { ScrollerSendMessageOptions, ScrollerEditMessageResult, ScrollerGetObjectsOptions } from '../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import ChatSettingsService from '../../db/services/settings/ChatSettingsService'
 import UserProfileService from '../../db/services/user/UserProfileService'
@@ -20,10 +21,7 @@ type Object = {
 export default class extends ScrollerAction<Object> {
     protected _minimumRank = RankUtils.min
 
-    protected async _getObjects(ctx: CallbackButtonContext, { id, data }: ScrollerGetObjectsOptions): Promise<Object[]> {
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return []
-
+    protected async _getObjects(ctx: CallbackButtonContext, { data, chatId }: ScrollerGetObjectsOptions): Promise<Object[]> {
         const type = this._getType(data)
         const subCommand = TopUtils.getSubCommand(type)
         const unsortedValues = await subCommand.getUnsortedValues(chatId)
@@ -59,11 +57,12 @@ export default class extends ScrollerAction<Object> {
 
     protected async _editMessage(
         ctx: CallbackButtonContext, 
-        options: ScrollerSendMessageOptions<Object>
+        options: ScrollerSendMessageOptions<Object>,
     ): Promise<ScrollerEditMessageResult> {
-        const id = ctx.from.id
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return null
+        const {
+            id, 
+            chatId
+        } = options
 
         if(!await UserRankService.has(chatId, id, this._minimumRank)) {
             await ContextUtils.showCallbackMessage(
@@ -94,7 +93,8 @@ export default class extends ScrollerAction<Object> {
             emoji,
             name,
             hasTotalCount = true,
-            hasWinner = hasTotalCount
+            hasWinner = hasTotalCount,
+            topOrRole = true
         } = TopUtils.getSubCommand(type)
 
         const isPrivate = ctx.chat?.type == 'private'
@@ -133,7 +133,7 @@ export default class extends ScrollerAction<Object> {
 
         return {
             text: await FileUtils.readPugFromResource(
-                'text/commands/top/top.pug',
+                `text/commands/top/${topOrRole ? 'top' : 'role'}.pug`,
                 {
                     changeValues: {
                         emoji,

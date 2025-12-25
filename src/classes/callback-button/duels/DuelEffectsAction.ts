@@ -1,5 +1,6 @@
 import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext, ClassTypes, Link } from '../../../utils/values/types/types'
+import { ClassTypes, Link } from '../../../utils/values/types/types'
+import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
 import DuelUtils from '../../../utils/DuelUtils'
 import DuelService from '../../db/services/duel/DuelService'
@@ -13,6 +14,7 @@ import UserClassService from '../../db/services/user/UserClassService'
 import SkillUtils from '../../../utils/SkillUtils'
 import FileUtils from '../../../utils/FileUtils'
 import { UNKNOWN_EFFECT } from '../../../utils/values/consts'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 type Data = {
     duel: number
@@ -37,7 +39,7 @@ export default class extends CallbackButtonAction<Data> {
         required: ['duel']
     }
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'dueleffects'
     }
@@ -46,14 +48,14 @@ export default class extends CallbackButtonAction<Data> {
         const sortedEffects: SortedEffects[] = []
         const classNames: Record<number, ClassTypes> = {}
 
-        for (const {name: effectId, target, remainingSteps} of effects) {
+        for (const { name: effectId, target, remainingSteps } of effects) {
             const foundEffect = sortedEffects.find(v => (
                 v.link.link == ContextUtils.getLinkUrl(target)
             ))
 
             let className = classNames[target]
 
-            if(!className) {
+            if (!className) {
                 className = await UserClassService.get(chatId, target)
                 classNames[target] = className
             }
@@ -63,11 +65,11 @@ export default class extends CallbackButtonAction<Data> {
             const effectName = isHide ? '?' : skill?.title ?? UNKNOWN_EFFECT
 
             const newEffect = {
-                name: effectName, 
+                name: effectName,
                 steps: remainingSteps
             }
 
-            if(foundEffect) {
+            if (foundEffect) {
                 foundEffect.effects.push(newEffect)
             }
             else {
@@ -81,11 +83,11 @@ export default class extends CallbackButtonAction<Data> {
         return sortedEffects
     }
 
-    async execute(ctx: CallbackButtonContext, {duel: duelId}: Data): Promise<string | void> {
-        if(await DuelUtils.showAlertIfCantUse(ctx, duelId)) return
+    async execute({ ctx, data: { duel: duelId } }: CallbackButtonOptions<Data>): Promise<string | void> {
+        if (await DuelUtils.showAlertIfCantUse(ctx, duelId)) return
 
         const duel = await DuelService.get(duelId)
-        if(!duel) return await FileUtils.readPugFromResource('text/actions/duel/hasnt.pug')
+        if (!duel) return await FileUtils.readPugFromResource('text/actions/duel/hasnt.pug')
         const { chatId } = duel
 
         const effects = await EffectService.get(duelId)
@@ -107,7 +109,7 @@ export default class extends CallbackButtonAction<Data> {
                 reply_markup: {
                     inline_keyboard: await InlineKeyboardManager.get(
                         'duels/back',
-                        JSON.stringify({id: duelId})
+                        JSON.stringify({ id: duelId })
                     )
                 }
             }
