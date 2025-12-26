@@ -187,4 +187,5 @@ export const BROADCAST_TIME = 5_000
 export const MIN_CARD_PRICE = 1
 export const MAX_CARD_PRICE = 26_02_2025
 export const UNKNOWN_CARD_TITLE = '???'
+export const UNKWOWN_IMPORT_TITLE = '???'
 export const FOREVER = 0

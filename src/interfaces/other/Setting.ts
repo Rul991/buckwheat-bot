@@ -5,5 +5,5 @@ export default interface Setting<K extends SettingType = 'any'> {
     description: string
     type: K
     default: SettingTypeDefault[K]
-    properties?: SettingPropertiesValues[K]
+    properties: SettingPropertiesValues[K]
 }

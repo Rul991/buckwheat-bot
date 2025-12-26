@@ -39,6 +39,17 @@ export default class {
             })
     }
 
+    static async getSettingsObject(chatId: number, filename: string): Promise<Record<string, any>> {
+        const settings = await SettingsRepository.findOne(
+            chatId,
+            {
+                type: filename
+            }
+        )
+
+        return settings?.settings ?? {}
+    }
+
     static async getSetting<K extends SettingType = any>(
         chatId: number,
         filename: string,
@@ -58,23 +69,40 @@ export default class {
         }
     }
 
-    static async setSetting<K extends SettingType = any>(
+    static async setSettings(
         chatId: number,
         filename: string,
-        settingId: string,
-        value: SettingTypeDefault[K]
+        newSettings: Map<string, any>
     ) {
         const {
             settings
         } = await this.get(chatId, filename)
 
-        settings.set(settingId, value)
+        newSettings.forEach((value, key) => {
+            settings.set(key, value)
+        })
 
         return await SettingsRepository.updateOne(
             chatId,
             {
                 settings
             }
+        )
+    }
+
+    static async setSetting<K extends SettingType = any>(
+        chatId: number,
+        filename: string,
+        settingId: string,
+        value: SettingTypeDefault[K]
+    ) {
+        const map: Map<string, any> = new Map()
+        map.set(settingId, value)
+
+        return await this.setSettings(
+            chatId,
+            filename,
+            map
         )
     }
 }

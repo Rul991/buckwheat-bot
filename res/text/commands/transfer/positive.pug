@@ -1,14 +1,65 @@
-- let name = 'игрок'
+include utils/mixins.pug
+
+- 
+    const numbers = [
+        {
+            values: [0],
+            act: '<',
+            text: 'Я заметил, что ты написал лишний минус, поэтому решил его убрать!'
+        },
+
+        {
+            values: [63],
+            act: '=',
+            text: '63!'
+        },
+
+        {
+            values: [26.02, 23.02, 6.08],
+            act: '=',
+            text: 'Похоже на дату, когда началось что-то хорошее!'
+        },
+
+        {
+            values: [42],
+            act: '=',
+            text: 'А также foo, bar и baz!'
+        },
+
+        {
+            values: [1000000],
+            act: '>=',
+            text: 'Тебе с такими суммами надо банк открывать!'
+        },
+    ]
+
 |💸 Игрок 
-a(href=sender.link) #{sender.name || name} 
++link(sender)
 | перевел #{count} монет игроку 
-a(href=receiver.link) #{receiver.name || name}
++link(receiver, false)
 |!
 |
 tg-spoiler
-    if raw < 0
-        | Я заметил, что ты написал лишний минус, поэтому решил его убрать!
-    else if raw == 63
-        | 63!
-    else if raw == 26.02 || raw == 23.02 || raw == 6.08
-        | Похоже на дату, когда началось что-то хорошее!
+    - let textToShow = ''
+    - for(let item of numbers) {
+        - for(let value of item.values) {
+            - 
+                let conditionMet = false
+                if(item.act == '<' && raw < value) {
+                    conditionMet = true
+                } 
+                else if(item.act == '=' && raw == value) {
+                    conditionMet = true
+                } 
+                else if(item.act == '>=' && raw >= value) {
+                    conditionMet = true
+                }
+
+                if(conditionMet) {
+                    textToShow = item.text
+                    break
+                }
+        - }
+        - if(textToShow) break
+    - }
+    | #{textToShow}

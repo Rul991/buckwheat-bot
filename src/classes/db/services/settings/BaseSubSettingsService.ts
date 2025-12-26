@@ -38,4 +38,24 @@ export default class {
         )
         return settings
     }
+
+    async getObject(
+        chatId: number
+    ) {
+        return await SettingsService.getSettingsObject(
+            chatId,
+            this._filename
+        )
+    }
+
+    async setMany(
+        chatId: number,
+        settings: Map<string, any>
+    ) {
+        return await SettingsService.setSettings(
+            chatId,
+            this._filename,
+            settings
+        )
+    }
 }

@@ -1,5 +1,6 @@
 import Ajv, { JSONSchemaType } from 'ajv/dist/2020'
 import Logging from './Logging'
+import JsonUtils from './JsonUtils'
 
 export default class ObjectValidator {
     private static _ajv: Ajv = new Ajv({
@@ -33,5 +34,12 @@ export default class ObjectValidator {
             Logging.error('[Validation exception]', e)
             return false
         }
+    }
+
+    static isValidatedJson<T>(data: string, schema: JSONSchemaType<T>): boolean {
+        const json = JsonUtils.parse<T>(data)
+        if(!json) return false
+
+        return this.isValidatedObject(json, schema)
     }
 }

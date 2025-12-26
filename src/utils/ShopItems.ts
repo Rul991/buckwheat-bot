@@ -405,6 +405,10 @@ export default class ShopItems {
         return null
     }
 
+    static async getByFilename(filename: string) {
+        return this._itemDescriptions.find(v => v.filename == filename)
+    }
+
     static async get(id: number): Promise<ShopItem> {
         const description = this._itemDescriptions[id]
         if (!description) return this._getDefaultItem()

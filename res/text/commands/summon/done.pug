@@ -13,6 +13,7 @@ include utils/mixins.pug
     ]
 
 - const emoji = () => emojies[Math.floor(Math.random() * emojies.length)]
+- let pings = 1
 
 blockquote #{text || 'Призываю!'}
 |
@@ -21,3 +22,7 @@ blockquote #{text || 'Призываю!'}
 each link in links
     +link({link, name: emoji()})
     |        
+    if pings > 0 && pings % 5 == 0
+        |
+        |
+    - pings++

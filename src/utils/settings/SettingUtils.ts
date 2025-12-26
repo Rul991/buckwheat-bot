@@ -32,4 +32,8 @@ export default class {
         const settings = await this.getSettings(filename)
         return settings[settingId] ?? null
     }
+
+    static async getKeys(filename: string) {
+        return Object.keys(this.getSettings(filename))
+    }
 }

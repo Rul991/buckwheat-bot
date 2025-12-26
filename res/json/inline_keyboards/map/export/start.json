@@ -1,0 +1,13 @@
+{
+    "definition": {
+        "export": {
+            "text": "@",
+            "data": "export_@"
+        }
+    },
+    
+    "values": 
+    [
+        "export"
+    ]
+}

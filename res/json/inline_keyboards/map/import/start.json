@@ -1,0 +1,13 @@
+{
+    "definition": {
+        "import": {
+            "text": "@",
+            "data": "import_@"
+        }
+    },
+    
+    "values": 
+    [
+        "import"
+    ]
+}

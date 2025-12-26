@@ -32,7 +32,6 @@ import AntiSpamAction from '../classes/actions/every/AntiSpamAction'
 import RuleCommand from '../classes/commands/buckwheat/chat/RuleCommand'
 import RuleChangeAction from '../classes/callback-button/scrollers/page/RuleChangeAction'
 import WorkCommand from '../classes/commands/buckwheat/money/WorkCommand'
-import { env } from 'process'
 import CommandsCommand from '../classes/commands/buckwheat/info/CommandsCommand'
 import DonateCommand from '../classes/commands/buckwheat/fee/DonateCommand'
 import HelloCommand from '../classes/commands/buckwheat/chat/HelloCommand'
@@ -152,6 +151,11 @@ import CardSellAction from '../classes/callback-button/card/shop/sell/CardSellAc
 import AddProfileAction from '../classes/actions/every/AddProfileAction'
 import ItemShowAction from '../classes/callback-button/shop/ItemShowAction'
 import SummonCommand from '../classes/commands/buckwheat/admins/SummonCommand'
+import ExportCommand from '../classes/commands/buckwheat/data/ExportCommand'
+import ExportAction from '../classes/callback-button/data/ExportAction'
+import ImportAction from '../classes/callback-button/data/ImportAction'
+import ImportSceneAction from '../classes/actions/scenes/ImportSceneAction'
+import ImportCommand from '../classes/commands/buckwheat/data/ImportCommand'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -286,7 +290,9 @@ const launchBot = async (bot: Bot) => {
         new CardBuyAction(),
         new CardSellChangeAction(),
         new CardSellAction(),
-        new ItemShowAction()
+        new ItemShowAction(),
+        new ExportAction(),
+        new ImportAction(),
     )
 
     // dice 
@@ -376,6 +382,8 @@ const launchBot = async (bot: Bot) => {
         new BroadcastCommand(),
         new CardCommand(),
         new SummonCommand(),
+        new ExportCommand(),
+        new ImportCommand(),
         ...await getSimpleCommands(),
     )
 
@@ -391,6 +399,7 @@ const launchBot = async (bot: Bot) => {
         new NumberSettingInputAction(),
         new SuggestCardAction(),
         new CardPriceSellAction(),
+        new ImportSceneAction(),
     )
 
     console.log('Start launching!')
@@ -398,7 +407,7 @@ const launchBot = async (bot: Bot) => {
 }
 
 const test = async (): Promise<void | boolean> => {
-
+    
 }
 
 const main = async () => {

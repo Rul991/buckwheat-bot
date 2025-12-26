@@ -17,11 +17,20 @@ export default class RulesService {
         return (await ChatService.get(chatId))?.rules ?? []
     }
 
-    static async add(chatId: number, data: string): Promise<void> {
+    static async set(chatId: number, data: string[]): Promise<void> {
         this._updateRules(
             chatId,
             rules => {
-                rules.push(data)
+                return data
+            }
+        )
+    }
+
+    static async add(chatId: number, ...data: string[]): Promise<void> {
+        this._updateRules(
+            chatId,
+            rules => {
+                rules.push(...data)
                 return rules
             }
         )
