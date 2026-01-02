@@ -9,24 +9,14 @@ import { tinyCurrentIncreaseIdSchema } from '../../../../../utils/values/schemas
 import { UNKNOWN_CARD_TITLE } from '../../../../../utils/values/consts'
 
 type Data = TinyCurrentIncreaseId
-
 type Object = ShopCard
 
 export default class extends ButtonScrollerAction<Object, Data> {
     protected _filename: string = 'cards/buy-change'
-    protected _schema: JSONSchemaType<Data> = tinyCurrentIncreaseIdSchema
 
     constructor () {
         super()
         this._name = 'cbych'
-    }
-
-    protected _getCurrentIncreaseIdNames(): CurrentIncreaseIdNames<Data> {
-        return {
-            current: 'c',
-            increase: 'i',
-            id: 'id'
-        }
     }
 
     protected async _getObjects({

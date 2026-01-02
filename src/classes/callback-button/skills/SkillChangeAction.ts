@@ -1,4 +1,4 @@
-import { ButtonScrollerEditMessageResult, ButtonScrollerFullOptions, ButtonScrollerOptions } from '../../../utils/values/types/types'
+import { ButtonScrollerEditMessageResult, ButtonScrollerFullOptions, ButtonScrollerOptions, CurrentIncreaseId } from '../../../utils/values/types/types'
 import UserClassService from '../../db/services/user/UserClassService'
 import ChosenSkillsService from '../../db/services/choosedSkills/ChosenSkillsService'
 import FileUtils from '../../../utils/FileUtils'
@@ -6,10 +6,12 @@ import Skill from '../../../interfaces/duel/Skill'
 import ClassUtils from '../../../utils/ClassUtils'
 import SkillUtils from '../../../utils/SkillUtils'
 import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
-import ButtonScrollerData from '../../../interfaces/callback-button-data/ButtonScrollerData'
+import { JSONSchemaType } from 'ajv'
+import { currentIncreaseIdSchema } from '../../../utils/values/schemas'
 
-export default class extends ButtonScrollerAction<Skill> {
+export default class extends ButtonScrollerAction<Skill, CurrentIncreaseId> {
     protected _filename: string = 'skills/add'
+    protected _schema: JSONSchemaType<CurrentIncreaseId> = currentIncreaseIdSchema
 
     constructor () {
         super()
@@ -19,7 +21,7 @@ export default class extends ButtonScrollerAction<Skill> {
     protected async _getObjects({
         chatId,
         id
-    }: ButtonScrollerOptions<ButtonScrollerData>): Promise<Skill[]> {
+    }: ButtonScrollerOptions<CurrentIncreaseId>): Promise<Skill[]> {
         const type = await UserClassService.get(chatId, id)
         const currentSkills = await ChosenSkillsService.getSkills(chatId, id)
         const availableSkills = (await SkillUtils.getAvailableSkills(chatId, id, type))
@@ -32,7 +34,7 @@ export default class extends ButtonScrollerAction<Skill> {
         chatId,
         id,
         slicedObjects
-    }: ButtonScrollerFullOptions<Skill, ButtonScrollerData>): Promise<ButtonScrollerEditMessageResult> {
+    }: ButtonScrollerFullOptions<Skill, CurrentIncreaseId>): Promise<ButtonScrollerEditMessageResult> {
         const type = await UserClassService.get(chatId, id)
 
         return {

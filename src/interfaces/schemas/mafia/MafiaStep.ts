@@ -3,4 +3,5 @@ export default interface MafiaStep {
     healedByMedic?: number
     workedWithWhore?: number
     killedBySheriff?: number
+    checkedBySheriff?: number
 }

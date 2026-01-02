@@ -2,7 +2,7 @@ import { JSONSchemaType } from 'ajv'
 import Character from '../../interfaces/duel/Character'
 import Characteristics from '../../interfaces/duel/Characteristics'
 import SimpleCommand from '../../interfaces/other/SimpleComand'
-import { NewInvoiceParameters, JsonShopItem, InventoryItemDescription, TinyCurrentIncreaseId } from './types/types'
+import { NewInvoiceParameters, JsonShopItem, InventoryItemDescription, TinyCurrentIncreaseId, CurrentIncreaseId } from './types/types'
 import Skill from '../../interfaces/duel/Skill'
 import StartUp from '../../interfaces/other/StartUp'
 import CubeData from '../../interfaces/callback-button-data/CubeData'
@@ -370,4 +370,21 @@ export const tinyCurrentIncreaseIdSchema: JSONSchemaType<TinyCurrentIncreaseId> 
         }
     },
     required: ['c', 'i']
+}
+
+export const currentIncreaseIdSchema: JSONSchemaType<CurrentIncreaseId> = {
+    type: 'object',
+    properties: {
+        current: {
+            type: 'number'
+        },
+        increase: {
+            type: 'number'
+        },
+        id: {
+            type: 'number',
+            nullable: true
+        }
+    },
+    required: ['current', 'increase']
 }

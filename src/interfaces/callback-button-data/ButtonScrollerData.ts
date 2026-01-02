@@ -1,5 +1,5 @@
-export default interface ButtonScrollerData {
-    id?: number
-    current: number
-    increase: number
+import { TinyCurrentIncreaseId } from '../../utils/values/types/types'
+
+export default interface ButtonScrollerData extends TinyCurrentIncreaseId {
+    
 }

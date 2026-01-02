@@ -5,7 +5,7 @@ import TestCommand from '../classes/commands/buckwheat/dev/TestCommand'
 import { DOMAIN, MODE, TOKEN } from '../utils/values/consts'
 import StartValidator from '../utils/StartValidator'
 import StartCommand from '../classes/commands/telegram/StartCommand'
-import EchoCommand from '../classes/commands/buckwheat/game/EchoCommand'
+import EchoCommand from '../classes/commands/buckwheat/say/EchoCommand'
 import SimpleBuckwheatCommand from '../classes/commands/base/SimpleBuckwheatCommand'
 import { connectDatabase } from './db'
 import { join } from 'path'
@@ -156,6 +156,7 @@ import ExportAction from '../classes/callback-button/data/ExportAction'
 import ImportAction from '../classes/callback-button/data/ImportAction'
 import ImportSceneAction from '../classes/actions/scenes/ImportSceneAction'
 import ImportCommand from '../classes/commands/buckwheat/data/ImportCommand'
+import SayCommand from '../classes/commands/buckwheat/say/SayCommand'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -337,6 +338,7 @@ const launchBot = async (bot: Bot) => {
         new ChangeDescriptionCommand(),
         new TestCommand(),
         new EchoCommand(),
+        new SayCommand(),
         new TransferCommand(),
         new RankCommand(),
         new MuteCommand(),

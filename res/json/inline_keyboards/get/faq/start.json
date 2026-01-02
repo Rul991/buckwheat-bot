@@ -2,7 +2,7 @@
     [
         {
             "text": "Просмотреть",
-            "callback_data": "faqchange_{\"current\":-1,\"increase\":1}"
+            "callback_data": "faqchange_{\"c\":-1,\"i\":1}"
         }
     ]
 ]

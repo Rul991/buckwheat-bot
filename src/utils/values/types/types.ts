@@ -303,6 +303,7 @@ export type SettingWithId<T extends SettingType = any> = Setting<T> & {
 export type CurrentIncreaseIdNames<D extends Record<string, any>> = {
     current: keyof D
     increase: keyof D
+    data?: keyof D
     id?: keyof D
 }
 
@@ -312,31 +313,41 @@ export type TinyCurrentIncreaseId = {
     id?: number
 }
 
+export type CurrentIncreaseId = {
+    current: number
+    increase: number
+    id?: number
+}
+
 export type MyTelegraf = Telegraf<Context & ContextData>
 
 export type ExtractSceneActionData<T extends SceneAction<any>> =
     T extends SceneAction<infer D> ? D : never
 
-export type CreateNavNumberField = {
-    name: string
-    value: number
+export type CreateNavNumberField = CreateNavObjectField<number>
+
+export type CreateNavObjectField<D> = {
+    name: string,
+    value: D
 }
 
-export type CreateNavButtonsOptions = {
+export type CreateNavButtonsOptions<D = undefined> = {
     current: CreateNavNumberField
     increase: CreateNavNumberField
     id?: CreateNavNumberField
+    data?: CreateNavObjectField<D>
     text: string
 }
 
-export type GetPageNavOptions = {
+export type GetPageNavOptions<D> = {
     length: number
     buttonsPerPage: number
     pageIndex: number
     current: string
     increase: string
     id?: CreateNavButtonsOptions['id']
-    createNavButton?: (options: CreateNavButtonsOptions) => CallbackButtonValue
+    data?: CreateNavButtonsOptions<D>['data']
+    createNavButton?: (options: CreateNavButtonsOptions<D>) => CallbackButtonValue
 }
 
 export type MafiaTypes = 'mafia' | 'medic' | 'sheriff' | 'harlot' | 'civilian'

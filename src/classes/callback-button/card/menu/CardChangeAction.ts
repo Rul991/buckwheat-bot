@@ -5,7 +5,6 @@ import { ScrollerGetObjectsOptions, ScrollerSendMessageOptions, ScrollerEditMess
 import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import CardService from '../../../db/services/card/CardService'
 import CardsService from '../../../db/services/card/CardsService'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import ScrollerAction from '../../scrollers/page/ScrollerAction'
 
 type Data = InventoryCard

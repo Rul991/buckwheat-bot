@@ -1,29 +1,17 @@
-import { JSONSchemaType } from 'ajv'
-import ClassUtils from '../../../utils/ClassUtils'
 import SkillUtils from '../../../utils/SkillUtils'
-import { ButtonScrollerOptions, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult, CallbackButtonValue, CurrentIncreaseIdNames, TinyCurrentIncreaseId } from '../../../utils/values/types/types'
+import { ButtonScrollerOptions, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult, CallbackButtonValue, TinyCurrentIncreaseId } from '../../../utils/values/types/types'
 import UserClassService from '../../db/services/user/UserClassService'
 import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
-import { tinyCurrentIncreaseIdSchema } from '../../../utils/values/schemas'
 
 type Data = CallbackButtonValue
 type ButtonScrollerData = TinyCurrentIncreaseId
 
 export default class extends ButtonScrollerAction<Data, ButtonScrollerData> {
     protected _filename: string = 'effects/classes'
-    protected _schema: JSONSchemaType<ButtonScrollerData> = tinyCurrentIncreaseIdSchema
 
     constructor () {
         super()
         this._name = 'echg'
-    }
-
-    protected _getCurrentIncreaseIdNames(): CurrentIncreaseIdNames<ButtonScrollerData> {
-        return {
-            current: 'c',
-            increase: 'i',
-            id: 'id'
-        }
     }
 
     protected async _getObjects({

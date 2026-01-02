@@ -1,27 +1,17 @@
 import { JSONSchemaType } from 'ajv'
 import ButtonScrollerData from '../../../../interfaces/callback-button-data/ButtonScrollerData'
 import { AsyncOrSync, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult, ButtonScrollerOptions, ButtonScrollerSlice, CallbackButtonValue, CurrentIncreaseIdNames, CreateNavButtonsOptions } from '../../../../utils/values/types/types'
-import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import CallbackButtonAction from '../../CallbackButtonAction'
 import ContextUtils from '../../../../utils/ContextUtils'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import { FIRST_INDEX, MAX_BUTTONS_IN_HORISONTAL, MAX_BUTTONS_PER_PAGE } from '../../../../utils/values/consts'
 import MessageUtils from '../../../../utils/MessageUtils'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
-import FileUtils from '../../../../utils/FileUtils'
 import NavigationButtonUtils from '../../../../utils/NavigationButtonUtils'
 import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
+import { tinyCurrentIncreaseIdSchema } from '../../../../utils/values/schemas'
 
 export default abstract class<O, D extends Record<string, any> = ButtonScrollerData> extends CallbackButtonAction<D> {
-    protected _schema: JSONSchemaType<D> = {
-        type: 'object',
-        properties: {
-            current: { type: 'number' },
-            increase: { type: 'number' },
-            id: {type: 'number', nullable: true}
-        },
-        required: ['current', 'increase']
-    }
+    protected _schema: JSONSchemaType<D> = tinyCurrentIncreaseIdSchema
 
     protected _buttonsPerPage: number = MAX_BUTTONS_PER_PAGE
     protected _maxRowWidth: number = MAX_BUTTONS_IN_HORISONTAL
@@ -54,8 +44,8 @@ export default abstract class<O, D extends Record<string, any> = ButtonScrollerD
 
     protected _getCurrentIncreaseIdNames(): CurrentIncreaseIdNames<D> {
         return {
-            current: 'current',
-            increase: 'increase',
+            current: 'c',
+            increase: 'i',
             id: 'id'
         }
     }
@@ -74,7 +64,8 @@ export default abstract class<O, D extends Record<string, any> = ButtonScrollerD
         const {
             id: idName,
             current,
-            increase
+            increase,
+            data: dataName
         } = this._getCurrentIncreaseIdNames()
 
         return NavigationButtonUtils.getPageNav({
@@ -86,7 +77,11 @@ export default abstract class<O, D extends Record<string, any> = ButtonScrollerD
                 value: id
             },
             length,
-            pageIndex: newPage
+            pageIndex: newPage,
+            data: {
+                name: dataName as string,
+                value: data['data'] ?? undefined
+            }
         })
     }
 

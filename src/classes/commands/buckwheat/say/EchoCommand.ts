@@ -1,11 +1,8 @@
-import { MaybeString } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import MessageUtils from '../../../../utils/MessageUtils'
 import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
 import Logging from '../../../../utils/Logging'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import ContextUtils from '../../../../utils/ContextUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 

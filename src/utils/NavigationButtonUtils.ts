@@ -1,37 +1,40 @@
 import { FIRST_INDEX, NOT_FOUND_INDEX } from './values/consts'
 import { CallbackButtonValue, CreateNavButtonsOptions, GetPageNavOptions } from './values/types/types'
 
-type GetArrowsOptions = GetPageNavOptions & {
+type GetArrowsOptions<D> = GetPageNavOptions<D> & {
     start: number
     end: number
 }
 
 export default class {
-    static createNavButton({
+    static createNavButton<D>({
         text,
         increase: { name: increase, value: increaseValue },
         current: { name: current, value: currentValue },
-        id
-    }: CreateNavButtonsOptions): CallbackButtonValue {
+        id,
+        data
+    }: CreateNavButtonsOptions<D>): CallbackButtonValue {
         return {
             text,
             data: JSON.stringify({
                 [current]: currentValue,
                 [increase]: increaseValue,
-                ...(id ? {[id.name as string]: id.value} : {})
+                ...(id ? {[id.name as string]: id.value} : {}),
+                ...(data ? {[data.name as string]: data.value} : {})
             })
         }
     }
 
-    static getPageNav({
+    static getPageNav<D>({
         length,
         buttonsPerPage,
         pageIndex,
         id,
         current,
         increase,
+        data,
         createNavButton = this.createNavButton
-    }: GetPageNavOptions): CallbackButtonValue[] {
+    }: GetPageNavOptions<D>): CallbackButtonValue[] {
         if(!length) {
             return [
                 {
@@ -60,7 +63,8 @@ export default class {
                     name: increase,
                     value: 1
                 },
-                id
+                id,
+                data
             }))
         }
 
@@ -87,14 +91,15 @@ export default class {
                     name: increase,
                     value: -1
                 },
-                id
+                id,
+                data
             }))
         }
 
         return pageNav
     }
 
-    static getArrows({
+    static getArrows<D>({
         length,
         start,
         end,
@@ -103,7 +108,7 @@ export default class {
         current,
         increase,
         createNavButton = this.createNavButton
-    }: GetArrowsOptions) {
+    }: GetArrowsOptions<D>) {
         const arrows: CallbackButtonValue[] = []
 
         const addArrow = (onLeft: boolean) => {

@@ -159,9 +159,10 @@ export default class BuyAction extends CallbackButtonAction<Data> {
         if (!ids) return
         const {
             botId,
-            chatId
+            chatId,
+            id
         } = ids
-        const [index, id, rawCount, page] = data
+        const [index, scrollingUserId, rawCount, page] = data
         const count = Math.max(1, rawCount)
 
         if (index === NOT_FOUND_INDEX) return
@@ -240,7 +241,7 @@ export default class BuyAction extends CallbackButtonAction<Data> {
                 ctx,
                 {
                     chatId,
-                    userId: id,
+                    userId: scrollingUserId,
                     index,
                     count,
                     page
