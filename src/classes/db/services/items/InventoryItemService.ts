@@ -54,6 +54,16 @@ export default class InventoryItemService {
         }
     }
 
+    static async has(chatId: number, id: number, itemId: string): Promise<boolean> {
+        const count = await this.getCount(chatId, id, itemId)
+        return count > 0
+    }
+
+    static async getCount(chatId: number, id: number, itemId: string): Promise<number> {
+        const item = await this.get(chatId, id, itemId)
+        return item?.count ?? 0
+    }
+
     static async get(chatId: number, id: number, itemId: string): Promise<InventoryItem | null> {
         const items = await this.getAll(chatId, id) ?? []
 

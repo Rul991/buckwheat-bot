@@ -1,31 +1,24 @@
-import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../utils/values/types/contexts'
+import { ZodType } from 'zod'
 import CallbackButtonAction from '../CallbackButtonAction'
 import DuelService from '../../db/services/duel/DuelService'
 import MessageUtils from '../../../utils/MessageUtils'
 import FileUtils from '../../../utils/FileUtils'
 import ClassUtils from '../../../utils/ClassUtils'
 import UserClassService from '../../db/services/user/UserClassService'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import ContextUtils from '../../../utils/ContextUtils'
 import ChosenSkillsService from '../../db/services/choosedSkills/ChosenSkillsService'
 import SkillUtils from '../../../utils/SkillUtils'
 import { UNKNOWN_EFFECT } from '../../../utils/values/consts'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
+import { duelSchema } from '../../../utils/values/schemas'
 
 type Data = {
     duel: number
 }
 
 export default class extends CallbackButtonAction<Data> {
-    protected _schema: JSONSchemaType<Data> = {
-        type: 'object',
-        properties: {
-            duel: { type: 'number' }
-        },
-        required: ['duel'],
-    }
+    protected _schema: ZodType<Data> = duelSchema
 
     constructor () {
         super()

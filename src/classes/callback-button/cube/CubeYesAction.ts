@@ -12,7 +12,7 @@ import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import CubeWinsService from '../../db/services/cube/CubeWinsService'
 import CubeLosesService from '../../db/services/cube/CubeLosesService'
 import CubeData from '../../../interfaces/callback-button-data/CubeData'
-import { JSONSchemaType } from 'ajv'
+import { ZodType } from 'zod'
 import { cubeDataSchema } from '../../../utils/values/schemas'
 import CubeLastMessageService from '../../db/services/cube/CubeLastMessageService'
 import FileUtils from '../../../utils/FileUtils'
@@ -29,7 +29,7 @@ type HasEnoughMoneyOptions = {
 }
 
 export default class CubeYesAction extends CallbackButtonAction<CubeData> {
-    protected _schema: JSONSchemaType<CubeData> = cubeDataSchema
+    protected _schema: ZodType<CubeData> = cubeDataSchema
 
     constructor() {
         super()

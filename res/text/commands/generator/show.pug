@@ -1,0 +1,11 @@
+include utils/mixins.pug
+include utils/functions.pug
+
+b 💸 Информация о генераторе №#{id + 1} игрока 
++link(user, false)
+| :
+|
+|
++parameter('Уровень', formatNumber(level))
++parameter('Доход в час', `${formatNumber(incomePerHour)} 💰`)
++parameter('Цена улучшения', `${formatNumber(price)} 💰`)

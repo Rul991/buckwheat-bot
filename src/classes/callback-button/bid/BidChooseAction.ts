@@ -1,5 +1,4 @@
-import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../utils/values/types/contexts'
+import { ZodType } from 'zod'
 import CallbackButtonAction from '../CallbackButtonAction'
 import { userReplyIdsDataSchema } from '../../../utils/values/schemas'
 import UserReplyIdsData from '../../../interfaces/callback-button-data/UserReplyIdsData'
@@ -10,7 +9,7 @@ type Data = UserReplyIdsData & {
 }
 
 export default class BidChooseAction extends CallbackButtonAction<Data> {
-    protected _schema: JSONSchemaType<Data> = userReplyIdsDataSchema
+    protected _schema: ZodType<Data> = userReplyIdsDataSchema
     
     constructor() {
         super()

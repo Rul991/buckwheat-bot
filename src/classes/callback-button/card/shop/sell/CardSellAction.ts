@@ -1,5 +1,4 @@
-import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../../../utils/values/types/contexts'
+import { number, object, ZodType } from 'zod'
 import CallbackButtonAction from '../../../CallbackButtonAction'
 import ContextUtils from '../../../../../utils/ContextUtils'
 import CardService from '../../../../db/services/card/CardService'
@@ -12,18 +11,10 @@ type Data = {
 }
 
 export default class extends CallbackButtonAction<Data> {
-    protected _schema: JSONSchemaType<Data> = {
-        type: 'object',
-        properties: {
-            c: {
-                type: 'number'
-            },
-            id: {
-                type: 'number'
-            }
-        },
-        required: ['c', 'id']
-    }
+    protected _schema: ZodType<Data> = object({
+        id: number(),
+        c: number()
+    })
 
     constructor() {
         super()

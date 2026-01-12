@@ -1,0 +1,12 @@
+include utils/mixins.pug
+include utils/functions.pug
+
+b 💸 Информация о генераторах игрока 
+    +link(user, false)
+    | : 
+|
+|
+|
++parameter('Количество', `${formatNumber(generatorCount)}`)
++parameter('Прибыль в час', `${formatNumber(incomePerHour)} 💰`)
++parameter('Прибыль', `${formatNumber(income)} 💰`)

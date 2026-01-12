@@ -1,42 +1,22 @@
-import Ajv, { JSONSchemaType } from 'ajv/dist/2020'
 import Logging from './Logging'
 import JsonUtils from './JsonUtils'
+import { ZodType } from 'zod'
 
 export default class ObjectValidator {
-    private static _ajv: Ajv = new Ajv({
-        allowUnionTypes: true, 
-        allErrors: true, 
-        verbose: true, 
-        strict: true,
-        strictNumbers: true,
-        strictRequired: true,
-        strictSchema: true,
-        strictTuples: true,
-        strictTypes: true
-    })
+    static isValidatedObject<T>(obj: T | any, schema: ZodType<T>): obj is T {
+        const parsed = schema.safeParse(obj)
 
-    static isValidatedObject<T>(obj: T | any, schema: JSONSchemaType<T>): obj is T {
-        try {
-            const validator = this._ajv.compile<T>(schema)
-            const isValid = validator(obj)
-
-            if(validator.errors) {
-                Logging.error('[Cant be validated]', obj)
-            }
-
-            validator.errors?.forEach(error => {
-                Logging.error('[Validation Error]', error)
-            })
-
-            return isValid
+        if(!parsed.success) {
+            Logging.error(
+                '[VALIDATION ERROR]',
+                parsed.error
+            )
         }
-        catch(e) {
-            Logging.error('[Validation exception]', e)
-            return false
-        }
+
+        return parsed.success
     }
 
-    static isValidatedJson<T>(data: string, schema: JSONSchemaType<T>): boolean {
+    static isValidatedJson<T>(data: string, schema: ZodType<T>): boolean {
         const json = JsonUtils.parse<T>(data)
         if(!json) return false
 

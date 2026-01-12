@@ -1,5 +1,5 @@
 import InventoryItemService from '../classes/db/services/items/InventoryItemService'
-import { DEFAULT_MAX_COUNT, DEFAULT_PREMIUM_DISCOUNT, DEFAULT_TOTAL_COUNT, DEFAULT_TOTAL_COUNT_MODE, FOREVER } from './values/consts'
+import { DEFAULT_DESCRIPTION, DEFAULT_ITEMNAME, DEFAULT_MAX_COUNT, DEFAULT_PREMIUM_DISCOUNT, DEFAULT_TOTAL_COUNT, DEFAULT_TOTAL_COUNT_MODE, FOREVER } from './values/consts'
 import MessageUtils from './MessageUtils'
 import { ItemCallbackOptions, ShopItem, ShopItemWithLength, JsonShopItem, ShopItemDescription, ShopMessageOptions, AsyncOrSync } from './values/types/types'
 import ContextUtils from './ContextUtils'
@@ -24,6 +24,24 @@ type HasEnoughItemsOptions = {
     count: number
 }
 
+const buyItem = async (
+    itemId: string, 
+    {
+        chatId,
+        id,
+        count
+    }: ItemCallbackOptions
+) => {
+    const [isBought] = await InventoryItemService.add(
+        chatId,
+        id,
+        itemId,
+        count
+    )
+
+    return isBought
+}
+
 const buyCard = async ({
     count,
     cardCount,
@@ -46,15 +64,16 @@ export default class ShopItems {
         return {
             id: '???',
             name: '???',
-            description: '???',
+            description: DEFAULT_DESCRIPTION,
             emoji: '🥀',
             price: 0,
-            maxCount: 1,
-            premiumDiscount: 0,
+            maxCount: DEFAULT_MAX_COUNT,
+            premiumDiscount: DEFAULT_PREMIUM_DISCOUNT,
             isPremium: true,
-            totalCount: 0,
-            totalCountMode: 'chat',
-            execute: () => false
+            totalCount: DEFAULT_TOTAL_COUNT,
+            totalCountMode: DEFAULT_TOTAL_COUNT_MODE,
+            execute: () => false,
+            itemName: DEFAULT_ITEMNAME
         }
     }
 
@@ -321,6 +340,26 @@ export default class ShopItems {
                     cardCount: 5
                 })
             }
+        },
+
+        {
+            filename: "moneyGrind/license",
+            execute: async options => {
+                return await buyItem(
+                    'moneyGrindLicense',
+                    options
+                )
+            }
+        },
+
+        {
+            filename: "moneyGrind/device",
+            execute: async (options) => {
+                return await buyItem(
+                    'moneyGrindDevice',
+                    options
+                )
+            }
         }
 
         // {
@@ -387,7 +426,8 @@ export default class ShopItems {
                 isPremium,
                 totalCount,
                 totalCountMode,
-                premiumDiscount
+                premiumDiscount,
+                itemName
             } = item
 
             return {
@@ -397,6 +437,7 @@ export default class ShopItems {
                 totalCount: totalCount ?? DEFAULT_TOTAL_COUNT,
                 totalCountMode: totalCountMode ?? DEFAULT_TOTAL_COUNT_MODE,
                 premiumDiscount: premiumDiscount ?? DEFAULT_PREMIUM_DISCOUNT,
+                itemName: itemName ?? filename,
                 execute,
                 id: filename
             }
@@ -452,7 +493,7 @@ export default class ShopItems {
     static async getRestAndCurrent(chatId: number, id: number, item: ShopItem) {
         const minValue = 0
 
-        const { totalCount, id: itemId } = item
+        const { totalCount, itemName: itemId } = item
         const isChatMode = this.isChatMode(item)
 
         const count = isChatMode ?

@@ -1,16 +1,14 @@
-import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../utils/values/types/contexts'
+import { number, object, ZodType } from 'zod'
 import CallbackButtonAction from '../CallbackButtonAction'
 import ContextUtils from '../../../utils/ContextUtils'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import ChosenSkillsService from '../../db/services/choosedSkills/ChosenSkillsService'
-import { type } from 'os'
 import ClassUtils from '../../../utils/ClassUtils'
 import FileUtils from '../../../utils/FileUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import UserClassService from '../../db/services/user/UserClassService'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
+import { idSchema } from '../../../utils/values/schemas'
 
 type Data = {
     index: number
@@ -18,14 +16,10 @@ type Data = {
 }
 
 export default class extends CallbackButtonAction<Data> {
-    protected _schema: JSONSchemaType<Data> = {
-        type: 'object',
-        properties: {
-            index: { type: 'number' },
-            id: { type: 'number' }
-        },
-        required: ['id', 'index']
-    }
+    protected _schema: ZodType<Data> = idSchema
+        .and(object({
+            index: number()
+        }))
 
     constructor () {
         super()

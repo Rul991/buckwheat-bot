@@ -1,4 +1,4 @@
-import { JSONSchemaType } from 'ajv'
+import { ZodType } from 'zod'
 import ButtonScrollerData from '../../../../interfaces/callback-button-data/ButtonScrollerData'
 import { AsyncOrSync, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult, ButtonScrollerOptions, ButtonScrollerSlice, CallbackButtonValue, CurrentIncreaseIdNames, CreateNavButtonsOptions } from '../../../../utils/values/types/types'
 import CallbackButtonAction from '../../CallbackButtonAction'
@@ -11,7 +11,7 @@ import { CallbackButtonOptions } from '../../../../utils/values/types/action-opt
 import { tinyCurrentIncreaseIdSchema } from '../../../../utils/values/schemas'
 
 export default abstract class<O, D extends Record<string, any> = ButtonScrollerData> extends CallbackButtonAction<D> {
-    protected _schema: JSONSchemaType<D> = tinyCurrentIncreaseIdSchema
+    protected _schema: ZodType<D> = tinyCurrentIncreaseIdSchema as any
 
     protected _buttonsPerPage: number = MAX_BUTTONS_PER_PAGE
     protected _maxRowWidth: number = MAX_BUTTONS_IN_HORISONTAL

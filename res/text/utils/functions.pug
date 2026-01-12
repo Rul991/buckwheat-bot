@@ -1,0 +1,29 @@
+-
+    const formatNumber = (number, separator = ' ') => {
+        if (number >= 1e+21) {
+            const zeroCount = Math.floor(Math.log10(number))
+            const afterDot = 2
+            const firstNumberPart = Math.floor(number / (10 ** (zeroCount - afterDot))) / (10 ** afterDot)
+
+            return `${firstNumberPart} * 10^${zeroCount}`
+        }
+        else {
+            let symbolsCount = 0
+            return [...number.toString()]
+                .reverse()
+                .reduce((prev, curr) => {
+                    if (curr != '.' && curr != '-') {
+                        symbolsCount++
+                    }
+                    else {
+                        symbolsCount = -1
+                    }
+
+                    if (symbolsCount > 0 && symbolsCount % 3 == 0) {
+                        return `${curr}${separator}${prev}`
+                    }
+
+                    return `${curr}${prev}`
+                })
+        }
+    }

@@ -1,11 +1,12 @@
 {
   "name": "buckwheat-bot",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "main": "src/app/index.ts",
   "scripts": {
     "start": "npx tsx src/app/index.ts",
     "dev": "npx tsx watch src/app/index.ts",
-    "build": "npm i && npx tsup src/app/index.ts",
+    "build": "npm i && npm run build:no-i",
+    "build:no-i": "npx tsup src/app/index.ts",
     "db": "npx tsx src/app/update-db.ts",
     "start:prod": "npm run build && pm2 start dist/index.js --name buckwheat",
     "stop:prod": "pm2 stop buckwheat && pm2 delete buckwheat",
@@ -30,7 +31,6 @@
     "tsup": "^8.5.1"
   },
   "dependencies": {
-    "ajv": "^8.17.1",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "https-proxy-agent": "^7.0.6",
@@ -39,6 +39,8 @@
     "pm2": "^6.0.10",
     "pug": "^3.0.3",
     "telegraf": "^4.16.3",
-    "typescript": "^5.9.3"
-  }
+    "typescript": "^5.9.3",
+    "zod": "^4.3.5"
+  },
+  "packageManager": "yarn@1.22.22"
 }

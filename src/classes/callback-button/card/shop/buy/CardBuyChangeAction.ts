@@ -1,11 +1,9 @@
-import { JSONSchemaType } from 'ajv'
-import { ButtonScrollerOptions, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult, CurrentIncreaseIdNames, CallbackButtonValue, TinyCurrentIncreaseId } from '../../../../../utils/values/types/types'
+import { ButtonScrollerOptions, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult, CallbackButtonValue, TinyCurrentIncreaseId } from '../../../../../utils/values/types/types'
 import ButtonScrollerAction from '../../../scrollers/button/ButtonScrollerAction'
 import ShopCardService from '../../../../db/services/card/ShopCardService'
 import FileUtils from '../../../../../utils/FileUtils'
 import CardService from '../../../../db/services/card/CardService'
 import ShopCard from '../../../../../interfaces/schemas/card/ShopCard'
-import { tinyCurrentIncreaseIdSchema } from '../../../../../utils/values/schemas'
 import { UNKNOWN_CARD_TITLE } from '../../../../../utils/values/consts'
 
 type Data = TinyCurrentIncreaseId

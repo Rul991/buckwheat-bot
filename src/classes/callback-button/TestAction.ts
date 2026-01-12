@@ -1,10 +1,8 @@
-import { JSONSchemaType } from 'ajv'
+import { literal, number, object, ZodType } from 'zod'
 import { AsyncOrSync } from '../../utils/values/types/types'
 import { CallbackButtonContext } from '../../utils/values/types/contexts'
 import CallbackButtonAction from './CallbackButtonAction'
 import { MODE } from '../../utils/values/consts'
-import LinkedChatService from '../db/services/linkedChat/LinkedChatService'
-import MessageUtils from '../../utils/MessageUtils'
 import CasinoAddService from '../db/services/casino/CasinoAddService'
 import ExperienceUtils from '../../utils/level/ExperienceUtils'
 import ExperienceService from '../db/services/level/ExperienceService'
@@ -28,18 +26,10 @@ type CallbackOptions = {
 type Callback = ({ }: CallbackOptions) => AsyncOrSync<string>
 
 export default class extends CallbackButtonAction<Data> {
-    protected _schema: JSONSchemaType<Data> = {
-        type: 'object',
-        properties: {
-            type: {
-                type: 'string'
-            },
-            value: {
-                type: 'number'
-            }
-        },
-        required: ['type', 'value']
-    }
+    protected _schema: ZodType<Data> = object({
+        type: literal(['level', 'money']),
+        value: number()
+    })
 
     private _callbacks: Record<Data['type'], Callback> = {
         level: async ({ id, chatId, data: { value } }: CallbackOptions): Promise<string> => {

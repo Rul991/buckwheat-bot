@@ -1,4 +1,4 @@
-import { JSONSchemaType } from 'ajv'
+import { ZodType } from 'zod'
 import DuelOfferData from '../../../interfaces/callback-button-data/DuelOfferData'
 import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
@@ -15,7 +15,7 @@ import DuelService from '../../db/services/duel/DuelService'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 export default class DuelYesAction extends CallbackButtonAction<DuelOfferData> {
-    protected _schema: JSONSchemaType<DuelOfferData> = userReplyIdsDataSchema
+    protected _schema: ZodType<DuelOfferData> = userReplyIdsDataSchema
 
     constructor() {
         super()

@@ -1,16 +1,13 @@
-import { JSONSchemaType } from 'ajv'
+import { ZodType } from 'zod'
 import CubeData from '../../../interfaces/callback-button-data/CubeData'
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
-import { CallbackButtonContext } from '../../../utils/values/types/contexts'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import CallbackButtonAction from '../CallbackButtonAction'
 import { cubeDataSchema } from '../../../utils/values/schemas'
-import FileUtils from '../../../utils/FileUtils'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 export default class CubeNoAction extends CallbackButtonAction<CubeData> {
-    protected _schema: JSONSchemaType<CubeData> = cubeDataSchema
+    protected _schema: ZodType<CubeData> = cubeDataSchema
     constructor () {
         super()
         this._name = 'cubeno'

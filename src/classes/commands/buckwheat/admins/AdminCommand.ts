@@ -1,4 +1,3 @@
-import { MaybeString } from '../../../../utils/values/types/types'
 import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import ContextUtils from '../../../../utils/ContextUtils'
@@ -14,6 +13,7 @@ import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-o
 export default abstract class AdminCommand extends BuckwheatCommand {
     protected _folder: string
     protected _isUndoCommand: boolean
+    protected _onUser: boolean
     protected _minimumRank: number
 
     constructor() {
@@ -21,6 +21,7 @@ export default abstract class AdminCommand extends BuckwheatCommand {
         this._folder = 'admin'
         this._isUndoCommand = true
         this._minimumRank = RankUtils.admin
+        this._onUser = true
     }
 
     protected abstract _do(ctx: TextContext, replyId: number, time: number, chatId: number): Promise<boolean>

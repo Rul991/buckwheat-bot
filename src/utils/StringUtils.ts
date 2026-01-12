@@ -15,12 +15,12 @@ export default class StringUtils {
         for (const symb of text.trim()) {
             const lastIndex = strings.length - 1
 
-            if(symb.match(this.spaceRegexp)) {
-                if(!strings[lastIndex].length) continue
-                
+            if (symb.match(this.spaceRegexp)) {
+                if (!strings[lastIndex].length) continue
+
                 spaceCount++
-                
-                if(spaceCount <= spaces) {
+
+                if (spaceCount <= spaces) {
                     strings.push('')
                     continue
                 }
@@ -36,20 +36,30 @@ export default class StringUtils {
         return text.split(sep).map(v => v.trim())
     }
 
-    static getShowValue(defaultValue: any) {
-        if(typeof defaultValue == 'boolean') {
-            return defaultValue ? '✅' : '❌'
+    static getShowValue(value: any) {
+        if (typeof value == 'boolean') {
+            return value ? '✅' : '❌'
         }
-        else if(typeof defaultValue == 'number') {
-            return StringUtils.toFormattedNumber(defaultValue)
+        else if (typeof value == 'number') {
+            return this.toFormattedNumber(value)
+        }
+        else if(value instanceof Array) {
+            return value.reduce(
+                (prev, curr, i) => {
+                    const separator = i + 1 < value.length ? ', ' : ''
+                    const showValue = this.getShowValue(curr)
+                    return `${prev}${separator}${showValue}`
+                },
+                ''
+            )
         }
         else {
-            return `${defaultValue}`
+            return `${value}`
         }
     }
 
-    static toFormattedNumber(number: number): string {
-        if(number >= 1e+21) {
+    static toFormattedNumber(number: number, separator = ' '): string {
+        if (number >= 1e+21) {
             const zeroCount = Math.floor(Math.log10(number))
             const afterDot = 2
             const firstNumberPart = Math.floor(number / (10 ** (zeroCount - afterDot))) / (10 ** afterDot)
@@ -57,29 +67,29 @@ export default class StringUtils {
             return `${firstNumberPart} * 10^${zeroCount}`
         }
         else {
-            let j = 0
-            return number
-                .toString()
-                .split('')
+            let symbolsCount = 0
+            return [...number.toString()]
                 .reverse()
-                .reduce((prev, curr, i, arr) => {
-                    let newSegment: string = curr
-                    if(j > 0 && (j + 1) % 3 == 0 && j != arr.length - 1) {
-                        newSegment = ' ' + newSegment
+                .reduce((prev, curr) => {
+                    if (curr != '.' && curr != '-') {
+                        symbolsCount++
+                    }
+                    else {
+                        symbolsCount = -1
                     }
 
-                    if(curr != '.' && curr != '-') {
-                        j++
+                    if (symbolsCount > 0 && symbolsCount % 3 == 0) {
+                        return `${curr}${separator}${prev}`
                     }
 
-                    return newSegment + prev
-                }, '')
+                    return `${curr}${prev}`
+                })
         }
     }
 
     static getProgress({
-        symbols: {half, full, empty, maxCount}, 
-        progress: {current, max}, 
+        symbols: { half, full, empty, maxCount },
+        progress: { current, max },
     }: Progress): string {
         const rawSymbolCount = current / max * maxCount
         const symbolsCount = (rawSymbolCount - (rawSymbolCount % 0.5))
@@ -93,7 +103,7 @@ export default class StringUtils {
     }
 
     static getProgressWithNums(progress: Progress): string {
-        const {current, max} = progress.progress
+        const { current, max } = progress.progress
         return `${this.getProgress(progress)} (${current} / ${max})`
     }
 
@@ -102,7 +112,7 @@ export default class StringUtils {
             .replaceAll(',', '.')
             .replaceAll(' ', '')
 
-        if(isNaN(rawNumber)) {
+        if (isNaN(rawNumber)) {
             return 0
         }
         else {

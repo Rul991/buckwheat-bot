@@ -1,4 +1,4 @@
-import { JSONSchemaType } from 'ajv'
+import { literal, number, object, string, ZodType } from 'zod'
 import { ClassTypes } from '../../../utils/values/types/types'
 import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
@@ -17,6 +17,7 @@ import Skill from '../../../interfaces/duel/Skill'
 import ChosenSkillsService from '../../db/services/choosedSkills/ChosenSkillsService'
 import { NOT_FOUND_INDEX } from '../../../utils/values/consts'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
+import { idSchema } from '../../../utils/values/schemas'
 
 type Types = 'd' | 'v' | 'a'
 
@@ -56,15 +57,12 @@ type SkillOptions = {
 }
 
 export default class extends CallbackButtonAction<Data> {
-    protected _schema: JSONSchemaType<Data> = {
-        type: 'object',
-        properties: {
-            id: { type: 'number' },
-            index: { type: ['number', 'string'] },
-            type: { type: 'string', nullable: true }
-        },
-        required: ['id', 'index']
-    }
+    protected _schema: ZodType<Data> = idSchema
+        .and(object({
+            index: number()
+                .or(string()),
+            type: literal(['d', 'v', 'a']).optional()
+        }))
 
     constructor () {
         super()

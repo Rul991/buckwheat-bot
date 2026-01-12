@@ -1,10 +1,7 @@
-import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../utils/values/types/contexts'
+import { object, string, ZodType } from 'zod'
 import CallbackButtonAction from '../CallbackButtonAction'
 import ContextUtils from '../../../utils/ContextUtils'
-import DuelUtils from '../../../utils/DuelUtils'
 import UserClassService from '../../db/services/user/UserClassService'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import ChosenSkillsService from '../../db/services/choosedSkills/ChosenSkillsService'
 import MessageUtils from '../../../utils/MessageUtils'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'
@@ -12,6 +9,7 @@ import FileUtils from '../../../utils/FileUtils'
 import ClassUtils from '../../../utils/ClassUtils'
 import SkillUtils from '../../../utils/SkillUtils'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
+import { idSchema } from '../../../utils/values/schemas'
 
 type Data = {
     skillId: string,
@@ -19,14 +17,10 @@ type Data = {
 }
 
 export default class extends CallbackButtonAction<Data> {
-    protected _schema: JSONSchemaType<Data> = {
-        type: 'object',
-        properties: {
-            skillId: { type: 'string' },
-            id: { type: 'number' }
-        },
-        required: ['id', 'skillId']
-    }
+    protected _schema: ZodType<Data> = idSchema
+        .and(object({
+            skillId: string()
+        }))
 
     constructor() {
         super()

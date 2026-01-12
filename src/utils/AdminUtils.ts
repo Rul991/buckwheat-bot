@@ -3,6 +3,7 @@ import TimeUtils from './TimeUtils'
 import Logging from './Logging'
 import LinkedChatService from '../classes/db/services/linkedChat/LinkedChatService'
 import UserLeftService from '../classes/db/services/user/UserLeftService'
+import ExceptionUtils from './ExceptionUtils'
 
 export default class AdminUtils {
     private static async _setLeft(ctx: Context, id: number, value: boolean) {
@@ -64,5 +65,31 @@ export default class AdminUtils {
             Logging.error('cant unban', e)
             return false
         }
+    }
+
+    private static _getMessageId(ctx: Context) {
+        return ctx.message ? 
+            'reply_to_message' in ctx.message ?
+                ctx.message.reply_to_message?.message_id :
+                ctx.message.message_id
+            : undefined
+    }
+
+    static async pin(ctx: Context) {
+        const messageId = this._getMessageId(ctx)
+        if(!messageId) return false
+
+        return await ExceptionUtils.handle(async () => {
+            await ctx.pinChatMessage(messageId)
+        })
+    }
+
+    static async unpin(ctx: Context) {
+        const messageId = this._getMessageId(ctx)
+        if(!messageId) return false
+
+        return await ExceptionUtils.handle(async () => {
+            await ctx.unpinChatMessage(messageId)
+        })
     }
 }

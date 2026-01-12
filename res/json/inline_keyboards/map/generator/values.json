@@ -1,0 +1,38 @@
+{
+    "definition": {
+        "generators": {
+            "text": "#@",
+            "data": "gs_@"
+        },
+
+        "add": {
+            "text": "+",
+            "data": "ga_@"
+        },
+
+        "arrow": {
+            "text": "@",
+            "data": "gc_@"
+        },
+
+        "pageNav": {
+            "text": "@",
+            "data": "gc_@"
+        },
+
+        "collect": {
+            "text": "💸 Собрать",
+            "data": "gg_@{collect}",
+            "notEach": true
+        }
+    },
+    
+    "values": 
+    [
+        "collect",
+        "generators",
+        "add",
+        ["arrow"],
+        ["pageNav"]
+    ]
+}

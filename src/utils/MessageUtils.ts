@@ -1,11 +1,11 @@
-import { InlineKeyboardMarkup, Message, ParseMode, TelegramEmoji } from 'telegraf/types'
+import { InlineKeyboardMarkup, InputFile, Message, ParseMode, TelegramEmoji } from 'telegraf/types'
 import { Context } from 'telegraf'
 import { FIRST_INDEX, MAX_MESSAGE_LENGTH, NOT_FOUND_INDEX, PARSE_MODE } from './values/consts'
 import FileUtils from './FileUtils'
 import Logging from './Logging'
 import AnswerOptions from '../interfaces/options/AnswerOptions'
 import FileAnswerOptions from '../interfaces/options/FileAnswerOptions'
-import { DiceValues, ExtraEditMessageMedia, ExtraEditMessageText, InputMediaWrapCaption, NewInvoiceParameters } from './values/types/types'
+import { DiceValues, ExtraEditMessageMedia, ExtraEditMessageText, FileOptions, InputMediaWrapCaption, NewInvoiceParameters, TextAsFileOptions } from './values/types/types'
 import ExceptionUtils from './ExceptionUtils'
 import ObjectValidator from './ObjectValidator'
 import { invoiceSchema } from './values/schemas'
@@ -240,6 +240,43 @@ export default class MessageUtils {
             ctx,
             json,
             extra
+        )
+    }
+
+    static async answerFile(
+        ctx: Context,
+        file: string | InputFile,
+        options?: FileOptions
+    ) {
+        return await ExceptionUtils.handle(async () => {
+            await ctx.replyWithDocument(
+                file,
+                {
+                    parse_mode: PARSE_MODE,
+                    ...options
+                }
+            )
+        })
+    }
+
+    static async answerTextAsFile(
+        ctx: Context,
+        {
+            filename = 'file.txt',
+            text
+        }: TextAsFileOptions,
+        options?: FileOptions
+    ) {
+        const buffer = Buffer.from(text, 'utf-8')
+        const file: InputFile = {
+            filename,
+            source: buffer,
+        }
+
+        return await this.answerFile(
+            ctx,
+            file,
+            options
         )
     }
 }

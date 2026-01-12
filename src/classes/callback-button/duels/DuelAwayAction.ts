@@ -1,9 +1,8 @@
-import { JSONSchemaType } from 'ajv'
+import { boolean, literal, number, object, ZodType } from 'zod'
 import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
 import DuelUtils from '../../../utils/DuelUtils'
 import MessageUtils from '../../../utils/MessageUtils'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import DuelService from '../../db/services/duel/DuelService'
 import FileUtils from '../../../utils/FileUtils'
 import ContextUtils from '../../../utils/ContextUtils'
@@ -24,18 +23,11 @@ type Args = {
 }
 
 export default class extends CallbackButtonAction<Data> {
-    protected _schema: JSONSchemaType<Data> = {
-        type: 'object',
-        properties: {
-            t: { type: 'string' },
-            v: { type: 'number' },
-            end: {
-                type: 'boolean',
-                nullable: true
-            }
-        },
-        required: ['t', 'v']
-    }
+    protected _schema: ZodType<Data> = object({
+        t: literal(['d', 'u']),
+        v: number(),
+        end: boolean().optional()
+    })
 
     constructor () {
         super()

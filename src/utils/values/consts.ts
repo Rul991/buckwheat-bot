@@ -56,7 +56,8 @@ export const MILLISECONDS_IN_SECOND = 1000
 export const SECONDS_IN_MINUTE = 60
 export const MINUTES_IN_HOUR = 60
 export const HOURS_IN_DAY = 24
-export const MILLISECONDS_IN_DAY = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY
+export const MILLISECONDS_IN_HOUR = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR
+export const MILLISECONDS_IN_DAY = MILLISECONDS_IN_HOUR * HOURS_IN_DAY
 
 export const PARSE_MODE = 'HTML'
 export const INFINITY_SYMB = '♾️'
@@ -151,6 +152,7 @@ export const DEFAULT_MAX_COUNT = 100_000
 export const DEFAULT_TOTAL_COUNT = -1
 export const DEFAULT_TOTAL_COUNT_MODE: TotalCountMode = 'user'
 export const DEFAULT_PREMIUM_DISCOUNT = 0
+export const DEFAULT_ITEMNAME = ''
 
 export const MAX_TIME_WORD = 'навсегда'
 export const DUEL_EXPERIENCE = 150
@@ -183,9 +185,14 @@ export const MAX_CARD_NAME_LENGTH = MAX_NAME_LENGTH
 export const MAX_CARD_DESCRIPTION_LENGTH = MAX_DESCRIPTION_LENGTH
 
 export const BROADCAST_TIME = 5_000
-
 export const MIN_CARD_PRICE = 1
 export const MAX_CARD_PRICE = 26_02_2025
 export const UNKNOWN_CARD_TITLE = '???'
 export const UNKWOWN_IMPORT_TITLE = '???'
 export const FOREVER = 0
+export const MAX_EXPORT_DATA_LENGTH = 2048
+
+export const GENERATOR_INCOME_PER_HOUR = 10
+export const GENERATOR_MAX_LEVEL = 5
+export const GENERATOR_UPGRADE_PRICE_PER_LEVEL = 1000
+export const GENERATOR_MAX_COUNT = 100

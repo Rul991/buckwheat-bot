@@ -1,17 +1,15 @@
-import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../utils/values/types/contexts'
+import { boolean, number, object, string, ZodType } from 'zod'
 import CallbackButtonAction from '../CallbackButtonAction'
 import RankUtils from '../../../utils/RankUtils'
 import ContextUtils from '../../../utils/ContextUtils'
 import UserRankService from '../../db/services/user/UserRankService'
 import FileUtils from '../../../utils/FileUtils'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import { SET_NUMBER_PHRASE, SET_STRING_PHRASE } from '../../../utils/values/consts'
 import ChatSettingsService from '../../db/services/settings/ChatSettingsService'
 import StringUtils from '../../../utils/StringUtils'
 import SettingShowUtils from '../../../utils/settings/SettingShowUtils'
-import NumberSettingInputAction from '../../actions/scenes/NumberSettingInputAction'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
+import { idSchema } from '../../../utils/values/schemas'
 
 type Data = {
     id: number
@@ -21,29 +19,14 @@ type Data = {
 }
 
 export default class extends CallbackButtonAction<Data> {
-    protected _schema: JSONSchemaType<Data> = {
-        type: 'object',
-        properties: {
-            id: {
-                type: 'number'
-            },
-            n: {
-                type: 'string'
-            },
-            v: {
-                type: [
-                    'boolean',
-                    'number',
-                    'string'
-                ]
-            },
-            p: {
-                type: 'number',
-                nullable: true
-            }
-        },
-        required: ['id', 'n', 'v']
-    }
+    protected _schema: ZodType<Data> = idSchema
+        .and(object({
+            n: string(),
+            v: boolean()
+                .or(string())
+                .or(number()),
+            p: number().optional()
+        }))
     protected _minimumRank: number = RankUtils.max
 
     constructor () {
@@ -83,7 +66,10 @@ export default class extends CallbackButtonAction<Data> {
             )
         }
         else if (value == SET_STRING_PHRASE) {
-
+            await ctx.scene.enter(
+                'setting-string',
+                initialState
+            )
         }
         else {
             await ChatSettingsService.set(chatId, settingId, value)

@@ -1,28 +1,18 @@
-import { JSONSchemaType } from 'ajv'
+import { literal, number, object, ZodType } from 'zod'
 import ClassData from '../../interfaces/callback-button-data/ClassData'
 import ClassUtils from '../../utils/ClassUtils'
 import ContextUtils from '../../utils/ContextUtils'
 import MessageUtils from '../../utils/MessageUtils'
-import { CallbackButtonContext } from '../../utils/values/types/contexts'
-import LinkedChatService from '../db/services/linkedChat/LinkedChatService'
 import UserClassService from '../db/services/user/UserClassService'
 import CallbackButtonAction from './CallbackButtonAction'
-import FileUtils from '../../utils/FileUtils'
 import { CallbackButtonOptions } from '../../utils/values/types/action-options'
+import { classTypesSchema } from '../../utils/values/schemas'
 
 export default class ClassAction extends CallbackButtonAction<ClassData> {
-    protected _schema: JSONSchemaType<ClassData> = {
-        type: 'object',
-        properties: {
-            classType: {
-                type: 'string'
-            },
-            userId: {
-                type: 'number'
-            }
-        },
-        required: ['classType', 'userId']
-    }
+    protected _schema: ZodType<ClassData> = object({
+        classType: classTypesSchema,
+        userId: number()
+    })
 
     constructor() {
         super()

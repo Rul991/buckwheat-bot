@@ -8,6 +8,11 @@ mixin param(title, progress, spaces = 0)
     code #{' '.repeat(spaces)}#{progress}
     |
 
+mixin parameter(title, value)
+    b 📍 #{title}: 
+    | #{value}
+    |
+
 mixin faq(title)
     b #{title.toUpperCase()}
     |

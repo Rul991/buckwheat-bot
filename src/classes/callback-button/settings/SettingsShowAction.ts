@@ -1,11 +1,9 @@
-import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../utils/values/types/contexts'
+import { number, object, string, ZodType } from 'zod'
 import CallbackButtonAction from '../CallbackButtonAction'
 import ContextUtils from '../../../utils/ContextUtils'
-import FileUtils from '../../../utils/FileUtils'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import SettingShowUtils from '../../../utils/settings/SettingShowUtils'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
+import { idSchema } from '../../../utils/values/schemas'
 
 type Data = {
     n: string
@@ -15,21 +13,11 @@ type Data = {
 
 export default class extends CallbackButtonAction<Data> {
     protected _filename: string = 'chat'
-    protected _schema: JSONSchemaType<Data> = {
-        type: 'object',
-        properties: {
-            n: {
-                type: 'string'
-            },
-            id: {
-                type: 'number'
-            },
-            p: {
-                type: 'number'
-            }
-        },
-        required: ['n', 'id', 'p']
-    }
+    protected _schema: ZodType<Data> = idSchema
+        .and(object({
+            n: string(),
+            p: number()
+        }))
 
     constructor () {
         super()

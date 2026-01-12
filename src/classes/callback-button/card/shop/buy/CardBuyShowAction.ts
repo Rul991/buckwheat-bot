@@ -1,5 +1,4 @@
-import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../../../utils/values/types/contexts'
+import { ZodType } from 'zod'
 import CallbackButtonAction from '../../../CallbackButtonAction'
 import ContextUtils from '../../../../../utils/ContextUtils'
 import CardUtils from '../../../../../utils/CardUtils'
@@ -10,6 +9,7 @@ import FileUtils from '../../../../../utils/FileUtils'
 import StringUtils from '../../../../../utils/StringUtils'
 import InlineKeyboardManager from '../../../../main/InlineKeyboardManager'
 import { CallbackButtonOptions } from '../../../../../utils/values/types/action-options'
+import { cardBuySchema } from '../../../../../utils/values/schemas'
 
 type Data = {
     s: number
@@ -18,21 +18,7 @@ type Data = {
 }
 
 export default class extends CallbackButtonAction<Data> {
-    protected _schema: JSONSchemaType<Data> = {
-        type: 'object',
-        properties: {
-            s: {
-                type: 'number',
-            },
-            id: {
-                type: 'number',
-            },
-            p: {
-                type: 'number',
-            },
-        },
-        required: ['s', 'id', 'p']
-    }
+    protected _schema: ZodType<Data> = cardBuySchema
 
     constructor() {
         super()

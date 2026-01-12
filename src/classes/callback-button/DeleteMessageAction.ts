@@ -1,24 +1,15 @@
-import { JSONSchemaType } from 'ajv'
+import { boolean, number, object, ZodType } from 'zod'
 import DeleteMessageData from '../../interfaces/callback-button-data/DeleteMessageData'
 import MessageUtils from '../../utils/MessageUtils'
-import { CallbackButtonContext } from '../../utils/values/types/contexts'
 import CallbackButtonAction from './CallbackButtonAction'
 import ContextUtils from '../../utils/ContextUtils'
 import { CallbackButtonOptions } from '../../utils/values/types/action-options'
 
 export default class DeleteMessageAction extends CallbackButtonAction<DeleteMessageData> {
-    protected _schema: JSONSchemaType<DeleteMessageData> = {
-        type: 'object',
-        properties: {
-            userId: {
-                type: 'number'
-            },
-            isSecure: {
-                type: 'boolean'
-            },
-        },
-        required: ['userId', 'isSecure']
-    }
+    protected _schema: ZodType<DeleteMessageData> = object({
+        userId: number(),
+        isSecure: boolean()
+    })
 
     constructor() {
         super()

@@ -1,4 +1,4 @@
-import { JSONSchemaType } from 'ajv'
+import { string, ZodType } from 'zod'
 import MessageUtils from '../../../../utils/MessageUtils'
 import Pager from '../../../../utils/Pager'
 import { AsyncOrSync, ScrollerSendMessageOptions, ScrollerEditMessageResult, ScrollerGetObjectsOptions } from '../../../../utils/values/types/types'
@@ -10,7 +10,7 @@ import { CallbackButtonOptions } from '../../../../utils/values/types/action-opt
 
 export default abstract class ScrollerAction<T, D = string> extends CallbackButtonAction<string> {
     protected _objectsPerPage: number = 0
-    protected _schema: JSONSchemaType<string> = { type: 'string' }
+    protected _schema: ZodType<string> = string()
     protected abstract _getObjects(ctx: CallbackButtonContext, { id }: ScrollerGetObjectsOptions<D>): AsyncOrSync<T[]>
 
     protected _getSlicedObjects(objects: T[], currentPage: number): T[] {

@@ -1,20 +1,18 @@
-import { JSONSchemaType } from 'ajv'
+import { number, ZodType } from 'zod'
 import AdminUtils from '../../utils/AdminUtils'
 import ContextUtils from '../../utils/ContextUtils'
 import MessageUtils from '../../utils/MessageUtils'
 import { CallbackButtonContext } from '../../utils/values/types/contexts'
-import LinkedChatService from '../db/services/linkedChat/LinkedChatService'
 import UserOldService from '../db/services/user/UserOldService'
 import CallbackButtonAction from './CallbackButtonAction'
 import UserRankService from '../db/services/user/UserRankService'
 import RankUtils from '../../utils/RankUtils'
-import FileUtils from '../../utils/FileUtils'
 import { CallbackButtonOptions } from '../../utils/values/types/action-options'
 
 type Data = number
 
 export default class VerificationAction extends CallbackButtonAction<Data> {
-    protected _schema: JSONSchemaType<Data> = { type: 'number' }
+    protected _schema: ZodType<Data> = number()
 
     constructor () {
         super()

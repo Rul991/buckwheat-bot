@@ -1,16 +1,13 @@
-import { JSONSchemaType } from 'ajv'
+import { ZodType } from 'zod'
 import UserReplyIdsData from '../../../interfaces/callback-button-data/UserReplyIdsData'
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
-import { CallbackButtonContext } from '../../../utils/values/types/contexts'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import CallbackButtonAction from '../CallbackButtonAction'
 import { userReplyIdsDataSchema } from '../../../utils/values/schemas'
-import FileUtils from '../../../utils/FileUtils'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 export default class MarryNoAction extends CallbackButtonAction<UserReplyIdsData> {
-    protected _schema: JSONSchemaType<UserReplyIdsData> = userReplyIdsDataSchema
+    protected _schema: ZodType<UserReplyIdsData> = userReplyIdsDataSchema
 
     constructor() {
         super()

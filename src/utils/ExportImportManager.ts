@@ -1,4 +1,4 @@
-import { JSONSchemaType } from 'ajv'
+import { object, string, tuple, ZodType } from 'zod'
 import UserRankService from '../classes/db/services/user/UserRankService'
 import RoleplaysService from '../classes/db/services/rp/RoleplaysService'
 import Roleplays from '../interfaces/schemas/chat/Roleplays'
@@ -7,7 +7,7 @@ import JsonUtils from './JsonUtils'
 import RankUtils from './RankUtils'
 import RulesService from '../classes/db/services/chat/RulesService'
 import ChatService from '../classes/db/services/chat/ChatService'
-import { MAX_DESCRIPTION_LENGTH, MAX_NAME_LENGTH, UNKWOWN_IMPORT_TITLE } from './values/consts'
+import { MAX_DESCRIPTION_LENGTH, MAX_EXPORT_DATA_LENGTH, MAX_NAME_LENGTH, UNKWOWN_IMPORT_TITLE } from './values/consts'
 import UserProfileService from '../classes/db/services/user/UserProfileService'
 import UserNameService from '../classes/db/services/user/UserNameService'
 import ChatSettingsService from '../classes/db/services/settings/ChatSettingsService'
@@ -35,7 +35,7 @@ type Data<T extends object = any> = {
     id: string
     title: string
     description?: string
-    schema: JSONSchemaType<T>,
+    schema: ZodType<T>,
     import: (options: ImportOptions<T>) => Promise<void>
     export: (options: ExportOptions) => Promise<T>
     type: SerializeType
@@ -51,16 +51,7 @@ export default class {
             id: 'rp',
             title: 'РП',
             description: 'Добавляет новые или заменяет существующие команды',
-            schema: {
-                type: 'array',
-                items: {
-                    type: 'array',
-                    minItems: 2,
-                    items: {
-                        type: 'string'
-                    }
-                }
-            },
+            schema: tuple([string(), string()]).array(),
             type: 'chat',
             import: async (options: ImportOptions<object>): Promise<void> => {
                 const {
@@ -84,24 +75,10 @@ export default class {
             id: 'chat',
             title: 'Чат',
             description: 'Заменяет правила и приветствие',
-            //@ts-ignore
-            schema: {
-                type: 'object',
-                properties: {
-                    rules: {
-                        type: 'array',
-                        items: {
-                            type: 'string',
-                            maxLength: 2048
-                        }
-                    },
-                    hello: {
-                        type: 'string',
-                        maxLength: 2048
-                    }
-                },
-                required: ['rules', 'hello']
-            },
+            schema: object({
+                rules: string().max(MAX_EXPORT_DATA_LENGTH).array(),
+                hello: string().max(MAX_EXPORT_DATA_LENGTH),
+            }),
             import: async options => {
                 const {
                     chatId,
@@ -136,12 +113,7 @@ export default class {
             id: 'rules',
             title: 'Правила',
             description: 'Добавляет правила',
-            schema: {
-                type: 'array',
-                    items: {
-                        type: 'string'
-                    }
-            },
+            schema: string().array(),
             type: 'chat',
             import: async (options: ImportOptions<object>): Promise<void> => {
                 const {
@@ -165,26 +137,11 @@ export default class {
             id: 'profile',
             title: 'Профиль',
             description: 'Заменяет ваши ник, описание и аватарку',
-            // @ts-ignore
-            schema: {
-                type: 'object',
-                required: ['name'],
-                properties: {
-                    name: {
-                        type: 'string',
-                        maxLength: MAX_NAME_LENGTH
-                    },
-                    description: {
-                        type: 'string',
-                        nullable: true,
-                        maxLength: MAX_DESCRIPTION_LENGTH
-                    },
-                    imageId: {
-                        type: 'string',
-                        nullable: true
-                    }
-                }
-            },
+            schema: object({
+                name: string().max(MAX_NAME_LENGTH),
+                description: string().max(MAX_DESCRIPTION_LENGTH).optional(),
+                imageId: string().optional()
+            }),
             type: 'user',
             import: async (options: ImportOptions<object>): Promise<void> => {
                 const {

@@ -1,10 +1,12 @@
-import { JSONSchemaType } from 'ajv'
+import { ZodType } from 'zod'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 import CallbackButtonAction from '../CallbackButtonAction'
 import ContextUtils from '../../../utils/ContextUtils'
 import ExportImportManager from '../../../utils/ExportImportManager'
 import MessageUtils from '../../../utils/MessageUtils'
 import FileUtils from '../../../utils/FileUtils'
+import { MAX_EXPORT_DATA_LENGTH } from '../../../utils/values/consts'
+import { dataSchema } from '../../../utils/values/schemas'
 
 type Data = {
     id: number,
@@ -12,20 +14,9 @@ type Data = {
 }
 
 export default class extends CallbackButtonAction<Data> {
-    protected _schema: JSONSchemaType<Data> = {
-        type: 'object',
-        required: ['id', 'n'],
-        properties: {
-            id: {
-                type: 'number'
-            },
-            n: {
-                type: 'string'
-            }
-        }
-    }
+    protected _schema: ZodType<Data> = dataSchema
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'export'
     }
@@ -41,7 +32,7 @@ export default class extends CallbackButtonAction<Data> {
             n: name,
             id
         } = data
-        if(await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return
+        if (await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return
 
         const {
             exported,
@@ -52,18 +43,37 @@ export default class extends CallbackButtonAction<Data> {
             name
         })
 
-        await MessageUtils.editText(
-            ctx,
-            await FileUtils.readPugFromResource(
-                'text/commands/export/done.pug',
+        const isEditMessage = exported.length <= MAX_EXPORT_DATA_LENGTH
+
+        const text = await FileUtils.readPugFromResource(
+            'text/commands/export/done.pug',
+            {
+                changeValues: {
+                    title: value?.title,
+                    result: isEditMessage ? exported : ''
+                }
+            }
+        )
+
+        if (isEditMessage) {
+            await MessageUtils.editText(
+                ctx,
+                text
+            )
+        }
+        else {
+            await MessageUtils.answerTextAsFile(
+                ctx,
                 {
-                    changeValues: {
-                        title: value?.title,
-                        result: exported
-                    }
+                    filename: value ? `${value.id}.json` : undefined,
+                    text: exported
+                },
+                {
+                    caption: text
                 }
             )
-        )
+            await MessageUtils.deleteMessage(ctx)
+        }
     }
 
 }

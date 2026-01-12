@@ -4,5 +4,6 @@
     "emoji": "🃏",
     "price": 5000,
     "maxCount": 100,
-    "premiumDiscount": 10
+    "premiumDiscount": 10,
+    "itemName": "cardBox"
 }

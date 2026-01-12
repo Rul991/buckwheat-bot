@@ -1,10 +1,8 @@
-import { JSONSchemaType } from 'ajv'
+import { ZodType } from 'zod'
 import { ClassTypes, Link } from '../../../utils/values/types/types'
-import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
 import DuelUtils from '../../../utils/DuelUtils'
 import DuelService from '../../db/services/duel/DuelService'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import EffectService from '../../db/services/duel/EffectService'
 import ContextUtils from '../../../utils/ContextUtils'
 import Effect from '../../../interfaces/schemas/duels/Effect'
@@ -15,6 +13,7 @@ import SkillUtils from '../../../utils/SkillUtils'
 import FileUtils from '../../../utils/FileUtils'
 import { UNKNOWN_EFFECT } from '../../../utils/values/consts'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
+import { duelSchema } from '../../../utils/values/schemas'
 
 type Data = {
     duel: number
@@ -31,13 +30,7 @@ type SortedEffects = {
 }
 
 export default class extends CallbackButtonAction<Data> {
-    protected _schema: JSONSchemaType<Data> = {
-        type: 'object',
-        properties: {
-            duel: { type: 'number' }
-        },
-        required: ['duel']
-    }
+    protected _schema: ZodType<Data> = duelSchema
 
     constructor () {
         super()

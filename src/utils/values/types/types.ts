@@ -97,20 +97,20 @@ export type ShopMessageOptions = {
 }
 
 export type TotalCountMode = 'user' | 'chat'
-export type JsonShopItem =
-    {
-        id?: string
-        name: string,
-        description: string,
-        emoji: string,
-        price: number,
-        maxCount?: number,
-        premiumDiscount?: number,
-        isPremium?: boolean,
-        totalCount?: number,
-        totalCountMode?: TotalCountMode,
-        execute?: ShopItemDescription['execute']
-    }
+export type JsonShopItem = {
+    id?: string
+    name: string
+    description: string
+    emoji: string
+    price: number
+    maxCount?: number
+    premiumDiscount?: number
+    isPremium?: boolean
+    totalCount?: number
+    totalCountMode?: TotalCountMode
+    itemName?: string
+    execute?: ShopItemDescription['execute']
+}
 
 export type ShopItemDescription = {
     filename: string
@@ -143,6 +143,12 @@ export type ScrollerEditMessageResult = ScrollerEditMessage | string | null
 export type Ids = {
     chatId: number
     id: number
+}
+
+export type FileOptions = Types.ExtraDocument
+export type TextAsFileOptions = {
+    filename?: string
+    text: string
 }
 
 export type NewInvoiceParameters = Omit<Types.NewInvoiceParameters, 'currency' | 'provider_token'>

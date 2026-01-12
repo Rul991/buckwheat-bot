@@ -1,3 +1,9 @@
 {
-    
+    "grind": {
+        "title": "Гринд",
+        "description": "Не показывать сообщения от казино, баквит работа и баквит печенька?",
+        "type": "boolean",
+        "properties": {},
+        "default": false
+    }
 }

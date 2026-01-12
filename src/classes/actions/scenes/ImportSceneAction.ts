@@ -1,9 +1,14 @@
+import { Update } from 'telegraf/types'
 import ContextUtils from '../../../utils/ContextUtils'
 import ExportImportManager from '../../../utils/ExportImportManager'
 import MessageUtils from '../../../utils/MessageUtils'
 import { UNKWOWN_IMPORT_TITLE } from '../../../utils/values/consts'
 import { SceneOptions } from '../../../utils/values/types/action-options'
+import { SceneContextData } from '../../../utils/values/types/contexts'
+import { IdContextData } from '../../../utils/values/types/types'
 import SceneAction from './SceneAction'
+import { Context } from 'telegraf'
+import FetchUtils from '../../../utils/FetchUtils'
 
 type Data = {
     id: number
@@ -22,27 +27,10 @@ export default class extends SceneAction<Data> {
             scene
         } = options
 
-        scene.enter(async ctx => {
-            const {
-                name
-            } = ctx.scene.state
-
-            const value = ExportImportManager.getById(name)
-
-            await MessageUtils.answerMessageFromResource(
-                ctx,
-                'text/commands/import/start.pug',
-                {
-                    changeValues: {
-                        title: ExportImportManager.getTitleByData(value),
-                        description: value?.description
-                    }
-                }
-            )
-        })
-
-        scene.on('text', async ctx => {
-            const data = ctx.text
+        const importAndSendMessage = async (
+            ctx: Context<Update> & SceneContextData<Data> & IdContextData,
+            data: string
+        ) => {
             const options = ctx.scene.state
 
             const {
@@ -72,6 +60,45 @@ export default class extends SceneAction<Data> {
             )
             
             await ctx.scene.leave()
+        }
+
+        scene.enter(async ctx => {
+            const {
+                name
+            } = ctx.scene.state
+
+            const value = ExportImportManager.getById(name)
+
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/import/start.pug',
+                {
+                    changeValues: {
+                        title: ExportImportManager.getTitleByData(value),
+                        description: value?.description
+                    }
+                }
+            )
+        })
+
+        scene.on('text', async ctx => {
+            const data = ctx.text
+            await importAndSendMessage(
+                ctx,
+                data
+            )
+        })
+
+        scene.on('document', async ctx => {
+            const document = ctx.message.document
+            const fileId = document.file_id
+            const url = await ctx.telegram.getFileLink(fileId)
+            const data = await FetchUtils.text(url)
+
+            await importAndSendMessage(
+                ctx,
+                data
+            )
         })
     }
 }

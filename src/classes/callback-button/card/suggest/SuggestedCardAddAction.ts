@@ -1,5 +1,4 @@
-import { JSONSchemaType } from 'ajv'
-import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
+import { any, literal, number, object, ZodType } from 'zod'
 import CallbackButtonAction from '../../CallbackButtonAction'
 import ContextUtils from '../../../../utils/ContextUtils'
 import { DEV_ID } from '../../../../utils/values/consts'
@@ -9,6 +8,7 @@ import CardService from '../../../db/services/card/CardService'
 import MessageUtils from '../../../../utils/MessageUtils'
 import ArrayUtils from '../../../../utils/ArrayUtils'
 import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
+import { cardBuySchema } from '../../../../utils/values/schemas'
 
 type Data = {
     a: 0 | 1,
@@ -18,25 +18,12 @@ type Data = {
 }
 
 export default class extends CallbackButtonAction<Data> {
-    protected _schema: JSONSchemaType<Data> = {
-        type: 'object',
-        properties: {
-            a: {
-                type: 'number',
-                enum: [0, 1]
-            },
-            id: {
-                type: 'number'
-            },
-            c: {
-                type: 'number'
-            },
-            p: {
-                type: 'number'
-            }
-        },
-        required: ['a', 'id', 'c', 'p']
-    }
+    protected _schema: ZodType<Data> = cardBuySchema
+        .and(object({
+            a: literal([0, 1]),
+            s: any().optional(),
+            c: number()
+        }))
 
     constructor () {
         super()

@@ -1,4 +1,4 @@
-import { JSONSchemaType } from 'ajv'
+import { object, string, ZodType } from 'zod'
 import { UseSkillOptions } from '../../../utils/values/types/types'
 import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
@@ -19,6 +19,7 @@ import FileUtils from '../../../utils/FileUtils'
 import LastStepService from '../../db/services/duel/LastStepService'
 import Skill from '../../../interfaces/duel/Skill'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
+import { duelSchema } from '../../../utils/values/schemas'
 
 type Data = {
     name: string
@@ -32,14 +33,10 @@ type CantUseSkillOptions = {
 }
 
 export default class extends CallbackButtonAction<Data> {
-    protected _schema: JSONSchemaType<Data> = {
-        type: 'object',
-        properties: {
-            name: { type: 'string' },
-            duel: { type: 'number' }
-        },
-        required: ['name', 'duel']
-    }
+    protected _schema: ZodType<Data> = duelSchema
+        .and(object({
+            name: string(),
+        }))
 
     constructor () {
         super()

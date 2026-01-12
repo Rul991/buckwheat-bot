@@ -1,13 +1,13 @@
 import BaseAction from '../actions/base/BaseAction'
-import { JSONSchemaType } from 'ajv'
+import { ZodType } from 'zod'
 import Logging from '../../utils/Logging'
 import ObjectValidator from '../../utils/ObjectValidator'
 import { CallbackButtonOptions } from '../../utils/values/types/action-options'
 
 export default abstract class CallbackButtonAction<T> extends BaseAction {
-    protected abstract _schema: JSONSchemaType<T> | null
+    protected abstract _schema: ZodType<T> | null
 
-    get schema(): JSONSchemaType<T> | null {
+    get schema(): ZodType<T> | null {
         return this._schema
     }
 

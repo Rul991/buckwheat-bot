@@ -1,4 +1,4 @@
-import { JSONSchemaType } from 'ajv'
+import { ZodType } from 'zod'
 import ArrayUtils from '../../../utils/ArrayUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import { DEV_ID, NOT_FOUND_INDEX } from '../../../utils/values/consts'
@@ -12,7 +12,7 @@ import FileUtils from '../../../utils/FileUtils'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 export default class DeleteIdeaAction extends CallbackButtonAction<ScrollerWithIdData> {
-    protected _schema: JSONSchemaType<ScrollerWithIdData> = scrollerWithIdDataSchema
+    protected _schema: ZodType<ScrollerWithIdData> = scrollerWithIdDataSchema
 
     constructor() {
         super()

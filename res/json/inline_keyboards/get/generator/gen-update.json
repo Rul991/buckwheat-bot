@@ -1,0 +1,8 @@
+[
+    [
+        {
+            "text": "Обновить",
+            "callback_data": "gs_{\"id\":@{id},\"p\":@{page},\"i\":@{index}}"
+        }
+    ]
+]

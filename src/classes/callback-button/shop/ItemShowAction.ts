@@ -1,9 +1,10 @@
-import { JSONSchemaType } from 'ajv'
+import { number, object, ZodType } from 'zod'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 import CallbackButtonAction from '../CallbackButtonAction'
 import ContextUtils from '../../../utils/ContextUtils'
 import ShopItems from '../../../utils/ShopItems'
 import MessageUtils from '../../../utils/MessageUtils'
+import { idSchema } from '../../../utils/values/schemas'
 
 type Data = {
     id: number
@@ -13,25 +14,12 @@ type Data = {
 }
 
 export default class extends CallbackButtonAction<Data> {
-    protected _schema: JSONSchemaType<Data> = {
-        type: 'object',
-        required: ['id', 'p', 'i'],
-        properties: {
-            id: {
-                type: 'number',
-            },
-            p: {
-                type: 'number'
-            },
-            i: {
-                type: 'number'
-            },
-            cnt: {
-                type: 'number',
-                nullable: true
-            }
-        }
-    }
+    protected _schema: ZodType<Data> = idSchema
+        .and(object({
+            p: number(),
+            i: number(),
+            cnt: number().optional()
+        }))
 
     constructor() {
         super()

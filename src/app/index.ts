@@ -157,6 +157,15 @@ import ImportAction from '../classes/callback-button/data/ImportAction'
 import ImportSceneAction from '../classes/actions/scenes/ImportSceneAction'
 import ImportCommand from '../classes/commands/buckwheat/data/ImportCommand'
 import SayCommand from '../classes/commands/buckwheat/say/SayCommand'
+import PinCommand from '../classes/commands/buckwheat/admins/PinCommand'
+import UnpinCommand from '../classes/commands/buckwheat/admins/UnpinCommand'
+import TelegramCommandsCommand from '../classes/commands/telegram/TelegramCommandsCommand'
+import GeneratorCommand from '../classes/commands/buckwheat/money/GeneratorCommand'
+import GeneratorChangeAction from '../classes/callback-button/generator/GeneratorChangeAction'
+import GeneratorAddAction from '../classes/callback-button/generator/GeneratorAddAction'
+import GeneratorShowAction from '../classes/callback-button/generator/GeneratorShowAction'
+import GeneratorCollectAction from '../classes/callback-button/generator/GeneratorCollectAction'
+import GeneratorUpgradeAction from '../classes/callback-button/generator/GeneratorUpgradeAction'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -294,6 +303,11 @@ const launchBot = async (bot: Bot) => {
         new ItemShowAction(),
         new ExportAction(),
         new ImportAction(),
+        new GeneratorChangeAction(),
+        new GeneratorAddAction(),
+        new GeneratorShowAction(),
+        new GeneratorCollectAction(),
+        new GeneratorUpgradeAction(),
     )
 
     // dice 
@@ -386,6 +400,9 @@ const launchBot = async (bot: Bot) => {
         new SummonCommand(),
         new ExportCommand(),
         new ImportCommand(),
+        new PinCommand(),
+        new UnpinCommand(),
+        new GeneratorCommand(),
         ...await getSimpleCommands(),
     )
 
@@ -393,7 +410,8 @@ const launchBot = async (bot: Bot) => {
     bot.addActions(
         new StartCommand(),
         new PaySupportCommand(),
-        new HelpCommand()
+        new HelpCommand(),
+        new TelegramCommandsCommand(),
     )
 
     // scenes

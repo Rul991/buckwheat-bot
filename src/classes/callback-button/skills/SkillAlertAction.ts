@@ -1,4 +1,4 @@
-import { JSONSchemaType } from 'ajv'
+import { number, object, string, ZodType } from 'zod'
 import { ClassTypes } from '../../../utils/values/types/types'
 import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
@@ -7,6 +7,7 @@ import ContextUtils from '../../../utils/ContextUtils'
 import Skill from '../../../interfaces/duel/Skill'
 import FileUtils from '../../../utils/FileUtils'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
+import { classTypesSchema } from '../../../utils/values/schemas'
 
 type Data = {
     name: string
@@ -15,15 +16,11 @@ type Data = {
 }
 
 export default class extends CallbackButtonAction<Data> {
-    protected _schema: JSONSchemaType<Data> = {
-        type: 'object',
-        properties: {
-            name: { type: 'string' },
-            id: { type: 'number', nullable: true },
-            type: { type: 'string' },
-        },
-        required: ['name']
-    }
+    protected _schema: ZodType<Data> = object({
+        name: string(),
+        id: number().optional(),
+        type: classTypesSchema
+    })
 
     constructor () {
         super()

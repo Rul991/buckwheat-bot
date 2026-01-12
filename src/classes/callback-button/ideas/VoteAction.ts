@@ -1,23 +1,19 @@
-import { JSONSchemaType } from 'ajv'
+import { boolean, number, object, ZodType } from 'zod'
 import VoteData from '../../../interfaces/callback-button-data/VoteData'
 import IdeaUtils from '../../../utils/IdeaUtils'
-import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import IdeasService from '../../db/services/ideas/IdeasService'
 import CallbackButtonAction from '../CallbackButtonAction'
 import IdeaChangeAction from './IdeaChangeAction'
 import FileUtils from '../../../utils/FileUtils'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
+import { idSchema } from '../../../utils/values/schemas'
 
 export default class VoteAction extends CallbackButtonAction<VoteData> {
-    protected _schema: JSONSchemaType<VoteData> = {
-        type: 'object',
-        properties: {
-            isCool: {type: 'boolean'},
-            current: {type: 'number'},
-            id: {type: 'number'},
-        },
-        required: ['current', 'id', 'isCool']
-    }
+    protected _schema: ZodType<VoteData> = idSchema
+        .and(object({
+            isCool: boolean(),
+            current: number()
+        }))
 
     constructor() {
         super()

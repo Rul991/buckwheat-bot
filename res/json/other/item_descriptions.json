@@ -62,5 +62,15 @@
     "cardBox": {
         "name": "Набор с карточками",
         "type": "consumable"
+    },
+
+    "moneyGrindLicense": {
+        "name": "Лицензия на генератор монет",
+        "type": "oneInfinity"
+    },
+
+    "moneyGrindDevice": {
+        "name": "Генератор монет",
+        "type": "consumable"
     }
 }

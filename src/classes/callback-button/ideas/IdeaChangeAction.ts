@@ -1,4 +1,4 @@
-import { JSONSchemaType } from 'ajv'
+import { ZodType } from 'zod'
 import ScrollerWithIdData from '../../../interfaces/callback-button-data/ScrollerWithIdData'
 import Idea from '../../../interfaces/schemas/ideas/Idea'
 import ContextUtils from '../../../utils/ContextUtils'
@@ -16,7 +16,7 @@ import { DEV_ID, MODE } from '../../../utils/values/consts'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 export default class IdeaChangeAction extends CallbackButtonAction<ScrollerWithIdData> {
-    protected _schema: JSONSchemaType<ScrollerWithIdData> = scrollerWithIdDataSchema
+    protected _schema: ZodType<ScrollerWithIdData> = scrollerWithIdDataSchema
 
     constructor() {
         super()

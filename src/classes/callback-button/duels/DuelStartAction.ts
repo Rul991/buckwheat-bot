@@ -1,36 +1,22 @@
-import { JSONSchemaType } from 'ajv'
+import { number, object, ZodType } from 'zod'
 import UserReplyIdsData from '../../../interfaces/callback-button-data/UserReplyIdsData'
-import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
 import DuelService from '../../db/services/duel/DuelService'
 import MessageUtils from '../../../utils/MessageUtils'
 import ContextUtils from '../../../utils/ContextUtils'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import DuelUtils from '../../../utils/DuelUtils'
-import FileUtils from '../../../utils/FileUtils'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
+import { userReplyIdsDataSchema } from '../../../utils/values/schemas'
 
 type Data = UserReplyIdsData & {
     bid?: number
 }
 
 export default class extends CallbackButtonAction<Data> {
-    protected _schema: JSONSchemaType<Data> = {
-        type: 'object',
-        properties: {
-            reply: {
-                type: 'number'
-            },
-            user: {
-                type: 'number'
-            },
-            bid: {
-                type: 'number',
-                nullable: true
-            }
-        },
-        required: ['reply', 'user']
-    }
+    protected _schema: ZodType<Data> = userReplyIdsDataSchema
+        .and(object({
+            bid: number().optional()
+        }))
 
     constructor () {
         super()

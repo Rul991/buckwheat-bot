@@ -4,6 +4,7 @@ export default class ClassUtils {
     static readonly defaultClassName = 'unknown'
     static nonPlayerClassNames: ClassTypes[] = [this.defaultClassName, 'boss', 'bot']
     static playerClassNames: ClassTypes[] = ['bard', 'engineer', 'knight', 'sorcerer', 'thief']
+    static classNames: ClassTypes[] = [...this.nonPlayerClassNames, ...this.playerClassNames]
 
     private static _visibleClassNames = {
         knight: 'Рыцарь',

@@ -44,13 +44,6 @@ export default class {
             seller
         } = shopCard
 
-        if (seller == buyer) {
-            return {
-                isBought: false,
-                reason: 'seller-buyer'
-            }
-        }
-
         const buyerMoney = await CasinoGetService.money(chatId, buyer)
 
         if (buyerMoney < price) {
