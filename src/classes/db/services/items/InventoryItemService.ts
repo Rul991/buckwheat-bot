@@ -87,13 +87,13 @@ export default class InventoryItemService {
         return result
     }
 
-    static async use(chatId: number, id: number, itemId: string): Promise<[boolean, number]> {
+    static async use(chatId: number, id: number, itemId: string, needCount = 1): Promise<[boolean, number]> {
         return await this._update(chatId, id, itemId, (item, {type}) => {
-            const hasItem = (item.count ?? 0) > 0
+            const hasItem = needCount >= 1 && (item.count ?? 0) >= needCount
 
             if(type == 'consumable') {
                 return hasItem ? 
-                    {addValue: -1, isUpdated: true} : 
+                    {addValue: -needCount, isUpdated: true} : 
                     {addValue: 0, isUpdated: false}
             }
 

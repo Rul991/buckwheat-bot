@@ -8,6 +8,7 @@ import SkillAttack from '../../../enums/SkillAttack'
 import Setting from '../../../interfaces/other/Setting'
 import SceneAction from '../../../classes/actions/scenes/SceneAction'
 import { CallbackButtonContext, ContextData, TextContext } from './contexts'
+import { BuckwheatCommandOptions } from './action-options'
 
 export type MaybeString = string | undefined
 export type CommandStrings = [string, MaybeString, MaybeString]
@@ -50,12 +51,13 @@ export type InputMediaWrapCaption = Types.WrapCaption<InputMedia>
 
 export type SubCommandObject = {
     name: string
+    needData?: boolean
 }
 export type SubCommandExecuteCallbackObject = {
-    execute: (ctx: TextContext, other: string) => Promise<boolean>
+    execute: (options: BuckwheatCommandOptions & { data: string }) => Promise<boolean>
 }
 
-export type FullSubCommandObject = SubCommandObject & SubCommandExecuteCallbackObject
+export type FullSubCommandObject = SubCommandObject & SubCommandExecuteCallbackObject 
 
 export type TopLevelObject = { id: number, level: number }
 export type ExperienceWithId = {

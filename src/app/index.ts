@@ -166,6 +166,7 @@ import GeneratorAddAction from '../classes/callback-button/generator/GeneratorAd
 import GeneratorShowAction from '../classes/callback-button/generator/GeneratorShowAction'
 import GeneratorCollectAction from '../classes/callback-button/generator/GeneratorCollectAction'
 import GeneratorUpgradeAction from '../classes/callback-button/generator/GeneratorUpgradeAction'
+import SearchCommand from '../classes/commands/buckwheat/profile/SearchCommand'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -403,6 +404,7 @@ const launchBot = async (bot: Bot) => {
         new PinCommand(),
         new UnpinCommand(),
         new GeneratorCommand(),
+        new SearchCommand(),
         ...await getSimpleCommands(),
     )
 

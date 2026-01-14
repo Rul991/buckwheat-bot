@@ -8,6 +8,7 @@ import FileUtils from '../../../utils/FileUtils'
 import GeneratorsService from '../../db/services/generators/GeneratorsService'
 import { GENERATOR_INCOME_PER_HOUR, GENERATOR_UPGRADE_PRICE_PER_LEVEL } from '../../../utils/values/consts'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'
+import GeneratorUtils from '../../../utils/GeneratorUtils'
 
 type Data = {
     id: number
@@ -22,7 +23,7 @@ export default class extends CallbackButtonAction<Data> {
             p: number(),
         }))
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'gs'
     }
@@ -40,24 +41,26 @@ export default class extends CallbackButtonAction<Data> {
             p: page
         } = data
 
+        if (await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return
+
         const generator = await GeneratorsService.get(chatId, id)
         const {
             generators
         } = generator
-        
+
         const moneyGenerator = generators[index]
-        if(!moneyGenerator) return await FileUtils.readPugFromResource(
+        if (!moneyGenerator) return await FileUtils.readPugFromResource(
             'text/commands/generator/add/no-devices.pug'
         )
-        
+
         const {
             level,
             id: generatorId
         } = moneyGenerator
+
         const incomePerHour = level * GENERATOR_INCOME_PER_HOUR
         const price = GENERATOR_UPGRADE_PRICE_PER_LEVEL * level
-
-        if(await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return
+        const upgradeLevels = GeneratorUtils.getUpgradeLevels(level)
 
         await MessageUtils.editText(
             ctx,
@@ -75,12 +78,27 @@ export default class extends CallbackButtonAction<Data> {
             ),
             {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get(
+                    inline_keyboard: await InlineKeyboardManager.map(
                         'generator/show',
                         {
-                            page,
-                            id,
-                            index
+                            globals: {
+                                page,
+                                id,
+                                index
+                            },
+                            values: {
+                                upgrade: upgradeLevels.map(
+                                    ({
+                                        level,
+                                        price
+                                    }) => {
+                                        return {
+                                            text: `${level}ур. (${price} 💰)`,
+                                            data: level.toString()
+                                        }
+                                    }
+                                )
+                            },
                         }
                     )
                 }

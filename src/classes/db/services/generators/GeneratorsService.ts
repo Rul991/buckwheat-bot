@@ -1,6 +1,8 @@
 import Generators from '../../../../interfaces/schemas/generator/Generators'
+import MoneyGenerator from '../../../../interfaces/schemas/generator/MoneyGenerator'
+import GeneratorUtils from '../../../../utils/GeneratorUtils'
 import TimeUtils from '../../../../utils/TimeUtils'
-import { GENERATOR_INCOME_PER_HOUR, GENERATOR_UPGRADE_PRICE_PER_LEVEL, GENERATOR_MAX_COUNT, MILLISECONDS_IN_HOUR, NOT_FOUND_INDEX, GENERATOR_MAX_LEVEL } from '../../../../utils/values/consts'
+import { GENERATOR_INCOME_PER_HOUR, GENERATOR_UPGRADE_PRICE_PER_LEVEL, GENERATOR_MAX_COUNT, MILLISECONDS_IN_HOUR, NOT_FOUND_INDEX, GENERATOR_MAX_LEVEL, GENERATOR_MIN_LEVEL } from '../../../../utils/values/consts'
 import GeneratorsRepository from '../../repositories/GeneratorsRepository'
 import CasinoAddService from '../casino/CasinoAddService'
 import CasinoGetService from '../casino/CasinoGetService'
@@ -8,7 +10,15 @@ import InventoryItemService from '../items/InventoryItemService'
 
 type GeneratorResult = {
     done: boolean
-    reason: string
+    reason: string,
+    count?: number
+}
+
+type UpgradeOptions = {
+    chatId: number
+    id: number
+    generatorId: number
+    level: number
 }
 
 export default class {
@@ -29,8 +39,9 @@ export default class {
         const {
             generators
         } = await this.get(chatId, id)
+        const generatorsLength = generators.length
 
-        if (generators.length >= GENERATOR_MAX_COUNT) {
+        if (generatorsLength >= GENERATOR_MAX_COUNT) {
             return {
                 done: false,
                 reason: 'many-generators'
@@ -38,10 +49,21 @@ export default class {
         }
 
         const itemId = 'moneyGrindDevice'
-        const [grindDeviceUsed] = await InventoryItemService.use(
+        const rawCount = await InventoryItemService.getCount(
             chatId,
             id,
             itemId
+        )
+        const count = Math.min(
+            Math.max(0, GENERATOR_MAX_COUNT - generatorsLength), 
+            rawCount
+        )
+        
+        const [grindDeviceUsed] = await InventoryItemService.use(
+            chatId,
+            id,
+            itemId,
+            count
         )
 
         if (!grindDeviceUsed) {
@@ -51,23 +73,33 @@ export default class {
             }
         }
 
+        const newGenerators: MoneyGenerator[] = []
+
+        for (let i = 0; i < count; i++) {
+            const level = GENERATOR_MIN_LEVEL
+            const id = generatorsLength + i
+
+            newGenerators.push({
+                level,
+                id
+            })
+        }
+
         await GeneratorsRepository.updateOne(
             chatId,
             id,
             {
                 generators: [
                     ...generators,
-                    {
-                        level: 1,
-                        id: generators.length
-                    }
+                    ...newGenerators
                 ]
             }
         )
 
         return {
             done: true,
-            reason: 'added'
+            reason: 'added',
+            count
         }
     }
 
@@ -115,40 +147,34 @@ export default class {
         return money
     }
 
-    static async getPriceForUpgrade(chatId: number, id: number, generatorId: number) {
+    static async upgrade({
+        chatId,
+        id,
+        level,
+        generatorId
+    }: UpgradeOptions): Promise<GeneratorResult> {
         const {
             generators
         } = await this.get(chatId, id)
 
-        const generator = generators[generatorId]
-        if (!generator) return NOT_FOUND_INDEX
+        if (!generators[generatorId]) {
+            return {
+                done: false,
+                reason: 'no-generator'
+            }
+        }
 
-        const {
-            level
-        } = generator
-
-        return GENERATOR_UPGRADE_PRICE_PER_LEVEL * level
-    }
-
-    static async upgrade(chatId: number, id: number, generatorId: number): Promise<GeneratorResult> {
-        const {
-            generators
-        } = await this.get(chatId, id)
-
-        if (generators[generatorId].level >= GENERATOR_MAX_LEVEL) {
+        if (level > GENERATOR_MAX_LEVEL) {
             return {
                 done: false,
                 reason: 'max-level'
             }
         }
 
-        const price = await this.getPriceForUpgrade(chatId, id, generatorId)
-        if (price === NOT_FOUND_INDEX) {
-            return {
-                done: false,
-                reason: 'no-generator'
-            }
-        }
+        const price = GeneratorUtils.getPrice(
+            generators[generatorId].level,
+            level
+        )
 
         const money = await CasinoGetService.money(chatId, id)
         if (price > money) {
@@ -158,7 +184,7 @@ export default class {
             }
         }
 
-        generators[generatorId].level++
+        generators[generatorId].level = level
 
         await CasinoAddService.money(chatId, id, -price)
         await GeneratorsRepository.updateOne(

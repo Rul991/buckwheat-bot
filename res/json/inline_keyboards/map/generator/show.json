@@ -1,0 +1,20 @@
+{
+    "definition": {
+        "upgrade": {
+            "text": "Улучшить до @",
+            "data": "gu_{\"id\":@{id},\"i\":@{index},\"p\":@{page},\"l\":@}"
+        },
+
+        "back": {
+            "text": "Назад",
+            "data": "gc_{\"id\":@{id},\"i\":0,\"c\":@{page}}",
+            "notEach": true
+        }
+    },
+    
+    "values": 
+    [
+        "upgrade",
+        "back"
+    ]
+}

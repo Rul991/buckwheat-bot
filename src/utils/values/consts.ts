@@ -193,6 +193,7 @@ export const FOREVER = 0
 export const MAX_EXPORT_DATA_LENGTH = 2048
 
 export const GENERATOR_INCOME_PER_HOUR = 10
+export const GENERATOR_MIN_LEVEL = 1
 export const GENERATOR_MAX_LEVEL = 5
 export const GENERATOR_UPGRADE_PRICE_PER_LEVEL = 1000
 export const GENERATOR_MAX_COUNT = 100

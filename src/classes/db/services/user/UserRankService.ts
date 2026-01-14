@@ -8,6 +8,17 @@ export default class UserRankService {
         return (await BaseUserService.get<'rank'>(chatId, id, 'rank')) ?? NOT_FOUND_INDEX
     }
 
+    static async getAllWithMinRank(chatId: number, rank: number) {
+        return await UserRepository.findManyInChat(
+            chatId,
+            {
+                rank: {
+                    $gte: rank
+                }
+            }
+        )
+    }
+
     static async update(chatId: number, id: number, rank: number): Promise<number> {
         return (await BaseUserService.update(chatId, id, 'rank', rank)) ?? NOT_FOUND_INDEX
     }

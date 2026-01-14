@@ -1,7 +1,5 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import { MaybeString } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
 import ChatService from '../../../db/services/chat/ChatService'
 import UserProfileService from '../../../db/services/user/UserProfileService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
@@ -18,7 +16,7 @@ export default class StatsCommand extends BuckwheatCommand {
     }
 
     async execute({ ctx }: BuckwheatCommandOptions): Promise<void> {
-        const chats = await ChatService.getAll()
+        const {total, premiums} = await ChatService.getStats()
         const {uniqueUsers, users} = await UserProfileService.getStats()
 
         await MessageUtils.answerMessageFromResource(
@@ -26,7 +24,8 @@ export default class StatsCommand extends BuckwheatCommand {
             'text/commands/stats/stats.pug',
             {
                 changeValues: {
-                    chats: chats.length,
+                    chats: total,
+                    premiums,
                     uniqueUsers: uniqueUsers.length,
                     users: users.length,
                 }

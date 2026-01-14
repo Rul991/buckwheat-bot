@@ -12,6 +12,7 @@ type Data = {
     id: number
     i: number
     p: number
+    l: number
 }
 
 export default class extends CallbackButtonAction<Data> {
@@ -19,6 +20,7 @@ export default class extends CallbackButtonAction<Data> {
         .and(object({
             i: number(),
             p: number(),
+            l: number(),
         }))
 
     constructor () {
@@ -36,7 +38,8 @@ export default class extends CallbackButtonAction<Data> {
         const {
             id,
             i: index,
-            p: page
+            p: page,
+            l: level
         } = data
 
         if (await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return
@@ -44,7 +47,12 @@ export default class extends CallbackButtonAction<Data> {
         const {
             done,
             reason
-        } = await GeneratorsService.upgrade(chatId, id, index)
+        } = await GeneratorsService.upgrade({
+            chatId, 
+            id, 
+            generatorId: index, 
+            level
+        })
         const path = `text/commands/generator/upgrade/${reason}.pug`
 
         if (done) {

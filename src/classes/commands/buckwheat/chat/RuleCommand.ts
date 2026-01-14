@@ -10,106 +10,200 @@ import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import StringUtils from '../../../../utils/StringUtils'
 import ContextUtils from '../../../../utils/ContextUtils'
+import BuckwheatCommandWithSub from '../../base/BuckwheatCommandWithSub'
 
 type RuleSubCommand = {
     needData: boolean
     needAdmin: boolean
-    execute: (options: BuckwheatCommandOptions & { other: string }) => Promise<boolean>
+    execute: (options: BuckwheatCommandOptions & { data: string }) => Promise<boolean>
     sendMessage: (options: { ctx: TextContext, changeValues: Record<string, any> }) => Promise<void>
     title: string,
     description: string
 } & SubCommandObject
 
-export default class RuleCommand extends BuckwheatCommand {
-    private _subCommands: RuleSubCommand[] = [
-        {
-            title: 'Для удаления правила',
-            description: 'баквит правила удалить <1-9999>\n(возможно, вы ввели неверный номер)',
-            name: 'удалить',
-
-            needData: true,
-            needAdmin: true,
-
-            execute: async ({ other: data, chatId }) => {
-                return await this._deleteRule(chatId, data)
-            },
-            sendMessage: async ({ ctx, changeValues }) => {
-                await MessageUtils.answerMessageFromResource(
-                    ctx,
-                    'text/commands/rules/done/delete.pug',
-                    {
-                        changeValues: {
-                            number: +changeValues.data
-                        }
-                    }
-                )
-            }
-        },
-
-        {
-            title: 'Для добавление нового правила',
-            description: 'баквит правила добавить <текст>',
-            name: 'добавить',
-
-            needAdmin: true,
-            needData: true,
-
-            execute: async ({ other: data, chatId }) => {
-                return await this._addRule(chatId, data)
-            },
-            sendMessage: async ({ ctx }) => {
-                await MessageUtils.answerMessageFromResource(
-                    ctx,
-                    'text/commands/rules/done/add.pug'
-                )
-            }
-        },
-
-        {
-            title: 'Для дополнения старого правила',
-            description: 'баквит правила дополнить <номер правила> <текст>',
-            name: 'дополнить',
-
-            needAdmin: true,
-            needData: true,
-
-            execute: async (options) => {
-                const {
-                    chatId,
-                    other,
-                    id
-                } = options
-
-                const {name} = await ContextUtils.getUser(chatId, id)
-                
-                return await this._extend(name, chatId, other)
-            },
-
-            sendMessage: async ({ctx, changeValues}) => {
-                await MessageUtils.answerMessageFromResource(
-                    ctx,
-                    'text/commands/rules/done/extend.pug',
-                    {
-                        changeValues: {
-                            number: +changeValues.data.split(' ', 1)[0]
-                        }
-                    }
-                )
-            }
-        }
-    ]
-
+export default class RuleCommand extends BuckwheatCommandWithSub<RuleSubCommand> {
     constructor () {
-        super()
+        super(
+            [
+                {
+                    title: 'Для удаления правила',
+                    description: 'баквит правила удалить <1-9999>\n(возможно, вы ввели неверный номер)',
+                    name: 'удалить',
+
+                    needData: true,
+                    needAdmin: true,
+
+                    execute: async ({ data, chatId }) => {
+                        return await this._deleteRule(chatId, data)
+                    },
+                    sendMessage: async ({ ctx, changeValues }) => {
+                        await MessageUtils.answerMessageFromResource(
+                            ctx,
+                            'text/commands/rules/done/delete.pug',
+                            {
+                                changeValues: {
+                                    number: +changeValues.data
+                                }
+                            }
+                        )
+                    }
+                },
+
+                {
+                    title: 'Для добавление нового правила',
+                    description: 'баквит правила добавить <текст>',
+                    name: 'добавить',
+
+                    needAdmin: true,
+                    needData: true,
+
+                    execute: async ({ data, chatId }) => {
+                        return await this._addRule(chatId, data)
+                    },
+                    sendMessage: async ({ ctx }) => {
+                        await MessageUtils.answerMessageFromResource(
+                            ctx,
+                            'text/commands/rules/done/add.pug'
+                        )
+                    }
+                },
+
+                {
+                    title: 'Для дополнения старого правила',
+                    description: 'баквит правила дополнить <номер правила> <текст>',
+                    name: 'дополнить',
+
+                    needAdmin: true,
+                    needData: true,
+
+                    execute: async (options) => {
+                        const {
+                            chatId,
+                            data,
+                            id
+                        } = options
+
+                        const { name } = await ContextUtils.getUser(chatId, id)
+
+                        return await this._extendRule(name, chatId, data)
+                    },
+
+                    sendMessage: async ({ ctx, changeValues }) => {
+                        await MessageUtils.answerMessageFromResource(
+                            ctx,
+                            'text/commands/rules/done/extend.pug',
+                            {
+                                changeValues: {
+                                    number: +changeValues.data.split(' ', 1)[0]
+                                }
+                            }
+                        )
+                    }
+                }
+            ]
+        )
+
         this._name = 'правила'
         this._description = 'показываю или редактирую правила'
-        this._needData = true
         this._aliases = [
             'правило',
         ]
+    }
 
-        const commands = SubCommandUtils.getArgumentText(this._subCommands)
-        this._argumentText = `(${commands}) [аргументы]`
+    protected async _checkAccess(options: BuckwheatCommandOptions, subCommand: [RuleSubCommand, string]): Promise<boolean> {
+        const { ctx, id, chatId } = options
+
+        const rank = await UserRankService.get(chatId, id)
+        const isAdminRank = RankUtils.canUse({
+            userRank: rank,
+            id
+        })
+
+        const [
+            {
+                needAdmin,
+                needData,
+                title,
+                description
+            },
+            data
+        ] = subCommand
+
+        const hasData = Boolean(data)
+        const changeValues = {
+            title,
+            description
+        }
+
+        if (needAdmin && !isAdminRank) {
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/rules/noAdmin.pug'
+            )
+            return false
+        }
+
+        if (needData && !hasData) {
+            await this._sendHelpSubCommandMessage(
+                ctx,
+                changeValues
+            )
+            return false
+        }
+
+        return true
+    }
+
+    protected async _handleNoText(options: BuckwheatCommandOptions): Promise<void> {
+        const {
+            chatId,
+            ctx
+        } = options
+
+        const rules = await RulesService.get(chatId)
+
+        await MessageUtils.answerMessageFromResource(
+            ctx,
+            'text/commands/rules/start.pug',
+            {
+                inlineKeyboard: await InlineKeyboardManager.get('rules', '-1'),
+                changeValues: {
+                    count: rules.length
+                }
+            }
+        )
+    }
+
+    protected async _handleNotExistCommand(options: BuckwheatCommandOptions): Promise<void> {
+        const {
+            ctx
+        } = options
+        await this._sendHelpMessage(ctx)
+    }
+
+    protected async _handleWrongDataCommand(options: BuckwheatCommandOptions, sub: RuleSubCommand): Promise<void> {
+        const {
+            ctx
+        } = options
+
+        await this._sendHelpSubCommandMessage(
+            ctx,
+            sub
+        )
+    }
+
+    protected async _handleCommand(options: BuckwheatCommandOptions, subCommand: [RuleSubCommand, string]): Promise<void> {
+        const {
+            ctx,
+            chatId,
+        } = options
+        const [
+            sub,
+            data
+        ] = subCommand
+
+        const rules = await RulesService.get(chatId)
+        await sub.sendMessage({ ctx, changeValues: { rules, data } })
     }
 
     private async _sendHelpMessage(ctx: TextContext): Promise<void> {
@@ -147,10 +241,10 @@ export default class RuleCommand extends BuckwheatCommand {
         return true
     }
 
-    private async _extend(name: string, chatId: number, data: string): Promise<boolean> {
+    private async _extendRule(name: string, chatId: number, data: string): Promise<boolean> {
         const [rawIndex, text] = StringUtils.splitByCommands(data, 1)
-        
-        if(isNaN(+rawIndex)) {
+
+        if (isNaN(+rawIndex)) {
             return false
         }
 
@@ -160,90 +254,5 @@ export default class RuleCommand extends BuckwheatCommand {
             index,
             `Дополнение от ${name}: ${text}`
         )
-    }
-
-    async execute(options: BuckwheatCommandOptions): Promise<void> {
-        const { ctx, other, id, chatId } = options
-        const commandAndData = SubCommandUtils.getSubCommandAndData(
-            other,
-            this._subCommands
-        )
-
-        if (commandAndData == 'no-text') {
-            const rules = await RulesService.get(chatId)
-
-            await MessageUtils.answerMessageFromResource(
-                ctx,
-                'text/commands/rules/start.pug',
-                {
-                    inlineKeyboard: await InlineKeyboardManager.get('rules', '-1'),
-                    changeValues: {
-                        count: rules.length
-                    }
-                }
-            )
-        }
-        else if (commandAndData === 'not-exist') {
-            this._sendHelpMessage(ctx)
-        }
-        else {
-            const rank = await UserRankService.get(chatId, id)
-            const isAdminRank = RankUtils.canUse({
-                userRank: rank,
-                id
-            })
-            const rules = await RulesService.get(chatId)
-
-            const [
-                {
-                    needAdmin,
-                    needData,
-                    execute,
-                    sendMessage,
-                    title,
-                    description
-                },
-                data
-            ] = commandAndData
-
-            const hasData = Boolean(data)
-
-            const changeValues = {
-                title,
-                description
-            }
-
-            if (needAdmin && !isAdminRank) {
-                await MessageUtils.answerMessageFromResource(
-                    ctx,
-                    'text/commands/rules/noAdmin.pug'
-                )
-                return
-            }
-
-            if (needData && !hasData) {
-                await this._sendHelpSubCommandMessage(
-                    ctx,
-                    changeValues
-                )
-                return
-            }
-
-            const isExecuted = await execute({
-                ...options,
-                other: data,
-            })
-            if (isExecuted) {
-                await sendMessage({ ctx, changeValues: { rules, data } })
-            }
-            else {
-                await this._sendHelpSubCommandMessage(
-                    ctx,
-                    changeValues
-                )
-            }
-
-            return
-        }
     }
 }

@@ -1,13 +1,12 @@
+import PremiumUtils from '../../../../utils/PremiumUtils'
 import { CHAT_ID } from '../../../../utils/values/consts'
 import ChatRepository from '../../repositories/ChatRepository'
 import ChatService from './ChatService'
 
 export default class PremiumChatService {
     static async isPremium(chatId: number): Promise<boolean> {
-        if(chatId == CHAT_ID) return true
-
-        const untilDate = await this.get(chatId)
-        return untilDate >= Date.now()
+        const chat = await ChatService.get(chatId)
+        return PremiumUtils.isPremium(chat)
     }
 
     static async getUntilDate(chatId: number): Promise<number> {

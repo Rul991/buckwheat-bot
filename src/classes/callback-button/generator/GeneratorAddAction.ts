@@ -37,14 +37,20 @@ export default class extends CallbackButtonAction<Data> {
 
         const {
             done,
-            reason
+            reason,
+            count 
         } = await GeneratorsService.add(chatId, id)
 
         if(done) {
             await MessageUtils.editText(
                 ctx,
                 await FileUtils.readPugFromResource(
-                    `text/commands/generator/add/added.pug`
+                    `text/commands/generator/add/added.pug`,
+                    {
+                        changeValues: {
+                            count
+                        }
+                    }
                 ),
                 {
                     reply_markup: {

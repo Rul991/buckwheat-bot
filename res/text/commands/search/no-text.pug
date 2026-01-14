@@ -1,0 +1,13 @@
+b Как искать игроков с:
+|
+|
+|
+each subCommand in subCommands
+    - const hasPrefix = (subCommand.prefix ?? '').length > 0
+    - const data = 'твои данные'
+    i 📍 #{subCommand.text} #{data}
+    |
+    |       👉 
+    code баквит поиск #{hasPrefix ? `${subCommand.prefix}${sep}`: ''}#{data}
+    |
+    |

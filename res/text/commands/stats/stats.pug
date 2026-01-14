@@ -1,13 +1,18 @@
+include utils/functions.pug
+
 mixin param(title, value)
     |
     | #{title}: 
-    b=value
+    b=formatNumber(value)
     |
 
 b 📌 Моя статистика:
 |
 |
 +param('Количество чатов', chats)
+|
++param('Количество премиум-чатов', premiums)
+|
 |
 +param('Количество аккаунтов', users)
 |
