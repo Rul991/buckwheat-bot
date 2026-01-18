@@ -6,8 +6,9 @@ import DuelService from '../db/services/duel/DuelService'
 import EffectService from '../db/services/duel/EffectService'
 import DuelistService from '../db/services/duelist/DuelistService'
 import SkillMethod from './SkillMethod'
+import Logging from '../../utils/Logging'
 
-type Options = MethodExecuteArguments<[number, number]> & {isText: boolean}
+type Options = MethodExecuteArguments<[number, number]> & { isText: boolean }
 
 type RemainingDamageOptions = {
     duelId: number
@@ -51,7 +52,7 @@ export default class extends SkillMethod<[number, number]> {
 
         if (await EffectService.userHas(duelId, id, INVULNERABLE_SKILL_NAME)) return -1
         if (await EffectService.userHas(duelId, id, SKIP_DAMAGE_SKILL_NAME)) {
-            if(!isText) {
+            if (!isText) {
                 await EffectService.deleteByNameAndTarget(duelId, SKIP_DAMAGE_SKILL_NAME, id)
             }
             return -1
@@ -100,7 +101,7 @@ export default class extends SkillMethod<[number, number]> {
             }
         )
 
-        if(cloneRemainingDamage < damage) {
+        if (cloneRemainingDamage < damage) {
             return 0
         }
 
@@ -124,12 +125,20 @@ export default class extends SkillMethod<[number, number]> {
         if (!duel) return false
         const duelId = duel.id
 
-        const damage = await this.getDamage({...options, isText: false})
+        const damage = await this.getDamage({ ...options, isText: false })
         const remainingDamage = await this._getRemainingDamage({
             duelId,
             target: id,
             damage
         })
+
+        Logging.log(
+            'DamageMethod._execute',
+            {
+                damage,
+                remainingDamage
+            }
+        )
 
         await DuelistService.addField(chatId, id, 'hp', -remainingDamage)
         return true
@@ -140,7 +149,7 @@ export default class extends SkillMethod<[number, number]> {
             skill: { onEnemy }
         } = options
 
-        const damage = await this.getDamage({...options, isText: true})
+        const damage = await this.getDamage({ ...options, isText: true })
         return await FileUtils.readPugFromResource(
             'text/methods/damage.pug',
             {

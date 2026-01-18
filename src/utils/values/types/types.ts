@@ -322,12 +322,6 @@ export type CurrentIncreaseIdNames<D extends Record<string, any>> = {
 export type TinyCurrentIncreaseId = {
     c: number,
     i: number,
-    id: number
-}
-
-export type CurrentIncreaseId = {
-    current: number
-    increase: number
     id?: number
 }
 

@@ -53,9 +53,9 @@ export default abstract class<O, D extends Record<string, any> = ButtonScrollerD
     protected _getPageNav({
         data,
         objects,
-        id
     }: ButtonScrollerFullOptions<O, D>): CallbackButtonValue[] {
         const length = objects.length
+        const id = data.id as number | undefined
         
         const {
             new: newPage
@@ -72,10 +72,10 @@ export default abstract class<O, D extends Record<string, any> = ButtonScrollerD
             buttonsPerPage: this._buttonsPerPage,
             current: current as string,
             increase: increase as string,
-            id: {
+            id: id ? {
                 name: idName as string,
                 value: id
-            },
+            } : undefined,
             length,
             pageIndex: newPage,
             data: {
@@ -92,8 +92,8 @@ export default abstract class<O, D extends Record<string, any> = ButtonScrollerD
     protected _getArrows({
         data,
         objects,
-        id
     }: ButtonScrollerFullOptions<O, D>): CallbackButtonValue[] {
+        const id = data.id as number | undefined
         const length = objects.length
 
         const {
@@ -113,10 +113,10 @@ export default abstract class<O, D extends Record<string, any> = ButtonScrollerD
             start,
             end,
             pageIndex,
-            id: {
+            id: id ? {
                 name: idName as string,
                 value: id
-            },
+            } : undefined,
             increase: increase as string,
             current: current as string,
             buttonsPerPage: this._buttonsPerPage

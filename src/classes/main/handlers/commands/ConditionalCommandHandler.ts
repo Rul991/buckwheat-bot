@@ -12,8 +12,8 @@ export default class extends BaseHandler<ConditionalCommand, ArrayContainer<Cond
     }
 
     async setup(bot: MyTelegraf): Promise<void> {
-        bot.on('text', async (ctx, next) => {
-            const text = ctx.text
+        bot.on('message', async (ctx, next) => {
+            const text = ctx.text ?? ''
 
             const isCommand = await CommandUtils.doIfCommand(
                 text,

@@ -44,7 +44,7 @@ export default class {
         }
         
         this._cacheSettings[filename] = result
-        return result
+        return {...result}
     }
 
     static async getSetting<K extends SettingType = "any">(filename: string, settingId: string): Promise<Setting<K>> {

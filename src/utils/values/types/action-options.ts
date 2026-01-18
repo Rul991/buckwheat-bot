@@ -64,7 +64,7 @@ export type BuckwheatCommandOptions = RawOptionsWithOther & {
 
 export type ConditionalCommandOptions = RawOptions & {
     strings: CommandStrings
-    ctx: TextContext
+    ctx: MessageContext
 }
 
 export type CallbackButtonOptions<T> = RawOptions & {

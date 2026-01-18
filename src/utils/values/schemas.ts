@@ -1,8 +1,8 @@
-import { any, boolean, literal, number, object, string, tuple, ZodLiteral, ZodObject, ZodType } from 'zod'
+import { any, boolean, literal, number, object, string, tuple, ZodLiteral, ZodType } from 'zod'
 import Character from '../../interfaces/duel/Character'
 import Characteristics from '../../interfaces/duel/Characteristics'
 import SimpleCommand from '../../interfaces/other/SimpleComand'
-import { NewInvoiceParameters, JsonShopItem, InventoryItemDescription, TinyCurrentIncreaseId, CurrentIncreaseId, ClassTypes, KeyboardDatabaseData } from './types/types'
+import { NewInvoiceParameters, JsonShopItem, InventoryItemDescription, TinyCurrentIncreaseId, ClassTypes, KeyboardDatabaseData } from './types/types'
 import Skill from '../../interfaces/duel/Skill'
 import StartUp from '../../interfaces/other/StartUp'
 import CubeData from '../../interfaces/callback-button-data/CubeData'
@@ -79,11 +79,9 @@ export const startUpSchema: ZodType<StartUp> = object({
     up: object()
 })
 
-export const anySchema: ZodType<any> = any()
-
 export const skillExecuteSchema: ZodType<SkillExecute> = object({
     name: string(),
-    args: anySchema.array()
+    args: any().array()
 })
 
 export const skillExecuteArraySchema: ZodType<SkillExecute[]> = skillExecuteSchema.array()
@@ -138,12 +136,6 @@ export const inventoryItemDescriptionSchema: ZodType<InventoryItemDescription> =
 export const tinyCurrentIncreaseIdSchema: ZodType<TinyCurrentIncreaseId> = object({
     c: number(),
     i: number(),
-    id: number()
-})
-
-export const currentIncreaseIdSchema: ZodType<CurrentIncreaseId> = object({
-    current: number(),
-    increase: number(),
     id: number().optional()
 })
 

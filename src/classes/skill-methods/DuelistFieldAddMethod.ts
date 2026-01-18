@@ -26,7 +26,7 @@ export default class<T extends any[]> extends SkillMethod<T> {
         args: [value]
     }: MethodExecuteArguments<T>): Promise<boolean> {
         const chars = await DuelistService.getCurrentCharacteristics(chatId, id)
-        return value == 0 || chars[this._key] >= value
+        return chars[this._key] >= -value
     }
 
     protected async _isAdd(_options: MethodExecuteArguments<T>) {

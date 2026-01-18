@@ -2,17 +2,20 @@ import LinkedChatService from '../classes/db/services/linkedChat/LinkedChatServi
 import ContextUtils from './ContextUtils'
 import FileUtils from './FileUtils'
 import { MaybeString } from './values/types/types'
-import { TextContext } from './values/types/contexts'
+import { MessageContext } from './values/types/contexts'
 
 export default class RoleplayUtils {
-    static async getMessage(ctx: TextContext, text: string, other?: MaybeString): Promise<string> {
+    static async getMessage(ctx: MessageContext, text: string, other?: MaybeString): Promise<string> {
             const dummyId = 0
-            const reply = ctx.message.reply_to_message?.from ?? 
-                {
+            const dummyFrom = {
                     ...ctx.from,
                     first_name: '',
                     id: dummyId
                 }
+            const reply = 'reply_to_message' in ctx.message ? 
+                ctx.message.reply_to_message?.from ?? dummyFrom :
+                dummyFrom
+                
             const hasReply = reply.id != dummyId && reply.id != ctx.botInfo.id
             const chatId = await LinkedChatService.getCurrent(ctx)
             if(!chatId) return await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')

@@ -1,11 +1,9 @@
-import FileUtils from '../../utils/FileUtils'
 import { JavascriptTypes, MethodExecuteArguments, SkillMethodGetText } from '../../utils/values/types/types'
 import DuelService from '../db/services/duel/DuelService'
 import EffectService from '../db/services/duel/EffectService'
 import DuelistFieldAddMethod from './DuelistFieldAddMethod'
 import SkillMethodUtils from '../../utils/SkillMethodTextsUtils'
 import UserClassService from '../db/services/user/UserClassService'
-import SkillUtils from '../../utils/SkillUtils'
 
 export default class extends DuelistFieldAddMethod<[number, string]> {
     args: JavascriptTypes[] = ['number', 'string']

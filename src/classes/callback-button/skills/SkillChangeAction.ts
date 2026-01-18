@@ -1,4 +1,4 @@
-import { ButtonScrollerEditMessageResult, ButtonScrollerFullOptions, ButtonScrollerOptions, CurrentIncreaseId } from '../../../utils/values/types/types'
+import { ButtonScrollerEditMessageResult, ButtonScrollerFullOptions, ButtonScrollerOptions, TinyCurrentIncreaseId } from '../../../utils/values/types/types'
 import UserClassService from '../../db/services/user/UserClassService'
 import ChosenSkillsService from '../../db/services/choosedSkills/ChosenSkillsService'
 import FileUtils from '../../../utils/FileUtils'
@@ -7,7 +7,7 @@ import ClassUtils from '../../../utils/ClassUtils'
 import SkillUtils from '../../../utils/SkillUtils'
 import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
 
-export default class extends ButtonScrollerAction<Skill, CurrentIncreaseId> {
+export default class extends ButtonScrollerAction<Skill, TinyCurrentIncreaseId> {
     protected _filename: string = 'skills/add'
 
     constructor () {
@@ -18,7 +18,7 @@ export default class extends ButtonScrollerAction<Skill, CurrentIncreaseId> {
     protected async _getObjects({
         chatId,
         id
-    }: ButtonScrollerOptions<CurrentIncreaseId>): Promise<Skill[]> {
+    }: ButtonScrollerOptions<TinyCurrentIncreaseId>): Promise<Skill[]> {
         const type = await UserClassService.get(chatId, id)
         const currentSkills = await ChosenSkillsService.getSkills(chatId, id)
         const availableSkills = (await SkillUtils.getAvailableSkills(chatId, id, type))
@@ -31,7 +31,7 @@ export default class extends ButtonScrollerAction<Skill, CurrentIncreaseId> {
         chatId,
         id,
         slicedObjects
-    }: ButtonScrollerFullOptions<Skill, CurrentIncreaseId>): Promise<ButtonScrollerEditMessageResult> {
+    }: ButtonScrollerFullOptions<Skill, TinyCurrentIncreaseId>): Promise<ButtonScrollerEditMessageResult> {
         const type = await UserClassService.get(chatId, id)
 
         return {
