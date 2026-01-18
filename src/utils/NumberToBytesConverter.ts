@@ -1,4 +1,4 @@
-export default class NumberByteConverter {
+export default class {
     private static readonly _isLittleEndian = false
     private static readonly _bufferSize = 8
     private static readonly _startOffset = 0

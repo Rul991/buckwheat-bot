@@ -1,8 +1,8 @@
-import { any, boolean, literal, number, object, string, ZodLiteral, ZodType } from 'zod'
+import { any, boolean, literal, number, object, string, tuple, ZodLiteral, ZodObject, ZodType } from 'zod'
 import Character from '../../interfaces/duel/Character'
 import Characteristics from '../../interfaces/duel/Characteristics'
 import SimpleCommand from '../../interfaces/other/SimpleComand'
-import { NewInvoiceParameters, JsonShopItem, InventoryItemDescription, TinyCurrentIncreaseId, CurrentIncreaseId, ClassTypes } from './types/types'
+import { NewInvoiceParameters, JsonShopItem, InventoryItemDescription, TinyCurrentIncreaseId, CurrentIncreaseId, ClassTypes, KeyboardDatabaseData } from './types/types'
 import Skill from '../../interfaces/duel/Skill'
 import StartUp from '../../interfaces/other/StartUp'
 import CubeData from '../../interfaces/callback-button-data/CubeData'
@@ -138,7 +138,7 @@ export const inventoryItemDescriptionSchema: ZodType<InventoryItemDescription> =
 export const tinyCurrentIncreaseIdSchema: ZodType<TinyCurrentIncreaseId> = object({
     c: number(),
     i: number(),
-    id: number().optional()
+    id: number()
 })
 
 export const currentIncreaseIdSchema: ZodType<CurrentIncreaseId> = object({
@@ -167,3 +167,9 @@ export const duelSchema = object({
 })
 
 export const classTypesSchema: ZodLiteral<ClassTypes> = literal(ClassUtils.classNames)
+
+export const keyboardDbDataSchema: ZodType<KeyboardDatabaseData> = object({
+    id: number(),
+    msgId: number(),
+    pos: tuple([number(), number()])
+})

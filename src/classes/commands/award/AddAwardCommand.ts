@@ -24,6 +24,7 @@ export default class AddAwardCommand extends BuckwheatCommand {
         this._replySupport = true
         this._needData = true
         this._argumentText = '<0-8> <текст>'
+        this._minimumRank = RankUtils.moderator
     }
 
     private _getValuesFromOther(ctx: TextContext, other?: string): [number, string] | null {
@@ -39,7 +40,7 @@ export default class AddAwardCommand extends BuckwheatCommand {
 
     private async _hasEnoughRank(chatId: number, id: number): Promise<boolean> {
         const rank = await UserRankService.get(chatId, id)
-        return rank >= RankUtils.moderator
+        return rank >= this._minimumRank
     }
 
     async execute({ ctx, other, id, chatId, replyFrom }: BuckwheatCommandOptions): Promise<void> {

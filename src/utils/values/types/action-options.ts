@@ -1,5 +1,5 @@
 import { PreCheckoutQuery, SuccessfulPayment, Update, User } from 'telegraf/types'
-import { Ids, MaybeString } from './types'
+import { CommandStrings, Ids, MaybeString } from './types'
 import { MessageContext } from './contexts'
 import { SuccessfulPaymentContext } from './contexts'
 import { PreCheckoutQueryContext } from './contexts'
@@ -62,7 +62,17 @@ export type BuckwheatCommandOptions = RawOptionsWithOther & {
     replyOrUserFrom: User
 }
 
+export type ConditionalCommandOptions = RawOptions & {
+    strings: CommandStrings
+    ctx: TextContext
+}
+
 export type CallbackButtonOptions<T> = RawOptions & {
     data: T
     ctx: CallbackButtonContext
+}
+
+export type ContextOptions = {
+    text: BuckwheatCommandOptions
+    photo: PhotoOptions
 }

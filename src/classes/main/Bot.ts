@@ -29,7 +29,7 @@ export default class Bot {
             token,
             {
                 telegram: {
-                    agent: HTTP_PROXY ? new HttpsProxyAgent('http://10.147.17.233:10809') : undefined
+                    agent: HTTP_PROXY ? new HttpsProxyAgent(HTTP_PROXY) : undefined
                 }
             }
         )
@@ -43,17 +43,6 @@ export default class Bot {
 
     addHandlers(...handlers: BaseHandler<any, any>[]): void {
         this._handlers.push(...handlers)
-    }
-
-    addActions(...actions: BaseAction[]): void {
-        for (const action of actions) {
-            for (const handler of this._handlers) {
-                if (handler.isNeedType(action)) {
-                    handler.add(action)
-                    break
-                }
-            }
-        }
     }
 
     private async _launchCallback(): Promise<void> {

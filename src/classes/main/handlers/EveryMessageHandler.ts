@@ -3,10 +3,11 @@ import BaseHandler from './BaseHandler'
 import Logging from '../../../utils/Logging'
 import { MyTelegraf } from '../../../utils/values/types/types'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
+import ArrayContainer from '../containers/ArrayContainer'
 
-export default class EveryMessageHandler extends BaseHandler<EveryMessageAction, EveryMessageAction[], typeof EveryMessageAction> {
-    constructor() {
-        super([], EveryMessageAction)
+export default class EveryMessageHandler extends BaseHandler<EveryMessageAction, ArrayContainer<EveryMessageAction>> {
+    constructor () {
+        super(new ArrayContainer())
     }
 
     setup(bot: MyTelegraf): void {
@@ -19,20 +20,22 @@ export default class EveryMessageHandler extends BaseHandler<EveryMessageAction,
                 ctx,
                 id
             )
-            if(!chatId) return next()
+            if (!chatId) return next()
 
-            for (const action of this._container) {
-                if(isPrivate && !action.canUsePrivate) continue
-                if(
-                    await action.execute({
-                        ctx,
-                        chatId,
-                        id
-                    })
-                ) return
+            const options = {
+                ctx,
+                chatId,
+                id
             }
 
-            next()
+            for (const action of this._container) {
+                if (isPrivate && !action.canUsePrivate) continue
+                if(await action.execute(options)) {
+                    return
+                }
+            }
+
+            return next()
         })
     }
 }

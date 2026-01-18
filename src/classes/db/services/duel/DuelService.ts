@@ -1,6 +1,5 @@
 import Duel from '../../../../interfaces/schemas/duels/Duel'
 import DuelStep from '../../../../interfaces/schemas/duels/DuelStep'
-import LastStep from '../../../../interfaces/schemas/duels/LastStep'
 import RandomUtils from '../../../../utils/RandomUtils'
 import { DUEL_PRICE_PER_LEVEL, MIN_STEPS_FOR_LEVEL_IN_DUEL } from '../../../../utils/values/consts'
 import { DuelCanUseOptions, DuelEndOptions, DuelResult } from '../../../../utils/values/types/types'

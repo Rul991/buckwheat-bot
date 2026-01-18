@@ -1,19 +1,15 @@
-import { Context, Telegraf } from 'telegraf'
 import BaseAction from '../../actions/base/BaseAction'
 import { AsyncOrSync, MyTelegraf } from '../../../utils/values/types/types'
-import { ContextData } from '../../../utils/values/types/contexts'
+import BaseContainer from '../containers/BaseContainer'
 
 export default abstract class BaseHandler<
-    T extends InstanceType<N>, 
-    C extends Array<T> | Record<string, T>, 
-    N extends typeof BaseAction = typeof BaseAction
+    T extends BaseAction, 
+    C extends BaseContainer<any, any, any> 
 > {
     protected _container: C
-    protected _needType: N
 
-    constructor(container: C, needType: N) {
+    constructor(container: C) {
         this._container = container
-        this._needType = needType
     }
     
     add(...values: T[]): void {
@@ -22,17 +18,8 @@ export default abstract class BaseHandler<
         }
     }
 
-    isNeedType(action: BaseAction): boolean {
-        return action instanceof this._needType
-    }
-
     protected _add(value: T): void {
-        if(this._container instanceof Array) {
-            this._container.push(value)
-        }
-        else {
-            this._container[value.name] = value
-        }
+        this._container.add(value)
     }
 
     abstract setup(bot: MyTelegraf): AsyncOrSync

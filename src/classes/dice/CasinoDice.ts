@@ -10,8 +10,11 @@ import InventoryItemService from '../db/services/items/InventoryItemService'
 import LinkedChatService from '../db/services/linkedChat/LinkedChatService'
 import ChatSettingsService from '../db/services/settings/ChatSettingsService'
 import { DiceOptions } from '../../utils/values/types/action-options'
+import UserSettingsService from '../db/services/settings/UserSettingsService'
+import { Link } from '../../utils/values/types/types'
+import GrindSettingService from '../db/services/settings/GrindSettingService'
 
-type ChangeValues = { name: string, link: string }
+type ChangeValues = Link
 
 export default class CasinoDice extends BaseDice {
     private static _winCombinations = [1, 22, 43]
@@ -20,6 +23,10 @@ export default class CasinoDice extends BaseDice {
     constructor () {
         super()
         this._name = '🎰'
+    }
+
+    private async _isSendMessage(ctx: DiceContext, id: number) {
+        return await GrindSettingService.isSendMessage(ctx, id)
     }
 
     private async _sendMessageAndUpdateCasino(
@@ -32,9 +39,12 @@ export default class CasinoDice extends BaseDice {
     ): Promise<void> {
         const chatId = await LinkedChatService.getCurrent(ctx, id)
         if (!chatId) return
-
+        
         await CasinoAddService.money(chatId, id, count)
         await (isWin ? CasinoAddService.wins(chatId, id, 1) : CasinoAddService.loses(chatId, id, 1))
+        
+        const isSendMessage = await this._isSendMessage(ctx, id)
+        if (!isSendMessage) return
 
         await MessageUtils.answerMessageFromResource(
             ctx,

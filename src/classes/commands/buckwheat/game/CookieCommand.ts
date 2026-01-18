@@ -9,9 +9,11 @@ import BuckwheatCommand from '../../base/BuckwheatCommand'
 import RandomUtils from '../../../../utils/RandomUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import UserSettingsService from '../../../db/services/settings/UserSettingsService'
+import GrindSettingService from '../../../db/services/settings/GrindSettingService'
 
 export default class CookieCommand extends BuckwheatCommand {
-    constructor() {
+    constructor () {
         super()
         this._name = 'печенька'
         this._description = 'вы можете съесть или поделиться печенькой'
@@ -24,11 +26,11 @@ export default class CookieCommand extends BuckwheatCommand {
     async execute({ ctx, chatId, id: userId, replyFrom }: BuckwheatCommandOptions): Promise<void> {
         const [hasCookie] = await InventoryItemService.use(
             chatId,
-            userId, 
+            userId,
             'cookie'
         )
 
-        if(!hasCookie) {
+        if (!hasCookie) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/cookie/no.pug'
@@ -36,11 +38,11 @@ export default class CookieCommand extends BuckwheatCommand {
             return
         }
 
-        if(replyFrom) {
+        if (replyFrom) {
             const replyId = replyFrom.id
             await InventoryItemService.add(
                 chatId,
-                replyId, 
+                replyId,
                 'cookie'
             )
 
@@ -52,7 +54,7 @@ export default class CookieCommand extends BuckwheatCommand {
                 }
             )
         }
-        else if(RandomUtils.chance(BAD_COOKIE_CHANCE)) {
+        else if (RandomUtils.chance(BAD_COOKIE_CHANCE)) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/cookie/bad.pug'
@@ -60,6 +62,10 @@ export default class CookieCommand extends BuckwheatCommand {
         }
         else {
             await WorkTimeService.add(chatId, userId, COOKIE_WORK_TIME)
+            
+            const isSendMessage = await GrindSettingService.isSendMessage(ctx, userId)
+            if(!isSendMessage) return
+
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/cookie/eat.pug'

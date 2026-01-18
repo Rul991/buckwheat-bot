@@ -2,10 +2,11 @@ import BaseHandler from './BaseHandler'
 import LeftMemberAction from '../../actions/left-member/LeftMemberAction'
 import { MyTelegraf } from '../../../utils/values/types/types'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
+import ArrayContainer from '../containers/ArrayContainer'
 
-export default class LeftMemberHandler extends BaseHandler<LeftMemberAction, LeftMemberAction[], typeof LeftMemberAction> {
+export default class LeftMemberHandler extends BaseHandler<LeftMemberAction, ArrayContainer<LeftMemberAction>> {
     constructor () {
-        super([], LeftMemberAction)
+        super(new ArrayContainer())
     }
 
     setup(bot: MyTelegraf): void {
@@ -16,13 +17,20 @@ export default class LeftMemberHandler extends BaseHandler<LeftMemberAction, Lef
                 id
             )
             if(!chatId) return
-            for (const action of this._container) {
+
+            const options = {
+                ctx,
+                chatId,
+                id
+            }
+
+            this._container.forEach(async action => {
                 await action.execute({
                     ctx,
                     chatId,
                     id
                 })
-            }
+            })
         })
     }
 }

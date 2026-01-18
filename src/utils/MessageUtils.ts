@@ -1,6 +1,6 @@
 import { InlineKeyboardMarkup, InputFile, Message, ParseMode, TelegramEmoji } from 'telegraf/types'
 import { Context } from 'telegraf'
-import { FIRST_INDEX, MAX_MESSAGE_LENGTH, NOT_FOUND_INDEX, PARSE_MODE } from './values/consts'
+import { CALLBACK_DATA_MAX_SIZE, DATABASE_KEYBOARD_NAME, FIRST_INDEX, MAX_MESSAGE_LENGTH, NOT_FOUND_INDEX, PARSE_MODE } from './values/consts'
 import FileUtils from './FileUtils'
 import Logging from './Logging'
 import AnswerOptions from '../interfaces/options/AnswerOptions'
@@ -9,18 +9,104 @@ import { DiceValues, ExtraEditMessageMedia, ExtraEditMessageText, FileOptions, I
 import ExceptionUtils from './ExceptionUtils'
 import ObjectValidator from './ObjectValidator'
 import { invoiceSchema } from './values/schemas'
+import KeyboardService from '../classes/db/services/keyboard/KeyboardService'
 
 export default class MessageUtils {
+    private static async _handleInlineKeyboard(
+        ctx: Context,
+        inlineKeyboard: AnswerOptions['inlineKeyboard']
+    ): Promise<AnswerOptions['inlineKeyboard']> {
+        if (!inlineKeyboard) return inlineKeyboard
+
+        const hasBigData = inlineKeyboard.some(row => {
+            return row.some(btn => {
+                if (!('callback_data' in btn)) return false
+                const buffer = Buffer.from(btn.callback_data)
+                const length = buffer.byteLength
+
+                return length > CALLBACK_DATA_MAX_SIZE
+            })
+        })
+
+        if (!hasBigData) {
+            return inlineKeyboard
+        }
+
+        const hasNeedCtxProperties = ctx.callbackQuery &&
+            ctx.callbackQuery.message &&
+            ctx.from
+
+        if (hasNeedCtxProperties) {
+            const messageId = ctx.callbackQuery.message!.message_id
+            const id = ctx.from.id
+            const chatId = ctx.chat?.id ?? id
+
+            const dbKeyboard = inlineKeyboard
+                .map(row => {
+                    return row.map(btn => {
+                        if (!('callback_data' in btn)) {
+                            return ''
+                        }
+                        else {
+                            return btn.callback_data
+                        }
+                    })
+                })
+
+            await KeyboardService.create({
+                id,
+                messageId,
+                keyboard: dbKeyboard,
+                chatId
+            })
+
+            const ids = {
+                msgId: messageId,
+                id
+            }
+
+            const result = inlineKeyboard.map((row, y) => {
+                return row.map((btn, x) => {
+                    return {
+                        text: btn.text,
+                        callback_data: `${DATABASE_KEYBOARD_NAME}_${JSON.stringify({
+                            ...ids,
+                            pos: [x, y]
+                        })
+                            }`
+                    }
+                })
+            })
+
+            Logging.log(
+                "MessageUtils._handleInlineKeyboard",
+                {
+                    result,
+                    raw: inlineKeyboard
+                }
+            )
+            return result
+        }
+
+        Logging.error('no messageId or userId in', ctx, inlineKeyboard)
+        return []
+    }
+
     private static async _getMessageOptions(
-        ctx: Context, 
+        ctx: Context,
         {
-            inlineKeyboard = [],
+            inlineKeyboard: rawInlineKeyboard,
             disableNotification,
             chatId = ctx.chat?.id ?? NOT_FOUND_INDEX,
             isReply = true,
             replyMarkup
         }: AnswerOptions = {}
     ) {
+        const inlineKeyboard = await this._handleInlineKeyboard(
+            ctx,
+            rawInlineKeyboard
+        ) ?? []
+
         return {
             reply_parameters: isReply && ctx.message?.message_id ? {
                 message_id: ctx.message.message_id
@@ -36,35 +122,35 @@ export default class MessageUtils {
     }
 
     static async answer(
-        ctx: Context, 
-        text: string, 
+        ctx: Context,
+        text: string,
         options: AnswerOptions = {}
     ): Promise<Message.TextMessage> {
         const emptyMessage: Message.TextMessage = {
-            text: '', 
-            message_id: NOT_FOUND_INDEX, 
-            date: NOT_FOUND_INDEX, 
+            text: '',
+            message_id: NOT_FOUND_INDEX,
+            date: NOT_FOUND_INDEX,
             chat: {
-                first_name: '', 
-                type: 'private', 
+                first_name: '',
+                type: 'private',
                 id: options.chatId ?? NOT_FOUND_INDEX
             }
         }
 
         const messageOptions = await this._getMessageOptions(ctx, options)
-        const {chatId} = messageOptions
-        
-        if(!text.length) return emptyMessage
-        if(chatId == NOT_FOUND_INDEX) return emptyMessage
+        const { chatId } = messageOptions
+
+        if (!text.length) return emptyMessage
+        if (chatId == NOT_FOUND_INDEX) return emptyMessage
 
         let lastMessage = emptyMessage
-        
+
         await ExceptionUtils.handle(async () => {
-            const partText = text.substring(FIRST_INDEX, MAX_MESSAGE_LENGTH)
+            const partText = text.substring(FIRST_INDEX, MAX_MESSAGE_LENGTH - 1)
             await ctx.sendChatAction('typing')
             lastMessage = await ctx.telegram.sendMessage(
                 chatId,
-                partText, 
+                partText,
                 messageOptions
             )
         })
@@ -80,15 +166,15 @@ export default class MessageUtils {
     }
 
     static async answerMessageFromResource(
-        ctx: Context, 
+        ctx: Context,
         path: string,
         options: FileAnswerOptions = {}
     ): Promise<Message.TextMessage> {
         const text = await FileUtils.readPugFromResource(path, options)
 
         return await this.answer(
-            ctx, 
-            text, 
+            ctx,
+            text,
             options
         )
     }
@@ -103,7 +189,7 @@ export default class MessageUtils {
         await ExceptionUtils.handle(async () => {
             const extra = await this._getMessageOptions(ctx, options)
 
-            if(extra.chatId == NOT_FOUND_INDEX) {
+            if (extra.chatId == NOT_FOUND_INDEX) {
                 Logging.error(`chat id equal -1`)
                 return
             }
@@ -120,11 +206,11 @@ export default class MessageUtils {
 
         return msg ?? {
             dice: {
-                emoji: '', 
+                emoji: '',
                 value: NOT_FOUND_INDEX
-            }, 
-            message_id: NOT_FOUND_INDEX, 
-            date: NOT_FOUND_INDEX, 
+            },
+            message_id: NOT_FOUND_INDEX,
+            date: NOT_FOUND_INDEX,
             chat: {
                 first_name: '',
                 id: NOT_FOUND_INDEX,
@@ -142,7 +228,7 @@ export default class MessageUtils {
         return await ExceptionUtils.handle(async () => {
             const extra = await this._getMessageOptions(ctx, options)
 
-            if(extra.chatId == -1) {
+            if (extra.chatId == -1) {
                 Logging.error(`Cant send photo '${photoId}', chat id equal -1`)
                 return
             }
@@ -159,13 +245,23 @@ export default class MessageUtils {
         })
     }
 
-    private static _updateEditOptions(ctx: Context, options?: ExtraEditMessageText) {
+    private static async _updateEditOptions(ctx: Context, options?: ExtraEditMessageText) {
+        const replyMarkup = options?.reply_markup
+        const inlineKeyboard = await this._handleInlineKeyboard(
+            ctx,
+            replyMarkup?.inline_keyboard
+        ) ?? []
+
         return {
             ...options,
             parse_mode: PARSE_MODE,
             reply_parameters: ctx.message ? {
                 message_id: ctx.message.message_id
-            } : undefined
+            } : undefined,
+            reply_markup: {
+                ...replyMarkup,
+                inline_keyboard: inlineKeyboard
+            }
         } as ExtraEditMessageText
     }
 
@@ -177,25 +273,25 @@ export default class MessageUtils {
 
     static async editText(ctx: Context, text: string, options?: ExtraEditMessageText): Promise<boolean> {
         try {
-            await ctx.editMessageText(text, this._updateEditOptions(ctx, options))
+            await ctx.editMessageText(text, await this._updateEditOptions(ctx, options))
             return true
         }
-        catch(e) {
+        catch (e) {
             Logging.error(e)
 
-            await ctx.reply(text, this._updateEditOptions(ctx, options))
+            await ctx.reply(text, await this._updateEditOptions(ctx, options))
             await this.deleteMessage(ctx)
             return false
         }
     }
 
     static async editMedia(
-        ctx: Context, 
+        ctx: Context,
         media: InputMediaWrapCaption,
         options?: ExtraEditMessageMedia,
     ) {
         return await ExceptionUtils.handle(async () => {
-            const usedOptions = this._updateEditOptions(ctx, options)
+            const usedOptions = await this._updateEditOptions(ctx, options)
             await ctx.editMessageMedia(
                 {
                     ...media,
@@ -233,8 +329,8 @@ export default class MessageUtils {
 
     static async answerInvoiceFromFile(ctx: Context, path: string, extra?: AnswerOptions): Promise<boolean> {
         const json = await FileUtils.readJsonFromResource<NewInvoiceParameters>(path)
-        if(!json) return false
-        if(!ObjectValidator.isValidatedObject(json, invoiceSchema)) return false
+        if (!json) return false
+        if (!ObjectValidator.isValidatedObject(json, invoiceSchema)) return false
 
         return await this.answerInvoice(
             ctx,

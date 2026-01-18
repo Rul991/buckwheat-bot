@@ -4,7 +4,6 @@ import FileUtils from '../../../../utils/FileUtils'
 import { ScrollerSendMessageOptions, ScrollerEditMessageResult, AsyncOrSync, ScrollerGetObjectsOptions } from '../../../../utils/values/types/types'
 import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import AwardsService from '../../../db/services/awards/AwardsService'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import ScrollerAction from './ScrollerAction'
 

@@ -53,3 +53,9 @@ export type SuccessfulPaymentContext = NarrowedContext<Context<Update>, {
 }> & ContextData
 
 export type MessageContext<D extends {} = any> = NarrowedContext<Context<Update>, Update.MessageUpdate<Message>> & ContextData<D>
+
+export type Contexts = {
+    text: TextContext,
+    photo: PhotoContext
+}
+export type BotFilterName = keyof Contexts

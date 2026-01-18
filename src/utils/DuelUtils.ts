@@ -14,6 +14,7 @@ import DuelService from '../classes/db/services/duel/DuelService'
 import AdminUtils from './AdminUtils'
 import DuelistService from '../classes/db/services/duelist/DuelistService'
 import { HP_SYMBOLS, MANA_SYMBOLS, MAX_STATS_SYMBOLS_COUNT } from './values/consts'
+import Logging from './Logging'
 
 type StatsOptions = {
     ctx: Context
@@ -142,6 +143,7 @@ export default class DuelUtils {
         const enemy = this.getEnemy(duel, id)
 
         const getChars = async (id: number) => {
+            Logging.log('getChars', {id: id ?? 'goyda'})
             const current = await DuelistService.getCurrentCharacteristics(chatId, id)
             const max = await DuelistService.getMaxCharacteristics(chatId, id)
 

@@ -1,4 +1,4 @@
-import { SettingType, SettingTypeDefault, SettingWithId } from '../../../../utils/values/types/types'
+import { GetSettingForManyResult, SettingType, SettingTypeDefault, SettingWithId } from '../../../../utils/values/types/types'
 import SettingsService from './SettingsService'
 
 export default class {
@@ -8,21 +8,21 @@ export default class {
         this._filename = filename
     }
 
-    async get<K extends SettingType = any>(chatId: number, settingId: string) {
+    async get<K extends SettingType = any>(id: number, settingId: string) {
         return await SettingsService.getSetting<K>(
-            chatId,
+            id,
             this._filename,
             settingId
         )
     }
 
     async set<K extends SettingType = any>(
-        chatId: number, 
+        id: number, 
         settingId: string, 
         value: SettingTypeDefault[K]
     ) {
         return await SettingsService.setSetting<K>(
-            chatId,
+            id,
             this._filename,
             settingId,
             value
@@ -30,32 +30,43 @@ export default class {
     }
 
     async getAll(
-        chatId: number
+        id: number
     ): Promise<SettingWithId[]> {
         const settings = await SettingsService.getSettingsArray(
-            chatId, 
+            id, 
             this._filename
         )
         return settings
     }
 
     async getObject(
-        chatId: number
+        id: number
     ) {
         return await SettingsService.getSettingsObject(
-            chatId,
+            id,
             this._filename
         )
     }
 
     async setMany(
-        chatId: number,
+        id: number,
         settings: Map<string, any>
     ) {
         return await SettingsService.setSettings(
-            chatId,
+            id,
             this._filename,
             settings
+        )
+    }
+
+    async getSettingForMany<K extends SettingType = any>(
+        ids: number[],
+        settingId: string
+    ): Promise<GetSettingForManyResult<K>[]> {
+        return await SettingsService.getSettingForMany(
+            ids,
+            this._filename,
+            settingId
         )
     }
 }

@@ -1,4 +1,4 @@
-import { Model, RootFilterQuery, UpdateWriteOpResult } from 'mongoose'
+import { Model, QueryFilter, QueryOptions, UpdateWriteOpResult } from 'mongoose'
 import { FIRST_INDEX } from '../../../../utils/values/consts'
 
 export default abstract class BaseRepository<K, T extends typeof Model<K>> {
@@ -8,7 +8,7 @@ export default abstract class BaseRepository<K, T extends typeof Model<K>> {
         this._Model = Model
     }
 
-    protected _getFilter(filter?: RootFilterQuery<K>): RootFilterQuery<K> {
+    protected _getFilter(filter?: QueryFilter<K>): QueryFilter<K> {
         return (filter ?? {})
     }
 
@@ -19,8 +19,8 @@ export default abstract class BaseRepository<K, T extends typeof Model<K>> {
         return obj
     }
 
-    async findByFilter(filter: RootFilterQuery<K>): Promise<K | null> {
-        return await this._Model.findOne(filter).exec()
+    async findByFilter(filter: QueryFilter<K>): Promise<K | null> {
+        return await this._Model.findOne(filter as any).exec()
     }
 
     async findOne(...filter: any): Promise<K | null> {
@@ -40,9 +40,16 @@ export default abstract class BaseRepository<K, T extends typeof Model<K>> {
      */
 
     async updateOne(...values: any): Promise<K | null> {
-        return await this._Model.findOneAndUpdate(
-            values[FIRST_INDEX], 
-            values[1],
+        return await this.updateOneByFilter(
+            values[FIRST_INDEX],
+            values[1]
+        )
+    }
+
+    async updateOneByFilter(filter: QueryFilter<K>, data: QueryOptions<K>): Promise<K | null> {
+        return await this._Model.findOneAndUpdate<K>(
+            filter as any,
+            data,
             {
                 upsert: true
             }

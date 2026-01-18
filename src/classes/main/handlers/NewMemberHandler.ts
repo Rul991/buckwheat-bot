@@ -2,10 +2,11 @@ import NewMemberAction from '../../actions/new-member/NewMemberAction'
 import BaseHandler from './BaseHandler'
 import { MyTelegraf } from '../../../utils/values/types/types'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
+import ArrayContainer from '../containers/ArrayContainer'
 
-export default class NewMemberHandler extends BaseHandler<NewMemberAction, NewMemberAction[], typeof NewMemberAction> {
+export default class NewMemberHandler extends BaseHandler<NewMemberAction, ArrayContainer<NewMemberAction>> {
     constructor() {
-        super([], NewMemberAction)
+        super(new ArrayContainer())
     }
 
     setup(bot: MyTelegraf): void {
@@ -17,13 +18,15 @@ export default class NewMemberHandler extends BaseHandler<NewMemberAction, NewMe
             )
             if(!chatId) return
 
-            for (const action of this._container) {
-                await action.execute({
-                    ctx,
-                    chatId,
-                    id
-                })
+            const options = {
+                ctx,
+                chatId,
+                id
             }
+
+            await this._container.forEach(async action => {
+                return action.execute(options)
+            })
         })
     }
 }

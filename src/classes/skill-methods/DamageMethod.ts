@@ -125,7 +125,7 @@ export default class extends SkillMethod<[number, number]> {
         const duelId = duel.id
 
         const damage = await this.getDamage({...options, isText: false})
-        const remainingDamage = this._getRemainingDamage({
+        const remainingDamage = await this._getRemainingDamage({
             duelId,
             target: id,
             damage

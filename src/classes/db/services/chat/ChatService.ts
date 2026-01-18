@@ -39,6 +39,10 @@ export default class ChatService {
         }
     }
 
+    static async delete(chatId: number) {
+        return await ChatRepository.deleteOne(chatId)
+    }
+
     static async set(chatId: number, data: SetData) {
         return await ChatRepository.updateOne(
             chatId,

@@ -51,7 +51,8 @@ export default class extends CallbackButtonAction<Data> {
                         'duels/away',
                         {
                             duel: JSON.stringify({ id: duelId }),
-                            user: JSON.stringify({ v: duelId, t: 'd' })
+                            user: JSON.stringify({ v: duelId, t: 'd' }),
+                            id: JSON.stringify({id})
                         }
                     )
                 }

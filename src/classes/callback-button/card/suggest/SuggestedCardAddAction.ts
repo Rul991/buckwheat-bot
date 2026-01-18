@@ -1,4 +1,4 @@
-import { any, literal, number, object, ZodType } from 'zod'
+import { literal, number, object, ZodType } from 'zod'
 import CallbackButtonAction from '../../CallbackButtonAction'
 import ContextUtils from '../../../../utils/ContextUtils'
 import { DEV_ID } from '../../../../utils/values/consts'
@@ -8,7 +8,6 @@ import CardService from '../../../db/services/card/CardService'
 import MessageUtils from '../../../../utils/MessageUtils'
 import ArrayUtils from '../../../../utils/ArrayUtils'
 import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
-import { cardBuySchema } from '../../../../utils/values/schemas'
 
 type Data = {
     a: 0 | 1,
@@ -18,12 +17,12 @@ type Data = {
 }
 
 export default class extends CallbackButtonAction<Data> {
-    protected _schema: ZodType<Data> = cardBuySchema
-        .and(object({
-            a: literal([0, 1]),
-            s: any().optional(),
-            c: number()
-        }))
+    protected _schema: ZodType<Data> = object({
+        a: literal([0, 1]),
+        id: number(),
+        c: number(),
+        p: number()
+    })
 
     constructor () {
         super()

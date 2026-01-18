@@ -7,7 +7,7 @@
         "list": {
             "notEach": true,
             "text": "+",
-            "data": "skillchange_{\"current\": -1, \"increase\": 1}_@{id}"
+            "data": "skillchange_{\"c\": -1, \"i\": 1}_@{id}"
         }
     },
     "values": 

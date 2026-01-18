@@ -20,6 +20,8 @@ import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService
 import PremiumChatService from '../../../db/services/chat/PremiumChatService'
 import ChatSettingsService from '../../../db/services/settings/ChatSettingsService'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import UserSettingsService from '../../../db/services/settings/UserSettingsService'
+import GrindSettingService from '../../../db/services/settings/GrindSettingService'
 
 type Boost = {
     value: boolean,
@@ -115,8 +117,9 @@ export default class WorkCommand extends BuckwheatCommand {
 
     async execute({ ctx, chatId, id }: BuckwheatCommandOptions): Promise<void> {
         const user = await ContextUtils.getUser(chatId, id)
+        const isPrivate = ctx.chat.type == 'private'
 
-        if(ctx.chat.type != 'private' && await ChatSettingsService.get<'boolean'>(chatId, 'cantWorkInChat')) {
+        if(!isPrivate && await ChatSettingsService.get<'boolean'>(chatId, 'cantWorkInChat')) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/work/deny.pug',
@@ -133,12 +136,15 @@ export default class WorkCommand extends BuckwheatCommand {
         const quest = await this._getQuest(chatId, id)
         const elapsed = await WorkTimeService.getElapsedTime(chatId, id, workTime)
 
+        const isSendMessage = await GrindSettingService.isSendMessage(ctx, id)
+
         if (!elapsed) {
             const totalMoney = await this._getTotalMoney(chatId, id)
             const experience = await this._getExperience(chatId, id)
             const newLevel = await ExperienceService.isLevelUpAfterAdding(chatId, id, experience)
 
             await CasinoAddService.money(chatId, id, totalMoney)
+            if(!isSendMessage) return
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/work/work.pug',
@@ -154,10 +160,12 @@ export default class WorkCommand extends BuckwheatCommand {
 
             if (newLevel) {
                 await CasinoAddService.money(chatId, id, newLevel * LEVEL_UP_MONEY)
+                if(!isSendMessage) return
                 await LevelUtils.sendLevelUpMessage(ctx, newLevel)
             }
         }
         else {
+            if(!isSendMessage) return
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/work/cant.pug',

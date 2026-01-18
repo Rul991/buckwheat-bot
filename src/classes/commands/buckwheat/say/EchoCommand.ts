@@ -14,6 +14,7 @@ export default class EchoCommand extends BuckwheatCommand {
         this._needData = true
         this._argumentText = 'текст'
         this._isPremium = true
+        this._minimumRank = 2
     }
 
     async execute({ ctx, other, chatId, id }: BuckwheatCommandOptions): Promise<void> {

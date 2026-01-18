@@ -1,19 +1,13 @@
 import MessageUtils from '../../../utils/MessageUtils'
 import RoleplayUtils from '../../../utils/RoleplayUtils'
-import { BuckwheatCommandOptions } from '../../../utils/values/types/action-options'
-import { CommandStrings, MaybeString } from '../../../utils/values/types/types'
-import { TextContext } from '../../../utils/values/types/contexts'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
+import { ConditionalCommandOptions } from '../../../utils/values/types/action-options'
 import RoleplaysService from '../../db/services/rp/RoleplaysService'
 import ConditionalCommand from '../base/ConditionalCommand'
 
 export default class CustomRoleplayCommand extends ConditionalCommand {
-    private _text: string | null = null
+    protected _text?: string
 
-    async condition(ctx: TextContext, [_word, command, _other]: CommandStrings): Promise<boolean> {
-        const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return false
-
+    protected async _condition({ chatId, strings: [_first, command] }: ConditionalCommandOptions): Promise<boolean> {
         const roleplayCommand = await RoleplaysService
             .getCommand(chatId, command?.toLowerCase() ?? '')
         
@@ -24,7 +18,7 @@ export default class CustomRoleplayCommand extends ConditionalCommand {
         return Boolean(roleplayCommand)
     }
 
-    async execute({ ctx, other }: BuckwheatCommandOptions): Promise<void> {
+    protected async _execute({ ctx, strings: [_first, _command, other] }: ConditionalCommandOptions): Promise<void> {
         if(!this._text) return
         
         await MessageUtils.answer(

@@ -6,7 +6,7 @@
         },
         "back": {
             "text": "Назад",
-            "data": "setch_{\"c\":@{page},\"i\":1,\"id\":@{id}}",
+            "data": "setch_{\"c\":@{page},\"i\":1,\"id\":@{id},\"t\":@{type}}",
             "notEach": true
         }
     },

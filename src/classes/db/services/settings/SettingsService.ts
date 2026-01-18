@@ -1,11 +1,15 @@
-import Setting from '../../../../interfaces/other/Setting'
 import SettingUtils from '../../../../utils/settings/SettingUtils'
-import { SettingType, SettingTypeDefault, SettingWithId } from '../../../../utils/values/types/types'
+import { GetSettingForManyResult, SettingType, SettingTypeDefault, SettingWithId } from '../../../../utils/values/types/types'
 import SettingsRepository from '../../repositories/SettingsRepository'
 
 export default class {
     static async get(chatId: number, filename: string) {
-        const settings = await SettingsRepository.findOne(chatId)
+        const settings = await SettingsRepository.findOne(
+            chatId,
+            {
+                type: filename
+            }
+        )
 
         if (!settings) return await SettingsRepository.create({
             id: chatId,
@@ -40,21 +44,15 @@ export default class {
     }
 
     static async getSettingsObject(chatId: number, filename: string): Promise<Record<string, any>> {
-        const settings = await SettingsRepository.findOne(
-            chatId,
-            {
-                type: filename
-            }
-        )
-
-        return settings?.settings ?? {}
+        const settings = await this.get(chatId, filename)
+        return settings.settings ?? {}
     }
 
     static async getSetting<K extends SettingType = any>(
         chatId: number,
         filename: string,
         settingId: string
-    ): Promise<SettingTypeDefault[K] | undefined> {
+    ): Promise<SettingTypeDefault[K]> {
         const {
             settings
         } = await this.get(chatId, filename)
@@ -65,8 +63,31 @@ export default class {
         }
         else {
             const setting = await SettingUtils.getSetting<K>(filename, settingId)
-            return setting?.default
+            return setting.default
         }
+    }
+
+    static async getSettingForMany<K extends SettingType = any>(
+        ids: number[],
+        filename: string,
+        settingId: string
+    ): Promise<GetSettingForManyResult<K>[]> {
+        const setting = await SettingUtils.getSetting<K>(filename, settingId)
+        const defaultValue = setting.default
+
+        const settings = await SettingsRepository.findMany({
+            id: {
+                $in: ids
+            },
+            type: filename
+        })
+
+        return settings.map(({ id, settings }) => {
+            return {
+                id,
+                value: settings.get(settingId) ?? defaultValue
+            }
+        })
     }
 
     static async setSettings(
@@ -82,8 +103,8 @@ export default class {
             settings.set(key, value)
         })
 
-        return await SettingsRepository.updateOne(
-            chatId,
+        return await SettingsRepository.updateOneByFilter(
+            { id: chatId, type: filename },
             {
                 settings
             }

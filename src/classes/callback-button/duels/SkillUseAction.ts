@@ -94,7 +94,7 @@ export default class extends CallbackButtonAction<Data> {
             '🎯'
         )
 
-        if (!dice) return
+        if (!dice) return SkillAttack.Normal
 
         await MessageUtils.editMarkup(ctx, undefined)
         await TimeUtils.sleep(DARTS_TIME)
@@ -109,8 +109,6 @@ export default class extends CallbackButtonAction<Data> {
         } = useSkillOptions
 
         const attack = await this._getAttack(ctx)
-        if (!attack) return null
-
         const { isUsed } = await SkillUtils.useSkill({ ...useSkillOptions, attack })
 
         if (!isUsed) {
@@ -118,7 +116,7 @@ export default class extends CallbackButtonAction<Data> {
                 ctx,
                 'text/actions/skill/use/cant.pug'
             )
-            return null
+            return SkillAttack.Normal
         }
         return attack
     }
@@ -154,7 +152,7 @@ export default class extends CallbackButtonAction<Data> {
 
         const oldEffects = await EffectService.get(duelId)
         const attack = await this._useSkill(useSkillOptions)
-        if (!attack) return
+
         await EffectService.use(
             ctx,
             duel,

@@ -1,20 +1,20 @@
-import { Model, RootFilterQuery, UpdateQuery, UpdateWriteOpResult } from 'mongoose'
+import { Model, QueryFilter, UpdateQuery, UpdateWriteOpResult } from 'mongoose'
 import BaseRepository from './BaseRepository'
 
 export default class ChatIdRepository<T extends typeof Model, K extends { id: number, chatId: number }> extends BaseRepository<K, T> {
-    async findOne(chatId: number, id: number, filter?: RootFilterQuery<K>): Promise<K | null> {
+    async findOne(chatId: number, id: number, filter?: QueryFilter<K>): Promise<K | null> {
         return await super.findOne({ ...this._getFilter(filter), id, chatId })
     }
 
-    async findManyInChat(chatId: number, filter?: RootFilterQuery<K>): Promise<K[]> {
-        return await this.findMany({ ...filter, chatId })
+    async findManyInChat(chatId: number, filter?: QueryFilter<K>): Promise<K[]> {
+        return await this.findMany({ ...filter, chatId } as QueryFilter<K>)
     }
 
-    async findMany(filter?: RootFilterQuery<K>): Promise<K[]> {
+    async findMany(filter?: QueryFilter<K>): Promise<K[]> {
         return await super.findMany(this._getFilter(filter))
     }
 
-    async deleteOne(chatId: number, id: number, filter?: RootFilterQuery<K>): Promise<K | null> {
+    async deleteOne(chatId: number, id: number, filter?: QueryFilter<K>): Promise<K | null> {
         return await super.deleteOne({ ...this._getFilter(filter), id, chatId })
     }
 

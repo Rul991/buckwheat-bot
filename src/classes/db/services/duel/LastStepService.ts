@@ -11,7 +11,8 @@ export default class {
             id,
             {
                 step: {
-                    lastStep
+                    lastStep,
+                    duelist: duel.step.duelist
                 }
             }
         )

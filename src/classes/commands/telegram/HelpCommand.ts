@@ -1,6 +1,4 @@
 import { BuckwheatCommandOptions } from '../../../utils/values/types/action-options'
-import { MaybeString } from '../../../utils/values/types/types'
-import { TextContext } from '../../../utils/values/types/contexts'
 import TelegramCommand from '../base/TelegramCommand'
 import FaqCommand from '../buckwheat/info/FaqCommand'
 

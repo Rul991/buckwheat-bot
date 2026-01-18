@@ -4,19 +4,22 @@ import ContextUtils from '../../../utils/ContextUtils'
 import SettingShowUtils from '../../../utils/settings/SettingShowUtils'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 import { idSchema } from '../../../utils/values/schemas'
+import SettingUtils from '../../../utils/settings/SettingUtils'
+import { DEFAULT_SETTINGS_TYPE } from '../../../utils/values/consts'
 
 type Data = {
     n: string
     id: number
     p: number
+    t?: string
 }
 
 export default class extends CallbackButtonAction<Data> {
-    protected _filename: string = 'chat'
     protected _schema: ZodType<Data> = idSchema
         .and(object({
             n: string(),
-            p: number()
+            p: number(),
+            t: string().optional()
         }))
 
     constructor () {
@@ -27,13 +30,14 @@ export default class extends CallbackButtonAction<Data> {
         const {
             n: settingId,
             id,
-            p: page
+            p: page,
+            t: type = DEFAULT_SETTINGS_TYPE
         } = data
         if (await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return
 
         return await SettingShowUtils.editMessage({
-            filename: this._filename,
-            chatId,
+            filename: type,
+            settingsId: SettingUtils.getSettingsId(chatId, id, type),
             id,
             page,
             settingId,

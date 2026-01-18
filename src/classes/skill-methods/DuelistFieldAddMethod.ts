@@ -20,8 +20,13 @@ export default class<T extends any[]> extends SkillMethod<T> {
         return id
     }
 
-    protected async _preCheck({ }: MethodExecuteArguments<T>): Promise<boolean> {
-        return true
+    protected async _preCheck({
+        chatId,
+        id,
+        args: [value]
+    }: MethodExecuteArguments<T>): Promise<boolean> {
+        const chars = await DuelistService.getCurrentCharacteristics(chatId, id)
+        return value == 0 || chars[this._key] >= value
     }
 
     protected async _isAdd(_options: MethodExecuteArguments<T>) {
@@ -34,7 +39,7 @@ export default class<T extends any[]> extends SkillMethod<T> {
             attack
         } = options
         const boost = SkillAttack.Crit == attack ? 2 : SkillAttack.Fail ? 0.75 : 1
-        return value 
+        return value * boost
     }
 
     async _execute(options: MethodExecuteArguments<T>): Promise<boolean> {

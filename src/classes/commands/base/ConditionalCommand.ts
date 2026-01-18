@@ -1,23 +1,17 @@
-import { Context } from 'telegraf'
-import { CommandStrings, MaybeString } from '../../../utils/values/types/types'
-import { TextContext } from '../../../utils/values/types/contexts'
-import BuckwheatCommand from './BuckwheatCommand'
+import BaseAction from '../../actions/base/BaseAction'
+import { ConditionalCommandOptions } from '../../../utils/values/types/action-options'
 
-export default abstract class ConditionalCommand extends BuckwheatCommand {
-    constructor () {
-        super()
-        this._isShow = false
-    }
+export default abstract class ConditionalCommand extends BaseAction {
+    protected abstract _condition(options: ConditionalCommandOptions): Promise<boolean>
+    protected abstract _execute(options: ConditionalCommandOptions): Promise<void>
 
-    abstract condition(ctx: TextContext, [firstWord, command, other]: CommandStrings): boolean | Promise<boolean>
+    async execute(options: ConditionalCommandOptions): Promise<boolean> {
+        const needExecute = await this._condition(options)
 
-    async executeIfCondition(ctx: TextContext, message: CommandStrings): Promise<boolean> {
-        if (await this.condition(ctx, message)) {
-            const [_word, _command, other] = message
-            await this.execute({ ctx, other })
-            return true
+        if(needExecute) {
+            await this._execute(options)
         }
 
-        return false
+        return needExecute
     }
 }

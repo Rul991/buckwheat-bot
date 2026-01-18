@@ -100,7 +100,7 @@ export default class extends ScrollerAction<Object> {
         const isPrivate = ctx.chat?.type == 'private'
         const botId = ctx.botInfo.id
         const isUsePlayerId = isPrivate ||
-            await ChatSettingsService.get<'boolean'>(chatId, 'pingInTop')
+            await ChatSettingsService.get<'boolean'>(chatId, 'link')
 
         const sorted = await Promise.all(
             objects.map(async ({id: objId, value}) => {

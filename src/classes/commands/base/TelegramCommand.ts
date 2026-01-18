@@ -7,6 +7,10 @@ export default abstract class TelegramCommand extends BuckwheatCommand {
     }
 
     get botCommand(): BotCommand & {isShow: boolean} {
-        return {command: this._name, description: this._description, isShow: this._isShow}
+        return {
+            command: this._name, 
+            description: this._description, 
+            isShow: this._isShow
+        }
     }
 }

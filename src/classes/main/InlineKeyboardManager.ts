@@ -3,7 +3,7 @@ import { CallbackButtonMapValues, CallbackButtonValue, ObjectOrArray, CallbackBu
 import { DATA_REPLACEABLE_SYMBOL, MAX_BUTTONS_IN_HORISONTAL } from '../../utils/values/consts'
 import { InlineKeyboardButton } from 'telegraf/types'
 import ArrayUtils from '../../utils/ArrayUtils'
-import NumberByteConverter from '../../utils/NumberToBytesConverter'
+import Logging from '../../utils/Logging'
 
 type GetCallback<T, K> = (keyboard: T) => K
 type GetOptions<T, K> = {
@@ -49,13 +49,8 @@ export default class InlineKeyboardManager {
             )
     }
 
-    private static _optimizeData(result: Result[][]): Result[][] {
-        // for (const arr of result) {
-        //     for (const v of arr) {
-        //         v.callback_data = NumberByteConverter.replaceNumberToBytes(v.callback_data)
-        //     }
-        // }
-
+    private static _logResult(result: Result[][]): Result[][] {
+        Logging.log('InlineKeyboardManager._logResult', result)
         return result
     }
 
@@ -96,7 +91,7 @@ export default class InlineKeyboardManager {
             isArray: true
         }) ?? []
         
-        return this._optimizeData(result)
+        return this._logResult(result)
     }
 
     static async map(name: string, values: CallbackButtonMapValues): Promise<Result[][]> {
@@ -171,6 +166,6 @@ export default class InlineKeyboardManager {
             folder: 'map'
         }) ?? []
 
-        return this._optimizeData(keyboard)
+        return this._logResult(keyboard)
     }
 }

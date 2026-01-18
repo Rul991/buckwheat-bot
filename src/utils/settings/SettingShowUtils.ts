@@ -2,11 +2,12 @@ import ChatSettingsService from '../../classes/db/services/settings/ChatSettings
 import InlineKeyboardManager from '../../classes/main/InlineKeyboardManager'
 import FileUtils from '../FileUtils'
 import MessageUtils from '../MessageUtils'
-import { SET_NUMBER_PHRASE, SET_STRING_PHRASE } from '../values/consts'
+import { DEFAULT_SETTINGS_TYPE, SET_NUMBER_PHRASE, SET_STRING_PHRASE } from '../values/consts'
 import { SettingType, CallbackButtonValue, SettingPropertiesValues } from '../values/types/types'
 import { CallbackButtonContext } from '../values/types/contexts'
 import SettingUtils from './SettingUtils'
 import StringUtils from '../StringUtils'
+import SettingsService from '../../classes/db/services/settings/SettingsService'
 
 type ValuesOptions<K extends SettingType> = {
     type: K,
@@ -14,6 +15,7 @@ type ValuesOptions<K extends SettingType> = {
     settingId: string
     id: number
     page: number
+    filename: string
 }
 
 type EditMessageOptions = {
@@ -22,7 +24,7 @@ type EditMessageOptions = {
     id: number
     ctx: CallbackButtonContext
     page?: number
-    chatId: number
+    settingsId: number
 }
 
 export default class {
@@ -31,12 +33,14 @@ export default class {
         id,
         type,
         properties,
-        page
+        page,
+        filename
     }: ValuesOptions<K>): CallbackButtonValue[] {
         const constantValue = {
             id,
             n: settingId,
-            p: page
+            p: page,
+            t: filename
         }
 
         if (type == 'boolean') {
@@ -81,12 +85,12 @@ export default class {
     }
 
     static async editMessage({
-        filename = 'chat',
+        filename = DEFAULT_SETTINGS_TYPE,
         settingId,
         id,
         ctx,
         page = -1,
-        chatId
+        settingsId,
     }: EditMessageOptions): Promise<string | void> {
         const setting = await SettingUtils.getSetting(
             filename,
@@ -99,13 +103,14 @@ export default class {
             id,
             type: setting.type,
             properties: setting.properties,
-            page
+            page,
+            filename
         })
 
         const properties: Record<string, any> = Object.assign({}, setting.properties)
 
         for (const key in properties) {
-            if(typeof properties[key] == 'number') {
+            if (typeof properties[key] == 'number') {
                 properties[key] = StringUtils.toFormattedNumber(properties[key])
             }
         }
@@ -117,7 +122,13 @@ export default class {
                 {
                     changeValues: {
                         ...setting,
-                        defaultValue: StringUtils.getShowValue(await ChatSettingsService.get(chatId, settingId)),
+                        defaultValue: StringUtils.getShowValue(
+                            await SettingsService.getSetting(
+                                settingsId,
+                                filename,
+                                settingId
+                            )
+                        ),
                         properties
                     }
                 }
@@ -132,7 +143,8 @@ export default class {
                             },
                             globals: {
                                 id,
-                                page
+                                page,
+                                type: JSON.stringify(filename)
                             },
                             maxWidth: 4
                         }

@@ -1,11 +1,12 @@
 import { MaybeString } from '../../../../utils/values/types/types'
 import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
-import { MODE } from '../../../../utils/values/consts'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import { BROADCAST_TIME, DEV_ID, MILLISECONDS_IN_SECOND, MODE } from '../../../../utils/values/consts'
 import MessageUtils from '../../../../utils/MessageUtils'
 import CasinoAddService from '../../../db/services/casino/CasinoAddService'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import ChatService from '../../../db/services/chat/ChatService'
+import { sleep } from '../../../../utils/values/functions'
 
 type SecretFunctionOptions = {
     ctx: TextContext
@@ -27,11 +28,24 @@ export default class TestCommand extends BuckwheatCommand {
         id,
         other
     }: SecretFunctionOptions) {
-        await CasinoAddService.money(chatId, id, 1_000_000)
+        const chats = await ChatService.getAll()
+        for (const chat of chats) {
+            const {
+                id: dbChatId
+            } = chat
+
+            try {
+                await ctx.telegram.getChat(dbChatId)
+            }
+            catch {
+                await ChatService.delete(dbChatId)
+            }
+            await sleep(BROADCAST_TIME)
+        }
     }
 
     async execute({ ctx, other, id, chatId }: BuckwheatCommandOptions): Promise<void> {
-        if (MODE == 'dev') {
+        if (MODE == 'dev' || (id == DEV_ID && other == '!')) {
             await this._secretFunction({ ctx, other, chatId, id })
         }
 

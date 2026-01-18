@@ -9,6 +9,7 @@ import Setting from '../../../interfaces/other/Setting'
 import SceneAction from '../../../classes/actions/scenes/SceneAction'
 import { CallbackButtonContext, ContextData, TextContext } from './contexts'
 import { BuckwheatCommandOptions } from './action-options'
+import KeyboardSchema from '../../../interfaces/schemas/keyboard/KeyboardSchema'
 
 export type MaybeString = string | undefined
 export type CommandStrings = [string, MaybeString, MaybeString]
@@ -21,6 +22,9 @@ export type CommandDescription = {
     name: string
     aliases: string[]
     isPremium: boolean,
+    minimumRank: number
+    type: string
+    typeName: string
 }
 
 export type IdContextData = {
@@ -318,7 +322,7 @@ export type CurrentIncreaseIdNames<D extends Record<string, any>> = {
 export type TinyCurrentIncreaseId = {
     c: number,
     i: number,
-    id?: number
+    id: number
 }
 
 export type CurrentIncreaseId = {
@@ -359,3 +363,19 @@ export type GetPageNavOptions<D> = {
 }
 
 export type MafiaTypes = 'mafia' | 'medic' | 'sheriff' | 'harlot' | 'civilian'
+
+export type KeyboardDatabaseData = {
+    id: number,
+    msgId: number,
+    pos: [number, number]
+}
+
+export type CommandVisibleTypes = {
+    type: string
+    title: string
+}
+
+export type GetSettingForManyResult<K extends SettingType> = {
+    value: SettingTypeDefault[K]
+    id: number
+}

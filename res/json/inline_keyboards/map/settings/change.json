@@ -6,11 +6,11 @@
         },
         "arrow": {
             "text": "@",
-            "data": "setch_@"
+            "data": "setch_@_@{type}"
         },
         "pageNav": {
             "text": "@",
-            "data": "setch_@"
+            "data": "setch_@_@{type}"
         }
     },
     

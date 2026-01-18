@@ -1,95 +1,49 @@
-import { Telegraf } from 'telegraf'
-import BaseHandler from '../BaseHandler'
-import BuckwheatCommand from '../../../commands/base/BuckwheatCommand'
-import ConditionalCommand from '../../../commands/base/ConditionalCommand'
-import { CommandStrings, MyTelegraf } from '../../../../utils/values/types/types'
+import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import { TextContext } from '../../../../utils/values/types/contexts'
-import WrongCommand from '../../../commands/buckwheat/WrongCommand'
-import CommandDescriptionUtils from '../../../../utils/CommandDescriptionUtils'
-import CommandUtils from '../../../../utils/CommandUtils'
+import { MaybeString } from '../../../../utils/values/types/types'
+import NoCommand from '../../../actions/service/text/NoCommand'
+import NoPremiumCommand from '../../../actions/service/text/NoPremiumCommand'
+import WrongCommand from '../../../actions/service/text/WrongCommand'
+import BuckwheatCommand from '../../../commands/base/BuckwheatCommand'
+import PremiumChatService from '../../../db/services/chat/PremiumChatService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
+import ShowableActionHandler from '../showable/ShowableActionHandler'
 
-export default class CommandHandler extends BaseHandler<BuckwheatCommand, ConditionalCommand[], typeof BuckwheatCommand> {
-    private static _wrongCommand = new WrongCommand
+export default class CommandHandler extends ShowableActionHandler<BuckwheatCommand, 'text'> {
+    protected _filterName: 'text' = 'text'
+    protected _notExistAction?: BuckwheatCommand | undefined = new WrongCommand
+    protected _nonCommandAction?: BuckwheatCommand | undefined = new NoCommand
+    protected _hasntPremiumAction?: BuckwheatCommand | undefined = new NoPremiumCommand
 
-    private _buckwheatCommands: Record<string, BuckwheatCommand>
-
-    constructor () {
-        super([], BuckwheatCommand)
-        this._buckwheatCommands = {}
-    }
-
-    protected _add(value: BuckwheatCommand): void {
-        CommandDescriptionUtils.add(value.commandDescription)
-        if (value instanceof ConditionalCommand) {
-            super._add(value)
-        }
-        else {
-            for (const name of [value.name, ...value.aliases]) {
-                this._buckwheatCommands[name] = value
-            }
-        }
-    }
-
-    protected async _onConditionalCommand(ctx: TextContext, message: CommandStrings) {
-        for await (const command of this._container) {
-            if (await command.executeIfCondition(ctx, message)) {
-                return true
-            }
-        }
-
-        return false
-    }
-
-    protected async _onBuckwheatCommand(ctx: TextContext, [_name, command, other]: CommandStrings) {
-        const choosedCommand = this._buckwheatCommands[command!.toLowerCase()]
-
+    protected async _createOptions(ctx: TextContext, other: MaybeString): Promise<BuckwheatCommandOptions | null> {
         const userFrom = ctx.from
-        const {
-            id
-        } = userFrom
+        const id = userFrom.id
 
         const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if(!chatId) return
+        if (!chatId) return null
 
         const replyFrom = ctx.message.reply_to_message?.from
         const replyOrUserFrom = replyFrom ?? userFrom
 
-        const options = {
-            ctx,
-            other,
+        return {
             id,
             chatId,
+            other,
+            ctx,
             replyFrom,
             replyOrUserFrom
         }
-
-        if (!choosedCommand) {
-            CommandHandler._wrongCommand.execute(options)
-        }
-        else {
-            choosedCommand.execute(options)
-        }
     }
 
-    protected async _onCommand(ctx: TextContext, message: CommandStrings): Promise<void> {
-        const [_, command] = message
-
-        if (!await this._onConditionalCommand(ctx, message) && command) {
-            this._onBuckwheatCommand(ctx, message)
-        }
+    protected _getText(ctx: TextContext): string | undefined {
+        return ctx.text
     }
 
-    setup(bot: MyTelegraf): void {
-        bot.on('text', async ctx => {
-            if (ctx.message.forward_origin) return
-            
-            await CommandUtils.doIfCommand(
-                ctx.text,
-                async (strings) => {
-                    await this._onCommand(ctx, strings)
-                }
-            )
-        })
+    protected async _hasPremium(options: BuckwheatCommandOptions): Promise<boolean> {
+        const {
+            chatId,
+        } = options
+
+        return await PremiumChatService.isPremium(chatId)
     }
 }

@@ -6,11 +6,11 @@
         },
         "arrow": {
             "text": "@",
-            "data": "skillchange_@_@{id}"
+            "data": "skillchange_@"
         },
         "pageNav": {
             "text": "@",
-            "data": "skillchange_@_@{id}"
+            "data": "skillchange_@"
         },
         "back": {
             "text": "-",

@@ -1,16 +1,16 @@
-import { Model, RootFilterQuery, UpdateQuery, UpdateWriteOpResult } from 'mongoose'
+import { Model, QueryFilter, UpdateQuery, UpdateWriteOpResult } from 'mongoose'
 import BaseRepository from './BaseRepository'
 
 export default class IdRepository<T extends typeof Model<K>, K extends { id: number }> extends BaseRepository<K, T> {
-    async findOne(id: number, filter?: RootFilterQuery<K>): Promise<K | null> {
+    async findOne(id: number, filter?: QueryFilter<K>): Promise<K | null> {
         return await super.findOne({ ...this._getFilter(filter), id })
     }
 
-    async findMany(filter?: RootFilterQuery<K>): Promise<K[]> {
+    async findMany(filter?: QueryFilter<K>): Promise<K[]> {
         return await super.findMany(this._getFilter(filter))
     }
 
-    async deleteOne(id: number, filter?: RootFilterQuery<K>): Promise<K | null> {
+    async deleteOne(id: number, filter?: QueryFilter<K>): Promise<K | null> {
         return await super.deleteOne({ ...this._getFilter(filter), id })
     }
 
@@ -18,7 +18,7 @@ export default class IdRepository<T extends typeof Model<K>, K extends { id: num
         return await super.updateOne({ id }, data)
     }
 
-    async updateMany(data: UpdateQuery<K>, filter?: RootFilterQuery<K>): Promise<UpdateWriteOpResult> {
+    async updateMany(data: UpdateQuery<K>, filter?: QueryFilter<K>): Promise<UpdateWriteOpResult> {
         return await super.updateMany(this._getFilter(filter), data)
     }
 

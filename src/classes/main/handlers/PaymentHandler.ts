@@ -4,10 +4,11 @@ import { MyTelegraf } from '../../../utils/values/types/types'
 import { SuccessfulPaymentContext } from '../../../utils/values/types/contexts'
 import { PreCheckoutQueryContext } from '../../../utils/values/types/contexts'
 import ContextUtils from '../../../utils/ContextUtils'
+import MapContainer from '../containers/MapContainer'
 
-export default class PaymentHandler extends BaseHandler<PaymentAction, Record<string, PaymentAction>, typeof PaymentAction> {
+export default class PaymentHandler extends BaseHandler<PaymentAction, MapContainer<PaymentAction>> {
     constructor() {
-        super({}, PaymentAction)
+        super(new MapContainer())
     }
 
     private _searchAction(ctx: PreCheckoutQueryContext | SuccessfulPaymentContext): PaymentAction | null {
@@ -16,9 +17,9 @@ export default class PaymentHandler extends BaseHandler<PaymentAction, Record<st
 
         const invoicePayload = (ctx.message?.successful_payment.invoice_payload || ctx.preCheckoutQuery?.invoice_payload)!
 
-        for (const key in this._container) {
+        for (const [key, action] of this._container.entries()) {
             if(invoicePayload.startsWith(`${key}`)) {
-                return this._container[key]
+                return action
             }
         }
 

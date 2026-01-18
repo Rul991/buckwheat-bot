@@ -7,7 +7,13 @@ import PhotoAction from './PhotoAction'
 export default class ImageProfileAction extends PhotoAction {
     constructor () {
         super()
-        this._name = 'профиль'
+
+        this._name = 'ава'
+        this._description = 'меняет вашу аватарку'
+        this._aliases = [
+            'аватарка',
+            'профиль'
+        ]
     }
 
     async execute({ ctx, chatId, id }: PhotoOptions): Promise<void> {

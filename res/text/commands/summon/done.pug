@@ -19,8 +19,9 @@ blockquote #{text || 'Призываю!'}
 |
 |
 |
-each link in links
-    +link({link, name: emoji()})
+each linkAndEmoji in linksAndEmojies
+    - const {link, emoji: userEmoji} = linkAndEmoji
+    +link({link, name: userEmoji || emoji()})
     |        
     if pings > 0 && pings % 5 == 0
         |

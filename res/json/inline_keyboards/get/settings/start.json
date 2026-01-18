@@ -2,7 +2,7 @@
     [
         {
             "text": "Посмотреть",
-            "callback_data": "setch_{\"c\":-1,\"i\":1,\"id\":@}"
+            "callback_data": "setch_{\"c\":-1,\"i\":1,\"id\":@{id},\"t\":@{type}}"
         }
     ]
 ]

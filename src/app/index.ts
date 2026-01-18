@@ -1,6 +1,5 @@
 import Bot from '../classes/main/Bot'
 import CapsCommand from '../classes/commands/conditional/CapsCommand'
-import NoCommand from '../classes/commands/conditional/NoCommand'
 import TestCommand from '../classes/commands/buckwheat/dev/TestCommand'
 import { DOMAIN, MODE, TOKEN } from '../utils/values/consts'
 import StartValidator from '../utils/StartValidator'
@@ -92,7 +91,7 @@ import DiceHandler from '../classes/main/handlers/DiceHandler'
 import EveryMessageHandler from '../classes/main/handlers/EveryMessageHandler'
 import LeftMemberHandler from '../classes/main/handlers/LeftMemberHandler'
 import NewMemberHandler from '../classes/main/handlers/NewMemberHandler'
-import PhotoHandler from '../classes/main/handlers/PhotoHandler'
+import PhotoHandler from '../classes/main/handlers/showable/PhotoHandler'
 import PaymentHandler from '../classes/main/handlers/PaymentHandler'
 import SubscriptionAction from '../classes/actions/payment/SubscriptionAction'
 import DonateAction from '../classes/actions/payment/DonateAction'
@@ -110,7 +109,6 @@ import SkillRemoveAction from '../classes/callback-button/skills/SkillRemoveActi
 import TestAction from '../classes/callback-button/TestAction'
 import DuelStartAction from '../classes/callback-button/duels/DuelStartAction'
 import DuelAwayAction from '../classes/callback-button/duels/DuelAwayAction'
-import IsPremiumCommand from '../classes/commands/conditional/IsPremiumCommand'
 import OnDuelCommand from '../classes/commands/conditional/OnDuelCommand'
 import DuelFightAction from '../classes/callback-button/duels/DuelFightAction'
 import DuelSkillAction from '../classes/callback-button/duels/DuelSkillAction'
@@ -119,7 +117,7 @@ import DuelEffectsAction from '../classes/callback-button/duels/DuelEffectsActio
 import SkillAlertAction from '../classes/callback-button/skills/SkillAlertAction'
 import EffectChangeAction from '../classes/callback-button/effects/EffectChangeAction'
 import NotAllowedChatAction from '../classes/actions/every/NotAllowedChatAction'
-import { disconnect } from 'mongoose'
+import mongoose, { disconnect } from 'mongoose'
 import FaqCommand from '../classes/commands/buckwheat/info/FaqCommand'
 import FaqChangeAction from '../classes/callback-button/faq/FaqChangeAction'
 import FaqAction from '../classes/callback-button/faq/FaqAction'
@@ -130,7 +128,7 @@ import SettingsCommand from '../classes/commands/buckwheat/settings/SettingsComm
 import SettingsShowAction from '../classes/callback-button/settings/SettingsShowAction'
 import SettingSetAction from '../classes/callback-button/settings/SettingSetAction'
 import SceneActionHandler from '../classes/main/handlers/SceneActionHandler'
-import NumberSettingInputAction from '../classes/actions/scenes/NumberSettingInputAction'
+import NumberSettingInputAction from '../classes/actions/scenes/setting-input/SettingInputAction'
 import TopChangeAction from '../classes/callback-button/top/TopChangeAction'
 import BroadcastCommand from '../classes/commands/buckwheat/dev/BroadcastCommand'
 import CardCommand from '../classes/commands/buckwheat/card/CardCommand'
@@ -167,6 +165,12 @@ import GeneratorShowAction from '../classes/callback-button/generator/GeneratorS
 import GeneratorCollectAction from '../classes/callback-button/generator/GeneratorCollectAction'
 import GeneratorUpgradeAction from '../classes/callback-button/generator/GeneratorUpgradeAction'
 import SearchCommand from '../classes/commands/buckwheat/profile/SearchCommand'
+import Logging from '../utils/Logging'
+import DuelCommand from '../classes/commands/buckwheat/duel/DuelCommand'
+import EffectsCommand from '../classes/commands/buckwheat/duel/EffectsCommand'
+import SkillsCommand from '../classes/commands/buckwheat/duel/SkillsCommand'
+import ConditionalCommandHandler from '../classes/main/handlers/commands/ConditionalCommandHandler'
+import RemoveImageProfileCommand from '../classes/commands/buckwheat/profile/RemoveImageProfileCommand'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -213,21 +217,20 @@ const getSimpleCommands = async () => {
 
 const launchBot = async (bot: Bot) => {
     // handlers
-    bot.addHandlers(
-        new SceneActionHandler(),
-        new EveryMessageHandler(),
-        new TelegramCommandHandler(),
-        new CommandHandler(),
-        new CallbackButtonActionHandler(),
-        new DiceHandler(),
-        new NewMemberHandler(),
-        new PhotoHandler(),
-        new LeftMemberHandler(),
-        new PaymentHandler(),
-    )
+    const sceneActionHandler = new SceneActionHandler()
+    const everyMessageHandler = new EveryMessageHandler()
+    const telegramCommandHandler = new TelegramCommandHandler()
+    const commandHandler = new CommandHandler()
+    const conditionalCommandHandler = new ConditionalCommandHandler()
+    const callbackButtonActionHandler = new CallbackButtonActionHandler()
+    const diceHandler = new DiceHandler()
+    const newMemberHandler = new NewMemberHandler()
+    const photoHandler = new PhotoHandler()
+    const leftMemberHandler = new LeftMemberHandler()
+    const paymentHandler = new PaymentHandler()
 
     // every message 
-    bot.addActions(
+    everyMessageHandler.add(
         new NotAllowedChatAction(), // it should be first
         new WrongChatAction(), // it should be second
         new AntiSpamAction(),
@@ -238,17 +241,12 @@ const launchBot = async (bot: Bot) => {
     )
 
     // left member 
-    bot.addActions(
+    leftMemberHandler.add(
         new AddLeftInDatabaseAction()
     )
 
-    // photo 
-    bot.addActions(
-        new ImageProfileAction()
-    )
-
     // callback button 
-    bot.addActions(
+    callbackButtonActionHandler.add(
         new TestAction(),
         new CubeYesAction(),
         new CubeNoAction(),
@@ -312,35 +310,33 @@ const launchBot = async (bot: Bot) => {
     )
 
     // dice 
-    bot.addActions(
+    diceHandler.add(
         new CasinoDice(),
         new DiceDice()
     )
 
     // new member 
-    bot.addActions(
+    newMemberHandler.add(
         new AddInDatabaseAction(),
         new DebtMemberAction(),
         new HelloMemberAction(),
     )
 
     // payment
-    bot.addActions(
+    paymentHandler.add(
         new SubscriptionAction(),
         new DonateAction()
     )
 
     // conditional
-    bot.addActions(
+    conditionalCommandHandler.add(
         new CapsCommand(),
-        new NoCommand(),
         new OnDuelCommand(),
-        new IsPremiumCommand(),
         new CustomRoleplayCommand(),
     )
 
     // buckwheat
-    bot.addActions(
+    commandHandler.add(
         new PremiumCommand(),
         new DonateCommand(),
         new CommandsCommand(),
@@ -389,9 +385,9 @@ const launchBot = async (bot: Bot) => {
         new ChooseCommand(),
         new SaveCommand(),
         new CharsCommand(),
-        // new DuelCommand(),
-        // new SkillsCommand(),
-        // new EffectsCommand(),
+        new DuelCommand(),
+        new SkillsCommand(),
+        new EffectsCommand(),
         new ChatCommand(),
         new StatsCommand(),
         new AddAwardCommand(),
@@ -405,11 +401,17 @@ const launchBot = async (bot: Bot) => {
         new UnpinCommand(),
         new GeneratorCommand(),
         new SearchCommand(),
+        new RemoveImageProfileCommand(),
         ...await getSimpleCommands(),
     )
 
+    // photo 
+    photoHandler.add(
+        new ImageProfileAction()
+    )
+
     // tg
-    bot.addActions(
+    telegramCommandHandler.add(
         new StartCommand(),
         new PaySupportCommand(),
         new HelpCommand(),
@@ -417,11 +419,26 @@ const launchBot = async (bot: Bot) => {
     )
 
     // scenes
-    bot.addActions(
+    sceneActionHandler.add(
         new NumberSettingInputAction(),
         new SuggestCardAction(),
         new CardPriceSellAction(),
         new ImportSceneAction(),
+    )
+
+    // setup handlers
+    bot.addHandlers(
+        sceneActionHandler,
+        everyMessageHandler,
+        conditionalCommandHandler,
+        telegramCommandHandler,
+        commandHandler,
+        callbackButtonActionHandler,
+        diceHandler,
+        newMemberHandler,
+        photoHandler,
+        leftMemberHandler,
+        paymentHandler,
     )
 
     console.log('Start launching!')
@@ -436,6 +453,10 @@ const main = async () => {
     if (!await InventoryItemsUtils.setup()) return
     if (!isEnvVarsValidate()) return
     await connectDatabase()
+
+    mongoose.set('debug', (collectionName, method, ...other) => {
+        Logging.system(`${collectionName}.${method}`, other)
+    })
 
     if (MODE == 'dev' && await test()) {
         await disconnect()

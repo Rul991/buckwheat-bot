@@ -59,7 +59,6 @@ export default class extends CallbackButtonAction<Data> {
         } = moneyGenerator
 
         const incomePerHour = level * GENERATOR_INCOME_PER_HOUR
-        const price = GENERATOR_UPGRADE_PRICE_PER_LEVEL * level
         const upgradeLevels = GeneratorUtils.getUpgradeLevels(level)
 
         await MessageUtils.editText(
@@ -72,7 +71,6 @@ export default class extends CallbackButtonAction<Data> {
                         incomePerHour,
                         id: generatorId,
                         user: await ContextUtils.getUser(chatId, id),
-                        price
                     }
                 }
             ),

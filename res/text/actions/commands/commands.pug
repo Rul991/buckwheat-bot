@@ -6,12 +6,13 @@ mixin info
 - let replySymbol = '💬'
 - let premiumSymbol = '👑'
 
-b 📌 [#{page + 1} \ #{length}] По правилам я могу отвечать только на эти команды:
-|
+b 📌 [#{page + 1} \ #{length}] По правилам я могу отвечать только на эти команды типа 
+    u #{title}
+| :
 |
 |
 each command in commands
-    | 👉 
+    | 👉 [#{command.minimumRank}] 
     code баквит #{command.name}#{command.needData ? ` [${command.argumentText || 'аргументы'}]` : ''}
     |  #{command.replySupport ? replySymbol : ''} #{command.isPremium ? premiumSymbol : ''}
     |

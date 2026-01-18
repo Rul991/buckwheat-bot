@@ -1,11 +1,8 @@
 import { TelegramEmoji } from 'telegraf/types'
 import MessageUtils from '../../../../utils/MessageUtils'
-import { MaybeString } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
-import ChatSettingsService from '../../../db/services/settings/ChatSettingsService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import UserSettingsService from '../../../db/services/settings/UserSettingsService'
 
 export default class PingCommand extends BuckwheatCommand {
     constructor() {
@@ -18,9 +15,9 @@ export default class PingCommand extends BuckwheatCommand {
         this._description = 'прием-прием'
     }
 
-    async execute({ ctx, chatId, id }: BuckwheatCommandOptions): Promise<void> {
-        const reactionChance = await ChatSettingsService.get<'string'>(
-            chatId, 
+    async execute({ ctx, id }: BuckwheatCommandOptions): Promise<void> {
+        const reactionChance = await UserSettingsService.get<'string'>(
+            id, 
             'pingEmoji'
         ) ?? '🫡'
 

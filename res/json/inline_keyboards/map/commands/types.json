@@ -1,0 +1,13 @@
+{
+    "definition": {
+        "command": {
+            "text": "@",
+            "data": "commandschange_-1_1_@"
+        }
+    },
+    
+    "values": 
+    [
+        "command"
+    ]
+}

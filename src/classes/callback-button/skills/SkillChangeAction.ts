@@ -6,12 +6,9 @@ import Skill from '../../../interfaces/duel/Skill'
 import ClassUtils from '../../../utils/ClassUtils'
 import SkillUtils from '../../../utils/SkillUtils'
 import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
-import { ZodType } from 'zod'
-import { currentIncreaseIdSchema } from '../../../utils/values/schemas'
 
 export default class extends ButtonScrollerAction<Skill, CurrentIncreaseId> {
     protected _filename: string = 'skills/add'
-    protected _schema: ZodType<CurrentIncreaseId> = currentIncreaseIdSchema
 
     constructor () {
         super()

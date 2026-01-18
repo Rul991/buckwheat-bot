@@ -161,7 +161,7 @@ export default class ShopItems {
             execute: async ({ ctx, id, chatId }) => {
                 const hasSetting = await ChatSettingsService.get<'boolean'>(
                     chatId,
-                    'canBuyUnmute'
+                    'cbu'
                 )
 
                 if (!hasSetting) {

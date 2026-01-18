@@ -15,7 +15,8 @@ export default class CommandsCommand extends BuckwheatCommand {
             'команда',
             'лист',
             'функции',
-            'как'
+            'как',
+            'кмд'
         ]
     }
 
@@ -30,7 +31,20 @@ export default class CommandsCommand extends BuckwheatCommand {
                 changeValues: {
                     length: commands.length
                 },
-                inlineKeyboard: await InlineKeyboardManager.get('commands/start')
+                inlineKeyboard: await InlineKeyboardManager.map(
+                    'commands/types',
+                    {
+                        values: {
+                            command: CommandDescriptionUtils.getVisibleTypes()
+                                .map(({type, title}) => {
+                                    return {
+                                        data: type,
+                                        text: title
+                                    }
+                                })
+                        }
+                    }
+                )
             }
         )
     }
