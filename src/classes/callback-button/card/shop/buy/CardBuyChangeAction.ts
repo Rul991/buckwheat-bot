@@ -5,6 +5,8 @@ import FileUtils from '../../../../../utils/FileUtils'
 import CardService from '../../../../db/services/card/CardService'
 import ShopCard from '../../../../../interfaces/schemas/card/ShopCard'
 import { UNKNOWN_CARD_TITLE } from '../../../../../utils/values/consts'
+import StringUtils from '../../../../../utils/StringUtils'
+import CardUtils from '../../../../../utils/CardUtils'
 
 type Data = TinyCurrentIncreaseId
 type Object = ShopCard
@@ -33,12 +35,18 @@ export default class extends ButtonScrollerAction<Object, Data> {
         const cards = await CardService.getAvailable()
         const values = slicedObjects.map<CallbackButtonValue>(({
             card: cardId,
-            id: shopId
+            id: shopId,
+            price
         }) => {
             const card = cards.find(({ id }) => id == cardId)
             const name = card?.name ?? UNKNOWN_CARD_TITLE
+            const rarityEmoji = CardUtils.getEmoji(card?.rarity ?? CardUtils.unknownRarity)
+            
+            const formattedPrice = StringUtils.toFormattedNumber(price)
+            const text = `${rarityEmoji}${name} (${formattedPrice}💰)`
+
             return {
-                text: name,
+                text,
                 data: JSON.stringify({ s: shopId, p: this._getNewPage(data), id })
             }
         })

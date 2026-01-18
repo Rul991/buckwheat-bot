@@ -40,7 +40,6 @@ export default class TestCommand extends BuckwheatCommand {
             catch {
                 await ChatService.delete(dbChatId)
             }
-            await sleep(BROADCAST_TIME)
         }
     }
 

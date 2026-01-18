@@ -5,6 +5,7 @@ import ButtonScrollerAction from '../../../scrollers/button/ButtonScrollerAction
 import CardService from '../../../../db/services/card/CardService'
 import { UNKNOWN_CARD_TITLE } from '../../../../../utils/values/consts'
 import FileUtils from '../../../../../utils/FileUtils'
+import CardUtils from '../../../../../utils/CardUtils'
 
 type Object = InventoryCard
 type Data = TinyCurrentIncreaseId
@@ -31,9 +32,11 @@ export default class extends ButtonScrollerAction<Object, Data> {
         const cardIdsTitles = await Promise.all(
             slicedObjects.map(async ({ id, count }) => {
                 const card = await CardService.get(id)
+                const name = card?.name ?? UNKNOWN_CARD_TITLE
+                const rarityEmoji = CardUtils.getEmoji(card?.rarity ?? CardUtils.unknownRarity)
                 return {
                     id,
-                    title: `${card?.name ?? UNKNOWN_CARD_TITLE} x${count}`
+                    title: `${rarityEmoji}${name} x${count}`
                 }
             })
         )

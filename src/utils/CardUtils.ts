@@ -41,15 +41,16 @@ export default class {
 
     private static _rarityChance = 0.4
     static maxRarity = this._rarityName.length - 2
+    static unknownRarity = this._rarityName.length - 1
 
     static getName(number: number) {
         return this._rarityName[number] ??
-            this._rarityName[this.maxRarity]
+            this._rarityName[this.unknownRarity]
     }
 
     static getEmoji(number: number) {
         return this._rarityEmoji[number] ??
-            this._rarityEmoji[this.maxRarity]
+            this._rarityEmoji[this.unknownRarity]
     }
 
     static getRarity() {
@@ -73,7 +74,7 @@ export default class {
             name: 'Неизвестный',
             description: 'Этой карточки на самом деле не существует',
             image: '',
-            rarity: this._rarityEmoji.length - 1,
+            rarity: this.unknownRarity,
             isSuggested
         }
     }

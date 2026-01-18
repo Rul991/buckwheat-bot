@@ -28,7 +28,8 @@ export default class {
 
     static async getSettings(filename: string): Promise<Settings> {
         const cacheSetting = this._cacheSettings[filename]
-        if(cacheSetting) return {...cacheSetting}
+        if(cacheSetting) return structuredClone(cacheSetting)
+
         const result = {} as Settings
         const json = await FileUtils.readJsonFromResource<Settings>(join(
             this._directory,
@@ -44,7 +45,7 @@ export default class {
         }
         
         this._cacheSettings[filename] = result
-        return {...result}
+        return structuredClone(result)
     }
 
     static async getSetting<K extends SettingType = "any">(filename: string, settingId: string): Promise<Setting<K>> {
