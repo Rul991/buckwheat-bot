@@ -29,7 +29,7 @@ export default abstract class extends RankedAction {
     }
 
     get actionAccesses(): ActionAccess[] {
-        return this._isShow && this._canBeChanged ? [
+        return this._isShow ? [
             {
                 setting: {
                     title: `Баквит ${this._name}`,
@@ -37,7 +37,9 @@ export default abstract class extends RankedAction {
                     type: 'enum',
                     default: this._minimumRank,
                     properties: {
-                        values: [0, 1, 2, 3, 4, 5]
+                        values: this._canBeChanged ? 
+                            [0, 1, 2, 3, 4, 5] :
+                            []
                     }
                 },
                 name: this._settingId

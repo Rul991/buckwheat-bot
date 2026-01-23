@@ -1,14 +1,11 @@
 import { number, object, ZodType } from 'zod'
 import CallbackButtonAction from './CallbackButtonAction'
 import MessageUtils from '../../utils/MessageUtils'
-import CasinoWipeService from '../db/services/casino/CasinoWipeService'
 import InventoryItemService from '../db/services/items/InventoryItemService'
-import ItemsService from '../db/services/items/ItemsService'
-import LevelService from '../db/services/level/LevelService'
-import WorkService from '../db/services/work/WorkService'
 import ContextUtils from '../../utils/ContextUtils'
 import { CallbackButtonOptions } from '../../utils/values/types/action-options'
 import TotalService from '../db/services/total/TotalService'
+import RankUtils from '../../utils/RankUtils'
 
 type Data = {
     chatId: number,
@@ -16,6 +13,7 @@ type Data = {
 }
 
 export default class extends CallbackButtonAction<Data> {
+    protected _minimumRank: number = RankUtils.max
     protected _buttonTitle: string = 'Вайп'
     protected _schema: ZodType<Data> = object({
         chatId: number(),

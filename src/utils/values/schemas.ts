@@ -199,7 +199,11 @@ export const userReplyIdsDataSchema: ZodType<UserReplyIdsData> = object({
 
 export const inventoryItemDescriptionSchema: ZodType<InventoryItemDescription> = object({
     name: string(),
-    type: literal(['consumable', 'oneInfinity', 'manyInfinity'])
+    type: literal(['consumable', 'oneInfinity', 'manyInfinity']),
+    description: string(),
+    material: object({
+        rarity: number()
+    }).optional()
 })
 
 export const tinyCurrentIncreaseIdSchema: ZodType<TinyCurrentIncreaseId> = object({

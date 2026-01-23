@@ -40,6 +40,10 @@ export type ModeTypes = 'prod' | 'dev'
 export type InventoryItemDescription = {
     name: string,
     type: InventoryItemType
+    description: string
+    material?: {
+        rarity: number
+    }
 }
 export type InventoryItemType = 'consumable' | 'oneInfinity' | 'manyInfinity'
 export type AsyncOrSync<T = void> = Promise<T> | T

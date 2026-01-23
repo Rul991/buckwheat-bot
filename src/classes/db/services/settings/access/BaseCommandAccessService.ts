@@ -8,6 +8,7 @@ import { MaybeString } from '../../../../../utils/values/types/types'
 import UserRankService from '../../user/UserRankService'
 import BaseSubSettingsService from '../BaseSubSettingsService'
 import RankSettingsService from '../RankSettingsService'
+import SettingUtils from '../../../../../utils/settings/SettingUtils'
 
 type CheckRankOptions = {
     ctx: Context
@@ -49,7 +50,12 @@ export default class extends BaseSubSettingsService {
             const needRank: number = await this.get<'enum'>(
                 chatId,
                 settingId
-            ) as number ?? RankUtils.min
+            ) as number
+
+            if(needRank.toString() == SettingUtils.dummyDefault) {
+                return true
+            }
+
             const userRank = await UserRankService.get(chatId, id)
 
             const getRankValues = async (rank: number) => ({
