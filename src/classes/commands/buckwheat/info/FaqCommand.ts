@@ -5,6 +5,8 @@ import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class extends BuckwheatCommand {
+    protected _settingId: string = 'faq'
+
     constructor() {
         super()
         this._name = 'как'

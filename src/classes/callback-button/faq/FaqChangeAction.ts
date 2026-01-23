@@ -5,6 +5,7 @@ import { ButtonScrollerOptions, ButtonScrollerFullOptions, ButtonScrollerEditMes
 import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
 
 export default class extends ButtonScrollerAction<string, ButtonScrollerData> {
+    protected _buttonTitle?: string | undefined = "FAQ: Пролистывание"
     protected _filename: string = 'faq/list'
     protected _name: string = 'faqchange'
 

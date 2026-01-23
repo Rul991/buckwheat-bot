@@ -20,6 +20,7 @@ type Data = {
 
 export default class extends CallbackButtonAction<Data> {
     protected _schema: ZodType<Data> = idSchema
+    protected _buttonTitle: string = 'Навык: Меню'
 
     constructor() {
         super()

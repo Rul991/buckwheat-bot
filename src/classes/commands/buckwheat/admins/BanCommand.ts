@@ -2,7 +2,9 @@ import AdminCommand from './AdminCommand'
 import AdminUtils from '../../../../utils/AdminUtils'
 import { TextContext } from '../../../../utils/values/types/contexts'
 
-export default class MuteCommand extends AdminCommand {
+export default class extends AdminCommand {
+    protected _settingId: string = 'ban'
+
     constructor() {
         super()
 

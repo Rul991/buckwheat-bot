@@ -9,6 +9,7 @@ import { CallbackButtonOptions } from '../../../utils/values/types/action-option
 import { idSchema } from '../../../utils/values/schemas'
 
 export default class VoteAction extends CallbackButtonAction<VoteData> {
+    protected _buttonTitle?: string | undefined = "Идеи: Голос"
     protected _schema: ZodType<VoteData> = idSchema
         .and(object({
             isCool: boolean(),

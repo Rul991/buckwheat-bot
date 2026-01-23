@@ -14,6 +14,14 @@ export default class ChatIdRepository<T extends typeof Model, K extends { id: nu
         return await super.findMany(this._getFilter(filter))
     }
 
+    async deleteAllInChat(chatId: number) {
+        return await super.deleteMany(
+            {
+                chatId
+            }
+        )
+    }
+
     async deleteOne(chatId: number, id: number, filter?: QueryFilter<K>): Promise<K | null> {
         return await super.deleteOne({ ...this._getFilter(filter), id, chatId })
     }

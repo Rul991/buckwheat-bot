@@ -30,6 +30,10 @@ export default class {
         return await ShopCardRepository.deleteOne(id)
     }
 
+    static async deleteAllInChat(chatId: number) {
+        return await ShopCardRepository.deleteMany({ chatId })
+    }
+
     static async buy(id: number, buyer: number): Promise<BuyResult> {
         const shopCard = await this.get(id)
         if (!shopCard) return {

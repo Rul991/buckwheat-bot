@@ -11,6 +11,7 @@ type Object = InventoryCard
 type Data = TinyCurrentIncreaseId
 
 export default class extends ButtonScrollerAction<Object, Data> {
+    protected _buttonTitle?: string | undefined = "Продажа карты: Пролистывание"
     protected _filename: string = 'cards/sell-change'
 
     constructor () {

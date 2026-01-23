@@ -1,4 +1,4 @@
-import { AsyncOrSync } from '../../../../utils/values/types/types'
+import { AsyncOrSync, SettingType, SettingTypeDefault } from '../../../../utils/values/types/types'
 import SceneAction from '../SceneAction'
 import MessageUtils from '../../../../utils/MessageUtils'
 import StringUtils from '../../../../utils/StringUtils'
@@ -8,46 +8,15 @@ import MathUtils from '../../../../utils/MathUtils'
 import { FIRST_INDEX, INFINITY_SYMB } from '../../../../utils/values/consts'
 import { SceneOptions } from '../../../../utils/values/types/action-options'
 import SettingsService from '../../../db/services/settings/SettingsService'
+import { SettingInputData } from '../../../../utils/values/types/scene-datas'
 
-type Data = {
-    settingId: string
-    settingsId: number
-    type: string
-    setting?: Setting<'number' | 'string'>
-    isNumber: boolean
-}
+export default abstract class<K extends 'string' | 'number'> extends SceneAction<SettingInputData<K>> {
+    protected abstract _settingType: K
+    protected abstract _getValue(text: string, min: number, max: number): SettingTypeDefault[K]
 
-export default class extends SceneAction<Data> {
-    constructor () {
-        super()
-        this._name = 'setting-input'
-    }
-
-    private _getNumberValue(text: string, min: number, max: number) {
-        const rawNumber = StringUtils.getNumberFromString(text)
-        const value = MathUtils.clamp(
-            rawNumber,
-            min,
-            max
-        )
-
-        return value
-    }
-
-    private _getStringValue(text: string, min: number, max: number) {
-        if(text.length < min) {
-            return text.padEnd(min)
-        }
-        else if(text.length > max) {
-            return text.substring(FIRST_INDEX, max)
-        }
-
-        return text
-    }
-
-    protected _execute({ scene }: SceneOptions<Data>): AsyncOrSync {
+    protected _execute({ scene }: SceneOptions<SettingInputData<K>>): AsyncOrSync {
         const getSetting = async (key: string, type: string) => {
-            return await SettingUtils.getSetting<'number' | 'string'>(
+            return await SettingUtils.getSetting<K>(
                 type,
                 key
             )
@@ -69,7 +38,7 @@ export default class extends SceneAction<Data> {
 
             await MessageUtils.answerMessageFromResource(
                 ctx,
-                'text/scenes/setting-number/enter.pug',
+                `text/scenes/setting-${this._settingType}/enter.pug`,
                 {
                     isReply: false,
                     changeValues: {
@@ -87,25 +56,21 @@ export default class extends SceneAction<Data> {
                 setting: rawSetting,
                 settingsId,
                 settingId = '',
-                type
+                type,
             } = ctx.scene.state
 
             const setting = rawSetting!
 
             const {
-                properties = {},
                 title,
-                type: settingType
             } = setting
 
             const {
                 min = Number.MIN_SAFE_INTEGER,
                 max = Number.MAX_SAFE_INTEGER
-            } = properties
+            } = setting.properties ?? {}
 
-            const value = type == 'string' ?
-                this._getStringValue(text, min, max) :
-                this._getNumberValue(text, min, max)
+            const value = this._getValue(text, min, max)
 
             await SettingsService.setSetting(
                 settingsId,
@@ -116,13 +81,11 @@ export default class extends SceneAction<Data> {
 
             await MessageUtils.answerMessageFromResource(
                 ctx,
-                'text/scenes/setting-number/saved.pug',
+                `text/scenes/setting-${this._settingType}/saved.pug`,
                 {
                     changeValues: {
                         title,
-                        value: settingType == 'number' ?
-                            StringUtils.toFormattedNumber(value as number) :
-                            value
+                        value
                     }
                 }
             )

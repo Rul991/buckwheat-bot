@@ -15,6 +15,7 @@ type SearchObject = {
 }
 
 export default class extends BuckwheatCommand {
+    protected _settingId: string = 'search'
     private readonly _prefixSeparator = ':'
 
     private _noPrefixSearchObject: SearchObject = {

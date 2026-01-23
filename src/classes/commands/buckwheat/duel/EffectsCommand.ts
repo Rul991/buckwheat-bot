@@ -1,16 +1,12 @@
-import { InlineKeyboardButton } from 'telegraf/types'
-import ClassUtils from '../../../../utils/ClassUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
-import { MaybeString, ClassTypes, CallbackButtonValue } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
-import SkillUtils from '../../../../utils/SkillUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class extends BuckwheatCommand {
+    protected _settingId: string = 'effects'
+
     constructor() {
         super()
         this._name = 'эффекты'

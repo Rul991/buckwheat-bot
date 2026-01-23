@@ -13,6 +13,7 @@ type Object = ShopCard
 
 export default class extends ButtonScrollerAction<Object, Data> {
     protected _filename: string = 'cards/buy-change'
+    protected _buttonTitle?: string | undefined = "Покупка карты: Пролистывание"
 
     constructor () {
         super()

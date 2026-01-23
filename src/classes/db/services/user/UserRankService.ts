@@ -24,10 +24,10 @@ export default class UserRankService {
     }
 
     static async has(chatId: number, id: number, needRank: number): Promise<boolean> {
-        if(needRank == 0) return true
+        if(needRank == RankUtils.min) return true
         const rank = await this.get(chatId, id)
 
-        return rank >= needRank
+        return RankUtils.has(rank, needRank)
     }
 
     static async getAllWithId(chatId: number) {

@@ -6,12 +6,16 @@ import FileUtils from '../../../utils/FileUtils'
 import { MyTelegraf } from '../../../utils/values/types/types'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
-import { DATABASE_KEYBOARD_NAME } from '../../../utils/values/consts'
+import { BUTTON_ACCESS_TYPE, COMMAND_ACCESS_TYPE, DATABASE_KEYBOARD_NAME } from '../../../utils/values/consts'
 import ObjectValidator from '../../../utils/ObjectValidator'
 import JsonUtils from '../../../utils/JsonUtils'
 import { keyboardDbDataSchema } from '../../../utils/values/schemas'
 import KeyboardService from '../../db/services/keyboard/KeyboardService'
 import MapContainer from '../containers/MapContainer'
+import Setting from '../../../interfaces/other/Setting'
+import SettingUtils from '../../../utils/settings/SettingUtils'
+import CommandAccessService from '../../db/services/settings/access/CommandAccessService'
+import ButtonAccessService from '../../db/services/settings/access/ButtonAccessService'
 
 type GetDataOptions = {
     data: string
@@ -29,6 +33,30 @@ export default class CallbackButtonActionHandler extends BaseHandler<
     }
 
     private async _executeAction(action: CallbackButtonAction<any>, options: CallbackButtonOptions<any>) {
+        const {
+            isPrivate
+        } = options
+
+        const canUse = (isPrivate && action.canBeUseInPrivateWithoutRank) ||
+            action.buttonTitle === undefined ||
+            await ButtonAccessService.canUse({
+                ...options,
+                settingId: action.settingId,
+                command: {
+                    command: action.buttonTitle,
+                    isFull: true
+                },
+                path: 'text/handlers/callback/low-rank.pug',
+                info: async (ctx, text) => {
+                    await ContextUtils.showCallbackMessage(
+                        ctx,
+                        text,
+                        true
+                    )
+                }
+            })
+
+        if (!canUse) return undefined
         return await action.execute(options) ?? undefined
     }
 
@@ -69,7 +97,22 @@ export default class CallbackButtonActionHandler extends BaseHandler<
         return result
     }
 
+    protected _setupSettings() {
+        const settings = {} as Record<string, Setting<'enum'>>
+
+        for (const action of this._container) {
+            const actionSettings = action.actionAccesses
+            for (const actionSetting of actionSettings) {
+                const { name, setting } = actionSetting
+                settings[name] = setting
+            }
+        }
+
+        SettingUtils.addSettings(BUTTON_ACCESS_TYPE, settings)
+    }
+
     setup(bot: MyTelegraf): void {
+        this._setupSettings()
         bot.action(/^([^_]+)_(.+)$/, async ctx => {
             let [_, name, rawData] = ctx.match
             if (!name) return
@@ -92,11 +135,11 @@ export default class CallbackButtonActionHandler extends BaseHandler<
             const [newName, ...handledRawDatas] = rawHandledData.split('_')
             const handledRawData = handledRawDatas.join('_')
 
-            Logging.log(
+            Logging.system(
                 'button:',
                 {
-                    name, 
-                    rawData, 
+                    name,
+                    rawData,
                     id,
                     newName,
                     handledRawData,
@@ -124,11 +167,13 @@ export default class CallbackButtonActionHandler extends BaseHandler<
                 const chatId = await LinkedChatService.getCurrent(ctx, id)
                 if (!chatId) return
 
+                const isPrivate = ctx.chat?.type == 'private'
                 const text = chatId ? await this._executeAction(action, {
                     ctx,
                     data,
                     id,
-                    chatId
+                    chatId,
+                    isPrivate
                 }) : await FileUtils.readPugFromResource('text/actions/other/no-chat-id.pug')
                 await ctx.answerCbQuery(text)
             }

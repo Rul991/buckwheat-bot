@@ -3,17 +3,14 @@ import ClassUtils from '../../../../utils/ClassUtils'
 import ContextUtils from '../../../../utils/ContextUtils'
 import DuelUtils from '../../../../utils/DuelUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
-import StringUtils from '../../../../utils/StringUtils'
-import { HP_SYMBOLS, MANA_SYMBOLS, MAX_STATS_SYMBOLS_COUNT } from '../../../../utils/values/consts'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import { MaybeString } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
 import DuelistService from '../../../db/services/duelist/DuelistService'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import UserClassService from '../../../db/services/user/UserClassService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class CharsCommand extends BuckwheatCommand {
+    protected _settingId: string = 'chars'
+
     constructor () {
         super()
         this._name = 'характеристики'

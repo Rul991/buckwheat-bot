@@ -31,6 +31,7 @@ type SortedEffects = {
 
 export default class extends CallbackButtonAction<Data> {
     protected _schema: ZodType<Data> = duelSchema
+    protected _buttonTitle?: string | undefined = "Дуэль: Эффекты"
 
     constructor () {
         super()

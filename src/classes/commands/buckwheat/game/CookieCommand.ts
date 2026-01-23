@@ -1,18 +1,16 @@
 import { BAD_COOKIE_CHANCE, COOKIE_WORK_TIME } from '../../../../utils/values/consts'
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
-import { MaybeString } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
 import WorkTimeService from '../../../db/services/work/WorkTimeService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import RandomUtils from '../../../../utils/RandomUtils'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import UserSettingsService from '../../../db/services/settings/UserSettingsService'
 import GrindSettingService from '../../../db/services/settings/GrindSettingService'
 
 export default class CookieCommand extends BuckwheatCommand {
+    protected _settingId: string = 'cookie'
+
     constructor () {
         super()
         this._name = 'печенька'

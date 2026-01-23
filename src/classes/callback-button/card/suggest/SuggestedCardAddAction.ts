@@ -8,6 +8,7 @@ import CardService from '../../../db/services/card/CardService'
 import MessageUtils from '../../../../utils/MessageUtils'
 import ArrayUtils from '../../../../utils/ArrayUtils'
 import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
+import { ActionAccess } from '../../../../utils/values/types/command-access'
 
 type Data = {
     a: 0 | 1,
@@ -17,6 +18,7 @@ type Data = {
 }
 
 export default class extends CallbackButtonAction<Data> {
+    protected _buttonTitle?: string | undefined = "Предложение карты: Добавить"
     protected _schema: ZodType<Data> = object({
         a: literal([0, 1]),
         id: number(),

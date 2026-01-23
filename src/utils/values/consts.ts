@@ -200,6 +200,9 @@ export const GENERATOR_MAX_LEVEL = 5
 export const GENERATOR_UPGRADE_PRICE_PER_LEVEL = 1000
 export const GENERATOR_MAX_COUNT = 100
 
+export const RANK_SETTINGS_TYPE = 'ranks'
+export const COMMAND_ACCESS_TYPE = 'access'
+export const BUTTON_ACCESS_TYPE = 'btn'
 export const DEFAULT_SETTINGS_TYPE = 'chat'
 export const DEFAULT_USER_SETTINGS_TYPE = 'user'
 export const USER_SETTINGS_TYPES = [
@@ -209,3 +212,6 @@ export const USER_SETTINGS_TYPES = [
 export const DATABASE_KEYBOARD_NAME = '#'
 export const DB_KEYBOARD_EXPIRES_SECONDS = MINUTES_IN_HOUR * 2 * SECONDS_IN_MINUTE
 export const CALLBACK_DATA_MAX_SIZE = 64
+
+export const MIN_RANK_NAME_LENGTH = 1
+export const MAX_RANK_NAME_LENGTH = 32

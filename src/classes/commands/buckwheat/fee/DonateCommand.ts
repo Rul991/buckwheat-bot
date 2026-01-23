@@ -9,6 +9,9 @@ import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class DonateCommand extends BuckwheatCommand {
+    protected _settingId: string = 'donate'
+    protected _canBeChanged: boolean = false
+
     private _starPrice = {
         min: 1,
         max: 100000

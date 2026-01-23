@@ -1,10 +1,11 @@
-import { Context } from 'telegraf'
 import AdminCommand from './AdminCommand'
 import AdminUtils from '../../../../utils/AdminUtils'
 import { TextContext } from '../../../../utils/values/types/contexts'
 import RankUtils from '../../../../utils/RankUtils'
 
 export default class UnmuteCommand extends AdminCommand {
+    protected _settingId: string = 'unmute'
+
     constructor() {
         super()
 

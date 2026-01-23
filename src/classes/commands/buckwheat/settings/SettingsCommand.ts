@@ -1,8 +1,5 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import { MaybeString } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
-import ChatSettingsService from '../../../db/services/settings/ChatSettingsService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import { DEFAULT_SETTINGS_TYPE, DEFAULT_USER_SETTINGS_TYPE } from '../../../../utils/values/consts'
@@ -10,6 +7,10 @@ import SettingsService from '../../../db/services/settings/SettingsService'
 import SettingUtils from '../../../../utils/settings/SettingUtils'
 
 export default class extends BuckwheatCommand {
+    protected _settingId: string = 'settings'
+    protected _userSettingsType = DEFAULT_USER_SETTINGS_TYPE
+    protected _chatSettingsType = DEFAULT_SETTINGS_TYPE
+
     constructor () {
         super()
         this._name = 'настройки'
@@ -22,7 +23,7 @@ export default class extends BuckwheatCommand {
     }
 
     async execute({ ctx, id, chatId }: BuckwheatCommandOptions): Promise<void> {
-        const type = ctx.chat.type == 'private' ? DEFAULT_USER_SETTINGS_TYPE : DEFAULT_SETTINGS_TYPE
+        const type = ctx.chat.type == 'private' ? this._userSettingsType : this._chatSettingsType
         const settingsId = SettingUtils.getSettingsId(chatId, id, type)
         const settings = await SettingsService.getSettingsArray(settingsId, type)
         const settingsLength = settings.length

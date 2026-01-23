@@ -78,7 +78,7 @@ export default class MessageUtils {
                 })
             })
 
-            Logging.log(
+            Logging.system(
                 "MessageUtils._handleInlineKeyboard",
                 {
                     result,
@@ -146,8 +146,8 @@ export default class MessageUtils {
         let lastMessage = emptyMessage
 
         await ExceptionUtils.handle(async () => {
+            ctx.sendChatAction('typing')
             const partText = text.substring(FIRST_INDEX, MAX_MESSAGE_LENGTH - 1)
-            await ctx.sendChatAction('typing')
             lastMessage = await ctx.telegram.sendMessage(
                 chatId,
                 partText,
@@ -194,7 +194,7 @@ export default class MessageUtils {
                 return
             }
 
-            await ctx.sendChatAction('typing')
+            ctx.sendChatAction('typing')
             msg = await ctx.telegram.sendDice(
                 extra.chatId,
                 {
@@ -233,7 +233,7 @@ export default class MessageUtils {
                 return
             }
 
-            await ctx.sendChatAction('upload_photo')
+            ctx.sendChatAction('upload_photo')
             await ctx.telegram.sendPhoto(
                 extra.chatId,
                 photoId,

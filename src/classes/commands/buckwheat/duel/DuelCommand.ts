@@ -12,6 +12,8 @@ import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class DuelCommand extends BuckwheatCommand {
+    protected _settingId: string = 'duel'
+
     constructor() {
         super()
         this._name = 'дуэль'

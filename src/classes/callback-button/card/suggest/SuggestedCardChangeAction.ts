@@ -4,12 +4,12 @@ import ContextUtils from '../../../../utils/ContextUtils'
 import { ScrollerGetObjectsOptions, AsyncOrSync, ScrollerSendMessageOptions, ScrollerEditMessageResult } from '../../../../utils/values/types/types'
 import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import CardService from '../../../db/services/card/CardService'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import ScrollerAction from '../../scrollers/page/ScrollerAction'
 
 type Data = Card
 
 export default class extends ScrollerAction<Data> {
+    protected _buttonTitle?: string | undefined = "Предложение карты: Пролистывание"
     constructor() {
         super()
         this._name = 'csush'

@@ -1,13 +1,12 @@
 import ExperienceUtils from '../../../../utils/level/ExperienceUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import { MaybeString } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
 import ExperienceService from '../../../db/services/level/ExperienceService'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class ExperienceCommand extends BuckwheatCommand {
+    protected _settingId: string = 'experience'
+
     private _commandOther = 'осталось до нового уровня'
     private _keyWords = ['уровня']
 

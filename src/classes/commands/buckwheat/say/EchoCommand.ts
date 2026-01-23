@@ -7,6 +7,8 @@ import ContextUtils from '../../../../utils/ContextUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class EchoCommand extends BuckwheatCommand {
+    protected _settingId: string = 'echo'
+
     constructor() {
         super()
         this._name = 'эхо'
@@ -26,11 +28,6 @@ export default class EchoCommand extends BuckwheatCommand {
                 ctx,
                 'text/commands/echo/status-issue.pug'
             )
-            return
-        }
-
-        if(rank < RankUtils.min + 2) {
-            await MessageUtils.answerMessageFromResource(ctx, 'text/commands/echo/rank-issue.pug')
             return
         }
 

@@ -7,6 +7,7 @@ import { cubeDataSchema } from '../../../utils/values/schemas'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 export default class CubeNoAction extends CallbackButtonAction<CubeData> {
+    protected _buttonTitle?: string | undefined = "Кубы: Нет"
     protected _schema: ZodType<CubeData> = cubeDataSchema
     constructor () {
         super()

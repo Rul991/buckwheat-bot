@@ -14,7 +14,7 @@ mixin parameter(title, value)
     |
 
 mixin faq(title)
-    b #{title.toUpperCase()}
+    b 📌 #{title.toUpperCase()}
     |
     |
     |
@@ -29,3 +29,9 @@ mixin pins(arr)
     each text in arr
         +pin(text)
     |
+
+mixin random(arr)
+    - const length = arr.length
+    - const value = Math.floor(Math.random() * length)
+
+    | #{arr[value]}

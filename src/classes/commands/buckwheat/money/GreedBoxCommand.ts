@@ -12,6 +12,8 @@ import ChatSettingsService from '../../../db/services/settings/ChatSettingsServi
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class GreedBoxCommand extends BuckwheatCommand {
+    protected _settingId: string = 'greedBox'
+
     constructor() {
         super()
         this._name = 'шкатулка'

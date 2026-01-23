@@ -35,6 +35,10 @@ export default abstract class BaseRepository<K, T extends typeof Model<K>> {
         return await this._Model.findOneAndDelete(filter[FIRST_INDEX]).exec()
     }
 
+    async deleteMany(...filter: any) {
+        return await this._Model.deleteMany(this._getFilter(filter[0]) as any)
+    }
+
     /**
      * first values must be filter, second must be data
      */

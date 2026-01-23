@@ -1,13 +1,12 @@
 import { MONEY_DROP_TIME } from '../../../../utils/values/consts'
 import MessageUtils from '../../../../utils/MessageUtils'
-import { MaybeString } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import CasinoGetService from '../../../db/services/casino/CasinoGetService'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class MoneyDropCommand extends BuckwheatCommand {
+    protected _settingId: string = 'moneyDrop'
+
     constructor() {
         super()
         this._name = 'монетка'

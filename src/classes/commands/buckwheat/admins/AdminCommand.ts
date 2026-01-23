@@ -6,7 +6,6 @@ import RankUtils from '../../../../utils/RankUtils'
 import TimeUtils from '../../../../utils/TimeUtils'
 import UserRankService from '../../../db/services/user/UserRankService'
 import StringUtils from '../../../../utils/StringUtils'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
@@ -14,7 +13,6 @@ export default abstract class AdminCommand extends BuckwheatCommand {
     protected _folder: string
     protected _isUndoCommand: boolean
     protected _onUser: boolean
-    protected _minimumRank: number
 
     constructor() {
         super()
@@ -38,7 +36,6 @@ export default abstract class AdminCommand extends BuckwheatCommand {
             const adminRank = await UserRankService.get(chatId, adminId)
             const replyRank = await UserRankService.get(chatId, replyId)
 
-            const isCreator = await ContextUtils.isCreator(ctx)
             const [textTime, rawReason] = other ? StringUtils.splitByCommands(other, 1) : ['навсегда', '']
             const time = Math.min(
                 TimeUtils.parseTimeToMilliseconds(textTime),
@@ -46,12 +43,9 @@ export default abstract class AdminCommand extends BuckwheatCommand {
             )
             const reason = time == NOT_FOUND_INDEX ? `${textTime} ${rawReason ?? ''}` : rawReason
 
-            if(!RankUtils.canAdminUse({
+            if(!RankUtils.biggerThan({
                 userRank: adminRank, 
-                replyRank, 
-                adminRank: this._minimumRank,
-                isCreator,
-                id: adminId
+                replyRank
             })) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,

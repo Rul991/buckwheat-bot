@@ -7,6 +7,7 @@ type Data = TinyCurrentIncreaseId
 
 export default class ItemChangeAction extends ButtonScrollerAction<ShopItem, Data> {
     protected _filename: string = 'shop/change'
+    protected _buttonTitle: string = 'Магазин: Пролистывание'
 
     constructor () {
         super()

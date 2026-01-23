@@ -7,6 +7,7 @@ type Data = CallbackButtonValue
 type ButtonScrollerData = TinyCurrentIncreaseId
 
 export default class extends ButtonScrollerAction<Data, ButtonScrollerData> {
+    protected _buttonTitle: string = 'Эффекты: Пролистывание'
     protected _filename: string = 'effects/classes'
 
     constructor () {
@@ -21,7 +22,8 @@ export default class extends ButtonScrollerAction<Data, ButtonScrollerData> {
         const result: CallbackButtonValue[] = []
 
         const type = await UserClassService.get(chatId, id)
-        const skills = (await SkillUtils.getSkillsFromFile(type))
+        const rawSkills = await SkillUtils.getSkillsFromFile(type)
+        const skills = rawSkills
             .filter(skill => skill.isEffect)
 
         const buttons: CallbackButtonValue[] = skills.map(skill => ({

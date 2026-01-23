@@ -4,6 +4,7 @@ import PinCommand from './PinCommand'
 
 export default class UnpinCommand extends PinCommand {
     protected _isUndoCommand: boolean = true
+    protected _settingId: string = 'unpin'
 
     constructor () {
         super()

@@ -4,6 +4,8 @@ import UserProfileService from '../../../db/services/user/UserProfileService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class extends BuckwheatCommand {
+    protected _settingId: string = 'remove-ava'
+
     constructor() {
         super()
         this._name = 'ава'

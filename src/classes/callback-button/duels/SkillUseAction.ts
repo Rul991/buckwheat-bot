@@ -33,6 +33,7 @@ type CantUseSkillOptions = {
 }
 
 export default class extends CallbackButtonAction<Data> {
+    protected _buttonTitle?: string | undefined = "Дуэль: Использование навыка"
     protected _schema: ZodType<Data> = duelSchema
         .and(object({
             name: string(),

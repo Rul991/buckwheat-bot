@@ -5,6 +5,8 @@ import UserImageService from '../../db/services/user/UserImageService'
 import PhotoAction from './PhotoAction'
 
 export default class ImageProfileAction extends PhotoAction {
+    protected _settingId: string = 'ava'
+
     constructor () {
         super()
 

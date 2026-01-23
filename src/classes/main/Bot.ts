@@ -6,7 +6,6 @@ import FileUtils from '../../utils/FileUtils'
 import BaseHandler from './handlers/BaseHandler'
 import MessageUtils from '../../utils/MessageUtils'
 import express from 'express'
-import BaseAction from '../actions/base/BaseAction'
 import { MyTelegraf } from '../../utils/values/types/types'
 import PQueue from 'p-queue'
 import { HttpsProxyAgent } from 'https-proxy-agent'
@@ -15,7 +14,7 @@ export default class Bot {
     private _bot: MyTelegraf
     private _handlers: BaseHandler<any, any>[]
 
-    private readonly _maxRequests: number = 10
+    private readonly _maxRequests: number = 30
     private readonly _concurrency: number = this._maxRequests
     private readonly _queue = new PQueue({
         concurrency: this._concurrency,

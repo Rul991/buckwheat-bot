@@ -8,6 +8,8 @@ import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class ChooseCommand extends BuckwheatCommand {
     private _separator = ';'
+    protected _settingId: string = 'choose'
+
 
     constructor() {
         super()

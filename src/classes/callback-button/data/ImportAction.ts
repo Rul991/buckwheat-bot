@@ -4,6 +4,7 @@ import CallbackButtonAction from '../CallbackButtonAction'
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import { dataSchema } from '../../../utils/values/schemas'
+import RankUtils from '../../../utils/RankUtils'
 
 type Data = {
     id: number
@@ -11,6 +12,8 @@ type Data = {
 }
 
 export default class extends CallbackButtonAction<Data> {
+    protected _buttonTitle: string = 'Импорт'
+    protected _minimumRank: number = RankUtils.max
     protected _schema: ZodType<Data> = dataSchema
 
     constructor() {

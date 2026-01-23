@@ -37,7 +37,8 @@ export default class {
 
     static async add(chatId: number, id: number): Promise<GeneratorResult> {
         const {
-            generators
+            generators,
+            lastCheckTime
         } = await this.get(chatId, id)
         const generatorsLength = generators.length
 
@@ -92,7 +93,8 @@ export default class {
                 generators: [
                     ...generators,
                     ...newGenerators
-                ]
+                ],
+                lastCheckTime: generatorsLength <= 0 ? Date.now() : lastCheckTime
             }
         )
 
@@ -199,5 +201,16 @@ export default class {
             done: true,
             reason: 'upgraded'
         }
+    }
+
+    static async wipe(chatId: number) {
+        return await GeneratorsRepository.updateMany(
+            chatId,
+            {
+                $set: {
+                    generators: []
+                }
+            }
+        )
     }
 }

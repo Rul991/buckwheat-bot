@@ -1,0 +1,8 @@
+mixin rank(rank)
+    | #{rank.name} [#{rank.value}]
+
+| #{needRank.emoji} Для работы команды ''#{command}'' нужен ранг 
++rank(needRank)
+| !
+| Ваш ранг - #{userRank.emoji} 
++rank(userRank)

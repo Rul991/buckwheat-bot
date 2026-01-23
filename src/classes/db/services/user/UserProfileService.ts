@@ -60,6 +60,10 @@ export default class UserProfileService {
         return await UserRepository.findManyInChat(chatId)
     }
 
+    static async deleteChat(chatId: number) {
+        return await UserRepository.deleteAllInChat(chatId)
+    }
+
     static async getMembersCount(chatId: number): Promise<number> {
         return (await (this.getAll(chatId))).length
     }

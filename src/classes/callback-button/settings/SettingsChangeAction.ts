@@ -14,6 +14,8 @@ type Data = TinyCurrentIncreaseId & {
 type Object = SettingWithId
 
 export default class extends ButtonScrollerAction<Object, Data> {
+    protected _buttonTitle: string = 'Настройки: Пролистывание'
+    protected _canBeUseInPrivateWithoutRank: boolean = true
     protected _filename: string = 'settings/change'
     protected _schema: ZodType<Data> = tinyCurrentIncreaseIdSchema
         .and(object({
@@ -23,13 +25,15 @@ export default class extends ButtonScrollerAction<Object, Data> {
     constructor () {
         super()
         this._name = 'setch'
+        this._buttonsPerPage = 7
     }
 
     protected async _getObjects({
+        id: userId,
         chatId,
         data: {
             t: type = DEFAULT_SETTINGS_TYPE,
-            id
+            id = userId
         }
     }: ButtonScrollerOptions<Data>): Promise<Object[]> {
         const settingsId = SettingUtils.getSettingsId(chatId, id, type)

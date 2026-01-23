@@ -1,16 +1,14 @@
-import AdminCommand from './AdminCommand'
 import AdminUtils from '../../../../utils/AdminUtils'
-import { TextContext } from '../../../../utils/values/types/contexts'
 import RankUtils from '../../../../utils/RankUtils'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import UserRankService from '../../../db/services/user/UserRankService'
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 
 export default class PinCommand extends BuckwheatCommand {
     protected _folder: string = 'pin'
     protected _isUndoCommand: boolean = false
+    protected _settingId: string = 'pin'
 
     constructor () {
         super()
@@ -44,22 +42,9 @@ export default class PinCommand extends BuckwheatCommand {
         const changeValues = {
             isUndo: this._isUndoCommand,
             user: await ContextUtils.getUser(chatId, id),
-            rank: this._minimumRank
-        }
-
-        if (!await UserRankService.has(chatId, id, this._minimumRank)) {
-            await MessageUtils.answerMessageFromResource(
-                ctx,
-                this._getPath('rank-issue'),
-                {
-                    changeValues
-                }
-            )
-            return
         }
 
         const isDone = await this._do(options)
-
         if(isDone) {
             await MessageUtils.answerMessageFromResource(
                 ctx,

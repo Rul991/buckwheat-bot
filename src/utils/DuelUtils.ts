@@ -143,7 +143,7 @@ export default class DuelUtils {
         const enemy = this.getEnemy(duel, id)
 
         const getChars = async (id: number) => {
-            Logging.log('getChars', {id: id ?? 'goyda'})
+            Logging.system('getChars', {id: id ?? 'goyda'})
             const current = await DuelistService.getCurrentCharacteristics(chatId, id)
             const max = await DuelistService.getMaxCharacteristics(chatId, id)
 

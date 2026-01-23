@@ -4,6 +4,7 @@ import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-o
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class InfoCommand extends BuckwheatCommand {
+    protected _settingId: string = 'info'
     private static _descriptions: { chance: number, texts: string[] }[] = [
         {
             chance: 0,

@@ -7,6 +7,8 @@ import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
 import ChatSettingsService from '../../../db/services/settings/ChatSettingsService'
 
 export default class MuteCommand extends AdminCommand {
+    protected _settingId: string = 'mute'
+
     constructor() {
         super()
 

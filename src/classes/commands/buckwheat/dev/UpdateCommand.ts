@@ -1,6 +1,3 @@
-import { Context } from 'telegraf'
-import { MaybeString } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import { DEV_ID } from '../../../../utils/values/consts'
 import { exec } from 'node:child_process'
@@ -8,6 +5,9 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class UpdateCommand extends BuckwheatCommand {
+    protected _settingId: string = 'ava'
+    protected _canBeChanged: boolean = false
+
     constructor() {
         super()
         this._name = 'обновись'

@@ -10,6 +10,8 @@ import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class TopCommand extends BuckwheatCommand {
+    protected _settingId: string = 'top'
+
     constructor() {
         super()
         this._name = 'топ'
@@ -17,20 +19,7 @@ export default class TopCommand extends BuckwheatCommand {
         this._minimumRank = RankUtils.min
     }
 
-    async execute({ ctx, id, chatId }: BuckwheatCommandOptions): Promise<void> {
-        if(!await UserRankService.has(chatId, id, this._minimumRank)) {
-            await MessageUtils.answerMessageFromResource(
-                ctx,
-                'text/other/rank-issue.pug',
-                {
-                    changeValues: {
-                        rank: this._minimumRank
-                    }
-                }
-            )
-            return
-        }
-
+    async execute({ ctx }: BuckwheatCommandOptions): Promise<void> {
         await MessageUtils.answerMessageFromResource(
             ctx,
             `text/commands/top/start.pug`,

@@ -7,9 +7,8 @@ import Skill from '../../../interfaces/duel/Skill'
 import SkillAttack from '../../../enums/SkillAttack'
 import Setting from '../../../interfaces/other/Setting'
 import SceneAction from '../../../classes/actions/scenes/SceneAction'
-import { CallbackButtonContext, ContextData, TextContext } from './contexts'
+import { CallbackButtonContext, ContextData, MyChatMemberContext, TextContext } from './contexts'
 import { BuckwheatCommandOptions } from './action-options'
-import KeyboardSchema from '../../../interfaces/schemas/keyboard/KeyboardSchema'
 
 export type MaybeString = string | undefined
 export type CommandStrings = [string, MaybeString, MaybeString]
@@ -56,6 +55,8 @@ export type InputMediaWrapCaption = Types.WrapCaption<InputMedia>
 export type SubCommandObject = {
     name: string
     needData?: boolean
+    settingId: string
+    minimumRank?: number
 }
 export type SubCommandExecuteCallbackObject = {
     execute: (options: BuckwheatCommandOptions & { data: string }) => Promise<boolean>
@@ -285,7 +286,7 @@ export type SettingType = 'string' | 'any' | 'enum' | 'boolean' | 'number'
 export type SettingTypeDefault = {
     string: string
     any: any
-    enum: any
+    enum: BooleanNumberString
     boolean: boolean
     number: number
 }
@@ -301,7 +302,7 @@ export type SettingPropertiesValues = {
     }
 
     enum: {
-        values: any[]
+        values: BooleanNumberString[]
     }
 
     boolean: SettingPropertiesValues['any']
@@ -373,3 +374,6 @@ export type GetSettingForManyResult<K extends SettingType> = {
     value: SettingTypeDefault[K]
     id: number
 }
+
+export type BooleanNumberString = boolean | number | string
+export type ChatMemberStatus = MyChatMemberContext['myChatMember']['old_chat_member']['status']

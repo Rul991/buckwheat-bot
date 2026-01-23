@@ -2,6 +2,8 @@ import { BotCommand } from 'telegraf/types'
 import BuckwheatCommand from './BuckwheatCommand'
 
 export default abstract class TelegramCommand extends BuckwheatCommand {
+    protected _settingId: string = this._name
+
     constructor() {
         super()
     }

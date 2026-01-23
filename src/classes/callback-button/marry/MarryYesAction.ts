@@ -9,6 +9,7 @@ import { CallbackButtonOptions } from '../../../utils/values/types/action-option
 
 export default class MarryYesAction extends CallbackButtonAction<UserReplyIdsData> {
     protected _schema: ZodType<UserReplyIdsData> = userReplyIdsDataSchema
+    protected _buttonTitle?: string | undefined = "Свадьба: Да"
 
     constructor() {
         super()

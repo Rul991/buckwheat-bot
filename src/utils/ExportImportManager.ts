@@ -1,4 +1,4 @@
-import { object, string, tuple, ZodType } from 'zod'
+import { literal, number, object, record, string, tuple, ZodType } from 'zod'
 import UserRankService from '../classes/db/services/user/UserRankService'
 import RoleplaysService from '../classes/db/services/rp/RoleplaysService'
 import Roleplays from '../interfaces/schemas/chat/Roleplays'
@@ -7,10 +7,15 @@ import JsonUtils from './JsonUtils'
 import RankUtils from './RankUtils'
 import RulesService from '../classes/db/services/chat/RulesService'
 import ChatService from '../classes/db/services/chat/ChatService'
-import { MAX_DESCRIPTION_LENGTH, MAX_EXPORT_DATA_LENGTH, MAX_NAME_LENGTH, UNKWOWN_IMPORT_TITLE } from './values/consts'
+import { MAX_DESCRIPTION_LENGTH, MAX_EXPORT_DATA_LENGTH, MAX_NAME_LENGTH, MAX_RANK_NAME_LENGTH, MIN_RANK_NAME_LENGTH, UNKWOWN_IMPORT_TITLE } from './values/consts'
 import UserProfileService from '../classes/db/services/user/UserProfileService'
 import UserNameService from '../classes/db/services/user/UserNameService'
 import ChatSettingsService from '../classes/db/services/settings/ChatSettingsService'
+import CommandAccessService from '../classes/db/services/settings/access/CommandAccessService'
+import { ranksSchema } from './values/schemas'
+import ButtonAccessService from '../classes/db/services/settings/access/ButtonAccessService'
+import RankSettingsService from '../classes/db/services/settings/RankSettingsService'
+import ArrayUtils from './ArrayUtils'
 
 type ExportOptions = {
     chatId: number
@@ -186,6 +191,95 @@ export default class {
                 }
             }
         },
+
+        {
+            id: 'cmd-access',
+            title: 'Ранг команд',
+            description: 'Определяет ранги команд в чате',
+            schema: ranksSchema,
+            import: async (options: ImportOptions<Record<string, number>>): Promise<void> => {
+                const {
+                    chatId,
+                    data
+                } = options
+
+                await CommandAccessService.setMany(
+                    chatId,
+                    new Map(Object.entries(data))
+                )
+            },
+            export: async (options: ExportOptions): Promise<Record<string, number>> => {
+                const {
+                    chatId,
+                } = options
+                const result: Record<string, number> = await CommandAccessService.getObject(chatId)
+
+                return result
+            },
+            type: 'chat'
+        },
+
+        {
+            id: 'btn-access',
+            title: 'Ранг кнопок',
+            description: 'Определяет ранги кнопок в чате',
+            schema: ranksSchema,
+            import: async (options: ImportOptions<Record<string, number>>): Promise<void> => {
+                const {
+                    chatId,
+                    data
+                } = options
+
+                await ButtonAccessService.setMany(
+                    chatId,
+                    new Map(Object.entries(data))
+                )
+            },
+            export: async (options: ExportOptions): Promise<Record<string, number>> => {
+                const {
+                    chatId,
+                } = options
+                const result: Record<string, number> = await ButtonAccessService.getObject(chatId)
+
+                return result
+            },
+            type: 'chat'
+        },
+
+        {
+            id: 'ranks',
+            title: 'Имена рангов',
+            description: 'Определяет имена рангов в чате',
+            schema: record(
+                literal(
+                    ArrayUtils.range(-1, 5)
+                        .map(v => `rank-${v}`)
+                ),
+                string()
+                    .min(MIN_RANK_NAME_LENGTH)
+                    .max(MAX_RANK_NAME_LENGTH)
+            ),
+            import: async (options: ImportOptions<Record<string, string>>): Promise<void> => {
+                const {
+                    chatId,
+                    data
+                } = options
+
+                await RankSettingsService.setMany(
+                    chatId,
+                    new Map(Object.entries(data))
+                )
+            },
+            export: async (options: ExportOptions): Promise<Record<string, string>> => {
+                const {
+                    chatId,
+                } = options
+                const result: Record<string, string> = await RankSettingsService.getObject(chatId)
+
+                return result
+            },
+            type: 'chat'
+        },
     ]
 
     static getById(id: string) {
@@ -197,7 +291,7 @@ export default class {
     }
 
     static getTitleById(id: string) {
-        const data =  this.getById(id)
+        const data = this.getById(id)
         return this.getTitleByData(data)
     }
 
@@ -224,16 +318,16 @@ export default class {
         } = value
 
         const needRank = this.needRank
-        const canUse = type == 'user' || 
+        const canUse = type == 'user' ||
             (type == 'chat' && await UserRankService.has(chatId, id, needRank))
 
-        if(!canUse) return {
+        if (!canUse) return {
             imported: false,
             value: value
         }
 
         const parsed = JsonUtils.parse(data)
-        if(!ObjectValidator.isValidatedObject(parsed, schema)) return {
+        if (!ObjectValidator.isValidatedObject(parsed, schema)) return {
             imported: false,
             value: value
         }

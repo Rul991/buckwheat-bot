@@ -11,6 +11,7 @@ import { CallbackButtonOptions } from '../../utils/values/types/action-options'
 type Data = string
 
 export default class RandomPrizeButtonAction extends CallbackButtonAction<string> {
+    protected _buttonTitle: string = 'Коробка'
     protected _schema: ZodType<Data> = string()
 
     constructor () {

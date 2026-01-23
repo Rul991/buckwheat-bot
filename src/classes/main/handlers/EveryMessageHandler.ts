@@ -12,7 +12,7 @@ export default class EveryMessageHandler extends BaseHandler<EveryMessageAction,
 
     setup(bot: MyTelegraf): void {
         bot.on('message', async (ctx, next) => {
-            Logging.log(ctx.message)
+            Logging.system(ctx.message)
 
             const isPrivate = ctx.chat.type == 'private'
             const id = ctx.from.id

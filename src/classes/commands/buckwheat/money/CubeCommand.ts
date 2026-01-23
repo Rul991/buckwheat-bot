@@ -12,6 +12,8 @@ import { MAX_DEBT } from '../../../../utils/values/consts'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class CubeCommand extends BuckwheatCommand {
+    protected _settingId: string = 'cube'
+
     constructor() {
         super()
         this._name = 'кубы'

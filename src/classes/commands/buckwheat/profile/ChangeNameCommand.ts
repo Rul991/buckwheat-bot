@@ -7,6 +7,7 @@ import ChangeProfileCommand from './ChangeProfileCommand'
 import ContextUtils from '../../../../utils/ContextUtils'
 
 export default class ChangeNameCommand extends ChangeProfileCommand {
+    protected _settingId: string = 'change-name'
     protected _folderName: string = 'change-name'
     protected _maxLength: number = MAX_NAME_LENGTH
 

@@ -22,6 +22,8 @@ type RuleSubCommand = {
 } & SubCommandObject
 
 export default class RuleCommand extends BuckwheatCommandWithSub<RuleSubCommand> {
+    protected _settingId: string = 'rule'
+
     constructor () {
         super(
             [
@@ -32,6 +34,9 @@ export default class RuleCommand extends BuckwheatCommandWithSub<RuleSubCommand>
 
                     needData: true,
                     needAdmin: true,
+
+                    settingId: 'deleteRule',
+                    minimumRank: RankUtils.admin,
 
                     execute: async ({ data, chatId }) => {
                         return await this._deleteRule(chatId, data)
@@ -57,6 +62,9 @@ export default class RuleCommand extends BuckwheatCommandWithSub<RuleSubCommand>
                     needAdmin: true,
                     needData: true,
 
+                    settingId: 'addRule',
+                    minimumRank: RankUtils.admin,
+
                     execute: async ({ data, chatId }) => {
                         return await this._addRule(chatId, data)
                     },
@@ -75,6 +83,9 @@ export default class RuleCommand extends BuckwheatCommandWithSub<RuleSubCommand>
 
                     needAdmin: true,
                     needData: true,
+
+                    settingId: 'extendRule',
+                    minimumRank: RankUtils.admin,
 
                     execute: async (options) => {
                         const {
@@ -111,20 +122,13 @@ export default class RuleCommand extends BuckwheatCommandWithSub<RuleSubCommand>
     }
 
     protected async _checkAccess(options: BuckwheatCommandOptions, subCommand: [RuleSubCommand, string]): Promise<boolean> {
-        const { ctx, id, chatId } = options
-
-        const rank = await UserRankService.get(chatId, id)
-        const isAdminRank = RankUtils.canUse({
-            userRank: rank,
-            id
-        })
+        const { ctx } = options
 
         const [
             {
-                needAdmin,
                 needData,
                 title,
-                description
+                description,
             },
             data
         ] = subCommand
@@ -133,14 +137,6 @@ export default class RuleCommand extends BuckwheatCommandWithSub<RuleSubCommand>
         const changeValues = {
             title,
             description
-        }
-
-        if (needAdmin && !isAdminRank) {
-            await MessageUtils.answerMessageFromResource(
-                ctx,
-                'text/commands/rules/noAdmin.pug'
-            )
-            return false
         }
 
         if (needData && !hasData) {

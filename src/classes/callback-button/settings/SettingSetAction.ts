@@ -1,14 +1,13 @@
-import { boolean, number, object, string, ZodType } from 'zod'
+import { number, object, string, ZodType } from 'zod'
 import CallbackButtonAction from '../CallbackButtonAction'
 import RankUtils from '../../../utils/RankUtils'
 import ContextUtils from '../../../utils/ContextUtils'
-import UserRankService from '../../db/services/user/UserRankService'
 import FileUtils from '../../../utils/FileUtils'
 import { DEFAULT_SETTINGS_TYPE, SET_NUMBER_PHRASE, SET_STRING_PHRASE } from '../../../utils/values/consts'
 import StringUtils from '../../../utils/StringUtils'
 import SettingShowUtils from '../../../utils/settings/SettingShowUtils'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
-import { idSchema } from '../../../utils/values/schemas'
+import { booleanNumberStringSchema, idSchema } from '../../../utils/values/schemas'
 import SettingUtils from '../../../utils/settings/SettingUtils'
 import SettingsService from '../../db/services/settings/SettingsService'
 
@@ -21,23 +20,23 @@ type Data = {
 }
 
 export default class extends CallbackButtonAction<Data> {
+    protected _buttonTitle: string = 'Настройки'
     protected _schema: ZodType<Data> = idSchema
         .and(object({
             n: string(),
-            v: boolean()
-                .or(string())
-                .or(number()),
+            v: booleanNumberStringSchema,
             p: number().optional(),
             t: string().optional()
         }))
     protected _minimumRank: number = RankUtils.max
+    protected _canBeUseInPrivateWithoutRank: boolean = true
 
     constructor () {
         super()
         this._name = 'set'
     }
 
-    async execute({ctx, data, chatId}: CallbackButtonOptions<Data>): Promise<string | void> {
+    async execute({ctx, data, chatId, isPrivate}: CallbackButtonOptions<Data>): Promise<string | void> {
         const {
             id,
             n: settingId,
@@ -47,7 +46,7 @@ export default class extends CallbackButtonAction<Data> {
         } = data
 
         if (await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return
-        if (!(SettingUtils.isForUser(type) || await UserRankService.has(chatId, id, this._minimumRank))) {
+        if (isPrivate && !SettingUtils.isForUser(type)) {
             return await FileUtils.readPugFromResource(
                 'text/other/rank-issue.pug',
                 {
@@ -63,12 +62,17 @@ export default class extends CallbackButtonAction<Data> {
             settingId,
             settingsId,
             type,
-            isNumber: value == SET_NUMBER_PHRASE
         }
 
-        if (value == SET_NUMBER_PHRASE || value == SET_STRING_PHRASE) {
+        if (value == SET_NUMBER_PHRASE) {
             await ctx.scene.enter(
-                'setting-input',
+                'setting-number',
+                initialState
+            )
+        }
+        else if(value == SET_STRING_PHRASE) {
+            await ctx.scene.enter(
+                'setting-string',
                 initialState
             )
         }

@@ -8,7 +8,6 @@ import CasinoGetService from '../../db/services/casino/CasinoGetService'
 import AdminUtils from '../../../utils/AdminUtils'
 import CasinoAddService from '../../db/services/casino/CasinoAddService'
 import StringUtils from '../../../utils/StringUtils'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import CubeWinsService from '../../db/services/cube/CubeWinsService'
 import CubeLosesService from '../../db/services/cube/CubeLosesService'
 import CubeData from '../../../interfaces/callback-button-data/CubeData'
@@ -29,6 +28,7 @@ type HasEnoughMoneyOptions = {
 }
 
 export default class CubeYesAction extends CallbackButtonAction<CubeData> {
+    protected _buttonTitle?: string | undefined = "Кубы: Да"
     protected _schema: ZodType<CubeData> = cubeDataSchema
 
     constructor() {

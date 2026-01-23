@@ -20,6 +20,8 @@ import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import MarriageService from '../../../db/services/marriage/MarriageService'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import RankSettingsService from '../../../db/services/settings/RankSettingsService';
+import UserSettingsService from '../../../db/services/settings/UserSettingsService'
 
 type IdAndName = {
     id: number
@@ -27,6 +29,8 @@ type IdAndName = {
 }
 
 export default class ProfileCommand extends BuckwheatCommand {
+    protected _settingId: string = 'profile'
+
     constructor() {
         super()
         this._name = 'профиль'
@@ -146,6 +150,9 @@ export default class ProfileCommand extends BuckwheatCommand {
         const photoId = await this._getPhotoId(ctx, id)
         
         const rank = user.rank ?? RankUtils.min
+        const rankName = await RankSettingsService.get<'string'>(chatId, `rank-${rank}`)
+        const summonEmoji = await UserSettingsService.get<'enum'>(id, 'summonEmoji')
+
         const classType = user.className ?? ClassUtils.defaultClassName
         const experience = await ExperienceService.get(chatId, id)
 
@@ -162,14 +169,15 @@ export default class ProfileCommand extends BuckwheatCommand {
             isLeft,
             family,
             isLinked,
+            summonEmoji,
+            userNameRank: rankName,
             maxLevel: LevelUtils.max,
             level: LevelUtils.get(experience),
-            ...await ContextUtils.getUser(chatId, id),
             emoji: RankUtils.getEmojiByRank(rank),
-            userNameRank: RankUtils.getRankByNumber(rank),
+            ...await ContextUtils.getUser(chatId, id),
             className: ClassUtils.getName(classType),
-            status: RankUtils.getAdminStatusByNumber(rank, id),
             classEmoji: ClassUtils.getEmoji(classType),
+            status: RankUtils.getAdminStatusByNumber(rank, id),
             description: user.description?.toUpperCase() || '...',
             spawnDate: TimeUtils.formatMillisecondsToTime(afterFirstMessage),
             messages: StringUtils.toFormattedNumber(messages.total ?? 0),

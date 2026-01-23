@@ -4,14 +4,13 @@ import MessageUtils from '../../../utils/MessageUtils'
 import RankUtils from '../../../utils/RankUtils'
 import StringUtils from '../../../utils/StringUtils'
 import { BuckwheatCommandOptions } from '../../../utils/values/types/action-options'
-import { MaybeString } from '../../../utils/values/types/types'
 import { TextContext } from '../../../utils/values/types/contexts'
 import AwardsService from '../../db/services/awards/AwardsService'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
-import UserRankService from '../../db/services/user/UserRankService'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 
 export default class AddAwardCommand extends BuckwheatCommand {
+    protected _settingId: string = 'addAward'
+
     constructor () {
         super()
         this._name = 'наградить'
@@ -36,11 +35,6 @@ export default class AddAwardCommand extends BuckwheatCommand {
         }
 
         return [level, text]
-    }
-
-    private async _hasEnoughRank(chatId: number, id: number): Promise<boolean> {
-        const rank = await UserRankService.get(chatId, id)
-        return rank >= this._minimumRank
     }
 
     async execute({ ctx, other, id, chatId, replyFrom }: BuckwheatCommandOptions): Promise<void> {
@@ -72,14 +66,6 @@ export default class AddAwardCommand extends BuckwheatCommand {
         }
         const [level, text] = values
         const rank = MathUtils.clamp(level, 1, 8)
-
-        if (!await this._hasEnoughRank(chatId, id)) {
-            await MessageUtils.answerMessageFromResource(
-                ctx,
-                'text/commands/award/rank-issue.pug'
-            )
-            return
-        }
 
         await AwardsService.add(chatId, replyId, {
             rank,

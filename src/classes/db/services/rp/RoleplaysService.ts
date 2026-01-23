@@ -79,4 +79,8 @@ export default class RoleplaysService {
             commands.filter(([name]) => name !== command)
         )
     }
+
+    static async deleteAll(chatId: number) {
+        return await RoleplaysRepository.deleteOne(chatId)
+    }
 }

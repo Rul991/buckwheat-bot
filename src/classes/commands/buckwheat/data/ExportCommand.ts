@@ -1,6 +1,8 @@
 import DataCommand from './DataCommand'
 
 export default class extends DataCommand {
+    protected _settingId: string = 'export'
+
     constructor() {
         super()
         this._name = 'экспорт'

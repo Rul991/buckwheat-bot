@@ -8,6 +8,7 @@ import LevelService from '../db/services/level/LevelService'
 import WorkService from '../db/services/work/WorkService'
 import ContextUtils from '../../utils/ContextUtils'
 import { CallbackButtonOptions } from '../../utils/values/types/action-options'
+import TotalService from '../db/services/total/TotalService'
 
 type Data = {
     chatId: number,
@@ -15,6 +16,7 @@ type Data = {
 }
 
 export default class extends CallbackButtonAction<Data> {
+    protected _buttonTitle: string = 'Вайп'
     protected _schema: ZodType<Data> = object({
         chatId: number(),
         userId: number(),
@@ -26,10 +28,7 @@ export default class extends CallbackButtonAction<Data> {
     }
 
     private async _wipe(chatId: number): Promise<boolean> {
-        await LevelService.wipe(chatId)
-        await ItemsService.wipe(chatId)
-        await WorkService.wipe(chatId)
-        await CasinoWipeService.money(chatId)
+        await TotalService.wipe(chatId)
 
         const userItemId = 'greedBox'
         return await InventoryItemService.anyHas(chatId, userItemId)

@@ -1,13 +1,12 @@
 import InventoryItemsUtils from '../../../../utils/InventoryItemsUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import { MaybeString } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class InventoryCommand extends BuckwheatCommand {
+    protected _settingId: string = 'inventory'
+
     constructor () {
         super()
         this._name = 'инвентарь'

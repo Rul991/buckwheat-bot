@@ -9,6 +9,7 @@ import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
 
 export default class extends ButtonScrollerAction<Skill, TinyCurrentIncreaseId> {
     protected _filename: string = 'skills/add'
+    protected _buttonTitle: string = 'Навык: Пролистывание'
 
     constructor () {
         super()

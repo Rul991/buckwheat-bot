@@ -4,6 +4,7 @@ import UserDescriptionService from '../../../db/services/user/UserDescriptionSer
 import ChangeProfileCommand from './ChangeProfileCommand'
 
 export default class ChangeDescriptionCommand extends ChangeProfileCommand {
+    protected _settingId: string = 'change-description'
     protected _folderName: string = 'change-description'
     protected _maxLength: number = MAX_DESCRIPTION_LENGTH
     

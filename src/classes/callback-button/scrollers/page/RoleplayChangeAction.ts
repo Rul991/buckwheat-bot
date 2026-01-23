@@ -9,6 +9,7 @@ import ScrollerAction from './ScrollerAction'
 type Data = [string, string]
 
 export default class RoleplayChangeAction extends ScrollerAction<Data> {
+    protected _buttonTitle: string = 'РП: Пролистывание'
     constructor() {
         super()
         this._name = 'roleplaychange'

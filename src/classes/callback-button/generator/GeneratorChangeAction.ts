@@ -12,6 +12,7 @@ import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
 type Data = MoneyGenerator
 
 export default class extends ButtonScrollerAction<Data> {
+    protected _buttonTitle?: string | undefined = "Генератор: Пролистывание"
     constructor () {
         super()
 
@@ -42,11 +43,11 @@ export default class extends ButtonScrollerAction<Data> {
             generators
         } = generator
 
-        const itemId = 'moneyGrindDevice'
+        const deviceItemId = 'moneyGrindDevice'
         const hasDevices = await InventoryItemService.has(
             chatId,
             id,
-            itemId
+            deviceItemId
         )
         const hasAdd = hasDevices && generators.length < GENERATOR_MAX_COUNT
         const page = this._getNewPage(data)

@@ -1,14 +1,11 @@
 import MessageUtils from '../../../../utils/MessageUtils'
-import RankUtils from '../../../../utils/RankUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import { MaybeString } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
 import HelloService from '../../../db/services/chat/HelloService'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
-import UserRankService from '../../../db/services/user/UserRankService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class HelloCommand extends BuckwheatCommand {
+    protected _settingId: string = 'hello'
+
     constructor() {
         super()
         this._name = 'приветствие'
@@ -20,9 +17,7 @@ export default class HelloCommand extends BuckwheatCommand {
         ]
     }
 
-    async execute({ ctx, other, id, chatId }: BuckwheatCommandOptions): Promise<void> {
-        const rank = await UserRankService.get(chatId, id)
-
+    async execute({ ctx, other, chatId }: BuckwheatCommandOptions): Promise<void> {
         if(!other) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
@@ -32,14 +27,6 @@ export default class HelloCommand extends BuckwheatCommand {
                         text: await HelloService.get(chatId)
                     }
                 }
-            )
-            return
-        }
-
-        if(rank < RankUtils.moderator) {
-            await MessageUtils.answerMessageFromResource(
-                ctx,
-                'text/commands/hello/low-rank.pug',
             )
             return
         }

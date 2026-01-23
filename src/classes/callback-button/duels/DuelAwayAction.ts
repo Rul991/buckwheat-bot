@@ -23,6 +23,7 @@ type Args = {
 }
 
 export default class extends CallbackButtonAction<Data> {
+    protected _buttonTitle?: string | undefined = "Дуэль: Сбежать"
     protected _schema: ZodType<Data> = object({
         t: literal(['d', 'u']),
         v: number(),

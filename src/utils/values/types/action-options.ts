@@ -1,6 +1,6 @@
 import { PreCheckoutQuery, SuccessfulPayment, Update, User } from 'telegraf/types'
-import { CommandStrings, Ids, MaybeString } from './types'
-import { MessageContext } from './contexts'
+import { ChatMemberStatus, CommandStrings, Ids, MaybeString } from './types'
+import { MessageContext, MyChatMemberContext } from './contexts'
 import { SuccessfulPaymentContext } from './contexts'
 import { PreCheckoutQueryContext } from './contexts'
 import { PhotoContext } from './contexts'
@@ -10,7 +10,7 @@ import { DiceContext } from './contexts'
 import { CallbackButtonContext } from './contexts'
 import { TextContext } from './contexts'
 import { ContextData } from './contexts'
-import { Context } from 'telegraf'
+import { Context, Types } from 'telegraf'
 import { BaseScene } from 'telegraf/scenes'
 
 type RawOptions = Ids & {
@@ -70,6 +70,13 @@ export type ConditionalCommandOptions = RawOptions & {
 export type CallbackButtonOptions<T> = RawOptions & {
     data: T
     ctx: CallbackButtonContext
+    isPrivate: boolean
+}
+
+export type MyChatMemberOptions = RawOptions & {
+    ctx: MyChatMemberContext
+    oldStatus: ChatMemberStatus
+    newStatus: ChatMemberStatus
 }
 
 export type ContextOptions = {

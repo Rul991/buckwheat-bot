@@ -1,8 +1,8 @@
-import { any, boolean, literal, number, object, string, tuple, ZodLiteral, ZodType } from 'zod'
+import { any, boolean, literal, number, object, record, string, tuple, ZodLiteral, ZodType } from 'zod'
 import Character from '../../interfaces/duel/Character'
 import Characteristics from '../../interfaces/duel/Characteristics'
 import SimpleCommand from '../../interfaces/other/SimpleComand'
-import { NewInvoiceParameters, JsonShopItem, InventoryItemDescription, TinyCurrentIncreaseId, ClassTypes, KeyboardDatabaseData } from './types/types'
+import { NewInvoiceParameters, JsonShopItem, InventoryItemDescription, TinyCurrentIncreaseId, ClassTypes, KeyboardDatabaseData, SettingPropertiesValues, BooleanNumberString } from './types/types'
 import Skill from '../../interfaces/duel/Skill'
 import StartUp from '../../interfaces/other/StartUp'
 import CubeData from '../../interfaces/callback-button-data/CubeData'
@@ -12,6 +12,7 @@ import UserReplyIdsData from '../../interfaces/callback-button-data/UserReplyIds
 import SkillExecute from '../../interfaces/other/SkillExecute'
 import Setting from '../../interfaces/other/Setting'
 import ClassUtils from '../ClassUtils'
+import RankUtils from '../RankUtils'
 
 export const simpleCommandSchema: ZodType<SimpleCommand> = object({
     name: string(),
@@ -21,13 +22,81 @@ export const simpleCommandSchema: ZodType<SimpleCommand> = object({
     aliases: string().array().optional()
 })
 
-export const settingSchema: ZodType<Setting<any>> = object({
+export const settingPartSchema: ZodType<Omit<Setting<any>, 'type' | 'default' | 'properties'>> = object({
     title: string(),
     description: string(),
-    type: literal(['string', 'number', 'boolean', 'any', 'enum']),
-    default: any(),
-    properties: object()
 })
+
+export const minMaxOptionalProperties: ZodType<SettingPropertiesValues['number' | 'string']> = object({
+    min: number().optional(),
+    max: number().optional()
+})
+
+export const booleanNumberStringSchema: ZodType<BooleanNumberString> = string()
+    .or(number())
+    .or(boolean())
+
+export const stringSetting: ZodType<Setting<'string'>> = settingPartSchema
+    .and(
+        object({
+            type: literal('string'),
+            default: string(),
+            properties: minMaxOptionalProperties
+        })
+    )
+
+export const numberSettingSchema: ZodType<Setting<'number'>> = settingPartSchema
+    .and(
+        object({
+            type: literal('number'),
+            default: number(),
+            properties: minMaxOptionalProperties
+        })
+    )
+
+export const enumSettingSchema: ZodType<Setting<'enum'>> = settingPartSchema
+    .and(
+        object({
+            type: literal('enum'),
+            default: booleanNumberStringSchema,
+            properties: object({
+                values: booleanNumberStringSchema.array()
+            })
+        })
+            .refine(
+                ({ default: defaultValue, properties: { values } }) => {
+                    return values.length == 0 || values.includes(defaultValue)
+                },
+                {
+                    path: ['default'],
+                    error: 'default can be only like in values'
+                }
+            )
+    )
+
+export const booleanSettingSchema: ZodType<Setting<'boolean'>> = settingPartSchema
+    .and(
+        object({
+            type: literal('boolean'),
+            default: boolean(),
+            properties: object()
+        })
+    )
+
+export const anySettingSchema: ZodType<Setting<'any'>> = settingPartSchema
+    .and(
+        object({
+            type: literal('any'),
+            default: any(),
+            properties: object()
+        })
+    )
+
+export const settingSchema: ZodType<Setting<any>> = stringSetting
+    .or(numberSettingSchema)
+    .or(enumSettingSchema)
+    .or(booleanSettingSchema)
+    .or(anySettingSchema)
 
 export const jsonShopItemSchema: ZodType<JsonShopItem> = object({
     id: string().optional(),
@@ -165,3 +234,10 @@ export const keyboardDbDataSchema: ZodType<KeyboardDatabaseData> = object({
     msgId: number(),
     pos: tuple([number(), number()])
 })
+
+export const ranksSchema = record(
+    string(),
+    number()
+        .min(RankUtils.min)
+        .max(RankUtils.max)
+)

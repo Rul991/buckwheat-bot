@@ -7,8 +7,6 @@ import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-o
 import { MaybeString } from '../../../../utils/values/types/types'
 import { TextContext } from '../../../../utils/values/types/contexts'
 import DuelistService from '../../../db/services/duelist/DuelistService'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
-import UserClassService from '../../../db/services/user/UserClassService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 type HealOptions = {
@@ -19,6 +17,9 @@ type HealOptions = {
 }
 
 export default class SaveCommand extends BuckwheatCommand {
+    protected _settingId: string = 'save'
+    protected _canBeChanged: boolean = false
+
     constructor() {
         super()
         this._name = 'сохраниться'

@@ -2,14 +2,12 @@ import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import RankUtils from '../../../../utils/RankUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import { MaybeString, HasOtherChangeProfileMessage, NoOtherChangeProfileMessage } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
-import UserNameService from '../../../db/services/user/UserNameService'
+import { HasOtherChangeProfileMessage, NoOtherChangeProfileMessage } from '../../../../utils/values/types/types'
 import UserRankService from '../../../db/services/user/UserRankService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default abstract class extends BuckwheatCommand {
+    protected _settingId: string = 'change-profile'
     protected abstract _folderName: string
     protected abstract _maxLength: number
 

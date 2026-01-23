@@ -1,6 +1,5 @@
 import { CATALOG_BOOST, LEVEL_BOOST, LEVEL_UP_MONEY, WORK_TIME } from '../../../../utils/values/consts'
-import { ClassTypes, MaybeString } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
+import { ClassTypes } from '../../../../utils/values/types/types'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import { MAX_WORK, MIN_WORK } from '../../../../utils/values/consts'
 import CasinoAddService from '../../../db/services/casino/CasinoAddService'
@@ -16,11 +15,9 @@ import ClassUtils from '../../../../utils/ClassUtils'
 import ExperienceService from '../../../db/services/level/ExperienceService'
 import LevelUtils from '../../../../utils/level/LevelUtils'
 import LevelService from '../../../db/services/level/LevelService'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import PremiumChatService from '../../../db/services/chat/PremiumChatService'
 import ChatSettingsService from '../../../db/services/settings/ChatSettingsService'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import UserSettingsService from '../../../db/services/settings/UserSettingsService'
 import GrindSettingService from '../../../db/services/settings/GrindSettingService'
 
 type Boost = {
@@ -34,6 +31,7 @@ type TotalMoney = {
 }
 
 export default class WorkCommand extends BuckwheatCommand {
+    protected _settingId: string = 'work'
     constructor () {
         super()
         this._name = 'работа'

@@ -4,6 +4,8 @@ import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-o
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class extends BuckwheatCommand {
+    protected _settingId: string = 'say'
+
     constructor() {
         super()
         this._name = 'скажи'

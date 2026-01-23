@@ -10,4 +10,8 @@ export default class CasinoAccountService {
         if(casino) return casino
         else return await CasinoRepository.create({chatId, id})
     }
+
+    static async deleteChat(chatId: number) {
+        return await CasinoRepository.deleteAllInChat(chatId)
+    }
 }

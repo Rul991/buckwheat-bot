@@ -15,6 +15,7 @@ import DuelService from '../../db/services/duel/DuelService'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 export default class DuelYesAction extends CallbackButtonAction<DuelOfferData> {
+    protected _buttonTitle?: string | undefined = "Дуэль: Да"
     protected _schema: ZodType<DuelOfferData> = userReplyIdsDataSchema
 
     constructor() {

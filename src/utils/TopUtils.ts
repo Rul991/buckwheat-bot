@@ -4,15 +4,22 @@ import CubeWinsService from '../classes/db/services/cube/CubeWinsService'
 import ExperienceService from '../classes/db/services/level/ExperienceService'
 import MessagesService from '../classes/db/services/messages/MessagesService'
 import RouletteService from '../classes/db/services/roulette/RouletteService'
+import RankSettingsService from '../classes/db/services/settings/RankSettingsService'
 import UserProfileService from '../classes/db/services/user/UserProfileService'
 import UserRankService from '../classes/db/services/user/UserRankService'
 import ClassUtils from './ClassUtils'
 import LevelUtils from './level/LevelUtils'
 import RankUtils from './RankUtils'
+import SettingUtils from './settings/SettingUtils'
 
 type GetUnsortedValuesResult = {
     id: number
     value: number | string
+}
+
+type HandleSortedValuesOptions = {
+    values: GetUnsortedValuesResult[]
+    chatId: number
 }
 
 type SubCommand = {
@@ -28,7 +35,7 @@ type SubCommand = {
         rawTitle: string
     }
     getUnsortedValues: (chatId: number) => Promise<GetUnsortedValuesResult[]>
-    handleSortedValues?: (values: GetUnsortedValuesResult[]) => Promise<GetUnsortedValuesResult[]>
+    handleSortedValues?: (values: HandleSortedValuesOptions) => Promise<GetUnsortedValuesResult[]>
 }
 
 type TitleAndKey = {
@@ -56,10 +63,13 @@ export default class {
                         }
                     })
             },
-            handleSortedValues: async values => {
+            handleSortedValues: async ({ values, chatId }) => {
+                const settings = await RankSettingsService.getObject(chatId)
                 return values.map(({ id, value }) => {
                     const rank = value as number
-                    const rankName = RankUtils.getRankByNumber(rank)
+                    const settingName = `rank-${rank}`
+
+                    const rankName = settings[settingName] || SettingUtils.dummyDefault
                     const rankEmoji = RankUtils.getEmojiByRank(rank)
                     return {
                         id,
@@ -101,7 +111,7 @@ export default class {
                         }
                     })
             },
-            handleSortedValues: async values => {
+            handleSortedValues: async ({ values }) => {
                 return values.map(({ id, value }) => {
                     return {
                         id,
@@ -124,7 +134,7 @@ export default class {
 
                 return users
                     .filter(
-                        ({ className }) => 
+                        ({ className }) =>
                             className && className != ClassUtils.defaultClassName
                     )
                     .map(({ id, className: rawClass }) => {

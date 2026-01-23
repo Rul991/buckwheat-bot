@@ -72,4 +72,8 @@ export default class {
 
         return true
     }
+
+    static async deleteChat(chatId: number) {
+        return await ChosenSkillsRepository.deleteAllInChat(chatId)
+    }
 }

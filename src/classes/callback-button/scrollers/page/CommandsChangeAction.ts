@@ -7,6 +7,7 @@ import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import ScrollerAction from './ScrollerAction'
 
 export default class CommandsChangeAction extends ScrollerAction<CommandDescription> {
+    protected _buttonTitle: string = 'Команды: Пролистывание'
     constructor () {
         super()
         this._name = 'commandschange'

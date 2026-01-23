@@ -1,15 +1,12 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import StringUtils from '../../../../utils/StringUtils'
-import SubCommandUtils from '../../../../utils/SubCommandUtils'
 import { FIRST_INDEX } from '../../../../utils/values/consts'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import { MaybeString, SubCommandObject } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
+import { SubCommandObject } from '../../../../utils/values/types/types'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import RoleplaysService from '../../../db/services/rp/RoleplaysService'
 import UserRankService from '../../../db/services/user/UserRankService'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
-import BuckwheatCommand from '../../base/BuckwheatCommand'
 import BuckwheatCommandWithSub from '../../base/BuckwheatCommandWithSub'
 import RankUtils from '../../../../utils/RankUtils'
 
@@ -21,11 +18,15 @@ type SubCommand = SubCommandObject & {
 }
 
 export default class RoleplayCommand extends BuckwheatCommandWithSub<SubCommand> {
+    protected _settingId: string = 'roleplay'
+
     constructor () {
         super(
             [
                 {
                     name: 'список',
+                    settingId: 'listRoleplay',
+                    minimumRank: RankUtils.min,
                     execute: async ({ ctx, chatId }) => {
                         await MessageUtils.answerMessageFromResource(
                             ctx,
@@ -43,6 +44,8 @@ export default class RoleplayCommand extends BuckwheatCommandWithSub<SubCommand>
 
                 {
                     name: 'добавить',
+                    settingId: 'addRoleplay',
+                    minimumRank: RankUtils.min + 1,
                     execute: async ({ ctx, data: other }) => {
                         const [rawName, text] = StringUtils.splitByCommands(other, 1)
                         if (!text) return false
@@ -77,13 +80,14 @@ export default class RoleplayCommand extends BuckwheatCommandWithSub<SubCommand>
 
                         return true
                     },
-                    minimumRank: 1,
                     needData: true,
                     exampleData: 'накричать накричал на'
                 },
 
                 {
                     name: 'удалить',
+                    settingId: 'deleteRoleplay',
+                    minimumRank: RankUtils.min + 1,
                     execute: async ({ ctx, data: other, chatId }) => {
                         const [name] = other.split(StringUtils.spaceRegexp, 1)
 
@@ -113,7 +117,6 @@ export default class RoleplayCommand extends BuckwheatCommandWithSub<SubCommand>
 
                         return true
                     },
-                    minimumRank: 1,
                     needData: true,
                     exampleData: 'накричать',
                 }
@@ -125,23 +128,6 @@ export default class RoleplayCommand extends BuckwheatCommandWithSub<SubCommand>
     }
 
     protected async _checkAccess(options: BuckwheatCommandOptions, [sub]: [SubCommand, string]): Promise<boolean> {
-        const {
-            ctx,
-            chatId,
-            id
-        } = options
-
-        const minimumRank = sub.minimumRank ?? RankUtils.min
-        const rank = await UserRankService.get(chatId, id)
-
-        if (minimumRank! > rank) {
-            await MessageUtils.answerMessageFromResource(
-                ctx,
-                'text/commands/add-rp/rank-issue.pug'
-            )
-            return false
-        }
-
         return true
     }
 

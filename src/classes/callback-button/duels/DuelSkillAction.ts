@@ -19,6 +19,7 @@ type Data = {
 
 export default class extends CallbackButtonAction<Data> {
     protected _schema: ZodType<Data> = duelSchema
+    protected _buttonTitle?: string | undefined = "Дуэль: Навыки"
 
     constructor () {
         super()

@@ -16,6 +16,7 @@ type Data = {
 }
 
 export default class extends CallbackButtonAction<Data> {
+    protected _buttonTitle: string = 'Навык: Убрать'
     protected _schema: ZodType<Data> = idSchema
         .and(object({
             index: number()

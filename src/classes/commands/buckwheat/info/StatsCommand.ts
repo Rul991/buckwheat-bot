@@ -5,6 +5,8 @@ import UserProfileService from '../../../db/services/user/UserProfileService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class StatsCommand extends BuckwheatCommand {
+    protected _settingId: string = 'stats'
+
     constructor() {
         super()
         this._name = 'статы'

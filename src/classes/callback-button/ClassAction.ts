@@ -9,6 +9,7 @@ import { CallbackButtonOptions } from '../../utils/values/types/action-options'
 import { classTypesSchema } from '../../utils/values/schemas'
 
 export default class ClassAction extends CallbackButtonAction<ClassData> {
+    protected _buttonTitle: string = 'Класс'
     protected _schema: ZodType<ClassData> = object({
         classType: classTypesSchema,
         userId: number()

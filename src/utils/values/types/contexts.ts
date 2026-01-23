@@ -40,6 +40,8 @@ export type LeftMemberContext = NarrowedContext<Context<Update>, {
     update_id: number
 }> & ContextData
 
+export type MyChatMemberContext = NarrowedContext<Context<Update> & SceneContextData<{}> & IdContextData, Update.MyChatMemberUpdate>
+
 export type PhotoContext = NarrowedContext<Context<Update>, {
     message: Update.New & Update.NonChannel & Message.PhotoMessage
     update_id: number

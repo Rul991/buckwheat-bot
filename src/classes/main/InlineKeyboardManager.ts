@@ -50,7 +50,7 @@ export default class InlineKeyboardManager {
     }
 
     private static _logResult(result: Result[][]): Result[][] {
-        Logging.log('InlineKeyboardManager._logResult', result)
+        Logging.system('InlineKeyboardManager._logResult', result)
         return result
     }
 

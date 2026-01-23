@@ -7,6 +7,9 @@ import BuckwheatCommand from '../../base/BuckwheatCommand'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class PremiumCommand extends BuckwheatCommand {
+    protected _settingId: string = 'premium'
+    protected _canBeChanged: boolean = false
+
     constructor() {
         super()
         this._name = 'премиум'

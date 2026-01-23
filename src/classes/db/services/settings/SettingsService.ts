@@ -44,8 +44,26 @@ export default class {
     }
 
     static async getSettingsObject(chatId: number, filename: string): Promise<Record<string, any>> {
-        const settings = await this.get(chatId, filename)
-        return settings.settings ?? {}
+        const settings = await SettingUtils.getSettings(filename)
+        const result = {} as Record<string, any>
+
+        const {
+            settings: newSettings
+        } = await this.get(chatId, filename)
+
+        newSettings.forEach((value, key) => {
+            const obj = settings[key]
+            if (!obj) return
+
+            settings[key].default = value
+        })
+
+        for (const key in settings) {
+            const value = settings[key]
+            result[key] = value.default
+        }
+
+        return result
     }
 
     static async getSetting<K extends SettingType = any>(
@@ -98,8 +116,10 @@ export default class {
         const {
             settings
         } = await this.get(chatId, filename)
+        const fileSettings = await SettingUtils.getSettings(filename)
 
         newSettings.forEach((value, key) => {
+            if(!fileSettings[key]) return
             settings.set(key, value)
         })
 
@@ -124,6 +144,15 @@ export default class {
             chatId,
             filename,
             map
+        )
+    }
+
+    static async delete(id: number, filename: string) {
+        return await SettingsRepository.deleteOne(
+            id,
+            {
+                type: filename
+            }
         )
     }
 }

@@ -57,6 +57,7 @@ type SkillOptions = {
 }
 
 export default class extends CallbackButtonAction<Data> {
+    protected _buttonTitle: string = 'Навык: Просмотр'
     protected _schema: ZodType<Data> = idSchema
         .and(object({
             index: number()

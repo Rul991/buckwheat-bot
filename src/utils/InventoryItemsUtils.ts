@@ -74,7 +74,7 @@ export default class InventoryItemsUtils {
         const result = [...items, ...newItem]
             .map(({count, itemId}) => ({count, itemId}))
         
-        Logging.log(`(${itemId}) new items: `, result)
+        Logging.system(`(${itemId}) new items: `, result)
         return result
     }
 

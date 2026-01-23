@@ -5,6 +5,8 @@ import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class LevelCommand extends BuckwheatCommand {
+    protected _settingId: string = 'level'
+
     constructor() {
         super()
         this._name = 'уровень'

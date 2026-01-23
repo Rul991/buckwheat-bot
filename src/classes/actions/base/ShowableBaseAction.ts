@@ -1,7 +1,8 @@
+import { ActionAccess } from '../../../utils/values/types/command-access'
 import { CommandDescription } from '../../../utils/values/types/types'
-import BaseAction from './BaseAction'
+import RankedAction from './RankedAction'
 
-export default abstract class extends BaseAction {
+export default abstract class extends RankedAction {
     protected _description: string = ''
     protected _isShow: boolean = true
     protected _needData: boolean = false
@@ -9,6 +10,7 @@ export default abstract class extends BaseAction {
     protected _aliases: string[] = []
     protected _argumentText?: string
     protected _isPremium: boolean = false
+    protected abstract _settingId: string
 
     get commandDescription(): CommandDescription {
         return {
@@ -20,10 +22,27 @@ export default abstract class extends BaseAction {
             argumentText: this._argumentText,
             aliases: this._aliases,
             isPremium: this._isPremium,
-            minimumRank: this._minimumRank,
+            minimumRank: this.minimumRank,
             type: this.descriptionType,
             typeName: this.typeName
         }
+    }
+
+    get actionAccesses(): ActionAccess[] {
+        return this._isShow && this._canBeChanged ? [
+            {
+                setting: {
+                    title: `Баквит ${this._name}`,
+                    description: `Определяет ранг команды ''баквит ${this._name}'' типа ${this.typeName}`,
+                    type: 'enum',
+                    default: this._minimumRank,
+                    properties: {
+                        values: [0, 1, 2, 3, 4, 5]
+                    }
+                },
+                name: this._settingId
+            }
+        ] : []
     }
 
     get aliases(): string[] {
@@ -32,6 +51,10 @@ export default abstract class extends BaseAction {
 
     get isPremium(): boolean {
         return this._isPremium
+    }
+
+    get settingId(): string {
+        return this._settingId
     }
 
     abstract get descriptionType(): string

@@ -1,8 +1,9 @@
+import RandomUtils from './RandomUtils'
 import StringUtils from './StringUtils'
 import { AsyncOrSync, CommandStrings } from './values/types/types'
 
 export default class CommandUtils {
-    private static _botNames: string[] = ['баквит', 'гречка', 'баквид']
+    private static _botNames: string[] = ['баквит', 'гречка', 'баквид', 'бак']
     private static _availableSymbols: string[] = ['', ',', '*']
 
     static getCommandStrings(text: string): CommandStrings {
@@ -36,5 +37,11 @@ export default class CommandUtils {
         else {
             return null
         }
+    }
+
+    static getFullCommand(command: string) {
+        const name = RandomUtils.choose(this._botNames)!
+
+        return `${name} ${command}`
     }
 }

@@ -7,6 +7,7 @@ import MessageUtils from '../../../utils/MessageUtils'
 import FileUtils from '../../../utils/FileUtils'
 import { MAX_EXPORT_DATA_LENGTH } from '../../../utils/values/consts'
 import { dataSchema } from '../../../utils/values/schemas'
+import RankUtils from '../../../utils/RankUtils'
 
 type Data = {
     id: number,
@@ -14,6 +15,7 @@ type Data = {
 }
 
 export default class extends CallbackButtonAction<Data> {
+    protected _buttonTitle: string = 'Экспорт'
     protected _schema: ZodType<Data> = dataSchema
 
     constructor () {

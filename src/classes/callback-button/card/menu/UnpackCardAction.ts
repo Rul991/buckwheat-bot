@@ -1,4 +1,4 @@
-import { number, object, ZodType } from 'zod'
+import { ZodType } from 'zod'
 import CallbackButtonAction from '../../CallbackButtonAction'
 import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import ContextUtils from '../../../../utils/ContextUtils'
@@ -25,6 +25,7 @@ type GiveCardOptions = {
 
 export default class extends CallbackButtonAction<Data> {
     protected _schema: ZodType<Data> = idSchema
+    protected _buttonTitle?: string | undefined = "Карты: Распаковка"
 
     constructor () {
         super()

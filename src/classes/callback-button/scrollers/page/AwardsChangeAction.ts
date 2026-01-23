@@ -8,6 +8,7 @@ import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import ScrollerAction from './ScrollerAction'
 
 export default class AwardsChangeAction extends ScrollerAction<Award> {
+    protected _buttonTitle: string = 'Награды: Пролистывание'
     private static _emojis = [
         '🎗',
         '🥉',

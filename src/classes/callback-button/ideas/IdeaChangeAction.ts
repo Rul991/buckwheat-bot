@@ -17,6 +17,7 @@ import { CallbackButtonOptions } from '../../../utils/values/types/action-option
 
 export default class IdeaChangeAction extends CallbackButtonAction<ScrollerWithIdData> {
     protected _schema: ZodType<ScrollerWithIdData> = scrollerWithIdDataSchema
+    protected _buttonTitle?: string | undefined = "Идеи: Пролистывание"
 
     constructor() {
         super()

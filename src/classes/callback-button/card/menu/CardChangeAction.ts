@@ -10,7 +10,9 @@ import ScrollerAction from '../../scrollers/page/ScrollerAction'
 type Data = InventoryCard
 
 export default class extends ScrollerAction<Data> {
-    constructor() {
+    protected _buttonTitle?: string | undefined = "Карты: Пролистывание"
+
+    constructor () {
         super()
         this._name = 'cshw'
         this._objectsPerPage = 1
@@ -29,11 +31,10 @@ export default class extends ScrollerAction<Data> {
             objects: [inventoryCard],
             currentPage,
             id,
-            length,
-            chatId
+            length
         } = options
 
-        if(await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return null
+        if (await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return null
 
         const {
             id: cardId,
@@ -51,5 +52,4 @@ export default class extends ScrollerAction<Data> {
             inlineKeyboardFilename: 'change'
         })
     }
-
 }

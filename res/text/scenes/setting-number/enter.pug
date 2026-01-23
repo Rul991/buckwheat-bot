@@ -1,5 +1,7 @@
-- let minNumber = min ?? `-${infinitySymbol}`
-- let maxNumber = max ?? `${infinitySymbol}`
+include utils/functions.pug
+
+- let minNumber = formatNumber(min) ?? `-${infinitySymbol}`
+- let maxNumber = formatNumber(max) ?? `${infinitySymbol}`
 
 | Введите число от 
 code #{minNumber}

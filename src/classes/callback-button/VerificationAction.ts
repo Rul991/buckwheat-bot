@@ -13,6 +13,7 @@ type Data = number
 
 export default class VerificationAction extends CallbackButtonAction<Data> {
     protected _schema: ZodType<Data> = number()
+    protected _buttonTitle: string = 'Верификация'
 
     constructor () {
         super()
@@ -38,7 +39,7 @@ export default class VerificationAction extends CallbackButtonAction<Data> {
     }
 
     async execute({ ctx, data: dataId, chatId, id }: CallbackButtonOptions<Data>): Promise<string | void> {
-        const isCan = ctx.from.id == dataId ||
+        const isCan = id == dataId ||
             await UserRankService.get(chatId, id) >= RankUtils.moderator
 
         if (isCan) {

@@ -13,6 +13,7 @@ type Data = UserReplyIdsData & {
 }
 
 export default class extends CallbackButtonAction<Data> {
+    protected _buttonTitle?: string | undefined = "Дуэль: Старт"
     protected _schema: ZodType<Data> = userReplyIdsDataSchema
         .and(object({
             bid: number().optional()

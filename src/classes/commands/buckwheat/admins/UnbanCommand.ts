@@ -4,6 +4,8 @@ import AdminUtils from '../../../../utils/AdminUtils'
 import { TextContext } from '../../../../utils/values/types/contexts'
 
 export default class UnbanCommand extends AdminCommand {
+    protected _settingId: string = 'unban'
+
     constructor() {
         super()
 

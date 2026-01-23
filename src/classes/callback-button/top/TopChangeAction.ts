@@ -1,15 +1,12 @@
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
-import RandomUtils from '../../../utils/RandomUtils'
 import RankUtils from '../../../utils/RankUtils'
 import StringUtils from '../../../utils/StringUtils'
 import TopUtils from '../../../utils/TopUtils'
 import { ScrollerSendMessageOptions, ScrollerEditMessageResult, ScrollerGetObjectsOptions } from '../../../utils/values/types/types'
 import { CallbackButtonContext } from '../../../utils/values/types/contexts'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import ChatSettingsService from '../../db/services/settings/ChatSettingsService'
 import UserProfileService from '../../db/services/user/UserProfileService'
-import UserRankService from '../../db/services/user/UserRankService'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import ScrollerAction from '../scrollers/page/ScrollerAction'
 
@@ -19,6 +16,7 @@ type Object = {
 }
 
 export default class extends ScrollerAction<Object> {
+    protected _buttonTitle: string = 'Топ: Пролистывание'
     protected _minimumRank = RankUtils.min
 
     protected async _getObjects(ctx: CallbackButtonContext, { data, chatId }: ScrollerGetObjectsOptions): Promise<Object[]> {
@@ -27,8 +25,8 @@ export default class extends ScrollerAction<Object> {
         const unsortedValues = await subCommand.getUnsortedValues(chatId)
 
         const sorted = unsortedValues.sort(
-            ({value: a}, {value: b}) => {
-                if(typeof b == 'string' && typeof a == 'string') {
+            ({ value: a }, { value: b }) => {
+                if (typeof b == 'string' && typeof a == 'string') {
                     return b.localeCompare(a)
                 }
                 else {
@@ -38,7 +36,7 @@ export default class extends ScrollerAction<Object> {
         )
 
         const handledSorted = subCommand.handleSortedValues !== undefined ?
-            await subCommand.handleSortedValues(sorted)
+            await subCommand.handleSortedValues({ chatId, values: sorted })
             : sorted
 
         return handledSorted
@@ -49,37 +47,21 @@ export default class extends ScrollerAction<Object> {
         return type
     }
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'topch'
         this._objectsPerPage = 20
     }
 
     protected async _editMessage(
-        ctx: CallbackButtonContext, 
+        ctx: CallbackButtonContext,
         options: ScrollerSendMessageOptions<Object>,
     ): Promise<ScrollerEditMessageResult> {
         const {
-            id, 
+            id,
             chatId
         } = options
 
-        if(!await UserRankService.has(chatId, id, this._minimumRank)) {
-            await ContextUtils.showCallbackMessage(
-                ctx,
-                await FileUtils.readPugFromResource(
-                    'text/other/rank-issue.pug',
-                    {
-                        changeValues: {
-                            rank: this._minimumRank
-                        }
-                    }
-                ),
-                true
-            )
-            return null
-        }
-        
         const {
             currentPage,
             length,
@@ -103,7 +85,7 @@ export default class extends ScrollerAction<Object> {
             await ChatSettingsService.get<'boolean'>(chatId, 'link')
 
         const sorted = await Promise.all(
-            objects.map(async ({id: objId, value}) => {
+            objects.map(async ({ id: objId, value }) => {
                 const {
                     name,
                     id
@@ -114,16 +96,16 @@ export default class extends ScrollerAction<Object> {
                         isLeft: false,
                         link: ContextUtils.getLinkUrl(isUsePlayerId ? id : botId)
                     },
-                    value: typeof value == 'string' ? 
-                        value : 
+                    value: typeof value == 'string' ?
+                        value :
                         StringUtils.toFormattedNumber(value)
                 }
             })
         )
 
         let isNumbers = true
-        const totalCount = hasTotalCount ? objects.reduce((prev, {value}) => {
-            if(typeof value == 'number') {
+        const totalCount = hasTotalCount ? objects.reduce((prev, { value }) => {
+            if (typeof value == 'number') {
                 return prev + value
             }
 

@@ -7,6 +7,9 @@ import ChatService from '../../../db/services/chat/ChatService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class extends BuckwheatCommand {
+    protected _settingId: string = 'broadcast'
+    protected _canBeChanged: boolean = false
+
     constructor() {
         super()
         this._name = 'броадкаст'

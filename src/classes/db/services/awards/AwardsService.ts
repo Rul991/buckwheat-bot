@@ -15,4 +15,8 @@ export default class AwardsService {
 
         return await AwardsRepository.updateOne(chatId, id, {awards: newAwards}) ?? awards
     }
+
+    static async deleteChat(chatId: number) {
+        return await AwardsRepository.deleteAllInChat(chatId)
+    }
 }

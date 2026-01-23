@@ -8,8 +8,11 @@ import RandomUtils from '../../../utils/RandomUtils'
 import ObjectValidator from '../../../utils/ObjectValidator'
 import { simpleCommandSchema } from '../../../utils/values/schemas'
 import { BuckwheatCommandOptions } from '../../../utils/values/types/action-options'
+import { ActionAccess } from '../../../utils/values/types/command-access'
 
 export default class SimpleBuckwheatCommand extends BuckwheatCommand {
+    protected _settingId: string = ''
+
     static async loadFromJsonResource(path: string): Promise<SimpleBuckwheatCommand> {
         let json = await FileUtils.readJsonFromResource<SimpleCommand>(path)
         let isWrong = false
@@ -96,6 +99,10 @@ export default class SimpleBuckwheatCommand extends BuckwheatCommand {
         else {
             await MessageUtils.sendWrongCommandMessage(ctx)
         }
+    }
+    
+    get actionAccesses(): ActionAccess[] {
+        return []
     }
 
     constructor({name, src, text, avoidOther, aliases}: SimpleCommand) {

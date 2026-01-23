@@ -12,6 +12,7 @@ import { CallbackButtonOptions } from '../../../utils/values/types/action-option
 
 export default class DuelNoAction extends CallbackButtonAction<DuelOfferData> {
     protected _schema: ZodType<DuelOfferData> = userReplyIdsDataSchema
+    protected _buttonTitle?: string | undefined = "Дуэль: Нет"
 
     constructor() {
         super()

@@ -6,6 +6,8 @@ import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class LinkCommand extends BuckwheatCommand {
+    protected _settingId: string = 'link'
+
     constructor() {
         super()
         this._name = 'привязать'

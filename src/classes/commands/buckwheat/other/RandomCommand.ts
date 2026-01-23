@@ -7,6 +7,8 @@ import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class RandomCommand extends BuckwheatCommand {
+    protected _settingId: string = 'random'
+
     constructor() {
         super()
         this._name = 'рандом'

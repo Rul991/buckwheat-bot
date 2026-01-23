@@ -128,7 +128,8 @@ import SettingsCommand from '../classes/commands/buckwheat/settings/SettingsComm
 import SettingsShowAction from '../classes/callback-button/settings/SettingsShowAction'
 import SettingSetAction from '../classes/callback-button/settings/SettingSetAction'
 import SceneActionHandler from '../classes/main/handlers/SceneActionHandler'
-import NumberSettingInputAction from '../classes/actions/scenes/setting-input/SettingInputAction'
+import SettingNumberAction from '../classes/actions/scenes/setting-input/SettingNumberAction'
+import SettingStringAction from '../classes/actions/scenes/setting-input/SettingStringAction'
 import TopChangeAction from '../classes/callback-button/top/TopChangeAction'
 import BroadcastCommand from '../classes/commands/buckwheat/dev/BroadcastCommand'
 import CardCommand from '../classes/commands/buckwheat/card/CardCommand'
@@ -171,6 +172,11 @@ import EffectsCommand from '../classes/commands/buckwheat/duel/EffectsCommand'
 import SkillsCommand from '../classes/commands/buckwheat/duel/SkillsCommand'
 import ConditionalCommandHandler from '../classes/main/handlers/commands/ConditionalCommandHandler'
 import RemoveImageProfileCommand from '../classes/commands/buckwheat/profile/RemoveImageProfileCommand'
+import CommandAccessCommand from '../classes/commands/buckwheat/settings/CommandAccessCommand'
+import RankSettingsCommand from '../classes/commands/buckwheat/settings/RankSettingsCommand'
+import ButtonAccessCommand from '../classes/commands/buckwheat/settings/ButtonAccessCommand'
+import MyChatMemberHandler from '../classes/main/handlers/MyChatMemberHandler'
+import CheckDeletingFromChatAction from '../classes/actions/my-chat-member/CheckDeletingFromChatAction'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -228,6 +234,7 @@ const launchBot = async (bot: Bot) => {
     const photoHandler = new PhotoHandler()
     const leftMemberHandler = new LeftMemberHandler()
     const paymentHandler = new PaymentHandler()
+    const myChatMemberHandler = new MyChatMemberHandler()
 
     // every message 
     everyMessageHandler.add(
@@ -340,6 +347,8 @@ const launchBot = async (bot: Bot) => {
         new PremiumCommand(),
         new DonateCommand(),
         new CommandsCommand(),
+        new CommandAccessCommand(),
+        new ButtonAccessCommand(),
         new FaqCommand(),
         new CreatorCommand(),
         new ProfileCommand(),
@@ -386,8 +395,8 @@ const launchBot = async (bot: Bot) => {
         new SaveCommand(),
         new CharsCommand(),
         // new DuelCommand(),
-        // new SkillsCommand(),
-        // new EffectsCommand(),
+        new SkillsCommand(),
+        new EffectsCommand(),
         new ChatCommand(),
         new StatsCommand(),
         new AddAwardCommand(),
@@ -402,6 +411,7 @@ const launchBot = async (bot: Bot) => {
         new GeneratorCommand(),
         new SearchCommand(),
         new RemoveImageProfileCommand(),
+        new RankSettingsCommand(),
         ...await getSimpleCommands(),
     )
 
@@ -420,10 +430,16 @@ const launchBot = async (bot: Bot) => {
 
     // scenes
     sceneActionHandler.add(
-        new NumberSettingInputAction(),
+        new SettingNumberAction(),
+        new SettingStringAction(),
         new SuggestCardAction(),
         new CardPriceSellAction(),
         new ImportSceneAction(),
+    )
+
+    // my chat member
+    myChatMemberHandler.add(
+        new CheckDeletingFromChatAction()
     )
 
     // setup handlers
@@ -439,6 +455,7 @@ const launchBot = async (bot: Bot) => {
         photoHandler,
         leftMemberHandler,
         paymentHandler,
+        myChatMemberHandler
     )
 
     console.log('Start launching!')

@@ -5,13 +5,12 @@ import RandomUtils from '../../../../utils/RandomUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import { KICK_TIME, ROULETTE_CHANCE } from '../../../../utils/values/consts'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import { MaybeString } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import RouletteService from '../../../db/services/roulette/RouletteService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class RouletteCommand extends BuckwheatCommand {
+    protected _settingId: string = 'roulette'
+
     constructor() {
         super()
         this._name = 'рулетка'

@@ -13,7 +13,7 @@ export default class {
     private static _directory = 'json/settings/'
     private static _cacheSettings: Record<string, Settings> = {}
 
-    private static _getDummySetting(): Setting<'enum'> {
+    static getDummySetting(): Setting<'enum'> {
         const text = 'Неизвестная настройка'
         return {
             type: 'enum',
@@ -22,8 +22,12 @@ export default class {
             properties: {
                 values: []
             },
-            default: '?'
+            default: this.dummyDefault
         }
+    }
+
+    static get dummyDefault(): string {
+        return '?'
     }
 
     static async getSettings(filename: string): Promise<Settings> {
@@ -54,14 +58,22 @@ export default class {
 
         if (!setting) {
             Logging.warn(`no setting "${settingId}"`)
-            return this._getDummySetting() as Setting<K>
+            return this.getDummySetting() as Setting<K>
         }
 
         return setting
     }
 
-    static addSettings(filename: string, settings: Settings) {
+    static setSettings(filename: string, settings: Settings) {
         this._cacheSettings[filename] = settings
+    }
+
+    static addSettings(filename: string, settings: Settings) {
+        const currentSettings = this._cacheSettings[filename] ?? {}
+        this._cacheSettings[filename] = {
+            ...currentSettings,
+            ...settings
+        }
     }
 
     static isForUser(type: string) {

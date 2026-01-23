@@ -4,6 +4,8 @@ import { TextContext } from '../../../../utils/values/types/contexts'
 import AdminCommand from './AdminCommand'
 
 export default class extends AdminCommand {
+    protected _settingId: string = 'deleteMessage'
+
     constructor() {
         super()
 

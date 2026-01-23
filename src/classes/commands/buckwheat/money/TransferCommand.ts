@@ -11,6 +11,7 @@ import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class TransferCommand extends BuckwheatCommand {
+    protected _settingId: string = 'transfer'
     private static _filenames = ['bot', 'no-receiver', 'self', 'empty', 'wrong', 'negative']
 
     private static _getIdByCondition(ctx: TextContext, other: MaybeString): number {

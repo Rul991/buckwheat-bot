@@ -13,6 +13,8 @@ import DuelistService from '../../../db/services/duelist/DuelistService'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class BalanceCommand extends BuckwheatCommand {
+    protected _settingId: string = 'balance'
+
     constructor() {
         super()
         this._name = 'баланс'

@@ -1,13 +1,12 @@
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import { MaybeString } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import MarriageService from '../../../db/services/marriage/MarriageService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class DivorceCommand extends BuckwheatCommand {
+    protected _settingId: string = 'divorce'
+
     constructor () {
         super()
         this._name = 'развестись'

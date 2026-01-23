@@ -5,11 +5,13 @@ import ShowableActionHandler from './ShowableActionHandler'
 import { PhotoOptions } from '../../../../utils/values/types/action-options'
 import { PhotoContext } from '../../../../utils/values/types/contexts'
 import PremiumChatService from '../../../db/services/chat/PremiumChatService'
+import WrongPhotoAction from '../../../actions/service/photo/WrongPhotoAction'
+import NoPremiumPhotoAction from '../../../actions/service/photo/NoPremiumPhotoAction'
 
 export default class PhotoHandler extends ShowableActionHandler<PhotoAction, 'photo'> {
-    protected _hasntPremiumAction?: PhotoAction | undefined
-    protected _notExistAction?: PhotoAction | undefined
-    protected _nonCommandAction?: PhotoAction | undefined
+    protected _hasntPremiumAction?: PhotoAction | undefined = new NoPremiumPhotoAction()
+    protected _notExistAction?: PhotoAction | undefined = new WrongPhotoAction()
+    protected _nonCommandAction?: PhotoAction | undefined = this._notExistAction
     protected _filterName: 'photo' = 'photo'
 
     protected async _hasPremium(options: PhotoOptions): Promise<boolean> {

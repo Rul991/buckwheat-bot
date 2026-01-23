@@ -4,6 +4,8 @@ import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class extends BuckwheatCommand {
+    protected _settingId: string = 'card'
+
     constructor () {
         super()
         this._name = 'карточки'

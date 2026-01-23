@@ -5,6 +5,8 @@ import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-o
 import UserSettingsService from '../../../db/services/settings/UserSettingsService'
 
 export default class PingCommand extends BuckwheatCommand {
+    protected _settingId: string = 'ping'
+
     constructor() {
         super()
         this._name = 'прием'

@@ -12,6 +12,7 @@ type Data = {
 }
 
 export default class extends CallbackButtonAction<Data> {
+    protected _buttonTitle?: string | undefined = "Карты: Магазин"
     protected _schema: ZodType<Data> = idSchema
 
     constructor() {

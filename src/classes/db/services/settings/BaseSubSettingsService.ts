@@ -59,6 +59,12 @@ export default class {
         )
     }
 
+    async delete(
+        id: number
+    ) {
+        return await SettingsService.delete(id, this._filename)
+    }
+
     async getSettingForMany<K extends SettingType = any>(
         ids: number[],
         settingId: string

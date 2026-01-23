@@ -13,6 +13,7 @@ import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import PremiumChatService from '../../db/services/chat/PremiumChatService'
 import { NOT_FOUND_INDEX } from '../../../utils/values/consts'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
+import { number, tuple, ZodType } from 'zod'
 
 type Data = [number, number, number, number]
 
@@ -36,7 +37,13 @@ type GetAlertMessageOptions = {
 }
 
 export default class BuyAction extends CallbackButtonAction<Data> {
-    protected _schema: null = null
+    protected _buttonTitle: string = 'Магазин: Купить'
+    protected _schema: ZodType<Data> = tuple([
+        number(),
+        number(),
+        number(),
+        number(),
+    ])
 
     constructor () {
         super()
