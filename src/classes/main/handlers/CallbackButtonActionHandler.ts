@@ -6,7 +6,7 @@ import FileUtils from '../../../utils/FileUtils'
 import { MyTelegraf } from '../../../utils/values/types/types'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
-import { BUTTON_ACCESS_TYPE, COMMAND_ACCESS_TYPE, DATABASE_KEYBOARD_NAME } from '../../../utils/values/consts'
+import { BUTTON_ACCESS_TYPE, DATABASE_KEYBOARD_NAME } from '../../../utils/values/consts'
 import ObjectValidator from '../../../utils/ObjectValidator'
 import JsonUtils from '../../../utils/JsonUtils'
 import { keyboardDbDataSchema } from '../../../utils/values/schemas'
@@ -14,8 +14,8 @@ import KeyboardService from '../../db/services/keyboard/KeyboardService'
 import MapContainer from '../containers/MapContainer'
 import Setting from '../../../interfaces/other/Setting'
 import SettingUtils from '../../../utils/settings/SettingUtils'
-import CommandAccessService from '../../db/services/settings/access/CommandAccessService'
 import ButtonAccessService from '../../db/services/settings/access/ButtonAccessService'
+import RateLimitUtils from '../../../utils/ratelimit/RateLimitUtils'
 
 type GetDataOptions = {
     data: string
@@ -114,10 +114,12 @@ export default class CallbackButtonActionHandler extends BaseHandler<
     setup(bot: MyTelegraf): void {
         this._setupSettings()
         bot.action(/^([^_]+)_(.+)$/, async ctx => {
-            let [_, name, rawData] = ctx.match
-            if (!name) return
-
             const id = ctx.from.id
+            let [_, name, rawData] = ctx.match
+            
+            if (!name) return
+            if (RateLimitUtils.isLimit(id)) return
+
             const rawHandledData = await this._handleRawData({
                 data: rawData,
                 name,

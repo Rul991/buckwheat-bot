@@ -1,5 +1,6 @@
+import Logging from '../Logging'
 import TimeUtils from '../TimeUtils'
-import { MILLISECONDS_IN_SECOND } from '../values/consts'
+import { MILLISECONDS_IN_SECOND, MODE } from '../values/consts'
 
 export default class {
     private static readonly _maxRequests = 1
@@ -10,6 +11,7 @@ export default class {
     >()
 
     static isLimit(id: number): boolean {
+        // if(MODE == 'dev') return false
         let current = this._map.get(id)
         if(!current) {
             current = {
@@ -38,6 +40,11 @@ export default class {
                 requests
             }
         )
+        Logging.log({
+            ratelimit: {
+                current
+            }
+        })
         return requests > this._maxRequests
     }
 }

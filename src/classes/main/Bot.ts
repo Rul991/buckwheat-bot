@@ -71,12 +71,6 @@ export default class Bot {
                 return await next()
             })
         })
-        this._bot.use(async (ctx, next) => {
-            const id = ctx.from?.id ?? 0
-            if (MODE == 'prod' && RateLimitUtils.isLimit(id)) return
-
-            return await next()
-        })
 
         for (const handler of this._handlers) {
             await handler.setup(this._bot)

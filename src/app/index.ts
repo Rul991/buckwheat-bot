@@ -188,6 +188,7 @@ import { DataFromCallbackButton } from '../utils/values/types/types'
 import MarketSellCountAction from '../classes/callback-button/market/sell/MarketSellCountAction'
 import MarketSellAction from '../classes/callback-button/market/sell/MarketSellAction'
 import MarketSellSceneAction from '../classes/actions/scenes/market/MarketSellSceneAction'
+import RateLimitCommand from '../classes/commands/conditional/RateLimitCommand'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -355,6 +356,7 @@ const launchBot = async (bot: Bot) => {
 
     // conditional
     conditionalCommandHandler.add(
+        new RateLimitCommand(),
         new CapsCommand(),
         new OnDuelCommand(),
         new CustomRoleplayCommand(),
