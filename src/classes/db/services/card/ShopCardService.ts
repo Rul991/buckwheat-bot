@@ -70,15 +70,16 @@ export default class {
             }
         }
 
-        await Promise.all([
-            CasinoAddService.money(chatId, seller, price),
-            CasinoAddService.money(chatId, buyer, -price),
+        if (seller != buyer) {
+            await Promise.all([
+                CasinoAddService.money(chatId, seller, price),
+                CasinoAddService.money(chatId, buyer, -price),
 
-            CardsService.removeCard(chatId, seller, card),
-            CardsService.addCard(chatId, buyer, card),
-
-            this.delete(id),
-        ])
+                CardsService.removeCard(chatId, seller, card),
+                CardsService.addCard(chatId, buyer, card),
+            ])
+        }
+        await this.delete(id)
 
         return {
             isBought: true,

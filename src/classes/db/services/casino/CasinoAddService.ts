@@ -1,15 +1,20 @@
 import Casino from '../../../../interfaces/schemas/games/Casino'
 import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
 import CasinoRepository from '../../repositories/CasinoRepository'
-import CasinoAccountService from './CasinoAccountService'
 
 type T = Casino
 
 export default class CasinoAddService {
     private static async _add(chatId: number, id: number, key: keyof T, value: number): Promise<number> {
-        const casino = await CasinoAccountService.get(chatId, id)
-        const newValue = casino[key]! + value
-        const newCasino = await CasinoRepository.updateOne(chatId, id, {[key]: isNaN(newValue) ? 0 : newValue})
+        const newCasino = await CasinoRepository.updateOne(
+            chatId, 
+            id, 
+            {
+                $inc: {
+                    [key]: value
+                }
+            }
+        )
         if(!newCasino) return NOT_FOUND_INDEX
 
         return newCasino[key] ?? NOT_FOUND_INDEX
