@@ -1,0 +1,10 @@
+include utils/mixins.pug
+include utils/inventory.pug
+
+- const totalPrice = slot.price * needCount
+- const priceText = `${formatNumber(slot.price)} * ${formatNumber(needCount)} = ${formatNumber(totalPrice)}💰`
+
++item(item)
+|
++param('📍 Цена', priceText)
++param('📍 Кол-во', formatNumber(slot.count))

@@ -1,12 +1,12 @@
 [
     [
         {
-            "text": "Согласиться",
+            "text": "✔️ Согласиться",
             "callback_data": "cubeyes_@"
         },
 
         {
-            "text": "Отказаться",
+            "text": "✖️ Отказаться",
             "callback_data": "cubeno_@"
         }
     ]

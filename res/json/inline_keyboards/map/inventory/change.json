@@ -1,0 +1,39 @@
+{
+    "definition": {
+        "bazaar": {
+            "text": "📊 На рынок",
+            "data": "marketbuychange_{\"c\":0,\"i\":0,\"id\":@{id}}",
+            "notEach": true
+        },
+        "shop": {
+            "text": "🛒 В магазин",
+            "data": "itemchange_{\"c\":0,\"i\":0,\"id\":@{id}}",
+            "notEach": true
+        },
+        "item": {
+            "text": "@",
+            "data": "invshow_@"
+        },
+        "arrow": {
+            "text": "@",
+            "data": "invchange_@"
+        },
+        "pageNav": {
+            "text": "@",
+            "data": "invchange_@"
+        }
+    },
+    "values": [
+        "item",
+        [
+            "bazaar",
+            "shop"
+        ],
+        [
+            "arrow"
+        ],
+        [
+            "pageNav"
+        ]
+    ]
+}

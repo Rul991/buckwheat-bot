@@ -4,6 +4,7 @@ import CubeWinsService from '../classes/db/services/cube/CubeWinsService'
 import ExperienceService from '../classes/db/services/level/ExperienceService'
 import MessagesService from '../classes/db/services/messages/MessagesService'
 import RouletteService from '../classes/db/services/roulette/RouletteService'
+import ChatSettingsService from '../classes/db/services/settings/ChatSettingsService'
 import RankSettingsService from '../classes/db/services/settings/RankSettingsService'
 import UserProfileService from '../classes/db/services/user/UserProfileService'
 import UserRankService from '../classes/db/services/user/UserRankService'
@@ -65,15 +66,19 @@ export default class {
             },
             handleSortedValues: async ({ values, chatId }) => {
                 const settings = await RankSettingsService.getObject(chatId)
+                const isShowRank = await ChatSettingsService.get<'boolean'>(chatId, 'showRankInTop')
+
                 return values.map(({ id, value }) => {
                     const rank = value as number
                     const settingName = `rank-${rank}`
 
                     const rankName = settings[settingName] || SettingUtils.dummyDefault
                     const rankEmoji = RankUtils.getEmojiByRank(rank)
+                    const rankNumber = isShowRank ? `[${rank}]` : ''
+                    
                     return {
                         id,
-                        value: `${rankEmoji} ${rankName}`
+                        value: `${rankEmoji} ${rankName} ${rankNumber}`
                     }
                 })
             }

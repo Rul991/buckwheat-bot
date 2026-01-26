@@ -19,7 +19,7 @@ export default class ExperienceService {
         return levels
             .map(
                 lv => ({
-                    id: lv.id, 
+                    id: lv.id,
                     experience: lv.experience ?? ExperienceUtils.min
                 })
             )
@@ -43,7 +43,7 @@ export default class ExperienceService {
         const currentExperience = await this.get(chatId, id)
         await this.add(chatId, id, added)
 
-        return ExperienceUtils.isNewLevel(currentExperience, added) ? 
+        return ExperienceUtils.isNewLevel(currentExperience, added) ?
             LevelUtils.get(currentExperience + added) :
             null
     }
@@ -54,7 +54,11 @@ export default class ExperienceService {
         )
 
         const getLevelBoost = async (id: number) => (
-            (await InventoryItemService.use(chatId, id, 'levelBoost'))[1]
+            (await InventoryItemService.use({
+                chatId,
+                id,
+                itemId: 'levelBoost'
+            }))[1]
         )
 
         const getLevelDiff = (first: keyof FirstSecond, second: keyof FirstSecond) => (

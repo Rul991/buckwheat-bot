@@ -1,7 +1,7 @@
 {
     "definition": {
         "buy": {
-            "text": "Купить",
+            "text": "🛍 Купить",
             "data": "buy_@{indexNum}_@{idNum}_@{countNum}_@{pageNum}",
             "notEach": true
         },
@@ -10,7 +10,7 @@
             "data": "itemshow_{\"id\":@{idNum},\"p\":@{pageNum},\"i\":@{indexNum},\"cnt\":@}"
         },
         "back": {
-            "text": "Назад",
+            "text": "🔙 Назад",
             "data": "itemchange_{\"id\":@{idNum},\"c\":@{pageNum},\"i\":0}",
             "notEach": true
         },

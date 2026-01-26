@@ -3,11 +3,8 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import { MAX_GREED_BOX } from '../../../../utils/values/consts'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import { MaybeString } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
 import CasinoAddService from '../../../db/services/casino/CasinoAddService'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import ChatSettingsService from '../../../db/services/settings/ChatSettingsService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
@@ -41,7 +38,11 @@ export default class GreedBoxCommand extends BuckwheatCommand {
         const money = other && !isNaN(rawMoney) ? 
             MathUtils.clamp(Math.ceil(rawMoney), 1, MAX_GREED_BOX) : 
             -1
-        const [hasBox] = await InventoryItemService.use(chatId, id, 'greedBox')
+        const [hasBox] = await InventoryItemService.use({
+            chatId, 
+            id, 
+            itemId: 'greedBox'
+        })
 
         if(!hasBox) {
             await MessageUtils.answerMessageFromResource(

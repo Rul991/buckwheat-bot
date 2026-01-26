@@ -43,11 +43,11 @@ export default class extends CallbackButtonAction<Data> {
         if(await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return
 
         const licenseItemId = 'moneyGrindLicense'
-        const hasLicense = await InventoryItemService.has(
+        const hasLicense = await InventoryItemService.has({
             chatId,
             id,
-            licenseItemId
-        )
+            itemId: licenseItemId
+        })
         const hasPremium = await PremiumChatService.isPremium(chatId)
 
         const canCollectMoney = hasLicense && hasPremium

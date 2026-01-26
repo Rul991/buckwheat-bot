@@ -39,10 +39,10 @@ export default class CasinoDice extends BaseDice {
     ): Promise<void> {
         const chatId = await LinkedChatService.getCurrent(ctx, id)
         if (!chatId) return
-        
+
         await CasinoAddService.money(chatId, id, count)
         await (isWin ? CasinoAddService.wins(chatId, id, 1) : CasinoAddService.loses(chatId, id, 1))
-        
+
         const isSendMessage = await this._isSendMessage(ctx, id)
         if (!isSendMessage) return
 
@@ -77,7 +77,11 @@ export default class CasinoDice extends BaseDice {
     ): Promise<void> {
         const chatId = await LinkedChatService.getCurrent(ctx, id)
         if (!chatId) return
-        const [hasBoost] = await InventoryItemService.use(chatId, id, 'manyCasino')
+        const [hasBoost] = await InventoryItemService.use({
+            chatId,
+            id,
+            itemId: 'manyCasino'
+        })
         const boost = hasBoost ? CASINO_PLUS_BOOST : 1
 
         if (value === CasinoDice._jackpotCombination) {
@@ -103,7 +107,11 @@ export default class CasinoDice extends BaseDice {
         }
 
         else {
-            const [hasBoost] = await InventoryItemService.use(chatId, id, 'infinityCasino')
+            const [hasBoost] = await InventoryItemService.use({
+                chatId,
+                id,
+                itemId: 'infinityCasino'
+            })
             const boost = hasBoost ? 0 : 1
 
             await this._sendMessageAndUpdateCasino(

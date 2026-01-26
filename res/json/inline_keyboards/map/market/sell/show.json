@@ -1,0 +1,30 @@
+{
+    "definition": {
+        "do": {
+            "text": "💰 Продать",
+            "data": "marketsell_{\"id\":@{id},\"count\":@{count}}_@{itemId}",
+            "notEach": true
+        },
+        "count": {
+            "text": "@",
+            "data": "marketsellcount_@"
+        },
+        "back": {
+            "text": "🔙 Назад",
+            "data": "invshow_{\"id\":@{id},\"page\":0}_@{itemId}",
+            "notEach": true
+        },
+        "countTitle": {
+            "text": "Количество:",
+            "data": "counttitle"
+        }
+    },
+    
+    "values": 
+    [
+        "countTitle",
+        ["count"],
+        "do",
+        "back"
+    ]
+}

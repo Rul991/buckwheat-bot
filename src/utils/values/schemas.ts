@@ -1,4 +1,4 @@
-import { any, boolean, literal, number, object, record, string, tuple, ZodLiteral, ZodType } from 'zod'
+import { any, boolean, int, literal, number, object, record, string, tuple, ZodLiteral, ZodType } from 'zod'
 import Character from '../../interfaces/duel/Character'
 import Characteristics from '../../interfaces/duel/Characteristics'
 import SimpleCommand from '../../interfaces/other/SimpleComand'
@@ -13,6 +13,9 @@ import SkillExecute from '../../interfaces/other/SkillExecute'
 import Setting from '../../interfaces/other/Setting'
 import ClassUtils from '../ClassUtils'
 import RankUtils from '../RankUtils'
+import MarketData from '../../interfaces/callback-button-data/MarketData'
+import MarketSlot from '../../interfaces/schemas/market/MarketSlot'
+import { MAX_MARKET_PRICE, MIN_MARKET_PRICE } from './consts'
 
 export const simpleCommandSchema: ZodType<SimpleCommand> = object({
     name: string(),
@@ -245,3 +248,9 @@ export const ranksSchema = record(
         .min(RankUtils.min)
         .max(RankUtils.max)
 )
+
+export const marketDataSchema: ZodType<MarketData> = tinyCurrentIncreaseIdSchema
+    .and(object({
+        id: number(),
+        itemId: string().optional()
+    }))

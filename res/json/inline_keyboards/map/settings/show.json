@@ -5,7 +5,7 @@
             "data": "set_@"
         },
         "back": {
-            "text": "Назад",
+            "text": "🔙 Назад",
             "data": "setch_{\"c\":@{page},\"i\":1,\"id\":@{id},\"t\":@{type}}",
             "notEach": true
         }

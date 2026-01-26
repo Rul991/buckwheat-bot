@@ -1,0 +1,8 @@
+[
+    [
+        {
+            "text": "🛍 На рынок",
+            "callback_data": "marketbuychange_{\"c\":@{page},\"i\":0,\"id\":@{id}}_@{itemId}"
+        }
+    ]
+]

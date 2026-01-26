@@ -1,19 +1,19 @@
 [
     [
         {
-            "text": "Использовать",
+            "text": "✴️ Использовать",
             "callback_data": "skilluse_@{skill}_@{duel}"
         },
 
         {
-            "text": "Назад",
+            "text": "🔙 Назад",
             "callback_data": "duelskills_@{duel}"
         }
     ],
 
     [
         {
-            "text": "Что умеет?",
+            "text": "❔ Что умеет?",
             "callback_data": "salert_@{alert}_@{skill}"
         }
     ]

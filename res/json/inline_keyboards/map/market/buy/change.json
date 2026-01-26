@@ -1,0 +1,29 @@
+{
+    "definition": {
+        "inventory": {
+            "text": "📦 В инвентарь",
+            "data": "@{toInventory}",
+            "notEach": true
+        },
+        "slot": {
+            "text": "@",
+            "data": "marketbuyshow_@"
+        },
+        "arrow": {
+            "text": "@",
+            "data": "marketbuychange_@_@{itemId}"
+        },
+        "pageNav": {
+            "text": "@",
+            "data": "marketbuychange_@_@{itemId}"
+        }
+    },
+    
+    "values": 
+    [
+        "slot",
+        "inventory",
+        ["arrow"],
+        ["pageNav"]
+    ]
+}

@@ -215,3 +215,8 @@ export const CALLBACK_DATA_MAX_SIZE = 64
 
 export const MIN_RANK_NAME_LENGTH = 1
 export const MAX_RANK_NAME_LENGTH = 32
+
+export const MIN_MARKET_PRICE = 0
+export const MAX_MARKET_PRICE = MAX_CARD_PRICE
+
+export const MAX_COUNT_BUTTONS_LENGTH = 18

@@ -1,7 +1,7 @@
 [
     [
         {
-            "text": "Назад",
+            "text": "🔙 Назад",
             "callback_data": "duelfight_@"
         }
     ]

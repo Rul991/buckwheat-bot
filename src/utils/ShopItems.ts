@@ -1,7 +1,7 @@
 import InventoryItemService from '../classes/db/services/items/InventoryItemService'
-import { DEFAULT_DESCRIPTION, DEFAULT_ITEMNAME, DEFAULT_MAX_COUNT, DEFAULT_PREMIUM_DISCOUNT, DEFAULT_TOTAL_COUNT, DEFAULT_TOTAL_COUNT_MODE, FOREVER } from './values/consts'
+import { DEFAULT_DESCRIPTION, DEFAULT_ITEMNAME, DEFAULT_MAX_COUNT, DEFAULT_PREMIUM_DISCOUNT, DEFAULT_TOTAL_COUNT, DEFAULT_TOTAL_COUNT_MODE, FOREVER, MAX_COUNT_BUTTONS_LENGTH } from './values/consts'
 import MessageUtils from './MessageUtils'
-import { ItemCallbackOptions, ShopItem, ShopItemWithLength, JsonShopItem, ShopItemDescription, ShopMessageOptions, AsyncOrSync } from './values/types/types'
+import { ItemCallbackOptions, ShopItem, ShopItemWithLength, JsonShopItem, ShopItemDescription, ShopMessageOptions } from './values/types/types'
 import ContextUtils from './ContextUtils'
 import FileUtils from './FileUtils'
 import LevelService from '../classes/db/services/level/LevelService'
@@ -14,6 +14,10 @@ import CasinoGetService from '../classes/db/services/casino/CasinoGetService'
 import AdminUtils from './AdminUtils'
 import ChatSettingsService from '../classes/db/services/settings/ChatSettingsService'
 import PremiumChatService from '../classes/db/services/chat/PremiumChatService'
+import ArrayUtils from './ArrayUtils'
+import UserClassService from '../classes/db/services/user/UserClassService'
+import ExperienceService from '../classes/db/services/level/ExperienceService'
+import ExperienceUtils from './level/ExperienceUtils'
 
 type ItemDescriptionKey = string
 
@@ -25,19 +29,19 @@ type HasEnoughItemsOptions = {
 }
 
 const buyItem = async (
-    itemId: string, 
+    itemId: string,
     {
         chatId,
         id,
         count
     }: ItemCallbackOptions
 ) => {
-    const [isBought] = await InventoryItemService.add(
+    const [isBought] = await InventoryItemService.add({
         chatId,
         id,
         itemId,
         count
-    )
+    })
 
     return isBought
 }
@@ -50,12 +54,12 @@ const buyCard = async ({
 }: ItemCallbackOptions & { cardCount: number }) => {
     const totalCount = cardCount * count
 
-    const [isBought] = await InventoryItemService.add(
+    const [isBought] = await InventoryItemService.add({
         chatId,
         id,
-        'cardBox',
-        totalCount
-    )
+        itemId: 'cardBox',
+        count: totalCount
+    })
     return isBought
 }
 
@@ -80,12 +84,12 @@ export default class ShopItems {
     private static _itemDescriptions: ShopItemDescription[] = [
         {
             execute: async ({ ctx, count: boughtCount, chatId, id }) => {
-                const [_isBought, count] = await InventoryItemService.add(
+                const [_isBought, count] = await InventoryItemService.add({
                     chatId,
                     id,
-                    'cookie',
-                    boughtCount
-                )
+                    itemId: 'cookie',
+                    count: boughtCount
+                })
 
                 await ContextUtils.showCallbackMessage(
                     ctx,
@@ -106,7 +110,11 @@ export default class ShopItems {
 
         {
             execute: async ({ ctx, chatId, id }) => {
-                await InventoryItemService.add(chatId, id, 'workUp')
+                await InventoryItemService.add({
+                    chatId,
+                    id,
+                    itemId: 'workUp'
+                })
                 await ContextUtils.showCallbackMessageFromFile(
                     ctx,
                     'text/commands/items/work/workUp.pug'
@@ -119,7 +127,11 @@ export default class ShopItems {
 
         {
             execute: async ({ ctx, chatId, id }) => {
-                await InventoryItemService.add(chatId, id, 'workCatalog')
+                await InventoryItemService.add({
+                    chatId,
+                    id,
+                    itemId: 'workCatalog'
+                })
                 await ContextUtils.showCallbackMessageFromFile(
                     ctx,
                     'text/commands/items/work/workCatalog.pug'
@@ -132,7 +144,11 @@ export default class ShopItems {
 
         {
             execute: async ({ ctx, chatId, id }) => {
-                const [isUpdated] = await InventoryItemService.add(chatId, id, 'manyCasino')
+                const [isUpdated] = await InventoryItemService.add({
+                    chatId,
+                    id,
+                    itemId: 'manyCasino'
+                })
                 await ContextUtils.showCallbackMessageFromFile(
                     ctx,
                     'text/commands/items/casino/many.pug'
@@ -145,7 +161,11 @@ export default class ShopItems {
 
         {
             execute: async ({ ctx, chatId, id }) => {
-                const [isUpdated] = await InventoryItemService.add(chatId, id, 'infinityCasino')
+                const [isUpdated] = await InventoryItemService.add({
+                    chatId,
+                    id,
+                    itemId: 'infinityCasino'
+                })
 
                 await ContextUtils.showCallbackMessageFromFile(
                     ctx,
@@ -187,7 +207,7 @@ export default class ShopItems {
         },
 
         {
-            execute: async ({ ctx, id, user, item }) => {
+            execute: async ({ ctx, chatId, id, user, item }) => {
                 const isBanned = await AdminUtils.ban(ctx, id, FOREVER)
 
                 await MessageUtils.answerMessageFromResource(
@@ -198,7 +218,9 @@ export default class ShopItems {
                             isBanned,
                             user,
                             item: item.name
-                        }
+                        },
+                        chatId,
+                        isReply: false
                     }
                 )
 
@@ -215,7 +237,12 @@ export default class ShopItems {
                 id,
                 chatId
             }) => {
-                const [_, boostCount] = await InventoryItemService.add(chatId, id, 'levelBoost', count)
+                const [_, boostCount] = await InventoryItemService.add({
+                    chatId,
+                    id,
+                    itemId: 'levelBoost',
+                    count
+                })
 
                 await ContextUtils.showCallbackMessage(
                     ctx,
@@ -248,7 +275,12 @@ export default class ShopItems {
                     return false
                 }
 
-                await InventoryItemService.add(chatId, id, itemId, count)
+                await InventoryItemService.add({
+                    chatId,
+                    id,
+                    itemId,
+                    count
+                })
 
                 await MessageUtils.answerMessageFromResource(
                     ctx,
@@ -257,7 +289,9 @@ export default class ShopItems {
                         changeValues: {
                             user,
                             precent: count
-                        }
+                        },
+                        chatId,
+                        isReply: false
                     }
                 )
 
@@ -283,13 +317,19 @@ export default class ShopItems {
 
         {
             execute: async ({ ctx, user, chatId, id }) => {
-                const [isUpdated] = await InventoryItemService.add(chatId, id, 'greedBox')
+                const [isUpdated] = await InventoryItemService.add({
+                    chatId,
+                    id,
+                    itemId: 'greedBox'
+                })
 
                 await MessageUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/items/greedBox/greedBox.pug',
                     {
-                        changeValues: user
+                        changeValues: user,
+                        chatId,
+                        isReply: false
                     }
                 )
 
@@ -300,7 +340,11 @@ export default class ShopItems {
 
         {
             execute: async ({ ctx, id, chatId }) => {
-                const [isBought] = await InventoryItemService.add(chatId, id, 'effectBook')
+                const [isBought] = await InventoryItemService.add({
+                    chatId,
+                    id,
+                    itemId: 'effectBook'
+                })
                 await ContextUtils.showCallbackMessageFromFile(
                     ctx,
                     'text/commands/items/effectBook/bought.pug',
@@ -360,11 +404,35 @@ export default class ShopItems {
                     options
                 )
             }
+        },
+
+        {
+            filename: "classReset",
+            execute: async ({ chatId, id }) => {
+                await Promise.allSettled([
+                    UserClassService.update(
+                        chatId,
+                        id,
+                        'unknown'
+                    ),
+                    ExperienceService.set(
+                            chatId,
+                            id,
+                            ExperienceUtils.min
+                        )
+                ])
+
+                return true
+            }
         }
 
         // {
         //     execute: async ({ ctx, id, chatId }) => {
-        //         const [hasGreedBox] = await InventoryItemService.use(chatId, id, 'greedBox')
+        //         const [hasGreedBox] = await InventoryItemService.use({
+        //              chatId,
+        //              id,
+        //              itemId: 'greedBox'
+        //         })
         //         if (hasGreedBox) {
         //             await ContextUtils.showCallbackMessageFromFile(
         //                 ctx,
@@ -490,21 +558,22 @@ export default class ShopItems {
         )
     }
 
-    static async getRestAndCurrent(chatId: number, id: number, item: ShopItem) {
+    static async getRestAndCurrentCount(chatId: number, id: number, item: ShopItem) {
         const minValue = 0
 
         const { totalCount, itemName: itemId } = item
         const isChatMode = this.isChatMode(item)
 
+        const userCount = (await InventoryItemService.get(chatId, id, itemId))?.count ?? minValue
         const count = isChatMode ?
             await InventoryItemService.getTotalCount(chatId, itemId) :
-            (await InventoryItemService.get(chatId, id, itemId))?.count ?? minValue
+            userCount
 
         return {
             rest: item.totalCount === DEFAULT_TOTAL_COUNT ?
                 Infinity :
                 Math.max(totalCount - count, minValue),
-            current: count
+            current: userCount
         }
     }
 
@@ -538,7 +607,7 @@ export default class ShopItems {
     }: HasEnoughItemsOptions) {
         const {
             rest
-        } = await this.getRestAndCurrent(chatId, id, item)
+        } = await this.getRestAndCurrentCount(chatId, id, item)
         return rest >= count
     }
 
@@ -566,7 +635,7 @@ export default class ShopItems {
         const item = await ShopItems.get(index)
         if (!item) return null
 
-        const { rest, current } = await ShopItems.getRestAndCurrent(chatId, userId, item)
+        const { rest, current } = await ShopItems.getRestAndCurrentCount(chatId, userId, item)
         const isRestInfinity = !isFinite(rest)
 
         if (isRestInfinity && !updateIfInfinity) {
@@ -580,17 +649,14 @@ export default class ShopItems {
         const isChatMode = ShopItems.isChatMode(item)
         const balance = await CasinoGetService.money(chatId, userId)
 
-        const rawCounts = [
-            1, 2, 5, 10, 20, 50,
-            100, 200, 500, 1000,
-            2000, 5000
-        ].sort((a, b) => a - b)
+        const maxLength = MAX_COUNT_BUTTONS_LENGTH
+        const maxValue = Math.min(maxCount, rest)
 
-        const counts = rawCounts
-            .filter(v => {
-                return v != count &&
-                    v <= maxCount
-            })
+        const counts = ArrayUtils.generateMultipliedSequence({
+            maxLength,
+            maxValue,
+            avoidNumber: count
+        })
 
         return {
             text: await FileUtils.readPugFromResource(

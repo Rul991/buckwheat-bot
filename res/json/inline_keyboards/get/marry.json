@@ -1,12 +1,12 @@
 [
     [
         {
-            "text": "Согласиться",
+            "text": "✔️ Согласиться",
             "callback_data": "marryyes_@"
         },
 
         {
-            "text": "Отказаться",
+            "text": "✖️ Отказаться",
             "callback_data": "marryno_@"
         }
     ]

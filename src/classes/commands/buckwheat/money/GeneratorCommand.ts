@@ -26,11 +26,11 @@ export default class extends BuckwheatCommand {
         } = options
 
         const itemId = 'moneyGrindLicense'
-        const [hasLicense] = await InventoryItemService.use(
+        const [hasLicense] = await InventoryItemService.use({
             chatId,
             id,
             itemId
-        )
+        })
 
         if (!hasLicense) {
             await MessageUtils.answerMessageFromResource(

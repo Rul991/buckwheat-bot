@@ -1,7 +1,7 @@
 import InventoryItem from '../interfaces/schemas/items/InventoryItem'
 import { INFINITY_SYMB } from './values/consts'
 import Logging from './Logging'
-import { InventoryItemDescription, InventoryItemType } from './values/types/types'
+import { InventoryItemDescription, InventoryItemType, ShowableItem } from './values/types/types'
 import FileUtils from './FileUtils'
 import StringUtils from './StringUtils'
 import ObjectValidator from './ObjectValidator'
@@ -17,8 +17,8 @@ export default class InventoryItemsUtils {
     }
 
     static async setup(): Promise<boolean> {
-        const items = await FileUtils.readJsonFromResource<ItemsRecord>('json/other/item_descriptions.json')
-        if(!items) {
+        const items = await FileUtils.readJsonFromResource<ItemsRecord>('json/other/item-descriptions.json')
+        if (!items) {
             Logging.error('cant setup inventory item descriptions')
             return false
         }
@@ -26,7 +26,7 @@ export default class InventoryItemsUtils {
         for (const key in items) {
             const item = items[key]
 
-            if(this._isValid(item)) {
+            if (this._isValid(item)) {
                 this._items[key] = item
             }
         }
@@ -36,14 +36,14 @@ export default class InventoryItemsUtils {
 
     static getCountString(count: number, type?: InventoryItemType): string {
         let result: string = 'x'
-        
+
         const hasItem = count > 0
         const countString = StringUtils.toFormattedNumber(count)
 
-        if(!(type && hasItem)) {
+        if (!(type && hasItem)) {
             result += `${countString}`
         }
-        else if(type == 'oneInfinity') {
+        else if (type == 'oneInfinity') {
             result += INFINITY_SYMB
         }
         else {
@@ -63,22 +63,37 @@ export default class InventoryItemsUtils {
         let foundItem = this.find(items, itemId)
         let newItem: InventoryItem[]
 
-        if(foundItem) {
+        if (foundItem) {
             newItem = []
             foundItem.count = (foundItem.count ?? 0) + addValue
         }
         else {
-            newItem = [{itemId: itemId, count: addValue}]
+            newItem = [{ itemId: itemId, count: addValue }]
         }
 
         const result = [...items, ...newItem]
-            .map(({count, itemId}) => ({count, itemId}))
-        
-        Logging.system(`(${itemId}) new items: `, result)
+            .map(({ count, itemId }) => ({ count, itemId }))
+
+        Logging.system(`(${itemId}) new items: `, { newItem, result })
         return result
     }
 
+    static getKeys(): string[] {
+        return Object.keys(this._items)
+    }
+
     static getItemDescription(itemId: string): InventoryItemDescription {
-        return this._items[itemId] ?? {name: 'Предмет', type: 'consumable'}
+        return this._items[itemId] ?? this.getDummyShowableItem()
+    }
+
+    static getDummyShowableItem(): ShowableItem {
+        return {
+            name: 'Предмет',
+            type: 'consumable',
+            description: '',
+            count: 0,
+            countText: 'x0',
+            itemId: ''
+        }
     }
 }

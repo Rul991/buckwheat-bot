@@ -22,11 +22,11 @@ export default class CookieCommand extends BuckwheatCommand {
     }
 
     async execute({ ctx, chatId, id: userId, replyFrom }: BuckwheatCommandOptions): Promise<void> {
-        const [hasCookie] = await InventoryItemService.use(
-            chatId,
-            userId,
-            'cookie'
-        )
+        const [hasCookie] = await InventoryItemService.use({
+            chatId, 
+            id: userId, 
+            itemId: 'cookie'
+        })
 
         if (!hasCookie) {
             await MessageUtils.answerMessageFromResource(
@@ -35,14 +35,15 @@ export default class CookieCommand extends BuckwheatCommand {
             )
             return
         }
+        const isSendMessage = await GrindSettingService.isSendMessage(ctx, userId)
 
         if (replyFrom) {
             const replyId = replyFrom.id
-            await InventoryItemService.add(
+            await InventoryItemService.add({
                 chatId,
-                replyId,
-                'cookie'
-            )
+                id: replyId,
+                itemId: 'cookie'
+            })
 
             await MessageUtils.answerMessageFromResource(
                 ctx,
@@ -53,6 +54,7 @@ export default class CookieCommand extends BuckwheatCommand {
             )
         }
         else if (RandomUtils.chance(BAD_COOKIE_CHANCE)) {
+            if(!isSendMessage) return
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/cookie/bad.pug'
@@ -60,8 +62,6 @@ export default class CookieCommand extends BuckwheatCommand {
         }
         else {
             await WorkTimeService.add(chatId, userId, COOKIE_WORK_TIME)
-            
-            const isSendMessage = await GrindSettingService.isSendMessage(ctx, userId)
             if(!isSendMessage) return
 
             await MessageUtils.answerMessageFromResource(

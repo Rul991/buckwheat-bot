@@ -6,7 +6,7 @@
         },
         "back": {
             "notEach": true,
-            "text": "Назад",
+            "text": "🔙 Назад",
             "data": "duelfight_@{duel}"
         }
     },

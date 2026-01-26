@@ -157,5 +157,21 @@
             "max": 900000
         },
         "default": 3000
+    },
+
+    "wrongCommandReact": {
+        "title": "Не отвечать на неправильные команды?",
+        "description": "Вместо отправления сообщения о том, что команды не существует, отправлять на подобное сообщение реакцию?",
+        "type": "boolean",
+        "properties": {},
+        "default": false
+    },
+
+    "showRankInTop": {
+        "title": "Показывать номер ранга в иерархии?",
+        "description": "Показывать номер ранга в топе ''Иерархия''?",
+        "type": "boolean",
+        "properties": {},
+        "default": true
     }
 }

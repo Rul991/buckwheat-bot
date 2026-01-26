@@ -25,7 +25,7 @@
 
     [
         {
-            "text": "Удалить",
+            "text": "🗑 Удалить",
             "callback_data": "deleteidea_{\"increase\": 0}_@"
         }
     ]

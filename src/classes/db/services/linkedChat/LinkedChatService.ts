@@ -28,4 +28,8 @@ export default class LinkedChatService {
 
         return linkedChat == 0 ? null : linkedChat
     }
+
+    static async getAll(): Promise<LinkedChat[]> {
+        return await LinkedChatRepository.findMany()
+    }
 }

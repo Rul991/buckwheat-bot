@@ -18,7 +18,11 @@ export default class extends BuckwheatCommand {
 
     async execute({ ctx, chatId, id }: BuckwheatCommandOptions): Promise<void> {
         const itemId = 'effectBook'
-        const [has] = await InventoryItemService.use(chatId, id, itemId)
+        const [has] = await InventoryItemService.use({
+            chatId, 
+            id, 
+            itemId
+        })
         const filename = has ? 
             'text/commands/effectBook/start.pug' : 
             'text/commands/effectBook/hasnt.pug'

@@ -9,6 +9,7 @@ import Setting from '../../../interfaces/other/Setting'
 import SceneAction from '../../../classes/actions/scenes/SceneAction'
 import { CallbackButtonContext, ContextData, MyChatMemberContext, TextContext } from './contexts'
 import { BuckwheatCommandOptions } from './action-options'
+import CallbackButtonAction from '../../../classes/callback-button/CallbackButtonAction'
 
 export type MaybeString = string | undefined
 export type CommandStrings = [string, MaybeString, MaybeString]
@@ -45,6 +46,12 @@ export type InventoryItemDescription = {
         rarity: number
     }
 }
+export type ShowableItem = InventoryItemDescription & {
+    itemId: string
+    countText: string
+    count: number
+}
+
 export type InventoryItemType = 'consumable' | 'oneInfinity' | 'manyInfinity'
 export type AsyncOrSync<T = void> = Promise<T> | T
 
@@ -66,7 +73,7 @@ export type SubCommandExecuteCallbackObject = {
     execute: (options: BuckwheatCommandOptions & { data: string }) => Promise<boolean>
 }
 
-export type FullSubCommandObject = SubCommandObject & SubCommandExecuteCallbackObject 
+export type FullSubCommandObject = SubCommandObject & SubCommandExecuteCallbackObject
 
 export type TopLevelObject = { id: number, level: number }
 export type ExperienceWithId = {
@@ -381,3 +388,5 @@ export type GetSettingForManyResult<K extends SettingType> = {
 
 export type BooleanNumberString = boolean | number | string
 export type ChatMemberStatus = MyChatMemberContext['myChatMember']['old_chat_member']['status']
+export type DataFromCallbackButton<A> =
+    A extends CallbackButtonAction<infer U> ? U : never

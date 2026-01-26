@@ -1,0 +1,30 @@
+{
+    "definition": {
+        "do": {
+            "text": "🛍 Купить",
+            "data": "marketbuy_{\"id\":@{id},\"page\":@{page},\"count\":@{count},\"slot\":@{slot}}_@{itemId}",
+            "notEach": true
+        },
+        "count": {
+            "text": "@",
+            "data": "marketbuyshow_@"
+        },
+        "back": {
+            "text": "🔙 Назад",
+            "data": "marketbuychange_{\"id\":@{id},\"c\":@{page},\"i\":0}_@{itemId}",
+            "notEach": true
+        },
+        "countTitle": {
+            "text": "Количество:",
+            "data": "counttitle"
+        }
+    },
+    
+    "values": 
+    [
+        "countTitle",
+        ["count"],
+        "do",
+        "back"
+    ]
+}

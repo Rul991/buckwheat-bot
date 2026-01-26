@@ -44,11 +44,11 @@ export default class extends ButtonScrollerAction<Data> {
         } = generator
 
         const deviceItemId = 'moneyGrindDevice'
-        const hasDevices = await InventoryItemService.has(
+        const hasDevices = await InventoryItemService.has({
             chatId,
             id,
-            deviceItemId
-        )
+            itemId: deviceItemId
+        })
         const hasAdd = hasDevices && generators.length < GENERATOR_MAX_COUNT
         const page = this._getNewPage(data)
 

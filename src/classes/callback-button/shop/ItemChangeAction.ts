@@ -47,8 +47,11 @@ export default class ItemChangeAction extends ButtonScrollerAction<ShopItem, Dat
                             })
                         }
                     })
+                },
+                globals: {
+                    id: JSON.stringify(id)
                 }
-            }
+            },
         }
     }
 }

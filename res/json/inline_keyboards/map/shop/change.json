@@ -1,5 +1,10 @@
 {
     "definition": {
+        "inventory": {
+            "text": "📦 В инвентарь",
+            "data": "invchange_{\"c\":0,\"i\":0,\"id\":@{id}}",
+            "notEach": true
+        },
         "item": {
             "text": "@",
             "data": "itemshow_@"
@@ -17,6 +22,7 @@
     "values": 
     [
         "item",
+        "inventory",
         ["arrow"],
         ["pageNav"]
     ]

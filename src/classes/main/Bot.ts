@@ -1,27 +1,19 @@
 import { Telegraf } from 'telegraf'
 import { session } from 'telegraf/session'
 import Logging from '../../utils/Logging'
-import { CHAT_ID, DOMAIN, HOOK_PORT, MILLISECONDS_IN_SECOND, MODE, SECRET_PATH, HTTP_PROXY } from '../../utils/values/consts'
+import { CHAT_ID, DOMAIN, HOOK_PORT, MODE, SECRET_PATH, HTTP_PROXY } from '../../utils/values/consts'
 import FileUtils from '../../utils/FileUtils'
 import BaseHandler from './handlers/BaseHandler'
 import MessageUtils from '../../utils/MessageUtils'
 import express from 'express'
 import { MyTelegraf } from '../../utils/values/types/types'
-import PQueue from 'p-queue'
 import { HttpsProxyAgent } from 'https-proxy-agent'
+import QueueUtils from '../../utils/ratelimit/QueueUtils'
+import RateLimitUtils from '../../utils/ratelimit/RateLimitUtils'
 
 export default class Bot {
     private _bot: MyTelegraf
     private _handlers: BaseHandler<any, any>[]
-
-    private readonly _maxRequests: number = 30
-    private readonly _concurrency: number = this._maxRequests
-    private readonly _queue = new PQueue({
-        concurrency: this._concurrency,
-        interval: MILLISECONDS_IN_SECOND / this._maxRequests,
-        intervalCap: this._maxRequests,
-        autoStart: true
-    })
 
     constructor (token: string) {
         this._bot = new Telegraf(
@@ -67,7 +59,6 @@ export default class Bot {
         await this._bot.launch(
             {
                 dropPendingUpdates: true,
-                
             },
             callback
         )
@@ -75,10 +66,16 @@ export default class Bot {
 
     async launch(isWebHook = false, callback = async () => { }): Promise<void> {
         this._bot.use(session())
-        this._bot.use(async (_ctx, next) => {
-            await this._queue.add(async _options => {
-                await next()
+        this._bot.use(async (ctx, next) => {
+            await QueueUtils.add(async () => {
+                return await next()
             })
+        })
+        this._bot.use(async (ctx, next) => {
+            const id = ctx.from?.id ?? 0
+            if (MODE == 'prod' && RateLimitUtils.isLimit(id)) return
+
+            return await next()
         })
 
         for (const handler of this._handlers) {

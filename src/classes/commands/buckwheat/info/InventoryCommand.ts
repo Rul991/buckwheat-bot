@@ -2,6 +2,7 @@ import InventoryItemsUtils from '../../../../utils/InventoryItemsUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
+import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class InventoryCommand extends BuckwheatCommand {
@@ -17,23 +18,17 @@ export default class InventoryCommand extends BuckwheatCommand {
         this._description = 'показываю все доступные тебе предметы'
     }
 
-    async execute({ ctx, chatId, id }: BuckwheatCommandOptions): Promise<void> {
-        const items = (await InventoryItemService.getAll(chatId, id) ?? [])
-            .map(v => {
-                const { name, type } = InventoryItemsUtils.getItemDescription(v.itemId)
-                return {
-                    name,
-                    count: InventoryItemsUtils.getCountString(v.count ?? 0, type)
-                }
-            })
-
+    async execute({ ctx, id }: BuckwheatCommandOptions): Promise<void> {
         await MessageUtils.answerMessageFromResource(
             ctx,
-            'text/commands/inventory.pug',
+            'text/commands/inventory/start.pug',
             {
-                changeValues: {
-                    items
-                }
+                inlineKeyboard: await InlineKeyboardManager.get(
+                    'inventory/start',
+                    {
+                        id
+                    }
+                )
             }
         )
     }

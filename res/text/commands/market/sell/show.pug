@@ -1,0 +1,7 @@
+include utils/mixins.pug
+include utils/inventory.pug
+
++item(item)
+|
++param('📍 Кол-во в инвентаре', formatNumber(item.count))
++param('📍 Кол-во на продажу', formatNumber(needCount))

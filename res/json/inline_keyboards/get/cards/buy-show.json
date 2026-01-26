@@ -1,14 +1,14 @@
 [
     [
         {
-            "text": "Купить",
+            "text": "🛍 Купить",
             "callback_data": "cbuy_{\"s\":@{shopId},\"id\":@{id},\"p\":@{page}}"
         }
     ],
 
     [
         {
-            "text": "Назад",
+            "text": "🔙 Назад",
             "callback_data": "cbych_{\"c\":@{page},\"i\":0,\"id\":@{id}}"
         }
     ]

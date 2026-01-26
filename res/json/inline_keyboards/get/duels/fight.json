@@ -1,28 +1,28 @@
 [
     [
         {
-            "text": "Атаковать",
+            "text": "⚔️ Атаковать",
             "callback_data": "skilluse_{\"name\":\"attack\"}_@{duel}"
         }
     ],
 
     [
         {
-            "text": "Эффекты",
+            "text": "✴️ Эффекты",
             "callback_data": "dueleffects_@{duel}"
         }
     ],
 
     [
         {
-            "text": "Навыки",
+            "text": "💪 Навыки",
             "callback_data": "duelskills_@{duel}"
         }
     ],
 
     [
         {
-            "text": "Сбежать",
+            "text": "👋 Сбежать",
             "callback_data": "duelaway_@{away}"
         }
     ]

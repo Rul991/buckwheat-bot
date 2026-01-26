@@ -1,0 +1,22 @@
+[
+    [
+        {
+            "text": "🛍 Купить еще",
+            "callback_data": "marketbuychange_{\"c\":0,\"i\":0,\"id\":@{id},\"itemId\":@{itemId}}"
+        }
+    ],
+    
+    [
+        {
+            "text": "💰 Продать",
+            "callback_data": "marketsellcount_{\"id\":@{id},\"itemId\":@{itemId}}"
+        }
+    ],
+
+    [
+        {
+            "text": "🔙 Назад",
+            "callback_data": "invchange_{\"c\":@{page},\"i\":0,\"id\":@{id}}"
+        }
+    ]
+]

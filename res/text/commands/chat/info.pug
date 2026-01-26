@@ -1,11 +1,13 @@
+include utils/functions.pug
+
 mixin text(title, value)
     | 📍 #{title}: 
     b #{value}
     |
     |
 
-mixin mark(title, bool)
-    +text(title, bool ? '✅' : '🚫')
+mixin mark(title, value)
+    +text(title, bool(value))
 
 b 📌 Информация о чате:
 |

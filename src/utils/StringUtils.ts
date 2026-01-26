@@ -107,13 +107,13 @@ export default class StringUtils {
         return `${this.getProgress(progress)} (${current} / ${max})`
     }
 
-    static getNumberFromString(str: string): number {
+    static getNumberFromString(str: string, defaultValue: number = 0): number {
         const rawNumber = +str
             .replaceAll(',', '.')
             .replaceAll(' ', '')
 
         if (isNaN(rawNumber)) {
-            return 0
+            return defaultValue
         }
         else {
             return rawNumber

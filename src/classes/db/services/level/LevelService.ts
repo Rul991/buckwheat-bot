@@ -1,7 +1,6 @@
 import Level from '../../../../interfaces/schemas/user/Level'
 import ExperienceUtils from '../../../../utils/level/ExperienceUtils'
 import LevelUtils from '../../../../utils/level/LevelUtils'
-import { TopLevelObject } from '../../../../utils/values/types/types'
 import LevelRepository from '../../repositories/LevelRepository'
 
 export default class LevelService {

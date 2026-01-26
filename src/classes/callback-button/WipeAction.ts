@@ -36,7 +36,11 @@ export default class extends CallbackButtonAction<Data> {
         const chatItemId = 'newGame'
 
         if (has) {
-            await InventoryItemService.add(chatId, chatId, chatItemId)
+            await InventoryItemService.add({
+                chatId,
+                id: chatId,
+                itemId: chatItemId
+            })
         }
     }
 

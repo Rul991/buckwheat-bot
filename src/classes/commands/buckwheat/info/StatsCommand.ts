@@ -1,13 +1,14 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import ChatService from '../../../db/services/chat/ChatService'
+import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import UserProfileService from '../../../db/services/user/UserProfileService'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class StatsCommand extends BuckwheatCommand {
     protected _settingId: string = 'stats'
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'статы'
         this._description = 'показываю население энвелла и количество их бесед'
@@ -18,8 +19,9 @@ export default class StatsCommand extends BuckwheatCommand {
     }
 
     async execute({ ctx }: BuckwheatCommandOptions): Promise<void> {
-        const {total, premiums} = await ChatService.getStats()
-        const {uniqueUsers, users} = await UserProfileService.getStats()
+        const { total, premiums } = await ChatService.getStats()
+        const { uniqueUsers, users } = await UserProfileService.getStats()
+        const linkedUsers = (await LinkedChatService.getAll()).length
 
         await MessageUtils.answerMessageFromResource(
             ctx,
@@ -30,6 +32,7 @@ export default class StatsCommand extends BuckwheatCommand {
                     premiums,
                     uniqueUsers: uniqueUsers.length,
                     users: users.length,
+                    linkedUsers
                 }
             }
         )

@@ -1,0 +1,18 @@
+include ./mixins.pug
+include ./functions.pug
+
+mixin item(item)
+    - 
+        const typeName = item.type == 'consumable' ?
+            'Одноразовый' :
+            'Многоразовый'
+
+    b 📦 #{item.name}
+    |
+    |
+    blockquote #{item.description || '...'}
+    |
+    |
+    |
+    +parameter('Тип', typeName)
+    +parameter('Материал', bool(item.material))

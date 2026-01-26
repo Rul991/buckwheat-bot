@@ -124,7 +124,11 @@ export default class extends CallbackButtonAction<Data> {
         } = data
         if (await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return
 
-        const [isUsed] = await InventoryItemService.use(chatId, id, 'cardBox')
+        const [isUsed] = await InventoryItemService.use({
+            chatId, 
+            id, 
+            itemId: 'cardBox'
+        })
 
         if (isUsed) {
             await this._giveCard({ ctx, chatId, id, data })

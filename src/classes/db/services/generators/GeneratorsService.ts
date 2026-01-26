@@ -60,12 +60,12 @@ export default class {
             rawCount
         )
         
-        const [grindDeviceUsed] = await InventoryItemService.use(
+        const [grindDeviceUsed] = await InventoryItemService.use({
             chatId,
             id,
             itemId,
             count
-        )
+        })
 
         if (!grindDeviceUsed) {
             return {

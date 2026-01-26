@@ -58,7 +58,11 @@ export default class WorkCommand extends BuckwheatCommand {
 
     private async _getBoosts(chatId: number, id: number): Promise<Boost[]> {
         const isPremium = await PremiumChatService.isPremium(chatId)
-        const [hasUp] = await InventoryItemService.use(chatId, id, 'workUp')
+        const [hasUp] = await InventoryItemService.use({
+            chatId,
+            id,
+            itemId: 'workUp'
+        })
 
         return [
             { value: isPremium },
@@ -89,18 +93,26 @@ export default class WorkCommand extends BuckwheatCommand {
                 multiplier * (currentLevel + currentLevelUp)
             )
         )
-        const [_, count] = await InventoryItemService.use(chatId, id, 'levelBoost')
+        const [_, count] = await InventoryItemService.use({
+            chatId,
+            id,
+            itemId: 'levelBoost'
+        })
 
         return Math.ceil(rawExperience * (1 + (count * LEVEL_BOOST / 100)))
     }
 
     private async _getWorkQuests(): Promise<Record<ClassTypes, string[]>> {
-        return await FileUtils.readJsonFromResource<Record<ClassTypes, string[]>>('json/other/work_types.json') ??
+        return await FileUtils.readJsonFromResource<Record<ClassTypes, string[]>>('json/other/work-quests.json') ??
             ClassUtils.getArray()
     }
 
     private async _getWorkTime(chatId: number, id: number) {
-        const [hasCatalog] = await InventoryItemService.use(chatId, id, 'workCatalog')
+        const [hasCatalog] = await InventoryItemService.use({
+            chatId,
+            id,
+            itemId: 'workCatalog'
+        })
         return WORK_TIME / (hasCatalog ? CATALOG_BOOST : 1)
     }
 
@@ -117,7 +129,7 @@ export default class WorkCommand extends BuckwheatCommand {
         const user = await ContextUtils.getUser(chatId, id)
         const isPrivate = ctx.chat.type == 'private'
 
-        if(!isPrivate && await ChatSettingsService.get<'boolean'>(chatId, 'cantWorkInChat')) {
+        if (!isPrivate && await ChatSettingsService.get<'boolean'>(chatId, 'cantWorkInChat')) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/work/deny.pug',
@@ -131,9 +143,9 @@ export default class WorkCommand extends BuckwheatCommand {
         }
 
         const workTime = await this._getWorkTime(chatId, id)
-        const quest = await this._getQuest(chatId, id)
         const elapsed = await WorkTimeService.getElapsedTime(chatId, id, workTime)
-
+        
+        const quest = await this._getQuest(chatId, id)
         const isSendMessage = await GrindSettingService.isSendMessage(ctx, id)
 
         if (!elapsed) {
@@ -142,28 +154,30 @@ export default class WorkCommand extends BuckwheatCommand {
             const newLevel = await ExperienceService.isLevelUpAfterAdding(chatId, id, experience)
 
             await CasinoAddService.money(chatId, id, totalMoney)
-            if(!isSendMessage) return
-            await MessageUtils.answerMessageFromResource(
-                ctx,
-                'text/commands/work/work.pug',
-                {
-                    changeValues: {
-                        ...await ContextUtils.getUserFromContext(ctx),
-                        money: totalMoney,
-                        quest,
-                        experience
+            if (isSendMessage) {
+                await MessageUtils.answerMessageFromResource(
+                    ctx,
+                    'text/commands/work/work.pug',
+                    {
+                        changeValues: {
+                            ...await ContextUtils.getUserFromContext(ctx),
+                            money: totalMoney,
+                            quest,
+                            experience
+                        }
                     }
-                }
-            )
+                )
+            }
 
             if (newLevel) {
                 await CasinoAddService.money(chatId, id, newLevel * LEVEL_UP_MONEY)
-                if(!isSendMessage) return
-                await LevelUtils.sendLevelUpMessage(ctx, newLevel)
+                if (isSendMessage) {
+                    await LevelUtils.sendLevelUpMessage(ctx, newLevel)
+                }
             }
         }
         else {
-            if(!isSendMessage) return
+            if (!isSendMessage) return
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/work/cant.pug',

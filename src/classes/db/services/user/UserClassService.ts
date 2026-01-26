@@ -15,4 +15,9 @@ export default class UserClassService {
         const playerType =  await this.get(chatId, id)
         return ClassUtils.isPlayer(playerType)
     }
+
+    static async has(chatId: number, id: number, needClass: ClassTypes) {
+        const className = await this.get(chatId, id)
+        return className == needClass
+    }
 }
