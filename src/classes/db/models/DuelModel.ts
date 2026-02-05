@@ -3,14 +3,13 @@ import Duel from '../../../interfaces/schemas/duels/Duel'
 import DuelStep from '../../../interfaces/schemas/duels/DuelStep'
 import Effect from '../../../interfaces/schemas/duels/Effect'
 import { createModelWithSubModel } from './modelCreators'
-import LastStep from '../../../interfaces/schemas/duels/LastStep'
+import Characteristics from '../../../interfaces/duel/Characteristics'
+import SkillAttack from '../../../enums/SkillAttack'
 
 type Type = Duel
 type SubType = DuelStep
-type SubSubType = LastStep
-type SecondSubType = Effect
 
-const secondSubSchema = new Schema<SecondSubType>({
+const effectSchema = new Schema<Effect>({
     name: {
         type: String,
         required: true
@@ -29,14 +28,14 @@ const secondSubSchema = new Schema<SecondSubType>({
     },
 })
 
-const subSubSchema = new Schema<SubSubType>({
-    duelist: {
+const characteristicsSchema = new Schema<Characteristics>({
+    hp: {
         type: Number,
         required: true
     },
-    skill: {
-        type: String,
-        required: false,
+    mana: {
+        type: Number,
+        required: true
     }
 })
 
@@ -46,10 +45,25 @@ export default createModelWithSubModel<Type, SubType>(
             type: Number,
             required: true
         },
-        lastStep: {
-            type: subSubSchema,
+        attack: {
+            type: Number,
+            required: false,
+            min: SkillAttack.Fail,
+            max: SkillAttack.Crit
+        },
+        skill: {
+            type: String,
+            required: false
+        },
+        characteristics: {
+            type: Map,
+            of: characteristicsSchema,
             required: true
         },
+        effects: {
+            type: [effectSchema],
+            required: true
+        }
     },
     sub => {
         return {
@@ -72,21 +86,13 @@ export default createModelWithSubModel<Type, SubType>(
                     type: Number,
                     required: true
                 },
-                step: {
-                    type: sub,
+                steps: {
+                    type: [sub],
                     required: true
                 },
                 bidId: {
                     type: Number,
                     required: false
-                },
-                effects: {
-                    type: [secondSubSchema],
-                    default: []
-                },
-                steps: {
-                    type: Number,
-                    default: 0
                 }
             }
         }

@@ -1,0 +1,20 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Громоотвод",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "effectHasEffect",
+                "args": [
+                    "energy",
+                    "delete-energy",
+                    2
+                ]
+            }
+        ]
+    }
+}

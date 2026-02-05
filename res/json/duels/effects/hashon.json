@@ -1,0 +1,11 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Вкусный мёд",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": []
+    }
+}

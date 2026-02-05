@@ -1,0 +1,39 @@
+{
+    "level": 45,
+    "info": {
+        "title": "Турель",
+        "description": "Даа, давай расстреляй этих бедных противников в пух и прах!"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -200
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "skip-skill",
+                    1
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "tower-continue",
+                    2
+                ]
+            },
+            {
+                "name": "damage",
+                "args": [
+                    45
+                ]
+            }
+        ]
+    }
+}

@@ -1,7 +1,6 @@
 import { UpdateQuery } from 'mongoose'
 import Characteristics from '../../../../interfaces/duel/Characteristics'
 import Duelist from '../../../../interfaces/schemas/duels/Duelist'
-import DuelUtils from '../../../../utils/DuelUtils'
 import { ClassTypes, TypeKeys } from '../../../../utils/values/types/types'
 import DuelistRepository from '../../repositories/DuelistRepository'
 import LevelService from '../level/LevelService'
@@ -10,6 +9,7 @@ import MathUtils from '../../../../utils/MathUtils'
 import { Context } from 'telegraf'
 import LinkedChatService from '../linkedChat/LinkedChatService'
 import MessageUtils from '../../../../utils/MessageUtils'
+import CharacteristicsUtils from '../../../../utils/duel/CharacteristicsUtils'
 
 export default class DuelistService {
     static async get(chatId: number, id: number, type?: ClassTypes): Promise<Duelist> {
@@ -17,7 +17,13 @@ export default class DuelistService {
         if(duelist) return duelist
         else {
             const maxChars = await this.getMaxCharacteristics(chatId, id, type)
-            return await DuelistRepository.create({chatId, id, ...maxChars})
+            return await DuelistRepository.create({
+                chatId, 
+                id, 
+                ...maxChars,
+                wins: 0,
+                loses: 0
+            })
         }
     }
 
@@ -32,10 +38,6 @@ export default class DuelistService {
     static async getField<Key extends keyof Duelist>(chatId: number, id: number, key: Key): Promise<Duelist[Key]> {
         const duelist = await this.get(chatId, id)
         return duelist[key]
-    }
-
-    static async onDuel(chatId: number, id: number): Promise<boolean> {
-        return await this.getField(chatId, id, 'onDuel') ?? false
     }
 
     static async setField<Key extends keyof Duelist>(
@@ -87,7 +89,7 @@ export default class DuelistService {
     static async getMaxCharacteristics(chatId: number, id: number, type?: ClassTypes): Promise<Characteristics> {
         const level = await LevelService.get(chatId, id)
         const usedType = type ?? await UserClassService.get(chatId, id)
-        const maxChars = await DuelUtils.getMaxCharacteristicsFromFile(usedType, level)
+        const maxChars = CharacteristicsUtils.getMaxCharacteristicsByClass(usedType, level)
 
         return maxChars ?? {hp: 0, mana: 0}
     }

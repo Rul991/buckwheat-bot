@@ -1,0 +1,18 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Турель",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "damage",
+                "args": [
+                    30
+                ]
+            }
+        ]
+    }
+}

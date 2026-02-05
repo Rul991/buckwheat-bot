@@ -1,0 +1,26 @@
+{
+    "level": 20,
+    "info": {
+        "title": "Во имя Энвелла",
+        "description": "Испустите боевой клич и поднимите свой дух."
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -85
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "invulnerable",
+                    1
+                ]
+            }
+        ]
+    }
+}

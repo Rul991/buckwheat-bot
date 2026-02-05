@@ -1,15 +1,10 @@
-import ContextUtils from '../../../../utils/ContextUtils'
-import DuelUtils from '../../../../utils/DuelUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import { MaybeString } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
-import DuelService from '../../../db/services/duel/DuelService'
 import DuelistService from '../../../db/services/duelist/DuelistService'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import UserClassService from '../../../db/services/user/UserClassService'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
+import DuelPrepareService from '../../../db/services/duel/DuelPrepareService'
 
 export default class DuelCommand extends BuckwheatCommand {
     protected _settingId: string = 'duel'
@@ -61,34 +56,18 @@ export default class DuelCommand extends BuckwheatCommand {
             return
         }
 
-        const user = await DuelService.getPriceStats(chatId, userId)
-        const reply = await DuelService.getPriceStats(chatId, replyId)
+        const user = await DuelPrepareService.getDuelistLinkWithPrice(chatId, userId)
+        const reply = await DuelPrepareService.getDuelistLinkWithPrice(chatId, replyId)
 
-        const userLink = await ContextUtils.getUser(chatId, userId)
-        const replyLink = await ContextUtils.getUser(chatId, replyId)
-
-        const options = {chatId, ctx, userId, replyId, isUserFirst: false}
-        const lowOptions = await DuelUtils.getLowOptions(options)
-        
-        if(!await DuelUtils.sendOnDuelMessage(lowOptions)) return
-        if(!await DuelUtils.checkStatsAndSendMessage(options)) return
-
-        await DuelistService.setField(chatId, userId, 'onDuel', true)
-        await MessageUtils.answerMessageFromResource(
+        const message = await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/duel/yes-offer/offer.pug',
             {
                 changeValues: {
-                    user: {
-                        ...userLink,
-                        price: user.price
-                    },
-                    reply: {
-                        ...replyLink,
-                        price: reply.price
-                    },
+                    user,
+                    reply
                 },
-                inlineKeyboard: await InlineKeyboardManager.get(
+                inlineKeyboard: await LegacyInlineKeyboardManager.get(
                     'duels/offer',
                     JSON.stringify({
                         user: userId,
@@ -97,5 +76,10 @@ export default class DuelCommand extends BuckwheatCommand {
                 )
             }
         )
+
+        const {
+            message_id: messageId
+        } = message
+        await DuelistService.deleteAndUpdateLastMessage(ctx, messageId)
     }
 }

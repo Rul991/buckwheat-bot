@@ -1,66 +1,51 @@
-import { REVERSE_SKILL_NAME, SKIP_SKILL_SKILL_NAME, ZERO_SKILL_SKILL_NAME } from '../../utils/values/consts'
-import { JavascriptTypes, MethodExecuteArguments, AsyncOrSync, SkillMethodGetText } from '../../utils/values/types/types'
-import DuelService from '../db/services/duel/DuelService'
-import EffectService from '../db/services/duel/EffectService'
+import SkillAttack from '../../enums/SkillAttack'
+import { MethodExecuteOptions, MethodGetTextOptions } from '../../utils/values/types/skills'
+import { JavascriptTypes } from '../../utils/values/types/types'
 
 export default abstract class <A extends any[]> {
     abstract args: JavascriptTypes[]
-    protected abstract _preCheck({ }: MethodExecuteArguments<A>): AsyncOrSync<boolean>
-    protected abstract _execute({ }: MethodExecuteArguments<A>): AsyncOrSync<boolean>
-    abstract getText({ }: MethodExecuteArguments<A> & SkillMethodGetText): AsyncOrSync<string>
+    protected abstract _preCheck({ }: MethodExecuteOptions<A>): Promise<boolean>
+    protected abstract _execute({ }: MethodExecuteOptions<A>): Promise<boolean>
+    protected abstract _getText({ }: MethodGetTextOptions<A>): Promise<string>
 
-    protected async _getDuelId(chatId: number, id: number) {
-        const duel = await DuelService.getByUserId(chatId, id)
-        if (!duel) return null
+    protected _failBoost = 0
+    protected _defaultBoost = 1
+    protected _critBoost = 2
 
-        return duel.id
+    validateArgs(skillArgs: A): skillArgs is A {
+        for (let i = 0; i < this.args.length; i++) {
+            const arg = this.args[i]
+            const skillArg = typeof skillArgs[i]
+            const isEqual = skillArg == arg
+
+            if (!isEqual) {
+                return false
+            }
+        }
+
+        return true
     }
 
-    protected async _reverseSkill(duelId: number, options: MethodExecuteArguments<A>) {
-        const {
-            id,
-            userId,
-            enemyId,
-            skill: { isEffect }
-        } = options
+    getBoost(attack: SkillAttack) {
+        if(attack == SkillAttack.Fail) {
+            return this._failBoost
+        }
+        else if(attack == SkillAttack.Crit) {
+            return this._critBoost
+        }
 
-        if (isEffect) return
-        if (!await EffectService.userHas(duelId, userId, REVERSE_SKILL_NAME)) return
-
-        options.id = id == userId ? enemyId : userId
-        options.enemyId = userId
-        options.userId = enemyId
+        return this._defaultBoost
     }
 
-    protected async _hasZeroSkill(duelId: number, id: number) {
-        return await EffectService.userHas(duelId, id, ZERO_SKILL_SKILL_NAME)
-    }
-
-    async execute(options: MethodExecuteArguments<A>): Promise<boolean> {
-        const {
-            id,
-            chatId
-        } = options
-
-        const duelId = await this._getDuelId(chatId, id)
-        if (!duelId) return false
-
-        if (await this._hasZeroSkill(duelId, id)) return true
-        await this._reverseSkill(duelId, options)
-
+    async execute(options: MethodExecuteOptions<A>): Promise<boolean> {
         return await this._execute(options)
     }
 
-    async preCheck(options: MethodExecuteArguments<A>): Promise<boolean> {
-        const {
-            chatId,
-            id
-        } = options
-
-        const duelId = await this._getDuelId(chatId, id)
-        if (!duelId) return false
-
-        if (await EffectService.userHas(duelId, id, SKIP_SKILL_SKILL_NAME)) return false
+    async preCheck(options: MethodExecuteOptions<A>): Promise<boolean> {
         return await this._preCheck(options)
+    }
+
+    async getText(options: MethodGetTextOptions<A>): Promise<string> {
+        return await this._getText(options)
     }
 }

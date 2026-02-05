@@ -1,0 +1,26 @@
+{
+    "level": 25,
+    "info": {
+        "title": "Вытряхивание души",
+        "description": "Забери у него душу."
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -60
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "shower-cont",
+                    4
+                ]
+            }
+        ]
+    }
+}

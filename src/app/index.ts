@@ -46,7 +46,6 @@ import DuelNoAction from '../classes/callback-button/duels/DuelNoAction'
 import DuelSkillAction from '../classes/callback-button/duels/DuelSkillAction'
 import DuelStartAction from '../classes/callback-button/duels/DuelStartAction'
 import DuelYesAction from '../classes/callback-button/duels/DuelYesAction'
-import SkillUseAction from '../classes/callback-button/duels/SkillUseAction'
 import EffectChangeAction from '../classes/callback-button/effects/EffectChangeAction'
 import FaqAction from '../classes/callback-button/faq/FaqAction'
 import FaqChangeAction from '../classes/callback-button/faq/FaqChangeAction'
@@ -74,12 +73,6 @@ import SettingsShowAction from '../classes/callback-button/settings/SettingsShow
 import BuyAction from '../classes/callback-button/shop/BuyAction'
 import ItemChangeAction from '../classes/callback-button/shop/ItemChangeAction'
 import ItemShowAction from '../classes/callback-button/shop/ItemShowAction'
-import SkillAddAction from '../classes/callback-button/skills/SkillAddAction'
-import SkillAlertAction from '../classes/callback-button/skills/SkillAlertAction'
-import SkillChangeAction from '../classes/callback-button/skills/SkillChangeAction'
-import SkillMenuAction from '../classes/callback-button/skills/SkillMenuAction'
-import SkillRemoveAction from '../classes/callback-button/skills/SkillRemoveAction'
-import SkillViewAction from '../classes/callback-button/skills/SkillViewAction'
 import TestAction from '../classes/callback-button/TestAction'
 import TopChangeAction from '../classes/callback-button/top/TopChangeAction'
 import VerificationAction from '../classes/callback-button/VerificationAction'
@@ -182,13 +175,20 @@ import { DOMAIN, MODE, TOKEN } from '../utils/values/consts'
 import { connectDatabase } from './db'
 import MarketBuyShowAction from '../classes/callback-button/market/buy/MarketBuyShowAction'
 import MarketBuyAction from '../classes/callback-button/market/buy/MarketBuyAction'
-import MarketSlotService from '../classes/db/services/market/MarketSlotService'
-import InventoryItemService from '../classes/db/services/items/InventoryItemService'
-import { DataFromCallbackButton } from '../utils/values/types/types'
 import MarketSellCountAction from '../classes/callback-button/market/sell/MarketSellCountAction'
 import MarketSellAction from '../classes/callback-button/market/sell/MarketSellAction'
 import MarketSellSceneAction from '../classes/actions/scenes/market/MarketSellSceneAction'
 import RateLimitCommand from '../classes/commands/conditional/RateLimitCommand'
+import SkillUtils from '../utils/skills/SkillUtils'
+import CharacterUtils from '../utils/duel/CharacterUtils'
+import DuelCommand from '../classes/commands/buckwheat/duel/DuelCommand'
+import SkillChangeAction from '../classes/callback-button/skills/SkillChangeAction'
+import SkillMenuAction from '../classes/callback-button/skills/SkillMenuAction'
+import SkillAddAction from '../classes/callback-button/skills/SkillAddAction'
+import SkillRemoveAction from '../classes/callback-button/skills/SkillRemoveAction'
+import SkillViewAction from '../classes/callback-button/skills/SkillViewAction'
+import SkillAlertAction from '../classes/callback-button/skills/SkillAlertAction'
+import InlineKeyboardManager from '../classes/main/InlineKeyboardManager'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -292,13 +292,6 @@ const launchBot = async (bot: Bot) => {
         new DuelSkillAction(),
         new DuelEffectsAction(),
         new WipeAction(),
-        new SkillMenuAction(),
-        new SkillViewAction(),
-        new SkillChangeAction(),
-        new SkillAddAction(),
-        new SkillRemoveAction(),
-        new SkillUseAction(),
-        new SkillAlertAction(),
         new EffectChangeAction(),
         new FaqChangeAction(),
         new FaqAction(),
@@ -333,6 +326,12 @@ const launchBot = async (bot: Bot) => {
         new MarketBuyAction(),
         new MarketSellCountAction(),
         new MarketSellAction(),
+        new SkillChangeAction(),
+        new SkillMenuAction(),
+        new SkillAddAction(),
+        new SkillRemoveAction(),
+        new SkillViewAction(),
+        new SkillAlertAction(),
     )
 
     // dice 
@@ -414,7 +413,7 @@ const launchBot = async (bot: Bot) => {
         new ChooseCommand(),
         new SaveCommand(),
         new CharsCommand(),
-        // new DuelCommand(),
+        new DuelCommand(),
         new SkillsCommand(),
         new EffectsCommand(),
         new ChatCommand(),
@@ -490,6 +489,9 @@ const test = async (): Promise<void | boolean> => {
 
 const main = async () => {
     if (!await InventoryItemsUtils.setup()) return
+    await CharacterUtils.setup()
+    await SkillUtils.setup(CharacterUtils.characters)
+
     if (!isEnvVarsValidate()) return
     await connectDatabase()
 

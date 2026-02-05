@@ -1,0 +1,33 @@
+{
+    "level": 50,
+    "info": {
+        "title": "Feedbacker",
+        "description": "-Ты не можешь парировать ядерный взрыв\n- Ну, знаешь, если это последняя вещь которую я могу сделать, я бы хотел попробовать\n- Делай что знаешь\n+parry\n- 0_0\n"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -225
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "return-damage",
+                    1
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "damageup-60",
+                    1
+                ]
+            }
+        ]
+    }
+}

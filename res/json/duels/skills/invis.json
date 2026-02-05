@@ -1,0 +1,33 @@
+{
+    "level": 10,
+    "info": {
+        "title": "Невидимость",
+        "description": "- Ты где?\n- А меня нет!\n- А кто это тогда говорит?\n- Мой арбалет! *пум*"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -100
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "invulnerable",
+                    1
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "invulnerable",
+                    1
+                ]
+            }
+        ]
+    }
+}

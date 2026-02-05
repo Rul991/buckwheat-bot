@@ -6,7 +6,7 @@ import { CallbackButtonOptions } from '../../../utils/values/types/action-option
 import GeneratorsService from '../../db/services/generators/GeneratorsService'
 import CallbackButtonAction from '../CallbackButtonAction'
 import MessageUtils from '../../../utils/MessageUtils'
-import InlineKeyboardManager from '../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 
 type Data = {
     id: number
@@ -60,7 +60,7 @@ export default class extends CallbackButtonAction<Data> {
             await MessageUtils.editMarkup(
                 ctx,
                 {
-                    inline_keyboard: await InlineKeyboardManager.get(
+                    inline_keyboard: await LegacyInlineKeyboardManager.get(
                         'generator/gen-update',
                         {
                             id,

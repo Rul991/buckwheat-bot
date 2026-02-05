@@ -1,0 +1,27 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Атака",
+        "description": "Именно этот навык используется, когда вы жмете на кнопку ''Атаковать''"
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "attack",
+                "args": [
+                    15,
+                    0.75
+                ]
+            },
+            {
+                "name": "effectHasEffect",
+                "args": [
+                    "poison-bullet",
+                    "poison",
+                    2
+                ]
+            }
+        ]
+    }
+}

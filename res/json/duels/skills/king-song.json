@@ -1,0 +1,26 @@
+{
+    "level": 80,
+    "info": {
+        "title": "Королевская игра",
+        "description": "Сыграй им рок-н-ролл!"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -175
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "king1",
+                    2
+                ]
+            }
+        ]
+    }
+}

@@ -7,9 +7,10 @@ import CasinoAddService from '../../../db/services/casino/CasinoAddService'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import ChatService from '../../../db/services/chat/ChatService'
 import { sleep } from '../../../../utils/values/functions'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import ArrayUtils from '../../../../utils/ArrayUtils'
 import MathUtils from '../../../../utils/MathUtils'
+import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 
 type SecretFunctionOptions = {
     ctx: TextContext
@@ -53,11 +54,11 @@ export default class TestCommand extends BuckwheatCommand {
         const getValues = (
             key: MaybeString
         ): CallbackButtonValue[] => {
-            if(!key) return []
-            if(!other) return []
+            if (!key) return []
+            if (!other) return []
 
             const button = buttons[key]
-            if(!button) return []
+            if (!button) return []
 
             const {
                 min = Number.MIN_SAFE_INTEGER,
@@ -84,7 +85,7 @@ export default class TestCommand extends BuckwheatCommand {
             ctx,
             other ?? 'test',
             {
-                inlineKeyboard: await InlineKeyboardManager.map(
+                inlineKeyboard: await LegacyInlineKeyboardManager.map(
                     'test',
                     {
                         values: {

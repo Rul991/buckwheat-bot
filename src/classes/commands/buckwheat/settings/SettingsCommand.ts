@@ -1,6 +1,6 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import { DEFAULT_SETTINGS_TYPE, DEFAULT_USER_SETTINGS_TYPE } from '../../../../utils/values/consts'
 import SettingsService from '../../../db/services/settings/SettingsService'
@@ -35,7 +35,7 @@ export default class extends BuckwheatCommand {
                 changeValues: {
                     settingsLength
                 },
-                inlineKeyboard: await InlineKeyboardManager.get('settings/start', {
+                inlineKeyboard: await LegacyInlineKeyboardManager.get('settings/start', {
                     id,
                     type: JSON.stringify(type)
                 })

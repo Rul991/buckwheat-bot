@@ -1,0 +1,33 @@
+{
+    "level": 90,
+    "info": {
+        "title": "Щит света",
+        "description": "Порой свет бывает ярок настолько, что даже урон может ослепнуть"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -350
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "invulnerable",
+                    3
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "invulnerable",
+                    3
+                ]
+            }
+        ]
+    }
+}

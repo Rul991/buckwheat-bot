@@ -1,0 +1,45 @@
+{
+    "level": 45,
+    "info": {
+        "title": "Кладезь света",
+        "description": "Создаёт меч из концентрированной энергии солнца, и вонзает его в землю, создавая кладезь"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -450
+                ]
+            },
+            {
+                "name": "heal",
+                "args": [
+                    200
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "damageup15",
+                    3
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "heal",
+                "args": [
+                    200
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "damageup15",
+                    3
+                ]
+            }
+        ]
+    }
+}

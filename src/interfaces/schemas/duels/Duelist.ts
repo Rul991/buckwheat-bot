@@ -5,7 +5,7 @@ export default interface Duelist {
     mana: number
     onDuel?: boolean
     lastSave?: number
-    wins?: number
-    loses?: number
+    wins: number
+    loses: number
     lastMessage?: number
 }

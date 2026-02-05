@@ -2,11 +2,11 @@ import ClassUtils from '../../../../utils/ClassUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { MODE } from '../../../../utils/values/consts'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import { MaybeString } from '../../../../utils/values/types/types'
+import { ClassTypes, MaybeString } from '../../../../utils/values/types/types'
 import { TextContext } from '../../../../utils/values/types/contexts'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import UserClassService from '../../../db/services/user/UserClassService'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class ClassCommand extends BuckwheatCommand {
@@ -37,9 +37,17 @@ export default class ClassCommand extends BuckwheatCommand {
         const buttons = Object
             .entries(ClassUtils.getVisibleNames())
             .map(([key, value]) => 
-                ({text: value, data: JSON.stringify({classType: key, userId})}))
+                ({
+                    text: `${ClassUtils.getEmoji(key as ClassTypes)} ${value}`, 
+                    data: JSON.stringify(
+                        {
+                            classType: key, 
+                            userId}
+                        )}
+                    )
+                )
 
-        const inlineKeyboard = await InlineKeyboardManager.map(
+        const inlineKeyboard = await LegacyInlineKeyboardManager.map(
             'class', 
             {
                 values: {

@@ -1,0 +1,25 @@
+{
+    "level": 5,
+    "info": {
+        "title": "Смех и Грех I",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "ls2",
+                    1
+                ]
+            },
+            {
+                "name": "damage",
+                "args": [
+                    2
+                ]
+            }
+        ]
+    }
+}

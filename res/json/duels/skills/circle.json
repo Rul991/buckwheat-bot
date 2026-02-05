@@ -1,0 +1,26 @@
+{
+    "level": 35,
+    "info": {
+        "title": "Шаровая молния",
+        "description": "Да, они существуют!"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -175
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "energy",
+                    4
+                ]
+            }
+        ]
+    }
+}

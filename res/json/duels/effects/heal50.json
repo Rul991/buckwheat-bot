@@ -1,0 +1,18 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Лечение",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "heal",
+                "args": [
+                    50
+                ]
+            }
+        ]
+    }
+}

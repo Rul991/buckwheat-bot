@@ -14,7 +14,7 @@
     [
         {
             "text": "❔ Что умеет?",
-            "callback_data": "salert_@{alert}_@{skill}"
+            "callback_data": "skillalert_@{alert}_@{skill}"
         }
     ]
 ]

@@ -1,11 +1,10 @@
 import { ButtonScrollerEditMessageResult, ButtonScrollerFullOptions, ButtonScrollerOptions, TinyCurrentIncreaseId } from '../../../utils/values/types/types'
 import UserClassService from '../../db/services/user/UserClassService'
-import ChosenSkillsService from '../../db/services/choosedSkills/ChosenSkillsService'
 import FileUtils from '../../../utils/FileUtils'
 import Skill from '../../../interfaces/duel/Skill'
 import ClassUtils from '../../../utils/ClassUtils'
-import SkillUtils from '../../../utils/SkillUtils'
 import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
+import SkillService from '../../db/services/chosen-skills/SkillService'
 
 export default class extends ButtonScrollerAction<Skill, TinyCurrentIncreaseId> {
     protected _filename: string = 'skills/add'
@@ -20,9 +19,8 @@ export default class extends ButtonScrollerAction<Skill, TinyCurrentIncreaseId> 
         chatId,
         id
     }: ButtonScrollerOptions<TinyCurrentIncreaseId>): Promise<Skill[]> {
-        const type = await UserClassService.get(chatId, id)
-        const currentSkills = await ChosenSkillsService.getSkills(chatId, id)
-        const availableSkills = (await SkillUtils.getAvailableSkills(chatId, id, type))
+        const currentSkills = await SkillService.get(chatId, id)
+        const availableSkills = (await SkillService.getAvailableSkills(chatId, id))
             .filter(skill => currentSkills.every(s => skill.id != s))
 
         return availableSkills
@@ -51,7 +49,7 @@ export default class extends ButtonScrollerAction<Skill, TinyCurrentIncreaseId> 
                 values: {
                     add: slicedObjects.map(v =>
                         ({
-                            text: v.title,
+                            text: v.info.title,
                             data: JSON.stringify({ id, index: v.id, type: 'a' })
                         })
                     )

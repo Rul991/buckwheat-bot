@@ -3,7 +3,6 @@ import Character from '../../interfaces/duel/Character'
 import Characteristics from '../../interfaces/duel/Characteristics'
 import SimpleCommand from '../../interfaces/other/SimpleComand'
 import { NewInvoiceParameters, JsonShopItem, InventoryItemDescription, TinyCurrentIncreaseId, ClassTypes, KeyboardDatabaseData, SettingPropertiesValues, BooleanNumberString } from './types/types'
-import Skill from '../../interfaces/duel/Skill'
 import StartUp from '../../interfaces/other/StartUp'
 import CubeData from '../../interfaces/callback-button-data/CubeData'
 import ScrollerWithIdData from '../../interfaces/callback-button-data/ScrollerWithIdData'
@@ -14,8 +13,8 @@ import Setting from '../../interfaces/other/Setting'
 import ClassUtils from '../ClassUtils'
 import RankUtils from '../RankUtils'
 import MarketData from '../../interfaces/callback-button-data/MarketData'
-import MarketSlot from '../../interfaces/schemas/market/MarketSlot'
-import { MAX_MARKET_PRICE, MIN_MARKET_PRICE } from './consts'
+import JsonSkill from '../../interfaces/duel/JsonSkill'
+import LevelUtils from '../level/LevelUtils'
 
 export const simpleCommandSchema: ZodType<SimpleCommand> = object({
     name: string(),
@@ -146,9 +145,9 @@ export const characteristicsSchema: ZodType<Characteristics> = object({
     mana: number()
 })
 
-export const startUpSchema: ZodType<StartUp> = object({
-    start: object(),
-    up: object()
+export const startUpNumberSchema: ZodType<StartUp<number>> = object({
+    start: number(),
+    up: number()
 })
 
 export const skillExecuteSchema: ZodType<SkillExecute> = object({
@@ -157,27 +156,32 @@ export const skillExecuteSchema: ZodType<SkillExecute> = object({
 })
 
 export const skillExecuteArraySchema: ZodType<SkillExecute[]> = skillExecuteSchema.array()
+export const classTypesSchema: ZodLiteral<ClassTypes> = literal(ClassUtils.classNames)
 
-export const skillSchema: ZodType<Skill> = object({
-    id: string(),
-    isAlwaysUsable: boolean().optional(),
-    secret: boolean().optional(),
-    level: number(),
-    title: string(),
-    description: string(),
-    onEnemy: boolean(),
-    cost: skillExecuteArraySchema,
-    execute: skillExecuteArraySchema,
-    isEffect: boolean().optional(),
+export const jsonSkillSchema: ZodType<JsonSkill> = object({
+    level: int().min(LevelUtils.min),
+    info: object({
+        title: string(),
+        description: string(),
+    }),
+    execute: object({
+        user: skillExecuteArraySchema,
+        enemy: skillExecuteArraySchema,
+    }),
+    effect: object({
+        className: classTypesSchema
+    }).optional()
 })
-
 
 export const characterSchema: ZodType<Character> = object({
     characteristics: object({
-        start: characteristicsSchema,
-        up: characteristicsSchema,
+        hp: startUpNumberSchema,
+        mana: startUpNumberSchema
     }),
-    skills: skillSchema.array()
+    skill: object({
+        showable: string().array(),
+        main: string()
+    })
 })
 
 export const cubeDataSchema: ZodType<CubeData> = object({
@@ -233,8 +237,6 @@ export const dataSchema = idSchema
 export const duelSchema = object({
     duel: number()
 })
-
-export const classTypesSchema: ZodLiteral<ClassTypes> = literal(ClassUtils.classNames)
 
 export const keyboardDbDataSchema: ZodType<KeyboardDatabaseData> = object({
     id: number(),

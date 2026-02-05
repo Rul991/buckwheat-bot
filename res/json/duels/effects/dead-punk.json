@@ -1,0 +1,19 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Мертвый панк",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "damageup-40",
+                    1
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Верный друг",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "effectLastStep",
+                "args": [
+                    "frnd",
+                    "frnd",
+                    3
+                ]
+            },
+            {
+                "name": "heal",
+                "args": [
+                    25
+                ]
+            }
+        ]
+    }
+}

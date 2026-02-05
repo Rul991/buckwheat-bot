@@ -1,0 +1,32 @@
+{
+    "level": 55,
+    "info": {
+        "title": "Гром",
+        "description": "Гром лишь отзвук молнии, так ведь?\n(с) Трагически погибший игрок"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -675
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "damage",
+                "args": [
+                    75
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "thndr-eff",
+                    3
+                ]
+            }
+        ]
+    }
+}

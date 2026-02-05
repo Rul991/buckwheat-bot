@@ -1,0 +1,43 @@
+{
+    "level": 90,
+    "info": {
+        "title": "Божественное исцеление",
+        "description": "Я маг, со мной бог"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -1400
+                ]
+            },
+            {
+                "name": "precentHeal",
+                "args": [
+                    100
+                ]
+            },
+            {
+                "name": "deleteEffects",
+                "args": [
+                    false
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "precentHeal",
+                "args": [
+                    100
+                ]
+            },
+            {
+                "name": "deleteEffects",
+                "args": [
+                    false
+                ]
+            }
+        ]
+    }
+}

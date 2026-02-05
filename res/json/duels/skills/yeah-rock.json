@@ -1,0 +1,26 @@
+{
+    "level": 30,
+    "info": {
+        "title": "Рок-стар",
+        "description": "Он не ценит рок, убей его."
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -100
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "randomDamage",
+                "args": [
+                    75,
+                    150
+                ]
+            }
+        ]
+    }
+}

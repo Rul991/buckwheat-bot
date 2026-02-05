@@ -1,0 +1,26 @@
+{
+    "level": 40,
+    "info": {
+        "title": "Дождь из фрикаделек",
+        "description": "Облачно, возможны осадки в виде фрикаделек"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -400
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "meatfall",
+                    10
+                ]
+            }
+        ]
+    }
+}

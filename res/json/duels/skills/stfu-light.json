@@ -1,0 +1,33 @@
+{
+    "level": 35,
+    "info": {
+        "title": "Громоотвод",
+        "description": "Назревает гром? Просто уничтожь его."
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -75
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "stfu-energy",
+                    5
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "stfu-energy",
+                    5
+                ]
+            }
+        ]
+    }
+}

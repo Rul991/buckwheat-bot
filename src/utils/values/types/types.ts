@@ -3,13 +3,12 @@ import { InputMedia } from 'telegraf/types'
 import CurrentMax from '../../../interfaces/other/CurrentMax'
 import Duel from '../../../interfaces/schemas/duels/Duel'
 import ButtonScrollerData from '../../../interfaces/callback-button-data/ButtonScrollerData'
-import Skill from '../../../interfaces/duel/Skill'
-import SkillAttack from '../../../enums/SkillAttack'
 import Setting from '../../../interfaces/other/Setting'
 import SceneAction from '../../../classes/actions/scenes/SceneAction'
 import { CallbackButtonContext, ContextData, MyChatMemberContext, TextContext } from './contexts'
 import { BuckwheatCommandOptions } from './action-options'
 import CallbackButtonAction from '../../../classes/callback-button/CallbackButtonAction'
+import Character from '../../../interfaces/duel/Character'
 
 export type MaybeString = string | undefined
 export type CommandStrings = [string, MaybeString, MaybeString]
@@ -215,39 +214,14 @@ export type ButtonScrollerArgs<D extends ButtonScrollerData = ButtonScrollerData
     data: D
 }
 
-export type MethodExecuteArguments<A extends any[]> = {
-    args: A,
-    id: number
-    chatId: number
-    ctx: CallbackButtonContext
-    skill: Skill
-    attack: SkillAttack
-    userId: number
-    enemyId: number
-    isSecret?: boolean
-}
-
 export type ConstSymbol<
     F extends string,
     H extends string,
     E extends string
 > = {
-    FULL: F
-    HALF: H
-    EMPTY: E
-}
-
-export type UseSkillOptions = {
-    skill: Skill
-    ctx: CallbackButtonContext
-    userId: number
-    enemyId: number
-    attack: SkillAttack
-}
-
-export type SkillMethodGetText = {
-    isExecute: boolean,
-    isSecret?: boolean
+    full: F
+    half: H
+    empty: E
 }
 
 export type NoOtherChangeProfileMessage = {
@@ -390,3 +364,5 @@ export type BooleanNumberString = boolean | number | string
 export type ChatMemberStatus = MyChatMemberContext['myChatMember']['old_chat_member']['status']
 export type DataFromCallbackButton<A> =
     A extends CallbackButtonAction<infer U> ? U : never
+
+export type CharactersMap = Map<DuelFilename, Character>

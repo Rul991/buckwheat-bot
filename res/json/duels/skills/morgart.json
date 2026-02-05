@@ -1,0 +1,33 @@
+{
+    "level": 99,
+    "info": {
+        "title": "Финальный босс",
+        "description": "Главное не начать похищать целителей..."
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -900
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "morgart-heal",
+                    3
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "morgart-heal",
+                    3
+                ]
+            }
+        ]
+    }
+}

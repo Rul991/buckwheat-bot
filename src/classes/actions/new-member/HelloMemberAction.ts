@@ -8,7 +8,7 @@ import HelloService from '../../db/services/chat/HelloService'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import ChatSettingsService from '../../db/services/settings/ChatSettingsService'
 import UserOldService from '../../db/services/user/UserOldService'
-import InlineKeyboardManager from '../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 import NewMemberAction from './NewMemberAction'
 
 type ConditionMessageOptions = {
@@ -112,7 +112,7 @@ export default class HelloMemberAction extends NewMemberAction {
                         text: await HelloService.get(chatId),
                         hasButton
                     },
-                    inlineKeyboard: hasButton ? await InlineKeyboardManager.get('verify', `${id}`) : undefined
+                    inlineKeyboard: hasButton ? await LegacyInlineKeyboardManager.get('verify', `${id}`) : undefined
                 }
             )
         }

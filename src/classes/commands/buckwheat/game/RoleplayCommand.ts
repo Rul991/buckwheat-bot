@@ -6,7 +6,7 @@ import { SubCommandObject } from '../../../../utils/values/types/types'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import RoleplaysService from '../../../db/services/rp/RoleplaysService'
 import UserRankService from '../../../db/services/user/UserRankService'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import BuckwheatCommandWithSub from '../../base/BuckwheatCommandWithSub'
 import RankUtils from '../../../../utils/RankUtils'
 
@@ -35,7 +35,7 @@ export default class RoleplayCommand extends BuckwheatCommandWithSub<SubCommand>
                                 changeValues: {
                                     length: (await RoleplaysService.getCommands(chatId)).length
                                 },
-                                inlineKeyboard: await InlineKeyboardManager.get('start-roleplaychange')
+                                inlineKeyboard: await LegacyInlineKeyboardManager.get('start-roleplaychange')
                             }
                         )
                         return true

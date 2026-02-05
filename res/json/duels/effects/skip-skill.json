@@ -1,0 +1,11 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Пропуск заклинания",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": []
+    }
+}

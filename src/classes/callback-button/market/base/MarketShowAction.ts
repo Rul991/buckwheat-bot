@@ -7,7 +7,7 @@ import MarketSlotService from '../../../db/services/market/MarketSlotService'
 import FileUtils from '../../../../utils/FileUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import ArrayUtils from '../../../../utils/ArrayUtils'
 import { FIRST_INDEX, MAX_COUNT_BUTTONS_LENGTH } from '../../../../utils/values/consts'
 import StringUtils from '../../../../utils/StringUtils'
@@ -90,7 +90,7 @@ export default abstract class extends CallbackButtonAction<Data> {
             ),
             {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.map(
+                    inline_keyboard: await LegacyInlineKeyboardManager.map(
                         `market/${this._folder}/show`,
                         {
                             values: {

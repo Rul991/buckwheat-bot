@@ -1,196 +1,231 @@
 import { literal, number, object, string, ZodType } from 'zod'
-import { ClassTypes } from '../../../utils/values/types/types'
-import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
-import ContextUtils from '../../../utils/ContextUtils'
-import ChoosedSkillsService from '../../db/services/choosedSkills/ChosenSkillsService'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
-import UserClassService from '../../db/services/user/UserClassService'
-import MessageUtils from '../../../utils/MessageUtils'
-import FileUtils from '../../../utils/FileUtils'
-import InlineKeyboardManager from '../../main/InlineKeyboardManager'
-import ClassUtils from '../../../utils/ClassUtils'
-import SkillUtils from '../../../utils/SkillUtils'
-import DuelService from '../../db/services/duel/DuelService'
-import { InlineKeyboardButton } from 'telegraf/types'
-import Skill from '../../../interfaces/duel/Skill'
-import ChosenSkillsService from '../../db/services/choosedSkills/ChosenSkillsService'
-import { NOT_FOUND_INDEX } from '../../../utils/values/consts'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 import { idSchema } from '../../../utils/values/schemas'
+import { InlineKeyboardButton } from 'telegraf/types'
+import DuelService from '../../db/services/duel/DuelService'
+import SkillService from '../../db/services/chosen-skills/SkillService'
+import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
+import FileUtils from '../../../utils/FileUtils'
+import { Ids } from '../../../utils/values/types/types'
+import SkillUtils from '../../../utils/skills/SkillUtils'
+import ContextUtils from '../../../utils/ContextUtils'
+import MessageUtils from '../../../utils/MessageUtils'
+import SkillAttack from '../../../enums/SkillAttack'
+import SkillTextUtils from '../../../utils/skills/SkillTextUtils'
+import DuelUtils from '../../../utils/duel/DuelUtils'
 
-type Types = 'd' | 'v' | 'a'
-
-type Keyboard = InlineKeyboardButton.CallbackButton[][]
+type DataTypes = 'a' | 'v' | 'd'
+type IndexTypes = {
+    d: number
+    a: string
+    v: number
+}
 
 type Data = {
-    id: number
-    index: number | string,
-    type?: Types
-}
-
-type ResolveOptions = Data & {
-    chatId: number
-}
-
-type ResolveResult = {
-    id: number,
-    keyboard: Keyboard
-    isSecret: boolean
-} | null
-
-type SkillMessageOptions = {
-    getTextsOptions: {
-        ctx: CallbackButtonContext
-        skill: Skill
+    [K in DataTypes]: {
+        id: number
+        index: IndexTypes[K],
+        type?: K
     }
-    isSecret: boolean
-    classType: ClassTypes
-    keyboard: Keyboard
+}[DataTypes]
+
+type ViewDataResult = {
+    keyboard: InlineKeyboardButton.CallbackButton[][]
+    userId: number
+    enemyId?: number
+    isSecret?: boolean
 }
 
-type SkillOptions = {
-    chatId: number,
-    usedId: number,
-    index: number | string
-    classType: ClassTypes
+type ViewData<Data> = {
+    callback: (options: CallbackButtonOptions<Data>) => Promise<ViewDataResult | null>
+}
+
+type GetSkillOptions = Ids & {
+    index: IndexTypes[DataTypes]
 }
 
 export default class extends CallbackButtonAction<Data> {
     protected _buttonTitle: string = 'Навык: Просмотр'
     protected _schema: ZodType<Data> = idSchema
-        .and(object({
-            index: number()
-                .or(string()),
-            type: literal(['d', 'v', 'a']).optional()
-        }))
-
-    constructor () {
-        super()
-        this._name = 'skillview'
-    }
-
-    private async _getViewData({
-        id,
-        index,
-        type,
-        chatId
-    }: ResolveOptions): Promise<ResolveResult> {
-        let usedId = id
-        let duelId = NOT_FOUND_INDEX
-        let keyboard: Keyboard = []
-        let isSecret = false
-
-        if (type == 'd') {
-            const duel = await DuelService.get(id)
-            if (!duel) return null
-
-            usedId = duel.step.duelist
-            duelId = duel.id
-
-            const type = await UserClassService.get(chatId, usedId)
-            const skills = await ChosenSkillsService.getSkills(chatId, usedId)
-
-            keyboard = await InlineKeyboardManager.get('duels/view', {
-                duel: JSON.stringify({ duel: duelId }),
-                alert: JSON.stringify({
-                    type,
-                    id: usedId
-                }),
-                skill: JSON.stringify({ name: skills[index as number] }),
+        .and(
+            object({
+                index: number(),
+                type: literal('d')
             })
-            isSecret = true
-        }
-        else if (type == 'a') {
-            keyboard = await InlineKeyboardManager.get('skills/add', {
-                id: JSON.stringify({ id }),
-                skillId: JSON.stringify({ skillId: index })
-            })
-        }
-        else {
-            keyboard = await InlineKeyboardManager.get('skills/view', {
-                index: JSON.stringify({ index }),
-                id: JSON.stringify({ id })
-            })
-        }
-
-        return {
-            id: usedId,
-            keyboard,
-            isSecret,
-        }
-    }
-
-    private async _sendSkillMessage({
-        keyboard,
-        classType,
-        getTextsOptions: getTextOptions,
-        isSecret
-    }: SkillMessageOptions): Promise<void> {
-        const { ctx, skill } = getTextOptions
-
-        const text = await SkillUtils.getViewText(
-            {
-                isSecret,
-                skill,
-                ctx,
-                classType
-            }
+                .or(
+                    object({
+                        index: number(),
+                        type: literal('v')
+                    })
+                )
+                .or(
+                    object({
+                        index: string(),
+                        type: literal('a')
+                    })
+                )
+                .or(
+                    object({
+                        index: number(),
+                    })
+                )
         )
 
-        await MessageUtils.editText(
-            ctx,
-            text,
-            {
-                reply_markup: {
-                    inline_keyboard: keyboard
+    private _viewDatas: Record<DataTypes, ViewData<Data>> = {
+        d: {
+            callback: async options => {
+                const {
+                    data,
+                    chatId
+                } = options
+
+                const {
+                    id,
+                    index: rawIndex
+                } = data
+
+                const duel = await DuelService.get(id)
+                if (!duel) return null
+
+                const duelId = duel.id
+                const index = rawIndex as number
+                const userId = duel.steps.at(-1)!.duelist
+
+                const skills = await SkillService.get(chatId, userId)
+                const skill = skills[index] ?? ''
+
+                return {
+                    keyboard: await LegacyInlineKeyboardManager.get(
+                        'duels/view',
+                        {
+                            duel: JSON.stringify({ duel: duelId }),
+                            alert: JSON.stringify({
+                                id: userId
+                            }),
+                            skill: JSON.stringify({ name: skill }),
+                        }
+                    ),
+                    userId,
+                    enemyId: DuelUtils.getEnemy(duel, userId),
+                    isSecret: true
                 }
             }
-        )
+        },
+
+        a: {
+            callback: async options => {
+                const {
+                    data,
+                } = options
+
+                const {
+                    id,
+                    index
+                } = data
+
+                return {
+                    keyboard: await LegacyInlineKeyboardManager.get('skills/add', {
+                        skillId: JSON.stringify({ skill: index }),
+                        id: JSON.stringify({ id })
+                    }),
+                    userId: id,
+                }
+            }
+        },
+
+        v: {
+            callback: async options => {
+                const {
+                    data,
+                } = options
+
+                const {
+                    id,
+                    index
+                } = data
+
+                return {
+                    keyboard: await LegacyInlineKeyboardManager.get('skills/view', {
+                        index: JSON.stringify({ index }),
+                        id: JSON.stringify({ id })
+                    }),
+                    userId: id,
+                }
+            }
+        }
+    }
+    private _undefinedViewData = this._viewDatas.v
+
+    private async _getViewData(options: CallbackButtonOptions<Data>) {
+        const {
+            type
+        } = options.data
+
+        const viewData = !(type && this._viewDatas[type]) ?
+            this._undefinedViewData :
+            this._viewDatas[type]
+
+        return await viewData.callback(options)
     }
 
-    private async _getSkill({
-        index,
-        classType,
-        chatId,
-        usedId
-    }: SkillOptions): Promise<Skill | undefined> {
+    private async _getSkill({ id, chatId, index }: GetSkillOptions) {
         let skillId: string
 
         if (typeof index == 'string') {
             skillId = index
         }
         else {
-            const skills = await ChoosedSkillsService.getSkills(chatId, usedId)
+            const skills = await SkillService.get(chatId, id)
             skillId = skills[index]
         }
 
-        return await SkillUtils.getSkillById(classType, skillId)
+        return SkillUtils.getSkillById(skillId)
     }
 
-    async execute({ ctx, data: { id, index, type }, chatId }: CallbackButtonOptions<Data>): Promise<string | void> {
-        const viewData = await this._getViewData({ id, index, type, chatId })
+    constructor () {
+        super()
+        this._name = 'skillview'
+    }
+
+    async execute(options: CallbackButtonOptions<Data>): Promise<string | void> {
+        const viewData = await this._getViewData(options)
         if (!viewData) return await FileUtils.readPugFromResource('text/actions/duel/hasnt.pug')
 
-        const { id: usedId, keyboard, isSecret } = viewData
-        if (await ContextUtils.showAlertIfIdNotEqual(ctx, usedId)) return
-
-        const classType = await UserClassService.get(chatId, usedId)
-        const skill = await this._getSkill({
+        const {
+            data,
             chatId,
-            usedId,
-            index,
-            classType
-        })
-        if (!skill) return await FileUtils.readPugFromResource('text/actions/skill/hasnt.pug')
+            ctx
+        } = options
 
-        const getTextsOptions = { skill, ctx }
-        await this._sendSkillMessage({
-            getTextsOptions,
-            keyboard,
-            isSecret,
-            classType
-        })
+        const {
+            index
+        } = data
+
+        const {
+            userId: id,
+            enemyId,
+            keyboard
+        } = viewData
+
+        if (await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return
+        const skill = await this._getSkill({ id, chatId, index })
+
+        await MessageUtils.editText(
+            ctx,
+            await SkillTextUtils.message({
+                ctx,
+                userId: id,
+                enemyId,
+                chatId,
+                skill
+            }),
+            {
+                reply_markup: {
+                    inline_keyboard: keyboard
+                }
+            }
+        )
     }
 
 }

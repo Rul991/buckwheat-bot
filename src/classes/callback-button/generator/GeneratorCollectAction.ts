@@ -6,7 +6,7 @@ import ContextUtils from '../../../utils/ContextUtils'
 import GeneratorsService from '../../db/services/generators/GeneratorsService'
 import GeneratorUtils from '../../../utils/GeneratorUtils'
 import MessageUtils from '../../../utils/MessageUtils'
-import InlineKeyboardManager from '../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 import FileUtils from '../../../utils/FileUtils'
 import InventoryItemService from '../../db/services/items/InventoryItemService'
 import PremiumChatService from '../../db/services/chat/PremiumChatService'
@@ -68,7 +68,7 @@ export default class extends CallbackButtonAction<Data> {
                 text,
                 {
                     reply_markup: {
-                        inline_keyboard: await InlineKeyboardManager.get(
+                        inline_keyboard: await LegacyInlineKeyboardManager.get(
                             'generator/update',
                             {
                                 id,

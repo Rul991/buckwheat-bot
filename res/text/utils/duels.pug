@@ -1,0 +1,20 @@
+include ./mixins.pug
+
+mixin effects(title, arr, bold = true)
+    if bold
+        b #{title}: 
+    else
+        | #{title}: 
+    |
+    if arr.length > 0
+        +pins(arr)
+    else
+        |
+        | 🤷‍♂️ (пусто)
+    |
+    |
+    |
+
+mixin defaultEffects(enemyTexts, userTexts, bold)
+    +effects('😈 На врага', enemyTexts, bold)
+    +effects('😄 На отправителя', userTexts, bold)

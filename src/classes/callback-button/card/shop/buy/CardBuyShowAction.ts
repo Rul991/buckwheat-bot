@@ -7,7 +7,7 @@ import MessageUtils from '../../../../../utils/MessageUtils'
 import ShopCardService from '../../../../db/services/card/ShopCardService'
 import FileUtils from '../../../../../utils/FileUtils'
 import StringUtils from '../../../../../utils/StringUtils'
-import InlineKeyboardManager from '../../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../../main/LegacyInlineKeyboardManager'
 import { CallbackButtonOptions } from '../../../../../utils/values/types/action-options'
 import { cardBuySchema } from '../../../../../utils/values/schemas'
 
@@ -80,7 +80,7 @@ export default class extends CallbackButtonAction<Data> {
             },
             {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get(
+                    inline_keyboard: await LegacyInlineKeyboardManager.get(
                         `cards/buy-show`,
                         {
                             page,

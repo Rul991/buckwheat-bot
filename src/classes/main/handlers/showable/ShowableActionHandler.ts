@@ -83,7 +83,7 @@ export default abstract class <A extends ShowableBaseAction, F extends BotFilter
                         return
                     }
 
-                    const instance = this._container.getByKey(command!)
+                    const instance = this._container.getByKey(command)
                     if (!instance) {
                         return await this._notExistAction?.execute(options)
                     }

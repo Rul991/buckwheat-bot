@@ -9,7 +9,7 @@ import LevelUtils from './level/LevelUtils'
 import StringUtils from './StringUtils'
 import ObjectValidator from './ObjectValidator'
 import { jsonShopItemSchema } from './values/schemas'
-import InlineKeyboardManager from '../classes/main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../classes/main/LegacyInlineKeyboardManager'
 import CasinoGetService from '../classes/db/services/casino/CasinoGetService'
 import AdminUtils from './AdminUtils'
 import ChatSettingsService from '../classes/db/services/settings/ChatSettingsService'
@@ -680,7 +680,7 @@ export default class ShopItems {
             ),
             options: {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.map('shop/show', {
+                    inline_keyboard: await LegacyInlineKeyboardManager.map('shop/show', {
                         values: {
                             count: counts
                                 .map(v => {

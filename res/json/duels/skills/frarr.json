@@ -1,0 +1,33 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Гори ярко, стрела",
+        "description": "Если поджечь стрелу, она будет наносит больше урона"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -30
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "attack",
+                "args": [
+                    15,
+                    0.5
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "freff",
+                    2
+                ]
+            }
+        ]
+    }
+}

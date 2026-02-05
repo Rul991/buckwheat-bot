@@ -12,7 +12,7 @@ const updateCubePlaying = async () => {
 
 const update = async () => {
     await Promise.allSettled([
-        updateCubePlaying()
+        // updateCubePlaying()
     ])
 }
 

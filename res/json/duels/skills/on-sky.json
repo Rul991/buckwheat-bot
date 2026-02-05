@@ -1,0 +1,26 @@
+{
+    "level": 25,
+    "info": {
+        "title": "На небеса",
+        "description": "Поднимает врагов в воздух, не давая сделать ни шага"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -340
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "skip-step",
+                    3
+                ]
+            }
+        ]
+    }
+}

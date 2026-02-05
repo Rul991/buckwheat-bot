@@ -23,13 +23,6 @@ type GenerateMultipliedSequenceOptions = {
 }
 
 export default class ArrayUtils {
-    static filterAndSort<T extends Record<any, any>>(arr: T[], key: keyof T, maxCount = arr.length) {
-        return arr
-            .filter((v) => v[key] > 0)
-            .sort((a, b) => (b[key] - a[key]))
-            .filter((_, i) => i < maxCount)
-    }
-
     static isBounds(index: number, arr: any[]): boolean {
         return index >= FIRST_INDEX && index < arr.length
     }
@@ -71,17 +64,9 @@ export default class ArrayUtils {
         width
     }: ObjectsGrid<T>): T[][] {
         const result: T[][] = []
-        const lastIndex = objects.length - 1
-        let temp: T[] = []
 
-        for (let i = 0; i <= lastIndex; i++) {
-            const object = objects[i]
-            temp.push(object)
-
-            if (temp.length >= width || i >= lastIndex) {
-                result.push(temp)
-                temp = []
-            }
+        for (let i = 0; i < objects.length; i += width) {
+            result.push(objects.slice(i, i + width))
         }
 
         return result
@@ -131,11 +116,19 @@ export default class ArrayUtils {
 
         const rawNumber = this._generateMultipliedSequenceWithoutAvoiding(options)
 
-        if(avoidNumber === undefined) {
+        if (avoidNumber === undefined) {
             return rawNumber
         }
         else {
             return rawNumber.filter(v => v != avoidNumber)
         }
+    }
+
+    static getLastIndex(arr: any[]) {
+        return arr.length - 1
+    }
+
+    static getLastElement<T>(arr: T[]): T | undefined {
+        return arr[this.getLastIndex(arr)] ?? undefined
     }
 }

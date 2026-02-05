@@ -1,0 +1,33 @@
+{
+    "level": 90,
+    "info": {
+        "title": "Пламя ада",
+        "description": "Стрела, которая смогла..."
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -575
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "attack",
+                "args": [
+                    45,
+                    3
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "freff",
+                    10
+                ]
+            }
+        ]
+    }
+}

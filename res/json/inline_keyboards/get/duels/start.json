@@ -1,15 +1,8 @@
 [
     [
         {
-            "text": "🎰 Выбрать",
-            "callback_data": "bidchoose_@"
-        }
-    ],
-
-    [
-        {
             "text": "🔫 Начать дуэль",
-            "callback_data": "duelstart_@"
+            "callback_data": "duelstart_@{userReply}"
         }
     ]
 ]

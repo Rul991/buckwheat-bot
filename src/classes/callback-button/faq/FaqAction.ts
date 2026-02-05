@@ -3,7 +3,7 @@ import CallbackButtonAction from '../CallbackButtonAction'
 import FaqUtils from '../../../utils/FaqUtils'
 import FileUtils from '../../../utils/FileUtils'
 import MessageUtils from '../../../utils/MessageUtils'
-import InlineKeyboardManager from '../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 
 type Data = {
@@ -40,7 +40,7 @@ export default class extends CallbackButtonAction<Data> {
             text,
             {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get(
+                    inline_keyboard: await LegacyInlineKeyboardManager.get(
                         'faq/back',
                         {
                             page: JSON.stringify(page)

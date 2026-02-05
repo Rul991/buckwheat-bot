@@ -1,0 +1,33 @@
+{
+    "level": 35,
+    "info": {
+        "title": "Держать строй",
+        "description": "Повышает ваш боевой дух и улучшает самочувствие"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -100
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "2precent-heal",
+                    3
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "2precent-heal",
+                    3
+                ]
+            }
+        ]
+    }
+}

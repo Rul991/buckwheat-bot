@@ -1,5 +1,7 @@
-| Игрок 
-a(href=reply.link) #{reply.name}
-|  отказался от дуэли с игроком 
-a(href=user.link) #{user.name}
+include utils/mixins.pug
+
+| ❌ Игрок 
++link(reply)
+| отказался от дуэли с игроком 
++link(user, false)
 | !

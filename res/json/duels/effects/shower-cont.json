@@ -1,0 +1,25 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Вытряхивание души",
+        "description": ""
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    15
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "mana",
+                "args": [
+                    -15
+                ]
+            }
+        ]
+    }
+}

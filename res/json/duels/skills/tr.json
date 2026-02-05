@@ -1,0 +1,31 @@
+{
+    "level": 80,
+    "info": {
+        "title": "Крыса",
+        "description": "Да... Забери у него всё.."
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -1000
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "useSkillIndex",
+                "args": [
+                    0
+                ]
+            },
+            {
+                "name": "removeSkill",
+                "args": [
+                    0
+                ]
+            }
+        ]
+    }
+}

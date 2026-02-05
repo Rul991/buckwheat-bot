@@ -1,7 +1,7 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import IdeasService from '../../../db/services/ideas/IdeasService'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class IdeaCommand extends BuckwheatCommand {
@@ -26,7 +26,7 @@ export default class IdeaCommand extends BuckwheatCommand {
                 ctx,
                 'text/commands/ideas/start.pug',
                 {
-                    inlineKeyboard: await InlineKeyboardManager.get(
+                    inlineKeyboard: await LegacyInlineKeyboardManager.get(
                         'start_ideas',
                         JSON.stringify({ id })
                     ),

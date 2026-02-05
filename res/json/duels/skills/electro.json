@@ -1,0 +1,29 @@
+{
+    "level": 40,
+    "info": {
+        "title": "Электро-шок",
+        "description": "Ты выглядишь весьма шокированным!"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -250
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "skipStep",
+                "args": []
+            },
+            {
+                "name": "damage",
+                "args": [
+                    150
+                ]
+            }
+        ]
+    }
+}

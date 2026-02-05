@@ -1,0 +1,19 @@
+{
+    "level": 100,
+    "info": {
+        "title": "Спидозные козявки",
+        "description": "Как думаешь, чья это идея?"
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "psn10",
+                    999
+                ]
+            }
+        ]
+    }
+}

@@ -5,7 +5,7 @@ import GeneratorsService from '../../db/services/generators/GeneratorsService'
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import FileUtils from '../../../utils/FileUtils'
-import InlineKeyboardManager from '../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 import { idSchema } from '../../../utils/values/schemas'
 
 type Data = {
@@ -55,7 +55,7 @@ export default class extends CallbackButtonAction<Data> {
                 ),
                 {
                     reply_markup: {
-                        inline_keyboard: await InlineKeyboardManager.get(
+                        inline_keyboard: await LegacyInlineKeyboardManager.get(
                             'generator/update',
                             {
                                 id: JSON.stringify(id),

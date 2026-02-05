@@ -1,7 +1,7 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class ShopCommand extends BuckwheatCommand {
@@ -34,7 +34,7 @@ export default class ShopCommand extends BuckwheatCommand {
                     totalCount,
                     fullOwner
                 },
-                inlineKeyboard: await InlineKeyboardManager.get(
+                inlineKeyboard: await LegacyInlineKeyboardManager.get(
                     'start_shop', 
                     JSON.stringify({
                         id

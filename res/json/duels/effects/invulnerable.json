@@ -1,0 +1,11 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Неуязвимость",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": []
+    }
+}

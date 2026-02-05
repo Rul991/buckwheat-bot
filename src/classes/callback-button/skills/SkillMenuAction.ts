@@ -2,17 +2,16 @@ import { ZodType } from 'zod'
 import { CallbackButtonValue } from '../../../utils/values/types/types'
 import CallbackButtonAction from '../CallbackButtonAction'
 import MessageUtils from '../../../utils/MessageUtils'
-import InlineKeyboardManager from '../../main/InlineKeyboardManager'
-import ChoosedSkillsService from '../../db/services/choosedSkills/ChosenSkillsService'
+import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 import UserClassService from '../../db/services/user/UserClassService'
 import FileUtils from '../../../utils/FileUtils'
 import ContextUtils from '../../../utils/ContextUtils'
 import ClassUtils from '../../../utils/ClassUtils'
-import SkillUtils from '../../../utils/SkillUtils'
-import ChosenSkillsService from '../../db/services/choosedSkills/ChosenSkillsService'
-import { UNKNOWN_EFFECT } from '../../../utils/values/consts'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 import { idSchema } from '../../../utils/values/schemas'
+import ChosenSkillsService from '../../db/services/chosen-skills/ChosenSkillsService'
+import SkillUtils from '../../../utils/skills/SkillUtils'
+import SkillService from '../../db/services/chosen-skills/SkillService'
 
 type Data = {
     id: number
@@ -38,11 +37,11 @@ export default class extends CallbackButtonAction<Data> {
             max: chosenSkills.maxCount ?? 0
         }
 
-        const userSkills = await ChoosedSkillsService.getSkills(chatId, id)
+        const userSkills = await SkillService.get(chatId, id)
         const buttons: CallbackButtonValue[] = await Promise.all(
             userSkills.map(async (skill, i) => 
                 ({
-                    text: (await SkillUtils.getSkillById(type, skill))?.title ?? UNKNOWN_EFFECT,
+                    text: SkillUtils.getSkillById(skill).info.title,
                     data: JSON.stringify({index: i})
                 })
             )
@@ -61,7 +60,7 @@ export default class extends CallbackButtonAction<Data> {
             ),
             {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.map(
+                    inline_keyboard: await LegacyInlineKeyboardManager.map(
                         'skills/menu', 
                         {
                             globals: {

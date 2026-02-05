@@ -14,10 +14,13 @@ export default class extends PhotoAction {
             ctx
         } = options
 
+        const photos = ctx.message.photo
+        const photo = photos[photos.length - 1]
+
         const {
             height,
             width
-        } = ctx.message.photo[0]
+        } = photo
 
         await MessageUtils.answerMessageFromResource(
             ctx,

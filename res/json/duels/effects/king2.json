@@ -1,0 +1,18 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Продолжение Концерта",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "damage",
+                "args": [
+                    50
+                ]
+            }
+        ]
+    }
+}

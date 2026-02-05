@@ -1,0 +1,11 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Повышение энергии (использовано)",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": []
+    }
+}

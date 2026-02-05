@@ -11,7 +11,7 @@
         "outDir": "./dist",
         "rootDir": "./src",
         "declaration": true,
-        "lib": ["es2021"]
+        "lib": ["es2021", "es2022"]
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules", "dist", "logs/**"]

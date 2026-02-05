@@ -1,0 +1,11 @@
+{
+    "level": 1000,
+    "info": {
+        "title": "",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": []
+    }
+}

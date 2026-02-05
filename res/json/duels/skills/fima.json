@@ -1,0 +1,32 @@
+{
+    "level": 5,
+    "info": {
+        "title": "Клоун-бомба",
+        "description": "Взрывное шоу обеспечено!"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -65
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "zero-skill",
+                    1
+                ]
+            },
+            {
+                "name": "damage",
+                "args": [
+                    40
+                ]
+            }
+        ]
+    }
+}

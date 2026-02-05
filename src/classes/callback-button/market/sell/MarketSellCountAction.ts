@@ -8,7 +8,7 @@ import FileUtils from '../../../../utils/FileUtils'
 import ArrayUtils from '../../../../utils/ArrayUtils'
 import { FIRST_INDEX, MAX_COUNT_BUTTONS_LENGTH } from '../../../../utils/values/consts'
 import MessageUtils from '../../../../utils/MessageUtils'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import StringUtils from '../../../../utils/StringUtils'
 
 type Data = {
@@ -79,7 +79,7 @@ export default class extends CallbackButtonAction<Data> {
             ),
             {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.map(
+                    inline_keyboard: await LegacyInlineKeyboardManager.map(
                         'market/sell/show',
                         {
                             values: {

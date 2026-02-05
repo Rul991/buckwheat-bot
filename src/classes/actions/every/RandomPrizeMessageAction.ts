@@ -3,7 +3,7 @@ import MessageUtils from '../../../utils/MessageUtils'
 import RandomUtils from '../../../utils/RandomUtils'
 import { MessageContext } from '../../../utils/values/types/contexts'
 import EveryMessageAction from './EveryMessageAction'
-import InlineKeyboardManager from '../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import CasinoGetService from '../../db/services/casino/CasinoGetService'
 import ChatSettingsService from '../../db/services/settings/ChatSettingsService'
@@ -22,7 +22,7 @@ export default class RandomPrizeMessageAction extends EveryMessageAction {
                 ctx,
                 'text/actions/random-prize/spawn.pug',
                 {
-                    inlineKeyboard: await InlineKeyboardManager.get('random_prize')
+                    inlineKeyboard: await LegacyInlineKeyboardManager.get('random_prize')
                 }
             )
         }

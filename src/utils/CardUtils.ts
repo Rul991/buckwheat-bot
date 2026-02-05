@@ -1,4 +1,4 @@
-import InlineKeyboardManager from '../classes/main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../classes/main/LegacyInlineKeyboardManager'
 import ReplaceOptions from '../interfaces/options/ReplaceOptions'
 import Card from '../interfaces/schemas/card/Card'
 import Cards from '../interfaces/schemas/card/Cards'
@@ -117,7 +117,7 @@ export default class {
             ),
             options: {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get(
+                    inline_keyboard: await LegacyInlineKeyboardManager.get(
                         `cards/${inlineKeyboardFilename}`,
                         {
                             page: currentPage,

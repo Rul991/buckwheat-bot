@@ -1,0 +1,45 @@
+{
+    "level": 45,
+    "info": {
+        "title": "Зелёная миля",
+        "description": "Лечит лучше, чем печеньки"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -250
+                ]
+            },
+            {
+                "name": "heal",
+                "args": [
+                    100
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "invulnerable",
+                    1
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "heal",
+                "args": [
+                    100
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "invulnerable",
+                    1
+                ]
+            }
+        ]
+    }
+}

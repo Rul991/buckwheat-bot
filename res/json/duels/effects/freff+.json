@@ -1,0 +1,19 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Горение+",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "attack",
+                "args": [
+                    10,
+                    0.25
+                ]
+            }
+        ]
+    }
+}

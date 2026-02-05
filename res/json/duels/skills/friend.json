@@ -1,0 +1,33 @@
+{
+    "level": 70,
+    "info": {
+        "title": "Верный друг",
+        "description": "Верный друг поможет в беде"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -700
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "frnd",
+                    3
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "frnd",
+                    3
+                ]
+            }
+        ]
+    }
+}

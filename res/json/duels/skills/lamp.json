@@ -1,0 +1,33 @@
+{
+    "level": 40,
+    "info": {
+        "title": "Маячок",
+        "description": "Если не хочешь разговаривать с людьми - телепортируйся от них. Это же так просто!"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -100
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "invulnerable",
+                    1
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "invulnerable",
+                    1
+                ]
+            }
+        ]
+    }
+}

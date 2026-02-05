@@ -1,0 +1,41 @@
+{
+    "level": 60,
+    "info": {
+        "title": "Повышение энергии",
+        "description": "Сыграв особую мелодию, Бард посылает волну ритма, которая заряжает оружие. Даже полностью разряженное оружие получает новый заряд, готовый к бою."
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "manaHasntEffect",
+                "args": [
+                    535,
+                    "used-mana-up"
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "used-mana-up",
+                    30
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "manaHasntEffect",
+                "args": [
+                    535,
+                    "used-mana-up"
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "used-mana-up",
+                    30
+                ]
+            }
+        ]
+    }
+}

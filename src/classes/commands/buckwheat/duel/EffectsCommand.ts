@@ -1,6 +1,6 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
@@ -28,7 +28,7 @@ export default class extends BuckwheatCommand {
             'text/commands/effectBook/hasnt.pug'
 
         const inlineKeyboard = has ?
-            await InlineKeyboardManager.get(
+            await LegacyInlineKeyboardManager.get(
                 'effects/start',
                 {
                     id

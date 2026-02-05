@@ -1,0 +1,51 @@
+{
+    "level": 60,
+    "info": {
+        "title": "Великолепная броня",
+        "description": "Куй броню, пока горячо"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -350
+                ]
+            },
+            {
+                "name": "effectHasntEffect",
+                "args": [
+                    "armor-used",
+                    "defend",
+                    350
+                ]
+            },
+            {
+                "name": "effectHasntEffect",
+                "args": [
+                    "armor-used",
+                    "armor-used",
+                    999
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effectHasntEffect",
+                "args": [
+                    "armor-used",
+                    "defend",
+                    350
+                ]
+            },
+            {
+                "name": "effectHasntEffect",
+                "args": [
+                    "armor-used",
+                    "armor-used",
+                    999
+                ]
+            }
+        ]
+    }
+}

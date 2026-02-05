@@ -1,0 +1,26 @@
+{
+    "level": 55,
+    "info": {
+        "title": "Заряженный медиатор",
+        "description": "Бард кидает медиаторы во врагов"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -100
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "randomDamage",
+                "args": [
+                    50,
+                    250
+                ]
+            }
+        ]
+    }
+}

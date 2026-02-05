@@ -1,0 +1,46 @@
+{
+    "level": 50,
+    "info": {
+        "title": "Железная воля",
+        "description": "Собрав всю свою волю в кулак, можно проигнорировать все эмоции и даже боль"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -200
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "damageup-50",
+                    2
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "no-effects",
+                    2
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "damageup-50",
+                    2
+                ]
+            },
+            {
+                "name": "deleteEffects",
+                "args": [
+                    false
+                ]
+            }
+        ]
+    }
+}

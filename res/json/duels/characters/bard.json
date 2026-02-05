@@ -1,0 +1,60 @@
+{
+    "characteristics": {
+        "hp": {
+            "start": 80,
+            "up": 9
+        },
+        "mana": {
+            "start": 90,
+            "up": 10
+        }
+    },
+    "skill": {
+        "showable": [
+            "attack-bard",
+            "string",
+            "laugh-sin",
+            "white-defender",
+            "scary-notes",
+            "sleep-melody",
+            "jimmy",
+            "yeah-rock",
+            "stay",
+            "lamp",
+            "koffy",
+            "chili-riff",
+            "angry-pick",
+            "mana-up",
+            "hero-song",
+            "punk-rock",
+            "guitar-hero",
+            "king-song",
+            "hard-rock",
+            "we-die",
+            "angle",
+            "sun-up"
+        ],
+        "main": "attack-bard",
+        "effects": [
+            "ls1",
+            "ls2",
+            "ls3",
+            "ls4",
+            "ls5",
+            "poison-10",
+            "2precent-heal",
+            "fire-guitar",
+            "good-punk",
+            "dead-punk",
+            "fire",
+            "used-mana-up",
+            "skip-step",
+            "king1",
+            "king2",
+            "agony",
+            "damageup40",
+            "damageup-40",
+            "defend"
+        ]
+    }
+}

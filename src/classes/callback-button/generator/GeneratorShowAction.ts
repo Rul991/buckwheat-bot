@@ -7,7 +7,7 @@ import MessageUtils from '../../../utils/MessageUtils'
 import FileUtils from '../../../utils/FileUtils'
 import GeneratorsService from '../../db/services/generators/GeneratorsService'
 import { GENERATOR_INCOME_PER_HOUR, GENERATOR_UPGRADE_PRICE_PER_LEVEL } from '../../../utils/values/consts'
-import InlineKeyboardManager from '../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 import GeneratorUtils from '../../../utils/GeneratorUtils'
 
 type Data = {
@@ -77,7 +77,7 @@ export default class extends CallbackButtonAction<Data> {
             ),
             {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.map(
+                    inline_keyboard: await LegacyInlineKeyboardManager.map(
                         'generator/show',
                         {
                             globals: {

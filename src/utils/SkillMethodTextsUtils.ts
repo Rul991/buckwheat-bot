@@ -1,12 +1,17 @@
 import ReplaceOptions from '../interfaces/options/ReplaceOptions'
 import FileUtils from './FileUtils'
-import SkillUtils from './SkillUtils'
-import { UNKNOWN_EFFECT } from './values/consts'
-import { ClassTypes } from './values/types/types'
+import SkillUtils from './skills/SkillUtils'
 
-type CharMessageWithAdditionalSymbolOptions = {
+type AddCharMessageOptions = {
     value: number
     symbol: string
+}
+
+type GetAddCharHasntEffectMessageOptions = AddCharMessageOptions & {
+    effect: string
+}
+
+type CharMessageWithAdditionalSymbolOptions = AddCharMessageOptions & {
     additional?: string
     filename?: string
     changeValues?: ReplaceOptions['changeValues']
@@ -36,34 +41,38 @@ export default class {
         )
     }
 
-    static getAddCharMessage(value: number, onEnemy: boolean, symbol: string) {
+    static getAddCharMessage({
+        value,
+        symbol
+    }: AddCharMessageOptions) {
         return this._getAddCharMessageWithAdditionalSymbol({
             value,
-            changeValues: {
-                onEnemy
-            },
             symbol
         })
     }
 
-    static getAddCharPrecentsMessage(value: number, onEnemy: boolean, symbol: string) {
+    static getAddCharPrecentsMessage({
+        value,
+        symbol
+    }: AddCharMessageOptions) {
         return this._getAddCharMessageWithAdditionalSymbol({
             value,
-            changeValues: {
-                onEnemy
-            },
             symbol,
             additional: '%'
         })
     }
 
-    static async getAddCharHasntEffectMessage(value: number, symbol: string, effect: string, type: ClassTypes) {
-        const skill = await SkillUtils.getSkillById(type, effect)
+    static getAddCharHasntEffectMessage({
+        value,
+        symbol,
+        effect
+    }: GetAddCharHasntEffectMessageOptions) {
+        const skill = SkillUtils.getSkillById(effect)
         return this._getAddCharMessageWithAdditionalSymbol({
             value,
             symbol,
             changeValues: {
-                title: skill?.title ?? UNKNOWN_EFFECT
+                ...skill.info
             },
             filename: 'duelist-hasnt-effect'
         })

@@ -1,0 +1,19 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Электрический шок",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "randomDamage",
+                "args": [
+                    50,
+                    100
+                ]
+            }
+        ]
+    }
+}

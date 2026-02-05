@@ -1,0 +1,33 @@
+{
+    "level": 60,
+    "info": {
+        "title": "Двойная атака",
+        "description": "Увеличим твой урон быстро и безболезненно!"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -840
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "damageup100",
+                    7
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "damageup100",
+                    7
+                ]
+            }
+        ]
+    }
+}

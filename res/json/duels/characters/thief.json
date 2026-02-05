@@ -1,0 +1,53 @@
+{
+    "characteristics": {
+        "hp": {
+            "start": 90,
+            "up": 9
+        },
+        "mana": {
+            "start": 80,
+            "up": 11
+        }
+    },
+    "skill": {
+        "showable": [
+            "attack-thief",
+            "frarr",
+            "theft",
+            "invis",
+            "fork",
+            "hrdarr",
+            "orbit",
+            "crook",
+            "ffwf",
+            "maxim",
+            "honey",
+            "key",
+            "black",
+            "noskill",
+            "2hand",
+            "friend",
+            "hide",
+            "tr",
+            "key85",
+            "clfr",
+            "asura",
+            "gta"
+        ],
+        "main": "attack-thief",
+        "effects": [
+            "freff",
+            "freff+",
+            "2heff",
+            "frnd",
+            "damageup100",
+            "omlet",
+            "skip-step",
+            "hashon",
+            "asuend",
+            "asucont",
+            "clone",
+            "defend"
+        ]
+    }
+}

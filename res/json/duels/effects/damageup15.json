@@ -1,0 +1,11 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Повышение урона на 15%",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": []
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Самоатака",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "returnDamage",
+                "args": [
+                    100
+                ]
+            }
+        ]
+    }
+}

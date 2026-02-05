@@ -1,0 +1,18 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Обжигающий дождик",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "damage",
+                "args": [
+                    15
+                ]
+            }
+        ]
+    }
+}

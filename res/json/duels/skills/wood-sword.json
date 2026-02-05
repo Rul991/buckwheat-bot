@@ -1,0 +1,26 @@
+{
+    "level": 10,
+    "info": {
+        "title": "Деревянный меч",
+        "description": "Лучшая помощница в бою - грубая сила"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -50
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "sword-effect",
+                    7
+                ]
+            }
+        ]
+    }
+}

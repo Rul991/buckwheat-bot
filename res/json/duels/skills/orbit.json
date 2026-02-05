@@ -1,0 +1,30 @@
+{
+    "level": 25,
+    "info": {
+        "title": "Жвачная ловушка",
+        "description": "Кто-то наступил в липкую жвачку"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -100
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "skip-step",
+                    1
+                ]
+            },
+            {
+                "name": "skipStep",
+                "args": []
+            }
+        ]
+    }
+}

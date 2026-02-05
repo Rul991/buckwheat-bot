@@ -1,0 +1,24 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Отголоски грозы",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "damage",
+                "args": [
+                    50
+                ]
+            },
+            {
+                "name": "mana",
+                "args": [
+                    -50
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Понижение урона на 40%",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": []
+    }
+}

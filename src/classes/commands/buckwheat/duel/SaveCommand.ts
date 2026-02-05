@@ -57,7 +57,7 @@ export default class SaveCommand extends BuckwheatCommand {
         ctx
     }: HealOptions): Promise<boolean> {
         const lastSave = await DuelistService.getField(chatId, id, 'lastSave')
-        const isCanSave = lastSave ? Date.now() - SAVE_COOLDOWN >= lastSave : true
+        const isCanSave = lastSave ? TimeUtils.isTimeExpired(SAVE_COOLDOWN, lastSave) : true
 
         if(isCanSave) {
             await DuelistService.save(chatId, id)

@@ -17,7 +17,7 @@ import StringUtils from '../../../../utils/StringUtils'
 import TimeUtils from '../../../../utils/TimeUtils'
 import Logging from '../../../../utils/Logging'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import MarriageService from '../../../db/services/marriage/MarriageService'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import RankSettingsService from '../../../db/services/settings/RankSettingsService';
@@ -184,7 +184,7 @@ export default class ProfileCommand extends BuckwheatCommand {
             experiencePrecents: ExperienceUtils.precents(experience)
         }
 
-        const inlineKeyboard =  await InlineKeyboardManager.get('awards/start', `${id}`)
+        const inlineKeyboard =  await LegacyInlineKeyboardManager.get('awards/start', `${id}`)
 
         try {
             if(photoId) {

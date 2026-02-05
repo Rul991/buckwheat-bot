@@ -4,7 +4,7 @@ import { ScrollerEditMessage, ScrollerGetObjectsOptions, ScrollerSendMessageOpti
 import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import RulesService from '../../../db/services/chat/RulesService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import ScrollerAction from './ScrollerAction'
 
 export default class RuleChangeAction extends ScrollerAction<string> {
@@ -41,7 +41,7 @@ export default class RuleChangeAction extends ScrollerAction<string> {
 
             options: {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get('rules', `${currentPage}`)
+                    inline_keyboard: await LegacyInlineKeyboardManager.get('rules', `${currentPage}`)
                 },
             }
         }

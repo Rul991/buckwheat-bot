@@ -1,5 +1,5 @@
 import ChatSettingsService from '../../classes/db/services/settings/ChatSettingsService'
-import InlineKeyboardManager from '../../classes/main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../classes/main/LegacyInlineKeyboardManager'
 import FileUtils from '../FileUtils'
 import MessageUtils from '../MessageUtils'
 import { DEFAULT_SETTINGS_TYPE, SET_NUMBER_PHRASE, SET_STRING_PHRASE } from '../values/consts'
@@ -135,7 +135,7 @@ export default class {
             ),
             {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.map(
+                    inline_keyboard: await LegacyInlineKeyboardManager.map(
                         'settings/show',
                         {
                             values: {

@@ -1,14 +1,14 @@
 import { number, object, ZodType } from 'zod'
 import CallbackButtonAction from '../CallbackButtonAction'
 import ContextUtils from '../../../utils/ContextUtils'
-import ChosenSkillsService from '../../db/services/choosedSkills/ChosenSkillsService'
 import ClassUtils from '../../../utils/ClassUtils'
 import FileUtils from '../../../utils/FileUtils'
 import MessageUtils from '../../../utils/MessageUtils'
-import InlineKeyboardManager from '../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 import UserClassService from '../../db/services/user/UserClassService'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 import { idSchema } from '../../../utils/values/schemas'
+import SkillService from '../../db/services/chosen-skills/SkillService'
 
 type Data = {
     index: number
@@ -30,7 +30,7 @@ export default class extends CallbackButtonAction<Data> {
     async execute({ ctx, data: { id, index }, chatId }: CallbackButtonOptions<Data>): Promise<string | void> {
         if (await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return
 
-        const isRemoved = await ChosenSkillsService.removeSkill(chatId, id, index)
+        const isRemoved = await SkillService.remove(chatId, id, index)
         const type = await UserClassService.get(chatId, id)
 
         await MessageUtils.editText(
@@ -45,7 +45,7 @@ export default class extends CallbackButtonAction<Data> {
             ),
             {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get(
+                    inline_keyboard: await LegacyInlineKeyboardManager.get(
                         'skills/menu',
                         JSON.stringify({ id })
                     )

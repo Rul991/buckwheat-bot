@@ -1,0 +1,35 @@
+{
+    "level": 95,
+    "info": {
+        "title": "Длань Асуры",
+        "description": "Вы возносите молитву Асуре, и он откликается. Божество наделяет вас своей силой и вы наносите сильный удар"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -325
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effectHasntEffect",
+                "args": [
+                    "asuend",
+                    "asucont",
+                    1
+                ]
+            },
+            {
+                "name": "effectHasntEffect",
+                "args": [
+                    "asuend",
+                    "asuend",
+                    10
+                ]
+            }
+        ]
+    }
+}

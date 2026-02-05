@@ -2,13 +2,14 @@ import SkillExecute from '../other/SkillExecute'
 
 export default interface Skill {
     id: string
-    isAlwaysUsable?: boolean
-    secret?: boolean
+    alwaysUsable?: boolean
     level: number
-    title: string
-    description: string
-    onEnemy: boolean
-    cost: SkillExecute[]
-    execute: SkillExecute[]
-    isEffect?: boolean
+    info: {
+        title: string
+        description: string
+    }
+    execute: {
+        user: SkillExecute[]
+        enemy: SkillExecute[]
+    }
 }

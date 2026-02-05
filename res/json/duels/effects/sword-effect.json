@@ -1,0 +1,19 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Деревянный меч",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "randomDamage",
+                "args": [
+                    5,
+                    15
+                ]
+            }
+        ]
+    }
+}

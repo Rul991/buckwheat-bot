@@ -8,7 +8,7 @@ import MessageUtils from '../../../utils/MessageUtils'
 import Pager from '../../../utils/Pager'
 import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import IdeasService from '../../db/services/ideas/IdeasService'
-import InlineKeyboardManager from '../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 import CallbackButtonAction from '../CallbackButtonAction'
 import { scrollerWithIdDataSchema } from '../../../utils/values/schemas'
 import TimeUtils from '../../../utils/TimeUtils'
@@ -52,7 +52,7 @@ export default class IdeaChangeAction extends CallbackButtonAction<ScrollerWithI
             ),
             {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get(
+                    inline_keyboard: await LegacyInlineKeyboardManager.get(
                         'ideachange', 
                         JSON.stringify({id, current: newPage})
                     )

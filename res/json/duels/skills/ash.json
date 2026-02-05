@@ -1,0 +1,31 @@
+{
+    "level": 10,
+    "info": {
+        "title": "Пепел",
+        "description": "Пусть от них останется лишь пепел..."
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -140
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "damage",
+                "args": [
+                    50
+                ]
+            },
+            {
+                "name": "mana",
+                "args": [
+                    -60
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "level": 35,
+    "info": {
+        "title": "Восстановление здоровья",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "precentHeal",
+                "args": [
+                    2
+                ]
+            }
+        ]
+    }
+}

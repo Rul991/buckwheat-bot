@@ -1,0 +1,30 @@
+{
+    "level": 15,
+    "info": {
+        "title": "Град ударов",
+        "description": "Быстро махаешь мечом, молодец!"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -50
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "skip-step",
+                    1
+                ]
+            },
+            {
+                "name": "skipStep",
+                "args": []
+            }
+        ]
+    }
+}

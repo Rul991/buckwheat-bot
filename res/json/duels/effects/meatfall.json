@@ -1,0 +1,19 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Дождь из фрикаделек",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "randomDamage",
+                "args": [
+                    30,
+                    50
+                ]
+            }
+        ]
+    }
+}

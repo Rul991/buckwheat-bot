@@ -7,7 +7,7 @@ import { ScrollerSendMessageOptions, ScrollerEditMessageResult, ScrollerGetObjec
 import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import ChatSettingsService from '../../db/services/settings/ChatSettingsService'
 import UserProfileService from '../../db/services/user/UserProfileService'
-import InlineKeyboardManager from '../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 import ScrollerAction from '../scrollers/page/ScrollerAction'
 
 type Object = {
@@ -134,7 +134,7 @@ export default class extends ScrollerAction<Object> {
             ),
             options: {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get(
+                    inline_keyboard: await LegacyInlineKeyboardManager.get(
                         'top/change',
                         {
                             page: currentPage,

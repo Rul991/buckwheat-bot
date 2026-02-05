@@ -1,0 +1,11 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Метка беспомощности",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": []
+    }
+}

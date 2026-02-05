@@ -1,0 +1,43 @@
+{
+    "level": 45,
+    "info": {
+        "title": "Баночка с медом",
+        "description": "Объеденье!"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "manaHasntEffect",
+                "args": [
+                    "hashon",
+                    500
+                ]
+            },
+            {
+                "name": "effectHasntEffect",
+                "args": [
+                    "hashon",
+                    "hashon",
+                    20
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "manaHasntEffect",
+                "args": [
+                    "hashon",
+                    500
+                ]
+            },
+            {
+                "name": "effectHasntEffect",
+                "args": [
+                    "hashon",
+                    "hashon",
+                    20
+                ]
+            }
+        ]
+    }
+}

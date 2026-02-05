@@ -1,0 +1,20 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Клоун надувается",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "effectLastStep",
+                "args": [
+                    "fima-wait",
+                    "fima-boom",
+                    1
+                ]
+            }
+        ]
+    }
+}

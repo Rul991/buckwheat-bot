@@ -1,0 +1,27 @@
+{
+    "level": 95,
+    "info": {
+        "title": "Робо-костюм",
+        "description": "Ого как вымахал, тут никто не победит тебя. Давай, замочи их там"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "effect",
+                "args": [
+                    "damageup100",
+                    6
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "damageup-25",
+                    6
+                ]
+            }
+        ]
+    }
+}

@@ -1,4 +1,4 @@
-import SkillUtils from '../../../utils/SkillUtils'
+import SkillUtils from '../../../utils/skills/SkillUtils'
 import { ButtonScrollerOptions, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult, CallbackButtonValue, TinyCurrentIncreaseId } from '../../../utils/values/types/types'
 import UserClassService from '../../db/services/user/UserClassService'
 import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
@@ -16,25 +16,24 @@ export default class extends ButtonScrollerAction<Data, ButtonScrollerData> {
     }
 
     protected async _getObjects({
-        chatId,
-        id
+        id,
+        chatId
     }: ButtonScrollerOptions<ButtonScrollerData>): Promise<Data[]> {
+        const type = await UserClassService.get(chatId, id)
+        const rawSkills = SkillUtils.getEffects(type)
         const result: CallbackButtonValue[] = []
 
-        const type = await UserClassService.get(chatId, id)
-        const rawSkills = await SkillUtils.getSkillsFromFile(type)
-        const skills = rawSkills
-            .filter(skill => skill.isEffect)
+        for (const skill of rawSkills) {
+            const text = skill.info.title
+            const id = skill.id
 
-        const buttons: CallbackButtonValue[] = skills.map(skill => ({
-            text: `${skill.title}`,
-            data: JSON.stringify({
-                name: skill.id,
-                type
+            result.push({
+                text,
+                data: JSON.stringify({
+                    name: id
+                })
             })
-        }))
-
-        result.push(...buttons)
+        }
 
         return result
     }

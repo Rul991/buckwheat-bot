@@ -1,0 +1,31 @@
+{
+    "level": 65,
+    "info": {
+        "title": "Гимн героя",
+        "description": "Сыграв этот воодушевляющий гимн, вы почувствуете себя лучше!"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "precentMana",
+                "args": [
+                    -50
+                ]
+            },
+            {
+                "name": "precentHeal",
+                "args": [
+                    50
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "precentHeal",
+                "args": [
+                    50
+                ]
+            }
+        ]
+    }
+}

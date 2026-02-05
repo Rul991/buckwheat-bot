@@ -1,0 +1,26 @@
+{
+    "level": 5,
+    "info": {
+        "title": "Грабёж",
+        "description": "Своруйте у врага монеты."
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -20
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "moneyStep",
+                "args": [
+                    6,
+                    3
+                ]
+            }
+        ]
+    }
+}

@@ -1,79 +1,25 @@
-import SkillAttack from '../../enums/SkillAttack'
-import Duelist from '../../interfaces/schemas/duels/Duelist'
-import SkillMethodUtils from '../../utils/SkillMethodTextsUtils'
-import { JavascriptTypes, MethodExecuteArguments, AsyncOrSync, TypeKeys, SkillMethodGetText, HpMana } from '../../utils/values/types/types'
+import { MethodExecuteOptions } from '../../utils/values/types/skills'
+import { HpMana, JavascriptTypes } from '../../utils/values/types/types'
 import DuelistService from '../db/services/duelist/DuelistService'
 import SkillMethod from './SkillMethod'
 
-export default class<T extends any[]> extends SkillMethod<T> {
-    args: JavascriptTypes[] = ['number']
-    protected _key: HpMana
+export default class extends SkillMethod<[number]> {
     protected _symbol: string
+    protected _characteristic: HpMana
 
-    constructor(symbol: string, key: HpMana) {
+    args: JavascriptTypes[] = ['number']
+
+    constructor (symbol: string, characteristic: HpMana) {
         super()
-        this._key = key
         this._symbol = symbol
+        this._characteristic = characteristic
     }
 
-    protected _getId({ id }: MethodExecuteArguments<T>) {
-        return id
-    }
-
-    protected async _preCheck({
-        chatId,
-        id,
-        args: [value]
-    }: MethodExecuteArguments<T>): Promise<boolean> {
-        const chars = await DuelistService.getCurrentCharacteristics(chatId, id)
-        return chars[this._key] >= -value
-    }
-
-    protected async _isAdd(_options: MethodExecuteArguments<T>) {
-        return true
-    }
-
-    protected async _getValue(options: MethodExecuteArguments<T>): Promise<number> {
+    protected async _preCheck({ chatId, id, args: [value] }: MethodExecuteOptions<[number]>): Promise<boolean> {
         const {
-            args: [value],
-            attack
-        } = options
-        const boost = SkillAttack.Crit == attack ? 2 : SkillAttack.Fail ? 0.75 : 1
-        return value * boost
+            [this._characteristic]: currentChar
+        } = await DuelistService.getCurrentCharacteristics(chatId, id)
+
+        return
     }
-
-    async _execute(options: MethodExecuteArguments<T>): Promise<boolean> {
-        const {
-            chatId,
-        } = options
-
-        const id = this._getId(options)
-        const value = await this._getValue(options)
-
-        if(await this._isAdd(options)) {
-            await DuelistService.addField(
-                chatId,
-                id,
-                this._key,
-                value
-            )
-        }
-
-        return true
-    }
-
-    async getText(options: MethodExecuteArguments<T> & SkillMethodGetText): Promise<string> {
-        const {
-            skill: { onEnemy }
-        } = options
-
-        const value = await this._getValue(options)
-
-        return await SkillMethodUtils.getAddCharMessage(
-            value,
-            onEnemy,
-            this._symbol
-        )
-    }
-
 }

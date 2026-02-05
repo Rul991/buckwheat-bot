@@ -1,0 +1,33 @@
+{
+    "level": 75,
+    "info": {
+        "title": "Маскировка",
+        "description": "Застань врага врасплох и нанеси кратно повышенный урон"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -480
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "damageup100",
+                    2
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "damageup100",
+                    2
+                ]
+            }
+        ]
+    }
+}

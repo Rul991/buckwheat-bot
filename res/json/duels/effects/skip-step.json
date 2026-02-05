@@ -1,0 +1,16 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Пропуск хода",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "skipStep",
+                "args": []
+            }
+        ]
+    }
+}

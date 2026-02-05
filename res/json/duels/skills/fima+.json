@@ -1,0 +1,26 @@
+{
+    "level": 20,
+    "info": {
+        "title": "Взрывной Клоун",
+        "description": "Хехехехехехехе"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -75
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "fima-wait",
+                    3
+                ]
+            }
+        ]
+    }
+}

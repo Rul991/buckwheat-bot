@@ -1,0 +1,19 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Не люблю, блин, молнию",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "deleteEffect",
+                "args": [
+                    "energy",
+                    true
+                ]
+            }
+        ]
+    }
+}

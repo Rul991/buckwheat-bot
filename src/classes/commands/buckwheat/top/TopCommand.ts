@@ -2,7 +2,7 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import { MaybeString } from '../../../../utils/values/types/types'
 import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import TopUtils from '../../../../utils/TopUtils'
 import RankUtils from '../../../../utils/RankUtils'
 import UserRankService from '../../../db/services/user/UserRankService'
@@ -24,7 +24,7 @@ export default class TopCommand extends BuckwheatCommand {
             ctx,
             `text/commands/top/start.pug`,
             {
-                inlineKeyboard: await InlineKeyboardManager.map(
+                inlineKeyboard: await LegacyInlineKeyboardManager.map(
                     'top/start',
                     {
                         values: {

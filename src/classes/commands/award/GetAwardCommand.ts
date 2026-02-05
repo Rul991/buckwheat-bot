@@ -1,7 +1,7 @@
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../utils/values/types/action-options'
-import InlineKeyboardManager from '../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 
 export default class GetAwardCommand extends BuckwheatCommand {
@@ -33,7 +33,7 @@ export default class GetAwardCommand extends BuckwheatCommand {
             'text/commands/award/start-get.pug',
             {
                 changeValues: {user},
-                inlineKeyboard: await InlineKeyboardManager.get('awards/start', `${id}`)
+                inlineKeyboard: await LegacyInlineKeyboardManager.get('awards/start', `${id}`)
             }
         )
     }

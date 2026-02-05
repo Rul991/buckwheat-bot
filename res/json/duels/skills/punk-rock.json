@@ -1,0 +1,33 @@
+{
+    "level": 70,
+    "info": {
+        "title": "Панк-рок",
+        "description": "ПАНКИ ХОЙ!"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -300
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "good-punk",
+                    3
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "good-punk",
+                    3
+                ]
+            }
+        ]
+    }
+}

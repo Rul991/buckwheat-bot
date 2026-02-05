@@ -1,18 +1,9 @@
-include utils/mixins.pug
+include utils/duels.pug
 
-mixin effects(title, arr)
-    if arr && arr.length > 0
-        |
-        | #{title}: 
-        +pins(arr)
-        |
-        |
+- const description = info.description
 
 if description && description.length
-    | - #{description}
+    | 📌 #{description}
     |
-+effects('🔼 Воздействие', executeTexts)
-+effects('🔽 Стоимость', costTexts)
-
-if executeTexts.length <= 0 && costTexts.length <= 0
-    | Способностей нет!
+    |
+| #{effectsText}

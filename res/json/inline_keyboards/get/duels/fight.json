@@ -2,7 +2,7 @@
     [
         {
             "text": "⚔️ Атаковать",
-            "callback_data": "skilluse_{\"name\":\"attack\"}_@{duel}"
+            "callback_data": "skilluse_{\"name\":\"attack-@{classType}\"}_@{duel}"
         }
     ],
 

@@ -1,0 +1,18 @@
+{
+    "level": 5,
+    "info": {
+        "title": "Смех и Грех V",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "damage",
+                "args": [
+                    32
+                ]
+            }
+        ]
+    }
+}

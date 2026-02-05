@@ -2,7 +2,7 @@
     [
         {
             "text": "✔️ Да",
-            "callback_data": "duelaway_{\"end\":true}_@{user}"
+            "callback_data": "duelaway_{\"end\":true}_@{id}"
         },
 
         {

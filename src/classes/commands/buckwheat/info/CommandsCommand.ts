@@ -3,7 +3,7 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import { MaybeString } from '../../../../utils/values/types/types'
 import { TextContext } from '../../../../utils/values/types/contexts'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class CommandsCommand extends BuckwheatCommand {
@@ -33,7 +33,7 @@ export default class CommandsCommand extends BuckwheatCommand {
                 changeValues: {
                     length: commands.length
                 },
-                inlineKeyboard: await InlineKeyboardManager.map(
+                inlineKeyboard: await LegacyInlineKeyboardManager.map(
                     'commands/types',
                     {
                         values: {

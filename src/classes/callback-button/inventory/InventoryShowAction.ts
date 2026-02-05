@@ -6,7 +6,7 @@ import ContextUtils from '../../../utils/ContextUtils'
 import InventoryItemService from '../../db/services/items/InventoryItemService'
 import FileUtils from '../../../utils/FileUtils'
 import MessageUtils from '../../../utils/MessageUtils'
-import InlineKeyboardManager from '../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 
 type Data = {
     id: number
@@ -61,7 +61,7 @@ export default class extends CallbackButtonAction<Data> {
             text,
             {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get(
+                    inline_keyboard: await LegacyInlineKeyboardManager.get(
                         'inventory/show',
                         {
                             id,

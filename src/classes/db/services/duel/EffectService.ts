@@ -1,11 +1,10 @@
 import Effect from '../../../../interfaces/schemas/duels/Effect'
-import SkillUtils from '../../../../utils/SkillUtils'
+import SkillUtils from '../../../../utils/skills/SkillUtils'
 import DuelRepository from '../../repositories/DuelRepository'
 import DuelService from './DuelService'
 import SkillAttack from '../../../../enums/SkillAttack'
-import { AsyncOrSync, ClassTypes, DeleteEffectsByNameTargetStepsOptions } from '../../../../utils/values/types/types'
+import { AsyncOrSync, DeleteEffectsByNameTargetStepsOptions } from '../../../../utils/values/types/types'
 import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
-import UserClassService from '../user/UserClassService'
 import Duel from '../../../../interfaces/schemas/duels/Duel'
 import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
 
@@ -18,7 +17,7 @@ export default class {
         const effects = await this.get(duelId)
         const newEffects = await callback(Array.from(effects))
 
-        if(newEffects.length != effects.length) {
+        if (newEffects.length != effects.length) {
             await DuelRepository.updateOne(duelId, {
                 $set: {
                     effects: newEffects
@@ -41,7 +40,7 @@ export default class {
             duelId,
             effects => {
                 const index = effects.findIndex(v => v.name == name)
-                if(index !== NOT_FOUND_INDEX) {
+                if (index !== NOT_FOUND_INDEX) {
                     effects.splice(index, 1)
                 }
                 return effects
@@ -54,7 +53,7 @@ export default class {
             duelId,
             effects => {
                 const index = effects.findIndex(v => v.name == name && v.target == target)
-                if(index !== NOT_FOUND_INDEX) {
+                if (index !== NOT_FOUND_INDEX) {
                     effects.splice(index, 1)
                 }
                 return effects
@@ -74,15 +73,15 @@ export default class {
             effects => {
 
                 for (const effect of effects) {
-                    if(steps <= 0) break
+                    if (steps <= 0) break
 
-                    if(effect.name == name && effect.target == target) {
+                    if (effect.name == name && effect.target == target) {
                         const minusSteps = Math.min(steps, effect.remainingSteps)
                         steps -= minusSteps
                         effect.remainingSteps -= minusSteps
                     }
 
-                    if(!isEvery) break
+                    if (!isEvery) break
                 }
 
                 return effects.filter(v => v.remainingSteps > 0)
@@ -121,13 +120,13 @@ export default class {
 
     static async has(duelId: number, name: string) {
         const effects = await this.get(duelId)
-        
+
         return effects.some(v => v.name == name)
     }
 
     static async userHas(duelId: number, userId: number, name: string) {
         const effects = await this.get(duelId)
-        
+
         return effects.some(v => v.name == name && v.target == userId)
     }
 
@@ -159,12 +158,12 @@ export default class {
     }
 
     static async use(ctx: CallbackButtonContext, duel: Duel, effects?: Effect[]) {
-        const { chatId } = duel
-        const currentEffects = (effects ?? await this.get(duel.id))
+        const { chatId, id } = duel
+        const currentEffects = (effects ?? await this.get(id))
             .map(({
-                name, 
-                remainingSteps, 
-                target, 
+                name,
+                remainingSteps,
+                target,
                 sender
             }) => ({
                 remainingSteps: remainingSteps - 1,
@@ -172,32 +171,24 @@ export default class {
                 target,
                 sender
             }))
-        const classNames: Record<number, ClassTypes> = {}
 
         await this.set(
-            duel.id,
+            id,
             currentEffects
         )
 
         for (const { name, sender, target } of currentEffects) {
-            let className = classNames[sender]
+            const skill = SkillUtils.getSkillById(name)
 
-            if(!className) {
-                className = await UserClassService.get(chatId, sender)
-                classNames[sender] = className
-            }
-            
-            const skill = await SkillUtils.getSkillById(className, name)
-
-            if(skill) {
-                await SkillUtils.useSkill({
-                    ctx,
-                    attack: SkillAttack.Normal,
-                    userId: sender,
-                    enemyId: target,
-                    skill
-                })
-            }
+            await SkillUtils.useSkill({
+                ctx,
+                attack: SkillAttack.Normal,
+                userId: sender,
+                enemyId: target,
+                skill,
+                chatId,
+                duel
+            })
         }
 
         const newEffects = (await this.get(duel.id))

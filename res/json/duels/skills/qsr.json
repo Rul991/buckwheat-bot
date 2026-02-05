@@ -1,0 +1,32 @@
+{
+    "level": 70,
+    "info": {
+        "title": "Луч квазара",
+        "description": "Луч чистейшей энергии, извергшейся из погибающей звезды."
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "effect",
+                "args": [
+                    "skip-step",
+                    2
+                ]
+            },
+            {
+                "name": "mana",
+                "args": [
+                    -200
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "precentDamage",
+                "args": [
+                    30
+                ]
+            }
+        ]
+    }
+}

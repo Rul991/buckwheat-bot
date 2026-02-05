@@ -1,0 +1,35 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Щит",
+        "description": "С щитом можно и на Моргарта"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -10
+                ]
+            },
+            {
+                "name": "effectLevel",
+                "args": [
+                    "defend",
+                    3,
+                    1
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effectLevel",
+                "args": [
+                    "defend",
+                    3,
+                    1
+                ]
+            }
+        ]
+    }
+}

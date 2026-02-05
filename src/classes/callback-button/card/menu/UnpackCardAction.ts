@@ -8,7 +8,7 @@ import CardsService from '../../../db/services/card/CardsService'
 import MessageUtils from '../../../../utils/MessageUtils'
 import CardUtils from '../../../../utils/CardUtils'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
 import { idSchema } from '../../../../utils/values/schemas'
 
@@ -41,7 +41,7 @@ export default class extends CallbackButtonAction<Data> {
         }
     }: GiveCardOptions): Promise<string | void> {
         const card = await CardService.getRandom()
-        const inlineKeyboard = await InlineKeyboardManager.get(
+        const inlineKeyboard = await LegacyInlineKeyboardManager.get(
             'cards/unpack',
             {
                 id: JSON.stringify({ id: dataId })

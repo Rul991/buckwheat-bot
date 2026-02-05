@@ -1,6 +1,6 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class extends BuckwheatCommand {
@@ -23,7 +23,7 @@ export default class extends BuckwheatCommand {
             ctx,
             'text/commands/cards/start.pug',
             {
-                inlineKeyboard: await InlineKeyboardManager.get(
+                inlineKeyboard: await LegacyInlineKeyboardManager.get(
                     'cards/start',
                     {
                         collection: id,

@@ -1,64 +1,57 @@
 import { ZodType } from 'zod'
 import DuelOfferData from '../../../interfaces/callback-button-data/DuelOfferData'
-import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import CallbackButtonAction from '../CallbackButtonAction'
 import { userReplyIdsDataSchema } from '../../../utils/values/schemas'
-import MessageUtils from '../../../utils/MessageUtils'
-import ContextUtils from '../../../utils/ContextUtils'
-import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
-import DuelUtils from '../../../utils/DuelUtils'
-import DuelistService from '../../db/services/duelist/DuelistService'
-import InlineKeyboardManager from '../../main/InlineKeyboardManager'
-import FileUtils from '../../../utils/FileUtils'
-import CasinoAddService from '../../db/services/casino/CasinoAddService'
-import DuelService from '../../db/services/duel/DuelService'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
+import DuelCheckService from '../../db/services/duel/DuelCheckService'
+import ContextUtils from '../../../utils/ContextUtils'
+import MessageUtils from '../../../utils/MessageUtils'
+import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 
 export default class DuelYesAction extends CallbackButtonAction<DuelOfferData> {
     protected _buttonTitle?: string | undefined = "Дуэль: Да"
     protected _schema: ZodType<DuelOfferData> = userReplyIdsDataSchema
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'duelyes'
     }
 
-    async execute({ctx, data, chatId}: CallbackButtonOptions<DuelOfferData>): Promise<string | void> {
-        const { user: userId, reply: replyId } = data
+    async execute(options: CallbackButtonOptions<DuelOfferData>): Promise<string | void> {
+        const {
+            data,
+            ctx,
+            chatId,
+        } = options
 
-        const userOptions = {chatId, ctx, userId, replyId, isUserFirst: false}
-        const replyOptions = {chatId, ctx, userId: replyId, replyId: userId, isUserFirst: true}
-        const lowOptions = await DuelUtils.getLowOptions(replyOptions)
+        const {
+            user: userId,
+            reply: replyId
+        } = data
+        if (await ContextUtils.showAlertIfIdNotEqual(ctx, replyId)) return
 
-        if(await ContextUtils.showAlertIfIdNotEqual(ctx, replyId)) return 
-        if(!await DuelUtils.checkStatsAndSendMessage(userOptions)) return
-        if(!await DuelUtils.checkStatsAndSendMessage(replyOptions)) return
-        if(!await DuelUtils.sendOnDuelMessage(lowOptions)) return
+        const checkOptionsPart = {
+            chatId,
+            ctx
+        }
 
-        const {price: userPrice} = await DuelService.getPriceStats(chatId, userId)
-        const {price: replyPrice} = await DuelService.getPriceStats(chatId, replyId)
+        if (!await DuelCheckService.checkAndSendMessage({ ...checkOptionsPart, id: userId })) return
+        if (!await DuelCheckService.checkAndSendMessage({ ...checkOptionsPart, id: replyId })) return
 
-        await CasinoAddService.money(chatId, userId, -userPrice)
-        await CasinoAddService.money(chatId, replyId, -replyPrice)
+        // await DuelistService.setField(chatId, userId, 'onDuel', true)
+        // await DuelistService.setField(chatId, replyId, 'onDuel', true)
 
-        await DuelistService.setField(chatId, replyId, 'onDuel', true)
         await MessageUtils.answerMessageFromResource(
             ctx,
-            'text/commands/duel/bid/choose.pug',
+            'text/commands/duel/fight/start.pug',
             {
-                inlineKeyboard: await InlineKeyboardManager.get(
+                inlineKeyboard: await LegacyInlineKeyboardManager.get(
                     'duels/start',
-                    JSON.stringify({
-                        user: userId,
-                        reply: replyId
-                    })
-                ),
-                changeValues: {
-                    ...await ContextUtils.getUser(chatId, userId)
-                }
+                    {
+                        userReply: JSON.stringify(data)
+                    }
+                )
             }
         )
-        await MessageUtils.deleteMessage(ctx)
     }
-
 }

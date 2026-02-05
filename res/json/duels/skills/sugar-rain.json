@@ -1,0 +1,32 @@
+{
+    "level": 15,
+    "info": {
+        "title": "Огненный дождь",
+        "description": "Да начнётся апокалипсис!"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -65
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "damage",
+                "args": [
+                    40
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "rain-cont",
+                    3
+                ]
+            }
+        ]
+    }
+}

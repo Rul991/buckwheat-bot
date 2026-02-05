@@ -1,0 +1,33 @@
+{
+    "level": 10,
+    "info": {
+        "title": "Музыка защитника",
+        "description": "Вы чувствуете, что вы под защитой"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -20
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "defend",
+                    25
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "defend",
+                    25
+                ]
+            }
+        ]
+    }
+}

@@ -1,7 +1,7 @@
 [
     [
         {
-            "text": "Добавить",
+            "text": "➕ Добавить",
             "callback_data": "skilladd_@{skillId}_@{id}"
         }
     ],

@@ -1,0 +1,33 @@
+{
+    "level": 75,
+    "info": {
+        "title": "Крестоносец",
+        "description": "Вперёд, возьмём Тронный Зал! "
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -300
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "invulnerable",
+                    2
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "skip-skill",
+                    3
+                ]
+            }
+        ]
+    }
+}

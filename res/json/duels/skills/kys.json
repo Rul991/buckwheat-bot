@@ -1,0 +1,26 @@
+{
+    "level": 25,
+    "info": {
+        "title": "Самоатака",
+        "description": "Давай, давай, побей себя ещё. Совсем с ума сошёл..."
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -50
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "self-attack",
+                    1
+                ]
+            }
+        ]
+    }
+}

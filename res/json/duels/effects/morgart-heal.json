@@ -1,0 +1,18 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Сила окрыляет",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "noHpHeal",
+                "args": [
+                    100
+                ]
+            }
+        ]
+    }
+}

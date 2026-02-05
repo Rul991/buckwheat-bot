@@ -1,0 +1,25 @@
+{
+    "level": 1,
+    "info": {
+        "title": "На два фланга",
+        "description": ""
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "heal",
+                "args": [
+                    40
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "damage",
+                "args": [
+                    60
+                ]
+            }
+        ]
+    }
+}

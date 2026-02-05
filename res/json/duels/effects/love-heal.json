@@ -1,0 +1,18 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Любовь окрыляет",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "noHpHeal",
+                "args": [
+                    25
+                ]
+            }
+        ]
+    }
+}

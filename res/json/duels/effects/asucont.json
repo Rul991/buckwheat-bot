@@ -1,0 +1,18 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Божественная помощь",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "precentDamage",
+                "args": [
+                    25
+                ]
+            }
+        ]
+    }
+}

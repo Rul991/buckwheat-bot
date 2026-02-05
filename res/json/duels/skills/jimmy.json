@@ -1,0 +1,35 @@
+{
+    "level": 25,
+    "info": {
+        "title": "Джимми Хендрикс",
+        "description": "– Я умею только как Джимми Хендрикс.\n– Играть соло зубами?\n– Нет... Поджигать гитару!"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "manaHasntEffect",
+                "args": [
+                    -50,
+                    "fire-guitar"
+                ]
+            },
+            {
+                "name": "effectHasntEffect",
+                "args": [
+                    "fire-guitar",
+                    "fire-guitar",
+                    4
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "attack",
+                "args": [
+                    8,
+                    1.6
+                ]
+            }
+        ]
+    }
+}

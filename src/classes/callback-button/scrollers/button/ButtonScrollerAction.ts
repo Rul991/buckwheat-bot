@@ -5,7 +5,7 @@ import CallbackButtonAction from '../../CallbackButtonAction'
 import ContextUtils from '../../../../utils/ContextUtils'
 import { FIRST_INDEX, MAX_BUTTONS_IN_HORISONTAL, MAX_BUTTONS_PER_PAGE } from '../../../../utils/values/consts'
 import MessageUtils from '../../../../utils/MessageUtils'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import NavigationButtonUtils from '../../../../utils/NavigationButtonUtils'
 import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
 import { tinyCurrentIncreaseIdSchema } from '../../../../utils/values/schemas'
@@ -179,7 +179,7 @@ export default abstract class<O, D extends Record<string, any> = ButtonScrollerD
             values: buttons
         } = values
         
-        const keyboard = await InlineKeyboardManager.map(
+        const keyboard = await LegacyInlineKeyboardManager.map(
             this._filename, 
             {
                 globals,

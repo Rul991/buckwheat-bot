@@ -2,7 +2,7 @@ import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import MarriageService from '../../../db/services/marriage/MarriageService'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class MarryCommand extends BuckwheatCommand {
@@ -43,7 +43,7 @@ export default class MarryCommand extends BuckwheatCommand {
                     user: await ContextUtils.getUser(chatId, userId),
                     reply: await ContextUtils.getUser(chatId, replyId),
                 },
-                inlineKeyboard: await InlineKeyboardManager.get('marry', JSON.stringify({
+                inlineKeyboard: await LegacyInlineKeyboardManager.get('marry', JSON.stringify({
                     user: userId,
                     reply: replyId
                 }))

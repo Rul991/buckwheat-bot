@@ -29,9 +29,4 @@ export default class CasinoGetService {
     static async wins(chatId: number, id: number): Promise<number> {
         return await this._get(chatId, id, 'wins')
     }
-
-    static async sortedCasinos(chatId: number, maxCount = DEFAULT_FILTER_LENGTH): Promise<Casino[]> {
-        const casinos = await CasinoRepository.findManyInChat(chatId)
-        return ArrayUtils.filterAndSort(casinos, 'money', maxCount)
-    }
 }

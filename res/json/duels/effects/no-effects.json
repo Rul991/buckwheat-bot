@@ -1,0 +1,18 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Нет эффектам",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "deleteEffects",
+                "args": [
+                    false
+                ]
+            }
+        ]
+    }
+}

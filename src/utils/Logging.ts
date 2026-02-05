@@ -6,7 +6,7 @@ import { MODE } from './values/consts'
 
 export default class Logging {
     private static _directoryPath = './logs'
-    private static _loggingLevel: LoggingLevel = LoggingLevel.Log
+    private static _loggingLevel: LoggingLevel = LoggingLevel.Error
 
     private static _consoleLog(level: LoggingLevel, data: any[]) {
         if(MODE == 'dev' && level <= this._loggingLevel) {

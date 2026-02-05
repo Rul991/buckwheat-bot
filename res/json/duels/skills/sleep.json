@@ -1,0 +1,33 @@
+{
+    "level": 35,
+    "info": {
+        "title": "Покой",
+        "description": "Чудесный лес, красивые горы... Вэлл... Ой, не то"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -220
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "heal50",
+                    6
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "heal50",
+                    6
+                ]
+            }
+        ]
+    }
+}

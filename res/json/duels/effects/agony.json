@@ -1,0 +1,18 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Агония",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "damage",
+                "args": [
+                    50
+                ]
+            }
+        ]
+    }
+}

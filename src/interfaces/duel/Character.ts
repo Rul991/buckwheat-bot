@@ -1,8 +1,13 @@
 import StartUp from '../other/StartUp'
-import Characteristics from './Characteristics'
-import Skill from './Skill'
 
 export default interface Character {
-    characteristics: StartUp<Characteristics>
-    skills: Skill[]
+    characteristics: {
+        hp: StartUp<number>
+        mana: StartUp<number>
+    }
+    skill: {
+        showable: string[]
+        main: string
+        effects: string[]
+    }
 }

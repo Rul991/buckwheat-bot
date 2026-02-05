@@ -3,7 +3,7 @@ import CallbackButtonAction from '../../../CallbackButtonAction'
 import ContextUtils from '../../../../../utils/ContextUtils'
 import ShopCardService from '../../../../db/services/card/ShopCardService'
 import MessageUtils from '../../../../../utils/MessageUtils'
-import InlineKeyboardManager from '../../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../../main/LegacyInlineKeyboardManager'
 import { CallbackButtonOptions } from '../../../../../utils/values/types/action-options'
 import { cardBuySchema } from '../../../../../utils/values/schemas'
 
@@ -39,7 +39,7 @@ export default class extends CallbackButtonAction<Data> {
             await MessageUtils.editMarkup(
                 ctx,
                 {
-                    inline_keyboard: await InlineKeyboardManager.get(
+                    inline_keyboard: await LegacyInlineKeyboardManager.get(
                         'cards/to-buy',
                         {
                             page: `${page}`,

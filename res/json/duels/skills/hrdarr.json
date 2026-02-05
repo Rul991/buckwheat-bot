@@ -1,0 +1,26 @@
+{
+    "level": 20,
+    "info": {
+        "title": "Тяжелые стрелы",
+        "description": "Чем тяжелее, тем сильнее."
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -50
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "attack",
+                "args": [
+                    30,
+                    2
+                ]
+            }
+        ]
+    }
+}

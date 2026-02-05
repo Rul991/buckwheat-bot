@@ -1,0 +1,26 @@
+{
+    "level": 50,
+    "info": {
+        "title": "Отмычка",
+        "description": "Эта стрела отлично открывает замки."
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -1
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "deleteEffect",
+                "args": [
+                    "keyshld",
+                    false
+                ]
+            }
+        ]
+    }
+}

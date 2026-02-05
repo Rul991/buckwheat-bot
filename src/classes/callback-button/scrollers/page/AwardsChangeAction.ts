@@ -4,7 +4,7 @@ import FileUtils from '../../../../utils/FileUtils'
 import { ScrollerSendMessageOptions, ScrollerEditMessageResult, AsyncOrSync, ScrollerGetObjectsOptions } from '../../../../utils/values/types/types'
 import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import AwardsService from '../../../db/services/awards/AwardsService'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import ScrollerAction from './ScrollerAction'
 
 export default class AwardsChangeAction extends ScrollerAction<Award> {
@@ -63,7 +63,7 @@ export default class AwardsChangeAction extends ScrollerAction<Award> {
             ),
             options: {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get('awards/change', `${currentPage}_${id}`)
+                    inline_keyboard: await LegacyInlineKeyboardManager.get('awards/change', `${currentPage}_${id}`)
                 }
             }
         }

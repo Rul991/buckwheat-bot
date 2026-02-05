@@ -1,0 +1,48 @@
+{
+    "characteristics": {
+        "hp": {
+            "start": 110,
+            "up": 11
+        },
+        "mana": {
+            "start": 60,
+            "up": 6
+        }
+    },
+    "skill": {
+        "showable": [
+            "attack-knight",
+            "shield",
+            "subwaysurf",
+            "gun",
+            "go-go",
+            "envell",
+            "kys",
+            "super",
+            "stfu-light",
+            "maad",
+            "grenade",
+            "iron",
+            "glove",
+            "break",
+            "piglins",
+            "phenix",
+            "cross",
+            "shield+",
+            "white-def",
+            "lshield",
+            "finish"
+        ],
+        "main": "attack-knight",
+        "effects": [
+            "poison-bullet",
+            "poison",
+            "self-attack",
+            "no-effects",
+            "stfu-energy",
+            "delete-energy",
+            "skip-step",
+            "defend"
+        ]
+    }
+}

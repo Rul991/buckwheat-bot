@@ -1,0 +1,55 @@
+{
+    "characteristics": {
+        "hp": {
+            "start": 80,
+            "up": 8
+        },
+        "mana": {
+            "start": 100,
+            "up": 20
+        }
+    },
+    "skill": {
+        "showable": [
+            "attack-sorcerer",
+            "ice",
+            "fima",
+            "ash",
+            "sugar-rain",
+            "fima+",
+            "shower",
+            "creep",
+            "circle",
+            "yammy",
+            "lstore",
+            "lockshld",
+            "thndr",
+            "dblfght",
+            "lstlgt",
+            "qsr",
+            "crpt",
+            "chaos",
+            "godheal",
+            "chill",
+            "end",
+            "ktaro-hi"
+        ],
+        "main": "attack-sorcerer",
+        "effects": [
+            "mana50",
+            "psn10",
+            "damageup-5",
+            "damageup15",
+            "damageup100",
+            "fima-wait",
+            "fima-boom",
+            "rain-cont",
+            "energy",
+            "meatfall",
+            "shower-cont",
+            "keyshld",
+            "skip-step",
+            "defend"
+        ]
+    }
+}

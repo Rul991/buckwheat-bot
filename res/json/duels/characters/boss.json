@@ -1,0 +1,19 @@
+{
+    "characteristics": {
+        "hp": {
+            "start": 0,
+            "up": 0
+        },
+        "mana": {
+            "start": 0,
+            "up": 0
+        }
+    },
+    "skill": {
+        "showable": [
+            "attack-boss"
+        ],
+        "main": "attack-boss",
+        "effects": []
+    }
+}

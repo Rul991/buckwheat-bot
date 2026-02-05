@@ -1,7 +1,7 @@
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import UserClassService from '../../../db/services/user/UserClassService'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class SkillsCommand extends BuckwheatCommand {
@@ -31,7 +31,7 @@ export default class SkillsCommand extends BuckwheatCommand {
             ctx,
             'text/commands/skills/menu.pug',
             {
-                inlineKeyboard: await InlineKeyboardManager.get(
+                inlineKeyboard: await LegacyInlineKeyboardManager.get(
                     'skills/menu', 
                     JSON.stringify({id})
                 )

@@ -6,7 +6,7 @@ import ContextUtils from '../../../../utils/ContextUtils'
 import MarketSlotService from '../../../db/services/market/MarketSlotService'
 import FileUtils from '../../../../utils/FileUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 
 type Data = {
     count: number,
@@ -64,7 +64,7 @@ export default class extends CallbackButtonAction<Data> {
                 ),
                 {
                     reply_markup: {
-                        inline_keyboard: await InlineKeyboardManager.get(
+                        inline_keyboard: await LegacyInlineKeyboardManager.get(
                             'market/after-buy',
                             {
                                 id,

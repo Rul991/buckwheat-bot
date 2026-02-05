@@ -1,7 +1,7 @@
 import ExportImportManager from '../../../../utils/ExportImportManager'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default abstract class extends BuckwheatCommand {
@@ -17,7 +17,7 @@ export default abstract class extends BuckwheatCommand {
             ctx,
             `text/commands/${this._filename}/list.pug`,
             {
-                inlineKeyboard: await InlineKeyboardManager.map(
+                inlineKeyboard: await LegacyInlineKeyboardManager.map(
                     `${this._filename}/start`,
                     {
                         values: {

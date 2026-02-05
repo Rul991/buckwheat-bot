@@ -1,0 +1,26 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Начало Концерта",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "damage",
+                "args": [
+                    100
+                ]
+            },
+            {
+                "name": "effectLastStep",
+                "args": [
+                    "king1",
+                    "king2",
+                    3
+                ]
+            }
+        ]
+    }
+}

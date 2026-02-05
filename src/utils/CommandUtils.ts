@@ -28,10 +28,18 @@ export default class CommandUtils {
 
     static async doIfCommand(text: string, callback: (strings: CommandStrings) => AsyncOrSync): Promise<CommandStrings | null> {
         const strings = this.getCommandStrings(text)
-        const [firstWord] = strings
+        const [
+            firstWord,
+            command,
+            other
+        ] = strings
 
         if (this.isCommand(firstWord)) {
-            await callback(strings)
+            await callback([
+                firstWord,
+                command?.toLowerCase(),
+                other
+            ])
             return strings
         }
         else {

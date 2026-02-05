@@ -1,171 +1,222 @@
+import { join } from 'path'
 import FileUtils from '../../utils/FileUtils'
-import { CallbackButtonMapValues, CallbackButtonValue, ObjectOrArray, CallbackButtonGlobals } from '../../utils/values/types/types'
-import { DATA_REPLACEABLE_SYMBOL, MAX_BUTTONS_IN_HORISONTAL } from '../../utils/values/consts'
-import { InlineKeyboardButton } from 'telegraf/types'
+import { JsonButtonData, JsonButton, JsonKeyboard, Keyboard, ReplaceKeyboardData, Variables, Button } from '../../utils/values/types/keyboards'
+import { MAX_BUTTONS_IN_HORISONTAL } from '../../utils/values/consts'
 import ArrayUtils from '../../utils/ArrayUtils'
-import Logging from '../../utils/Logging'
 
-type GetCallback<T, K> = (keyboard: T) => K
-type GetOptions<T, K> = {
-    folder?: string,
-    isArray?: boolean,
-    callback: GetCallback<T, K>
-    name: string
+type HandleVariablesOptions = {
+    variables: JsonKeyboard['variables']
+    globals: ReplaceKeyboardData['globals']
 }
-type Result = InlineKeyboardButton.CallbackButton
-type JsonValue = {
-    definition: DefinitionRecord,
-    values: ObjectOrArray<string>[]
+
+type HandleDataOptions = {
+    data: JsonButton['data']
+    variables: Variables
 }
-type DefinitionRecord = Record<string, CallbackButtonValue>
 
-export default class InlineKeyboardManager {
-    private static _getPath(name: string): string {
-        return `json/inline_keyboards/${name}.json`
-    }
+type HandleDefinitionOptions = Required<Omit<ReplaceKeyboardData, 'maxWidth'>> & {
+    definition: JsonKeyboard['definition']
+    variables: Variables
+}
+type HandleDefinitionResult = Record<string, Button[]>
 
-    private static _replaceGlobals(text: string, data?: CallbackButtonGlobals): string {
-        let result: string = text
-        const usedData = data ?? {}
+type HandleTextOptions = {
+    text: JsonButton['text']
+    globals: ReplaceKeyboardData['globals']
+}
 
-        for (const key in usedData) {
-            result = result.replaceAll(
-                `${DATA_REPLACEABLE_SYMBOL}{${key}}`,
-                usedData[key].toString()
-            )
+type HandleMarkupOptions = {
+    markup: JsonKeyboard['markup']
+    maxWidth: ReplaceKeyboardData['maxWidth'] & {}
+    definition: HandleDefinitionResult
+}
+
+export default class {
+    private static readonly _keyboardFolder = 'json/inline_keyboards/new/'
+    private static readonly _keyboardExtension = 'json'
+
+    private static _handleVariables({
+        variables = {},
+        globals = {}
+    }: HandleVariablesOptions): Variables {
+        const result = {} as Variables
+
+        for (const variableName in variables) {
+            const variable = variables[variableName]
+            result[variableName] = {}
+
+            for (const fieldName in variable) {
+                const globalKey = variable[fieldName]
+                const global = globals[globalKey]
+                result[variableName][fieldName] = global
+            }
         }
 
         return result
     }
 
-    private static _replaceValues(text: string, data?: string): string {
-        if(!text) return ''
-        else if(!data) return text
-        
-        return text
-            .replaceAll(
-                DATA_REPLACEABLE_SYMBOL, 
-                data
-            )
-    }
+    private static _handleData({
+        data,
+        variables = {}
+    }: HandleDataOptions): JsonButtonData {
+        let result = {
+            ...data.$additional
+        } as JsonButtonData
 
-    private static _logResult(result: Result[][]): Result[][] {
-        Logging.system('InlineKeyboardManager._logResult', result)
+        for (const key of data.$vars ?? []) {
+            const variable = variables[key]
+            if (!variable) continue
+
+            result = {
+                ...result,
+                ...variable
+            }
+        }
+
         return result
     }
 
-    private static async _get<T, K = T>(
-        {
-            name,
-            folder = 'get',
-            isArray,
-            callback
-        }: GetOptions<T, K>
-    ): Promise<K | null> {
-        const keyboard = await FileUtils.readJsonFromResource<T>(
-            this._getPath(`${folder}/${name}`)
-        )
-        if(!keyboard) return null
-        if(typeof isArray !== 'undefined' && isArray != keyboard instanceof Array) return null
+    private static _handleText({
+        text,
+        globals
+    }: HandleTextOptions) {
+        if (typeof text == 'string') return text
+        let result: string = ''
 
-        const result = callback(keyboard)
+        for (const part of text) {
+            if (part.startsWith('@')) {
+                const key = part.slice(1)
+                const global = globals?.[key]
+                result += `${global ?? ''}`
+            }
+            else {
+                result += part
+            }
+        }
+
         return result
     }
 
-    static async get(name: string, data?: string | CallbackButtonGlobals): Promise<Result[][]> {
-        const result = await this._get<Result[][]>({
-            name,
-            callback: keyboard => {
-                return keyboard.map(arr => 
-                    arr.map(button => {
-                        if(typeof data == 'string') {
-                            button.callback_data = this._replaceValues(button.callback_data, data)
-                        }
-                        else {
-                            button.callback_data = this._replaceGlobals(button.callback_data, data)
-                        }
-                        return button
-                    })
-                )
-            },
-            isArray: true
-        }) ?? []
-        
-        return this._logResult(result)
-    }
+    private static _handleDefinition({
+        definition,
+        variables,
+        globals,
+        values
+    }: HandleDefinitionOptions): HandleDefinitionResult {
+        const result = {} as HandleDefinitionResult
 
-    static async map(name: string, values: CallbackButtonMapValues): Promise<Result[][]> {
-        const keyboard = await this._get<
-            JsonValue, 
-            Result[][]
-        >({
-            name,
-            callback: keyboard => {
-                const resultKeyboard: Result[][] = []
-                const {
-                    maxWidth = MAX_BUTTONS_IN_HORISONTAL
-                } = values
+        for (const key in definition) {
+            const button = definition[key]
+            const {
+                text,
+                data,
+                name
+            } = button
 
-                for (const button of keyboard.values) {
-                    const isArray = button instanceof Array
-                    const buttonArray = isArray ? button : [button]
+            const eachKey = data.$each
+            const datas = eachKey ?
+                values[eachKey] ?? [] :
+                [{ text: '', data: {} }]
 
-                    const subResult: Result[] = []
-
-                    for (const key of buttonArray) {
-                        const value = keyboard.definition[key]
-                        if(!value) continue
-
-                        const text = this._replaceGlobals(value.text, values.globals)
-                        const data = this._replaceGlobals(value.data, values.globals)
-
-                        if(value.notEach) {
-                            const result = {
-                                text, 
-                                callback_data: data
-                            }
-                            if(isArray) {
-                                subResult.push(result)
-                            }
-                            else {
-                                resultKeyboard.push([result])
-                            }
-                            continue
-                        }
-
-                        const valueValues = values.values[key]
-                        if(!valueValues) continue
-
-                        const resultValues = valueValues.map(v => ({
-                            text: this._replaceValues(text, v.text),
-                            callback_data: this._replaceValues(data, v.data)
-                        }))
-
-                        if(isArray) {
-                            subResult.push(
-                                ...resultValues
-                            )
-                        }
-                        else {
-                            resultKeyboard.push(
-                                ...resultValues.map(v => [v])
-                            )
-                        }
-                    }
-
-                    if(subResult.length) {
-                        resultKeyboard.push(...ArrayUtils.objectsGrid({
-                            objects: subResult,
-                            width: maxWidth
-                        }))
-                    }
+            const row = datas.map(v => {
+                const handledData = this._handleData({
+                    data,
+                    variables
+                })
+                const newData = {
+                    ...handledData,
+                    ...v.data
                 }
 
-                return resultKeyboard
-            },
-            folder: 'map'
-        }) ?? []
+                const handledText = this._handleText({
+                    text,
+                    globals: {
+                        ...globals,
+                        '': v.text
+                    }
+                })
 
-        return this._logResult(keyboard)
+                return {
+                    text: handledText,
+                    callback_data: `${name}_${JSON.stringify(newData)}`
+                }
+            })
+
+            if (row.length) {
+                result[key] = row
+            }
+        }
+
+        return result
+    }
+
+    private static _handleMarkup({
+        markup,
+        definition,
+        maxWidth
+    }: HandleMarkupOptions): Keyboard {
+        const result: Keyboard = []
+
+        for (const maybeRow of markup) {
+            const isArray = maybeRow instanceof Array
+
+            if (isArray) {
+                const row = maybeRow.map(key => definition[key])
+
+                for (const subRow of row) {
+                    result.push(
+                        ...ArrayUtils.objectsGrid({
+                            objects: subRow,
+                            width: maxWidth
+                        })
+                    )
+                }
+            }
+            else {
+                result.push(...definition[maybeRow].map(v => [v]))
+            }
+        }
+
+        return result
+    }
+
+    static async get(filename: string, data: ReplaceKeyboardData = {}): Promise<Keyboard> {
+        const jsonKeyboard = await FileUtils.readJsonFromResource<JsonKeyboard>(
+            join(
+                this._keyboardFolder,
+                `${filename}.${this._keyboardExtension}`
+            )
+        )
+        if (!jsonKeyboard) return []
+
+        const {
+            variables,
+            definition,
+            markup
+        } = jsonKeyboard
+
+        const {
+            globals,
+            values,
+            maxWidth = MAX_BUTTONS_IN_HORISONTAL
+        } = data
+
+        const handledVariables = this._handleVariables({
+            variables,
+            globals
+        })
+
+        const handledDefinition = this._handleDefinition({
+            definition,
+            variables: handledVariables,
+            values: values ?? {},
+            globals: globals ?? {},
+        })
+
+        return this._handleMarkup({
+            markup,
+            definition: handledDefinition,
+            maxWidth
+        })
     }
 }

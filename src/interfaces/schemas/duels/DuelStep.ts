@@ -1,6 +1,11 @@
-import LastStep from './LastStep'
+import SkillAttack from '../../../enums/SkillAttack'
+import Characteristics from '../../duel/Characteristics'
+import Effect from './Effect'
 
 export default interface DuelStep {
     duelist: number
-    lastStep: LastStep
+    characteristics: Map<number, Characteristics>
+    skill?: string
+    attack?: SkillAttack
+    effects?: Effect[]
 }

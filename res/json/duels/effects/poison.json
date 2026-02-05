@@ -1,0 +1,19 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Яд",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "randomDamage",
+                "args": [
+                    20,
+                    60
+                ]
+            }
+        ]
+    }
+}

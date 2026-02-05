@@ -6,7 +6,7 @@ import UserRankService from '../../../db/services/user/UserRankService'
 import RankUtils from '../../../../utils/RankUtils'
 import RulesService from '../../../db/services/chat/RulesService'
 import SubCommandUtils from '../../../../utils/SubCommandUtils'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import StringUtils from '../../../../utils/StringUtils'
 import ContextUtils from '../../../../utils/ContextUtils'
@@ -162,7 +162,7 @@ export default class RuleCommand extends BuckwheatCommandWithSub<RuleSubCommand>
             ctx,
             'text/commands/rules/start.pug',
             {
-                inlineKeyboard: await InlineKeyboardManager.get('rules', '-1'),
+                inlineKeyboard: await LegacyInlineKeyboardManager.get('rules', '-1'),
                 changeValues: {
                     count: rules.length
                 }

@@ -1,0 +1,18 @@
+{
+    "level": 1,
+    "info": {
+        "title": "Возвращение урона",
+        "description": ""
+    },
+    "execute": {
+        "user": [],
+        "enemy": [
+            {
+                "name": "returnDamage",
+                "args": [
+                    30
+                ]
+            }
+        ]
+    }
+}

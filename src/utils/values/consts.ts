@@ -134,17 +134,18 @@ export const SKIP_SKILL_SKILL_NAME = 'skip-skill'
 export const ZERO_SKILL_SKILL_NAME = 'zero-skill'
 export const REVERSE_SKILL_NAME = 'reverse-skill'
 export const CLONE_SKILL_NAME = 'clone'
+export const ATTACK_SKILL_NAME_PART = 'attack'
 
 export const HP_SYMBOLS: ConstSymbol<'❤️', '❣️', '💀'> = {
-    FULL: '❤️',
-    HALF: '❣️',
-    EMPTY: '💀'
+    full: '❤️',
+    half: '❣️',
+    empty: '💀'
 }
 
 export const MANA_SYMBOLS: ConstSymbol<'🔷', '🔹', '✖️'> = {
-    FULL: '🔷',
-    HALF: '🔹',
-    EMPTY: '✖️'
+    full: '🔷',
+    half: '🔹',
+    empty: '✖️'
 }
 
 export const DEFAULT_DESCRIPTION = ''
@@ -220,3 +221,8 @@ export const MIN_MARKET_PRICE = 0
 export const MAX_MARKET_PRICE = MAX_CARD_PRICE
 
 export const MAX_COUNT_BUTTONS_LENGTH = 18
+
+export const MIN_DICE_VALUE = 1
+export const MAX_DICE_VALUE = 6
+
+export const HP_MIN_VALUE = 0

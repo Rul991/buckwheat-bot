@@ -1,0 +1,26 @@
+{
+    "level": 65,
+    "info": {
+        "title": "Манипуляция полем",
+        "description": "Манипуляции - это плохо, хотя кого это волнует!"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -160
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "damageup-40",
+                    6
+                ]
+            }
+        ]
+    }
+}

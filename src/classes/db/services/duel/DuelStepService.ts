@@ -1,0 +1,79 @@
+import DuelStep from '../../../../interfaces/schemas/duels/DuelStep'
+import ArrayUtils from '../../../../utils/ArrayUtils'
+import DuelUtils from '../../../../utils/duel/DuelUtils'
+import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
+import { DuelistsWithChatId } from '../../../../utils/values/types/duels'
+import DuelRepository from '../../repositories/DuelRepository'
+import DuelistService from '../duelist/DuelistService'
+import DuelService from './DuelService'
+
+type FromDuelistsExtra = Partial<
+    Omit<DuelStep, 'characteristics'>
+>
+
+export default class {
+    static async add(id: number, step: DuelStep) {
+        const duel = await DuelService.get(id)
+        if (!duel) return null
+
+        return await DuelRepository.updateOne(
+            id,
+            {
+                $push: {
+                    steps: step
+                }
+            }
+        )
+    }
+
+    static async get(id: number) {
+        const duel = await DuelService.get(id)
+        return duel?.steps ?? []
+    }
+
+    static async getCurrent(id: number) {
+        const steps = await this.get(id)
+        return ArrayUtils.getLastElement(steps)
+    }
+
+    static async updateCurrent(id: number, step: Partial<DuelStep>) {
+        const steps = await this.get(id)
+        const currentStepIndex = ArrayUtils.getLastIndex(steps)
+        if (currentStepIndex == NOT_FOUND_INDEX) return false
+
+        const currentStep = steps[currentStepIndex]
+        const updatedStep = {
+            ...currentStep,
+            ...step
+        }
+
+        steps[currentStepIndex] = updatedStep
+        await DuelRepository.updateOne(
+            id,
+            {
+                steps
+            }
+        )
+        return true
+    }
+
+    static async fromDuelists(duelists: DuelistsWithChatId, extra?: FromDuelistsExtra): Promise<DuelStep> {
+        const {
+            firstDuelist,
+            secondDuelist,
+            chatId
+        } = duelists
+        
+        const duelist = extra?.duelist ?? DuelUtils.getRandomDuelist(duelists)
+        const characteristics: DuelStep['characteristics'] = new Map()
+
+        characteristics.set(firstDuelist, await DuelistService.getCurrentCharacteristics(chatId, firstDuelist))
+        characteristics.set(secondDuelist, await DuelistService.getCurrentCharacteristics(chatId, secondDuelist))
+
+        return {
+            ...extra,
+            duelist,
+            characteristics,
+        }
+    }
+}

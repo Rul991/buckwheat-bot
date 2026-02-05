@@ -2,7 +2,7 @@ import { number, object, ZodType } from 'zod'
 import CallbackButtonAction from '../../CallbackButtonAction'
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import FileUtils from '../../../../utils/FileUtils'
 import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
 import { idSchema } from '../../../../utils/values/schemas'
@@ -33,7 +33,7 @@ export default class extends CallbackButtonAction<Data> {
             ),
             {
                 reply_markup: {
-                    inline_keyboard: await InlineKeyboardManager.get(
+                    inline_keyboard: await LegacyInlineKeyboardManager.get(
                         'cards/shop',
                         {
                             data: JSON.stringify({id, c: -1, i: 1})

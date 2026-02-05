@@ -1,0 +1,33 @@
+{
+    "level": 85,
+    "info": {
+        "title": "Клич храбрости",
+        "description": "Будь храбр, не бойся врага, стань самой смертью в обличие человека"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -300
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "damageup25",
+                    10
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "effect",
+                "args": [
+                    "damageup25",
+                    10
+                ]
+            }
+        ]
+    }
+}

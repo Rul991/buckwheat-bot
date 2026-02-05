@@ -1,0 +1,39 @@
+{
+    "markup": [
+        ["money"],
+        "money",
+        "back"
+    ],
+
+    "definition": {
+        "back": {
+            "text": ["<< ", "@current"],
+            "name": "echg",
+            "data": {
+                "$vars": ["change"],
+                "$additional": {
+                    "i": -1
+                }
+            }
+        },
+
+        "money": {
+            "text": ["#", "@"],
+            "name": "echg",
+            "data": {
+                "$each": "money",
+                "$vars": ["change"],
+                "$additional": {
+                    "i": -1
+                }
+            }
+        }
+    },
+
+    "variables": {
+        "change": {
+            "c": "current",
+            "id": "id"
+        }
+    }
+}

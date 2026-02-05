@@ -115,15 +115,16 @@ export default class CallbackButtonActionHandler extends BaseHandler<
         this._setupSettings()
         bot.action(/^([^_]+)_(.+)$/, async ctx => {
             const id = ctx.from.id
+            const chatId = ctx.chat?.id ?? id
             let [_, name, rawData] = ctx.match
             
             if (!name) return
-            if (RateLimitUtils.isLimit(id)) return
+            if (RateLimitUtils.isLimit(chatId, id)) return
 
             const rawHandledData = await this._handleRawData({
                 data: rawData,
                 name,
-                chatId: ctx.chat?.id ?? id
+                chatId
             })
 
             if (!rawHandledData) {

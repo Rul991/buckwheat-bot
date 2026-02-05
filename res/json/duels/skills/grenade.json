@@ -1,0 +1,33 @@
+{
+    "level": 45,
+    "info": {
+        "title": "Граната",
+        "description": "Используйте, чтобы взорвать врага"
+    },
+    "execute": {
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    -200
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "randomDamage",
+                "args": [
+                    150,
+                    250
+                ]
+            },
+            {
+                "name": "effect",
+                "args": [
+                    "skip-step",
+                    1
+                ]
+            }
+        ]
+    }
+}

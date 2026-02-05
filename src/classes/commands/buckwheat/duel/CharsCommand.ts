@@ -1,7 +1,7 @@
 import Characteristics from '../../../../interfaces/duel/Characteristics'
 import ClassUtils from '../../../../utils/ClassUtils'
 import ContextUtils from '../../../../utils/ContextUtils'
-import DuelUtils from '../../../../utils/DuelUtils'
+import DuelUtils from '../../../../utils/duel/DuelUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import DuelistService from '../../../db/services/duelist/DuelistService'
@@ -29,7 +29,6 @@ export default class CharsCommand extends BuckwheatCommand {
     async execute(options: BuckwheatCommandOptions): Promise<void> {
         const { ctx, chatId } = options
         const id = this._getId(options)
-        const className = await UserClassService.get(chatId, id)
         const user = await ContextUtils.getUser(chatId, id)
 
         if (!await UserClassService.isPlayer(chatId, id)) {
@@ -45,30 +44,30 @@ export default class CharsCommand extends BuckwheatCommand {
             return
         }
 
-        const current = await DuelistService.getCurrentCharacteristics(chatId, id)
-        const max = await DuelistService.getMaxCharacteristics(chatId, id, className)
+        // const current = await DuelistService.getCurrentCharacteristics(chatId, id)
+        // const max = await DuelistService.getMaxCharacteristics(chatId, id, className)
 
-        const getProgress = (
-            key: keyof Characteristics
-        ): string => {
-            return DuelUtils.getProgress(
-                current,
-                max,
-                key
-            )
-        }
+        // const getProgress = (
+        //     key: keyof Characteristics
+        // ): string => {
+        //     return DuelUtils.getProgress(
+        //         current,
+        //         max,
+        //         key
+        //     )
+        // }
 
-        await MessageUtils.answerMessageFromResource(
-            ctx,
-            'text/commands/chars/info.pug',
-            {
-                changeValues: {
-                    ...user,
-                    mana: getProgress('mana'),
-                    hp: getProgress('hp'),
-                    className: ClassUtils.getName(className)
-                }
-            }
-        )
+        // await MessageUtils.answerMessageFromResource(
+        //     ctx,
+        //     'text/commands/chars/info.pug',
+        //     {
+        //         changeValues: {
+        //             ...user,
+        //             mana: getProgress('mana'),
+        //             hp: getProgress('hp'),
+        //             className: ClassUtils.getName(className)
+        //         }
+        //     }
+        // )
     }
 }

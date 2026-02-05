@@ -1,0 +1,53 @@
+{
+    "characteristics": {
+        "hp": {
+            "start": 60,
+            "up": 8
+        },
+        "mana": {
+            "start": 100,
+            "up": 11
+        }
+    },
+    "skill": {
+        "showable": [
+            "attack-engineer",
+            "rock-void",
+            "one-tower",
+            "wood-sword",
+            "drone",
+            "phantom",
+            "on-sky",
+            "drill",
+            "sleep",
+            "electro",
+            "tower",
+            "feedback",
+            "artifact",
+            "cool-armor",
+            "master-of-field",
+            "chain-trap",
+            "flutter",
+            "atheist",
+            "womanet",
+            "love",
+            "iron-man",
+            "morgart"
+        ],
+        "main": "attack-engineer",
+        "effects": [
+            "sword-effect",
+            "heal50",
+            "tower-continue",
+            "psn35",
+            "damageup100",
+            "damageup-40",
+            "damageup-25",
+            "love-heal",
+            "morgart-heal",
+            "return-damage",
+            "robot",
+            "defend"
+        ]
+    }
+}

@@ -5,7 +5,7 @@ import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
-import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import CasinoGetService from '../../../db/services/casino/CasinoGetService'
 import CubeLastMessageService from '../../../db/services/cube/CubeLastMessageService'
 import { MAX_DEBT } from '../../../../utils/values/consts'
@@ -76,7 +76,7 @@ export default class CubeCommand extends BuckwheatCommand {
                         userName: user.name,
                         cost: needMoney > 0 ? `${StringUtils.toFormattedNumber(needMoney)} монет` : 'интерес'
                     },
-                    inlineKeyboard: await InlineKeyboardManager.get('cubes', JSON.stringify({
+                    inlineKeyboard: await LegacyInlineKeyboardManager.get('cubes', JSON.stringify({
                         r: replyId,
                         u: userId,
                         m: needMoney
