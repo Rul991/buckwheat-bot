@@ -189,6 +189,7 @@ import SkillRemoveAction from '../classes/callback-button/skills/SkillRemoveActi
 import SkillViewAction from '../classes/callback-button/skills/SkillViewAction'
 import SkillAlertAction from '../classes/callback-button/skills/SkillAlertAction'
 import InlineKeyboardManager from '../classes/main/InlineKeyboardManager'
+import CustomTitleCommand from '../classes/commands/buckwheat/admins/CustomTitleCommand'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -393,6 +394,7 @@ const launchBot = async (bot: Bot) => {
         new HelloCommand(),
         new TopCommand(),
         new ShopCommand(),
+        new MarketCommand(),
         new InventoryCommand(),
         new ClassCommand(),
         new GreedBoxCommand(),
@@ -431,7 +433,7 @@ const launchBot = async (bot: Bot) => {
         new SearchCommand(),
         new RemoveImageProfileCommand(),
         new RankSettingsCommand(),
-        new MarketCommand(),
+        new CustomTitleCommand(),
         ...await getSimpleCommands(),
     )
 

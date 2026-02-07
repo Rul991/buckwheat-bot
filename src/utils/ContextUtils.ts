@@ -1,5 +1,4 @@
 import { Context } from 'telegraf'
-import { DEFAULT_USER_NAME } from './values/consts'
 import UserNameService from '../classes/db/services/user/UserNameService'
 import MessageUtils from './MessageUtils'
 import FileUtils from './FileUtils'
@@ -56,7 +55,7 @@ export default class ContextUtils {
             }
         )
 
-        const {dice: {value: dice}} = await ctx.replyWithDice({
+        const { dice: { value: dice } } = await ctx.replyWithDice({
             emoji: '🎲'
         })
 
@@ -64,21 +63,21 @@ export default class ContextUtils {
     }
 
     static hasBotReply(ctx: TextContext) {
-        const {reply_to_message: reply} = ctx.message
+        const { reply_to_message: reply } = ctx.message
         return Boolean(reply?.from?.is_bot)
     }
 
     static getUserOrBotId(ctx: TextContext) {
         const isBot = this.hasBotReply(ctx)
 
-        if(isBot) return ctx.message.reply_to_message!.from!.id
+        if (isBot) return ctx.message.reply_to_message!.from!.id
         return ctx.from.id
     }
 
     static getUserOrBotFirstName(ctx: TextContext) {
         const isBot = this.hasBotReply(ctx)
 
-        if(isBot) return ctx.message.reply_to_message!.from!.first_name
+        if (isBot) return ctx.message.reply_to_message!.from!.first_name
         return ctx.from.first_name
     }
 
@@ -89,7 +88,7 @@ export default class ContextUtils {
     static async showCallbackMessage(ctx: Context, text: string, isAlert = false): Promise<boolean> {
         return await ExceptionUtils.handle(async () => {
             await ctx.answerCbQuery(
-                text, 
+                text,
                 { show_alert: isAlert }
             )
         })
@@ -97,8 +96,8 @@ export default class ContextUtils {
 
     static async showCallbackMessageFromFile(ctx: Context, path = 'text/alerts/alert.pug', isAlert = false) {
         await this.showCallbackMessage(
-            ctx, 
-            await FileUtils.readPugFromResource(path), 
+            ctx,
+            await FileUtils.readPugFromResource(path),
             isAlert
         )
     }
@@ -107,31 +106,39 @@ export default class ContextUtils {
         await this.showCallbackMessageFromFile(ctx, path, true)
     }
 
-    static async isCreator(ctx: Context): Promise<boolean> {
-        const user = await this.getChatMember(ctx, ctx.from?.id ?? 0)
-        return user?.status == 'creator'
+    static async isAdmin(ctx: Context, id?: number): Promise<boolean> {
+        const status = await this.getStatus(ctx, id)
+        return status == 'creator' || status == 'administrator'
     }
 
-    static async getChatMember(ctx: Context, id: number): Promise<ChatMember | null> {
+    static async getStatus(ctx: Context, id?: number) {
+        const user = await this.getChatMember(ctx, id)
+        return user?.status ?? 'left'
+    }
+
+    static async isCreator(ctx: Context, id?: number): Promise<boolean> {
+        const status = await this.getStatus(ctx, id)
+        return status == 'creator'
+    }
+
+    static async getChatMember(ctx: Context, id?: number): Promise<ChatMember | null> {
         try {
-            const user = await ctx.telegram.getChatMember(ctx.chat?.id ?? 0, id)
+            const user = await ctx.telegram.getChatMember(ctx.chat?.id ?? 0, id ?? ctx.from?.id ?? 0)
             return user
         }
-        catch(e) {
+        catch (e) {
             Logging.error(e)
             return null
         }
     }
 
     static async isLeft(ctx: Context, id: number) {
-        const user = await this.getChatMember(ctx, id)
-        const status = user?.status ?? 'left'
-
+        const status = await this.getStatus(ctx, id)
         return status == 'kicked' || status == 'left'
     }
 
     static async showAlertIfIdNotEqual(ctx: Context, id: number): Promise<boolean> {
-        if(id != ctx.from?.id) {
+        if (id != ctx.from?.id) {
             await ContextUtils.showAlertFromFile(ctx)
             return true
         }

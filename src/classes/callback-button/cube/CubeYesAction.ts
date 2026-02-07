@@ -154,7 +154,11 @@ export default class CubeYesAction extends CallbackButtonAction<CubeData> {
                                     }
                                 }
                             )
-                            await AdminUtils.kick(ctx, loserId)
+                            await AdminUtils.gameKick({
+                                ctx,
+                                id: loserId,
+                                chatId
+                            })
                         }
                     }, MILLISECONDS_IN_SECOND)
                 }

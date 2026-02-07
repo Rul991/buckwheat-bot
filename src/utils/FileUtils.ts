@@ -15,9 +15,9 @@ export default class FileUtils {
             let isCached = false
             const cachedValue = this._cache[path] ?? {}
 
-            if(MODE == 'dev') {
+            if (MODE == 'dev') {
                 const stats = await stat(path)
-                if(stats.ctimeMs == cachedValue.lastEdited) {
+                if (stats.ctimeMs == cachedValue.lastEdited) {
                     isCached = true
                 }
                 else {
@@ -27,10 +27,10 @@ export default class FileUtils {
 
             let result: string
 
-            if(isCached) {
+            if (isCached) {
                 result = cachedValue.text
             }
-            
+
             else {
                 const buffer = await readFile(path)
                 result = buffer.toString('utf-8')
@@ -41,7 +41,7 @@ export default class FileUtils {
 
             return result
         }
-        catch(e) {
+        catch (e) {
             Logging.error(`Cant read text from ${path}: ${e}`)
             return ``
         }
@@ -52,7 +52,7 @@ export default class FileUtils {
             await writeFile(path, data)
             return true
         }
-        catch(e) {
+        catch (e) {
             Logging.error('Cant write:', e)
             return false
         }
@@ -62,7 +62,7 @@ export default class FileUtils {
         try {
             await appendFile(path, data)
             return true
-        } 
+        }
         catch (e) {
             Logging.error('Cant append:', e)
             return false
@@ -74,21 +74,21 @@ export default class FileUtils {
             const text = await this.readToString(path)
             return JSON.parse(text)
         }
-        catch(e) {
+        catch (e) {
             Logging.warn(`Cant read json from ${path}: ${e}`)
             return null
         }
     }
 
     static async readPugFromResource(
-        path: string, 
+        path: string,
         options: ReplaceOptions = {}
     ): Promise<string> {
         let text = await this.readToString(join(this._resourceFolder, path))
-        
+
         try {
             let result = render(
-                text, 
+                text,
                 {
                     ...(options.changeValues ?? {}),
                     filename: './res/text/.',
@@ -96,9 +96,10 @@ export default class FileUtils {
                 }
             )
 
+            Logging.log({ result })
             return result
         }
-        catch(e) {
+        catch (e) {
             Logging.error('Pug parsing error:', e)
             return ''
         }
@@ -107,14 +108,14 @@ export default class FileUtils {
     static async readFilesFromResourse(path: string) {
         try {
             const files = await readdir(
-                join(this._resourceFolder, path), 
-                {withFileTypes: true}
+                join(this._resourceFolder, path),
+                { withFileTypes: true }
             )
             return files
                 .filter(v => v.isFile())
                 .map(v => v.name)
         }
-        catch(e) {
+        catch (e) {
             Logging.error('Cant read directory', e)
             return []
         }

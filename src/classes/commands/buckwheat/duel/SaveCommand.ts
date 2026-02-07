@@ -25,7 +25,9 @@ export default class SaveCommand extends BuckwheatCommand {
         this._name = 'сохраниться'
         this._aliases = [
             'сохранится',
-            'вылечиться'
+            'вылечиться',
+            'сейв',
+            'отхил'
         ]
         this._description = 'сохраняю вас на чекпоинте и восстанавливаю вас'
     }

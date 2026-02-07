@@ -7,6 +7,7 @@ import ConditionalCommand from '../base/ConditionalCommand'
 import { ConditionalCommandOptions } from '../../../utils/values/types/action-options'
 import Duel from '../../../interfaces/schemas/duels/Duel'
 import ReplaceOptions from '../../../interfaces/options/ReplaceOptions'
+import DuelCheckService from '../../db/services/duel/DuelCheckService'
 
 type DuelHandlerOptions = NoDuelHandlerOptions & {
     duel: Duel
@@ -27,17 +28,18 @@ export default class extends ConditionalCommand {
     protected async _duelHandle({ ctx, id, duel, changeValues }: DuelHandlerOptions) {
         const duelId = duel.id
 
+        const cantUse = await DuelCheckService.cantUse(duel, id)
         const message = await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/duel/fight/other-command.pug',
             {
                 changeValues,
                 inlineKeyboard: await LegacyInlineKeyboardManager.get(
-                    `duels/away-duel`,
+                    `duels/away-${cantUse ? 'enemy' : 'you'}`,
                     {
-                        id: JSON.stringify({ userId: id }),
-                        user: JSON.stringify({ v: id, t: 'u' }),
-                        duel: JSON.stringify({ id: duelId })
+                        id: JSON.stringify({ id }),
+                        duel: JSON.stringify({ id: duelId }),
+                        deleteMessage: JSON.stringify({ userId: id })
                     }
                 )
             }
@@ -49,7 +51,7 @@ export default class extends ConditionalCommand {
     protected async _execute(options: ConditionalCommandOptions): Promise<void> {
         const { ctx, chatId, id } = options
         const duel = await DuelService.getByUserId(chatId, id)
-        if(!duel) return
+        if (!duel) return
 
         const changeValues = {
             user: await ContextUtils.getUser(chatId, id)

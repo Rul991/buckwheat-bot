@@ -1,0 +1,59 @@
+{
+    "markup": [
+        [
+            "fight",
+            "effects",
+            "skills"
+        ]
+    ],
+    "definition": {
+        "fight": {
+            "text": "⚔️ Атаковать",
+            "name": "skilluse",
+            "data": {
+                "$vars": [
+                    "duel",
+                    "attack"
+                ]
+            }
+        },
+        "effects": {
+            "text": "✴️ Эффекты",
+            "name": "dueleffects",
+            "data": {
+                "$vars": [
+                    "duel"
+                ]
+            }
+        },
+        "skills": {
+            "text": "💪 Навыки",
+            "name": "duelskills",
+            "data": {
+                "$vars": [
+                    "duel"
+                ]
+            }
+        },
+        "away": {
+            "text": "👋 Сбежать",
+            "name": "duelaway",
+            "data": {
+                "$vars": [
+                    "away"
+                ]
+            }
+        }
+    },
+    "variables": {
+        "duel": {
+            "id": "duelId"
+        },
+        "away": {
+            "id": "userId"
+        },
+        "attack": {
+            "name": "skillId"
+        }
+    }
+}

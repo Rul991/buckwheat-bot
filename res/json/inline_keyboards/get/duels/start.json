@@ -1,8 +1,0 @@
-[
-    [
-        {
-            "text": "🔫 Начать дуэль",
-            "callback_data": "duelstart_@{userReply}"
-        }
-    ]
-]

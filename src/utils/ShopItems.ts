@@ -18,6 +18,8 @@ import ArrayUtils from './ArrayUtils'
 import UserClassService from '../classes/db/services/user/UserClassService'
 import ExperienceService from '../classes/db/services/level/ExperienceService'
 import ExperienceUtils from './level/ExperienceUtils'
+import DuelistService from '../classes/db/services/duelist/DuelistService'
+import DuelCheckService from '../classes/db/services/duel/DuelCheckService'
 
 type ItemDescriptionKey = string
 
@@ -422,6 +424,22 @@ export default class ShopItems {
                         )
                 ])
 
+                return true
+            }
+        },
+
+        {
+            filename: "save-cooldown",
+            execute: async ({
+                chatId,
+                id
+            }) => {
+                await DuelistService.setField(
+                    chatId,
+                    id,
+                    'lastSave',
+                    0
+                )
                 return true
             }
         }

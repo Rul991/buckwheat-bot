@@ -1,12 +1,10 @@
+include utils/functions.pug
 include utils/mixins.pug
 
-mixin level(user, key)
-    - let exp = experience[key]
-    if exp > 0
-        |
+mixin level(user)
         | Игрок 
         +link(user)
-        | получает #{exp} опыта!
+        | получает #{formatNumber(experience)} опыта!
         |
 
 | Дуэль между 
@@ -16,7 +14,9 @@ mixin level(user, key)
 | закончилась, победил 
 +link(winner, false)
 | !
-| Он получает #{prize} 💰!
+| Он получает #{formatNumber(prize)}💰!
 |
-+level(winner, 'first')
-+level(loser, 'second')
+|
+if experience > 0
+    +level(winner)
+    +level(loser)

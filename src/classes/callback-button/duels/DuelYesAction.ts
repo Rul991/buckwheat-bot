@@ -6,7 +6,11 @@ import { CallbackButtonOptions } from '../../../utils/values/types/action-option
 import DuelCheckService from '../../db/services/duel/DuelCheckService'
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
-import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
+import { MODE } from '../../../utils/values/consts'
+import DuelistService from '../../db/services/duelist/DuelistService'
+import DuelService from '../../db/services/duel/DuelService'
+import InlineKeyboardManager from '../../main/InlineKeyboardManager'
+import Logging from '../../../utils/Logging'
 
 export default class DuelYesAction extends CallbackButtonAction<DuelOfferData> {
     protected _buttonTitle?: string | undefined = "Дуэль: Да"
@@ -38,17 +42,38 @@ export default class DuelYesAction extends CallbackButtonAction<DuelOfferData> {
         if (!await DuelCheckService.checkAndSendMessage({ ...checkOptionsPart, id: userId })) return
         if (!await DuelCheckService.checkAndSendMessage({ ...checkOptionsPart, id: replyId })) return
 
-        // await DuelistService.setField(chatId, userId, 'onDuel', true)
-        // await DuelistService.setField(chatId, replyId, 'onDuel', true)
+        if (true) {
+            await DuelistService.setField(chatId, userId, 'onDuel', true)
+            await DuelistService.setField(chatId, replyId, 'onDuel', true)
+        }
 
+        const duel = await DuelService.start({
+            chatId,
+            firstDuelist: userId,
+            secondDuelist: replyId,
+        })
+        const {
+            id: duelId
+        } = duel
+        Logging.log({
+            duel
+        })
+
+        await MessageUtils.editMarkup(ctx)
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/duel/fight/start.pug',
             {
-                inlineKeyboard: await LegacyInlineKeyboardManager.get(
+                changeValues: {
+                    user: await ContextUtils.getUser(chatId, userId),
+                    reply: await ContextUtils.getUser(chatId, replyId),
+                },
+                inlineKeyboard: await InlineKeyboardManager.get(
                     'duels/start',
                     {
-                        userReply: JSON.stringify(data)
+                        globals: {
+                            duelId
+                        }
                     }
                 )
             }

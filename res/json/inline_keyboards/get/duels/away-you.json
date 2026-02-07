@@ -1,0 +1,13 @@
+[
+    [
+        {
+            "text": "🏃 Да",
+            "callback_data": "duelaway_@{id}"
+        },
+
+        {
+            "text": "⚔️ Нет",
+            "callback_data": "duelfight_@{duel}"
+        }
+    ]
+]

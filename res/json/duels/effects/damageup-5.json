@@ -2,7 +2,7 @@
     "level": 1,
     "info": {
         "title": "Понижение урона на 5%",
-        "description": ""
+        "description": "Понижает наносимый урон на 5%"
     },
     "execute": {
         "user": [],

@@ -1,4 +1,5 @@
-import { MethodExecuteOptions } from '../../utils/values/types/skills'
+import SkillMethodTextsUtils from '../../utils/SkillMethodTextsUtils'
+import { MethodExecuteOptions, MethodGetTextOptions } from '../../utils/values/types/skills'
 import { HpMana, JavascriptTypes } from '../../utils/values/types/types'
 import DuelistService from '../db/services/duelist/DuelistService'
 import SkillMethod from './SkillMethod'
@@ -20,6 +21,30 @@ export default class extends SkillMethod<[number]> {
             [this._characteristic]: currentChar
         } = await DuelistService.getCurrentCharacteristics(chatId, id)
 
-        return
+        return currentChar > -value
+    }
+
+    protected async _execute({
+        chatId,
+        id,
+        args: [value]
+    }: MethodExecuteOptions<[number]>): Promise<boolean> {
+        await DuelistService.addField(
+            chatId,
+            id,
+            this._characteristic,
+            value
+        )
+
+        return true
+    }
+
+    protected async _getText({
+        args: [value]
+    }: MethodGetTextOptions<[number]>): Promise<string> {
+        return await SkillMethodTextsUtils.getAddCharMessage({
+            value,
+            symbol: this._symbol
+        })
     }
 }

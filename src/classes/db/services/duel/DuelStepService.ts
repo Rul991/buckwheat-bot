@@ -1,15 +1,12 @@
 import DuelStep from '../../../../interfaces/schemas/duels/DuelStep'
 import ArrayUtils from '../../../../utils/ArrayUtils'
+import DuelStepUtils from '../../../../utils/duel/DuelStepUtils'
 import DuelUtils from '../../../../utils/duel/DuelUtils'
 import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
-import { DuelistsWithChatId } from '../../../../utils/values/types/duels'
+import { DuelistsWithChatId, FromDuelistsExtra } from '../../../../utils/values/types/duels'
 import DuelRepository from '../../repositories/DuelRepository'
 import DuelistService from '../duelist/DuelistService'
 import DuelService from './DuelService'
-
-type FromDuelistsExtra = Partial<
-    Omit<DuelStep, 'characteristics'>
->
 
 export default class {
     static async add(id: number, step: DuelStep) {
@@ -28,12 +25,12 @@ export default class {
 
     static async get(id: number) {
         const duel = await DuelService.get(id)
-        return duel?.steps ?? []
+        return DuelStepUtils.get(duel)
     }
 
     static async getCurrent(id: number) {
         const steps = await this.get(id)
-        return ArrayUtils.getLastElement(steps)
+        return DuelStepUtils.getCurrent(steps)
     }
 
     static async updateCurrent(id: number, step: Partial<DuelStep>) {
@@ -67,8 +64,8 @@ export default class {
         const duelist = extra?.duelist ?? DuelUtils.getRandomDuelist(duelists)
         const characteristics: DuelStep['characteristics'] = new Map()
 
-        characteristics.set(firstDuelist, await DuelistService.getCurrentCharacteristics(chatId, firstDuelist))
-        characteristics.set(secondDuelist, await DuelistService.getCurrentCharacteristics(chatId, secondDuelist))
+        characteristics.set(`${firstDuelist}`, await DuelistService.getCurrentCharacteristics(chatId, firstDuelist))
+        characteristics.set(`${secondDuelist}`, await DuelistService.getCurrentCharacteristics(chatId, secondDuelist))
 
         return {
             ...extra,

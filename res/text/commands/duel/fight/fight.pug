@@ -1,4 +1,5 @@
 include utils/mixins.pug
+include utils/functions.pug
 
 mixin stats(title, obj)
     |
@@ -10,16 +11,16 @@ mixin stats(title, obj)
     |
 
 b Дуэль между 
-+link(first)
++link(you)
 | и 
-+link(second, false)
++link(enemy, false)
 | :
 |
 | Текущий шаг у игрока 
-+link(step, false)
++link(you, false)
 | !
 | Всего шагов: 
-b #{steps}
+b #{formatNumber(steps)}
 |
 |
 |

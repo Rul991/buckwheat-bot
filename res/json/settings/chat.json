@@ -173,5 +173,13 @@
         "type": "boolean",
         "properties": {},
         "default": true
+    },
+
+    "gameKick": {
+        "title": "Кик в играх",
+        "description": "Выгонять ли игрока за проигрыш в играх(долг в кубах, рулетка и прочее)",
+        "type": "boolean",
+        "properties": {},
+        "default": true
     }
 }

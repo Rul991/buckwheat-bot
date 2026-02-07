@@ -20,8 +20,8 @@ export default class TelegramCommandHandler extends BaseHandler<TelegramCommand,
         }
     }
 
-    setup(bot: MyTelegraf): void {
-        this._container.forEach(command => {
+    async setup(bot: MyTelegraf): Promise<void> {
+        await this._container.forEach(command => {
             this._addCommand(command)
             bot.command(command.name, async ctx => {
                 const id = ctx.from.id

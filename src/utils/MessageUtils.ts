@@ -154,7 +154,6 @@ export default class MessageUtils {
                 messageOptions
             )
         })
-
         return lastMessage
     }
 
@@ -283,6 +282,17 @@ export default class MessageUtils {
             await this.deleteMessage(ctx)
             return false
         }
+    }
+
+    static async editTextFromResource(ctx: Context, path: string, options: FileAnswerOptions = {}) {
+        const text = await FileUtils.readPugFromResource(path, options)
+        const messageOptions = await this._getMessageOptions(ctx, options)
+
+        return await this.editText(
+            ctx,
+            text,
+            messageOptions
+        )
     }
 
     static async editMedia(

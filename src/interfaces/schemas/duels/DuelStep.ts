@@ -4,7 +4,7 @@ import Effect from './Effect'
 
 export default interface DuelStep {
     duelist: number
-    characteristics: Map<number, Characteristics>
+    characteristics: Map<string, Characteristics>
     skill?: string
     attack?: SkillAttack
     effects?: Effect[]

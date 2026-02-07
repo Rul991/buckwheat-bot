@@ -22,14 +22,7 @@
             }
         ],
         "enemy": [
-            {
-                "name": "effectLevel",
-                "args": [
-                    "defend",
-                    3,
-                    1
-                ]
-            }
+            
         ]
     }
 }

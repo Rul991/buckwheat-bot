@@ -2,7 +2,7 @@
     "level": 1,
     "info": {
         "title": "Двойной урон",
-        "description": ""
+        "description": "Повышает наносимый урон на 100%"
     },
     "execute": {
         "user": [],

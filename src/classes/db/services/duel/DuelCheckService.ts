@@ -6,9 +6,20 @@ import DuelPrepareService from './DuelPrepareService'
 import { Ids } from '../../../../utils/values/types/types'
 import MessageUtils from '../../../../utils/MessageUtils'
 import ContextUtils from '../../../../utils/ContextUtils'
+import Duel from '../../../../interfaces/schemas/duels/Duel'
+import DuelService from './DuelService'
+import DuelStepUtils from '../../../../utils/duel/DuelStepUtils'
+import DuelUtils from '../../../../utils/duel/DuelUtils'
 
 type CheckAndSendMessageOptions = Ids & {
     ctx: Context
+}
+
+type DuelId = Duel | Duel['id']
+type ShowAlertOptions = {
+    ctx: Context
+    duelId: DuelId
+    userId: number
 }
 
 export default class {
@@ -78,5 +89,38 @@ export default class {
         }
 
         return done
+    }
+
+    static async cantUse(duelId: DuelId, userId: number) {
+        const duel = typeof duelId == 'number' ?
+            await DuelService.get(duelId) :
+            duelId
+        if (!duel) return true
+
+        const currentStep = DuelStepUtils.getCurrent(duel.steps)
+        if (!currentStep) return true
+
+        const {
+            duelist
+        } = currentStep
+
+        return duelist != userId
+    }
+
+    static async showAlertIfCantUse({
+        ctx,
+        duelId,
+        userId
+    }: ShowAlertOptions) {
+        const cantUse = await this.cantUse(duelId, userId)
+
+        if(cantUse) {
+            await ContextUtils.showAlertFromFile(
+                ctx,
+                'text/commands/duel/check/cant-use.pug'
+            )
+        }
+
+        return cantUse
     }
 }
