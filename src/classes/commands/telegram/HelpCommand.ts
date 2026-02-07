@@ -8,7 +8,7 @@ export default class HelpCommand extends TelegramCommand {
     constructor() {
         super()
         this._name = 'help'
-        this._description = 'Команда для получения помощи'
+        this._description = '🆘 Помощь'
     }
 
     async execute(options: BuckwheatCommandOptions): Promise<void> {

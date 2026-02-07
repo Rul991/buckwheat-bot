@@ -2,7 +2,7 @@
     "level": 1,
     "info": {
         "title": "Ядовитые пули",
-        "description": ""
+        "description": "Отравляет врага при использование атаки"
     },
     "execute": {
         "user": [],

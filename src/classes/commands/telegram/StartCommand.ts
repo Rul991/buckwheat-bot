@@ -6,7 +6,7 @@ export default class StartCommand extends TelegramCommand {
     constructor () {
         super()
         this._name = 'start'
-        this._description = 'Команда для запуска бота'
+        this._description = '🚀 Запуск'
     }
 
     async execute({ ctx }: BuckwheatCommandOptions): Promise<void> {

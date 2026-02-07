@@ -2,7 +2,7 @@
     "level": 1,
     "info": {
         "title": "Пропуск заклинания",
-        "description": ""
+        "description": "Не дает использовать навыки, кроме Атаки"
     },
     "execute": {
         "user": [],

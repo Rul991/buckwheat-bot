@@ -1,6 +1,5 @@
 import { ZodType } from 'zod'
 import CallbackButtonAction from '../CallbackButtonAction'
-import DuelUtils from '../../../utils/duel/DuelUtils'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 import { duelSchema } from '../../../utils/values/schemas'
 

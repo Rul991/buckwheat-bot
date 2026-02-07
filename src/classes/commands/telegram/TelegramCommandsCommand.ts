@@ -8,7 +8,7 @@ export default class TelegramCommandsCommand extends TelegramCommand {
     constructor() {
         super()
         this._name = 'commands'
-        this._description = 'Команда, показывающая все команды'
+        this._description = '📚 Команды'
     }
 
     async execute(options: BuckwheatCommandOptions): Promise<void> {

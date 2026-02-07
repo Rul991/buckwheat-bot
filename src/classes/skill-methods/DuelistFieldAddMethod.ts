@@ -24,26 +24,37 @@ export default class extends SkillMethod<[number]> {
         return currentChar > -value
     }
 
+    private _getValue(value: number, boost: number) {
+        if(value < 0 && boost != this._failBoost) {
+            return value
+        }
+        else {
+            return value * boost
+        }
+    }
+
     protected async _execute({
         chatId,
         id,
-        args: [value]
+        args: [value],
+        boost
     }: MethodExecuteOptions<[number]>): Promise<boolean> {
         await DuelistService.addField(
             chatId,
             id,
             this._characteristic,
-            value
+            this._getValue(value, boost)
         )
 
         return true
     }
 
     protected async _getText({
-        args: [value]
+        args: [value],
+        boost
     }: MethodGetTextOptions<[number]>): Promise<string> {
         return await SkillMethodTextsUtils.getAddCharMessage({
-            value,
+            value: this._getValue(value, boost),
             symbol: this._symbol
         })
     }

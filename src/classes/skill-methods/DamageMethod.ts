@@ -8,6 +8,7 @@ type Data = [number, number]
 
 export default class extends SkillMethod<Data> {
     args: JavascriptTypes[] = ['number']
+    protected _filename: string = 'damage'
 
     protected async _getRawDamage({
         args: [damage]
@@ -49,12 +50,16 @@ export default class extends SkillMethod<Data> {
     }
 
     protected async _getText(options: MethodGetTextOptions<Data>): Promise<string> {
+        const {
+            args
+        } = options
         const damage = await this._getDamage(options)
         return await FileUtils.readPugFromResource(
-            'text/methods/damage.pug',
+            `text/methods/${this._filename}.pug`,
             {
                 changeValues: {
-                    damage
+                    damage,
+                    args
                 }
             }
         )

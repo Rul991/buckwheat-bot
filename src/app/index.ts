@@ -44,7 +44,6 @@ import DuelEffectsAction from '../classes/callback-button/duels/DuelEffectsActio
 import DuelFightAction from '../classes/callback-button/duels/DuelFightAction'
 import DuelNoAction from '../classes/callback-button/duels/DuelNoAction'
 import DuelSkillAction from '../classes/callback-button/duels/DuelSkillAction'
-import DuelStartAction from '../classes/callback-button/duels/DuelStartAction'
 import DuelYesAction from '../classes/callback-button/duels/DuelYesAction'
 import EffectChangeAction from '../classes/callback-button/effects/EffectChangeAction'
 import FaqAction from '../classes/callback-button/faq/FaqAction'
@@ -190,6 +189,7 @@ import SkillViewAction from '../classes/callback-button/skills/SkillViewAction'
 import SkillAlertAction from '../classes/callback-button/skills/SkillAlertAction'
 import InlineKeyboardManager from '../classes/main/InlineKeyboardManager'
 import CustomTitleCommand from '../classes/commands/buckwheat/admins/CustomTitleCommand'
+import SettingTelegramCommand from '../classes/commands/telegram/SettingTelegramCommand'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -287,7 +287,6 @@ const launchBot = async (bot: Bot) => {
         new DeleteMessageAction(),
         new DuelNoAction(),
         new DuelYesAction(),
-        new DuelStartAction(),
         new DuelAwayAction(),
         new DuelFightAction(),
         new DuelSkillAction(),
@@ -448,6 +447,7 @@ const launchBot = async (bot: Bot) => {
         new PaySupportCommand(),
         new HelpCommand(),
         new TelegramCommandsCommand(),
+        new SettingTelegramCommand
     )
 
     // scenes

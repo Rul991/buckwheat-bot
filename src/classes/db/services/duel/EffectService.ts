@@ -1,16 +1,16 @@
 import Effect from '../../../../interfaces/schemas/duels/Effect'
 import SkillUtils from '../../../../utils/skills/SkillUtils'
 import DuelRepository from '../../repositories/DuelRepository'
-import DuelService from './DuelService'
 import SkillAttack from '../../../../enums/SkillAttack'
 import { AsyncOrSync, DeleteEffectsByNameTargetStepsOptions } from '../../../../utils/values/types/types'
 import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import Duel from '../../../../interfaces/schemas/duels/Duel'
 import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
+import DuelStepService from './DuelStepService'
 
 export default class {
     static async get(duelId: number): Promise<Effect[]> {
-        return (await DuelService.get(duelId))?.effects ?? []
+        return (await DuelStepService.getCurrent(duelId))?.effects ?? []
     }
 
     private static async _update(duelId: number, callback: (effects: Effect[]) => AsyncOrSync<Effect[]>) {

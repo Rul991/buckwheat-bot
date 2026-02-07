@@ -6,7 +6,6 @@ import { CallbackButtonOptions } from '../../../utils/values/types/action-option
 import DuelCheckService from '../../db/services/duel/DuelCheckService'
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
-import { MODE } from '../../../utils/values/consts'
 import DuelistService from '../../db/services/duelist/DuelistService'
 import DuelService from '../../db/services/duel/DuelService'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'

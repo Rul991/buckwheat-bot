@@ -22,22 +22,6 @@
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "manaHasntEffect",
-                "args": [
-                    "hashon",
-                    500
-                ]
-            },
-            {
-                "name": "effectHasntEffect",
-                "args": [
-                    "hashon",
-                    "hashon",
-                    20
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

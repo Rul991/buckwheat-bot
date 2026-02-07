@@ -125,6 +125,7 @@ export default class ProfileCommand extends BuckwheatCommand {
     }
 
     private async _getLeft(ctx: TextContext, id: number) {
+        if(ctx.chat.type == 'private') return false
         return await ContextUtils.isLeft(ctx, id)
     }
 

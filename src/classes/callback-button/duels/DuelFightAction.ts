@@ -12,9 +12,6 @@ import DuelUtils from '../../../utils/duel/DuelUtils'
 import ContextUtils from '../../../utils/ContextUtils'
 import { ClassTypes, Link } from '../../../utils/values/types/types'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'
-import DuelistService from '../../db/services/duelist/DuelistService'
-import StringUtils from '../../../utils/StringUtils'
-import { HP_SYMBOLS, MANA_SYMBOLS, MAX_STATS_SYMBOLS_COUNT } from '../../../utils/values/consts'
 import CharacteristicsProgressService from '../../db/services/duel/CharacteristicsProgressService'
 
 type Data = {
@@ -39,9 +36,11 @@ export default class extends CallbackButtonAction<Data> {
 
     private async _getUser(chatId: number, id: number, classType?: ClassTypes): Promise<LinkAndChars> {
         const link = await ContextUtils.getUser(chatId, id)
+        const chars = await CharacteristicsProgressService.get(chatId, id, classType)
+        
         return {
             ...link,
-            ...(await CharacteristicsProgressService.get(chatId, id, classType))
+            ...chars
         }
     }
 
