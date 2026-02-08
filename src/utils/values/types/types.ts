@@ -181,12 +181,6 @@ export type Progress = {
 export type DuelFilename = ClassTypes
 export type JavascriptTypes = 'string' | 'number' | 'boolean'
 
-export type DuelEndOptions = {
-    chatId: number,
-    duelId: number
-    winnerId: number
-}
-
 export type FirstSecond = {
     first: number
     second: number

@@ -37,29 +37,11 @@ export default class extends CallbackButtonAction<Data> {
         const duel = await DuelService.getByUserId(chatId, id)
         if (!duel) return await FileUtils.readPugFromResource('text/actions/duel/hasnt.pug')
 
-        const duelEndResult = await DuelService.end({
+        await DuelUtils.end({
+            chatId,
             ctx,
             duel,
             winner: DuelUtils.getEnemy(duel, id)
         })
-        const {
-            winner,
-            loser,
-            experience,
-            prize
-        } = duelEndResult
-
-        await MessageUtils.answerMessageFromResource(
-            ctx,
-            'text/commands/duel/fight/end.pug',
-            {
-                changeValues: {
-                    winner: await ContextUtils.getUser(chatId, winner),
-                    loser: await ContextUtils.getUser(chatId, loser),
-                    experience,
-                    prize
-                }
-            }
-        )
     }
 }

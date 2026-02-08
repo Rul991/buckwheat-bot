@@ -3,13 +3,13 @@ import { ConditionalCommandOptions } from '../../../utils/values/types/action-op
 
 export default abstract class ConditionalCommand extends BaseAction {
     protected abstract _condition(options: ConditionalCommandOptions): Promise<boolean>
-    protected abstract _execute(options: ConditionalCommandOptions): Promise<void>
+    protected abstract _execute(options: ConditionalCommandOptions): Promise<boolean | void>
 
     async execute(options: ConditionalCommandOptions): Promise<boolean> {
         const needExecute = await this._condition(options)
 
         if(needExecute) {
-            await this._execute(options)
+            return await this._execute(options) ?? true
         }
 
         return needExecute

@@ -10,8 +10,8 @@ type Data = [string, boolean]
 export default class extends SkillMethod<Data> {
     args: JavascriptTypes[] = ['string', 'boolean']
 
-    protected async _preCheck({ }: MethodExecuteOptions<Data>): Promise<boolean> {
-        return true
+    protected async _preCheck({ duel }: MethodExecuteOptions<Data>): Promise<boolean> {
+        return Boolean(duel)
     }
 
     protected async _execute({

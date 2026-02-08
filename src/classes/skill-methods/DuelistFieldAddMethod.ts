@@ -4,7 +4,8 @@ import { HpMana, JavascriptTypes } from '../../utils/values/types/types'
 import DuelistService from '../db/services/duelist/DuelistService'
 import SkillMethod from './SkillMethod'
 
-export default class extends SkillMethod<[number]> {
+export default class extends SkillMethod<[number, string]> {
+    protected _failBoost: number = 0.5
     protected _symbol: string
     protected _characteristic: HpMana
 
@@ -16,7 +17,7 @@ export default class extends SkillMethod<[number]> {
         this._characteristic = characteristic
     }
 
-    protected async _preCheck({ chatId, id, args: [value] }: MethodExecuteOptions<[number]>): Promise<boolean> {
+    protected async _preCheck({ chatId, id, args: [value] }: MethodExecuteOptions<[number, string]>): Promise<boolean> {
         const {
             [this._characteristic]: currentChar
         } = await DuelistService.getCurrentCharacteristics(chatId, id)
@@ -24,37 +25,40 @@ export default class extends SkillMethod<[number]> {
         return currentChar > -value
     }
 
-    private _getValue(value: number, boost: number) {
-        if(value < 0 && boost != this._failBoost) {
-            return value
-        }
-        else {
-            return value * boost
-        }
+    protected async _getRawValue({
+        args: [value]
+    }: MethodExecuteOptions<[number, string]>) {
+        return value
     }
 
-    protected async _execute({
-        chatId,
-        id,
-        args: [value],
-        boost
-    }: MethodExecuteOptions<[number]>): Promise<boolean> {
+    protected async _getValue(options: MethodExecuteOptions<[number, string]>) {
+        const {
+            boost
+        } = options
+        const value = await this._getRawValue(options)
+
+        return value * boost
+    }
+
+    protected async _execute(options: MethodExecuteOptions<[number, string]>): Promise<boolean> {
+        const {
+            chatId,
+            id,
+        } = options
+        const value = await this._getValue(options)
         await DuelistService.addField(
             chatId,
             id,
             this._characteristic,
-            this._getValue(value, boost)
+            value
         )
 
         return true
     }
 
-    protected async _getText({
-        args: [value],
-        boost
-    }: MethodGetTextOptions<[number]>): Promise<string> {
+    protected async _getText(options: MethodGetTextOptions<[number, string]>): Promise<string> {
         return await SkillMethodTextsUtils.getAddCharMessage({
-            value: this._getValue(value, boost),
+            value: await this._getValue(options),
             symbol: this._symbol
         })
     }

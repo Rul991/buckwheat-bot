@@ -180,8 +180,9 @@ export const characterSchema: ZodType<Character> = object({
     }),
     skill: object({
         showable: string().array(),
-        main: string()
-    })
+        main: string(),
+        effects: string().array(),
+    }),
 })
 
 export const cubeDataSchema: ZodType<CubeData> = object({

@@ -16,18 +16,10 @@
                 "name": "effect",
                 "args": [
                     "skip-damage",
-                    999
+                    5
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "effect",
-                "args": [
-                    "skip-damage",
-                    999
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

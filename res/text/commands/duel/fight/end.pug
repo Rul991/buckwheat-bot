@@ -1,12 +1,6 @@
 include utils/functions.pug
 include utils/mixins.pug
 
-mixin level(user)
-        | Игрок 
-        +link(user)
-        | получает #{formatNumber(experience)} опыта!
-        |
-
 | Дуэль между 
 +link(winner)
 | и 
@@ -16,7 +10,7 @@ mixin level(user)
 | !
 | Он получает #{formatNumber(prize)}💰!
 |
-|
 if experience > 0
-    +level(winner)
-    +level(loser)
+    | Игроки 
+    | получают #{formatNumber(experience)} опыта!
+    |

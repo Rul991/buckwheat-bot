@@ -3,7 +3,7 @@ import Duel from '../../../../interfaces/schemas/duels/Duel'
 import AdminUtils from '../../../../utils/AdminUtils'
 import DuelStepUtils from '../../../../utils/duel/DuelStepUtils'
 import DuelUtils from '../../../../utils/duel/DuelUtils'
-import { FromDuelistsExtra } from '../../../../utils/values/types/duels'
+import { DuelEndOptions, FromDuelistsExtra } from '../../../../utils/values/types/duels'
 import DuelRepository from '../../repositories/DuelRepository'
 import CasinoAddService from '../casino/CasinoAddService'
 import DuelistService from '../duelist/DuelistService'
@@ -11,17 +11,13 @@ import DuelPrepareService from './DuelPrepareService'
 import DuelStepService from './DuelStepService'
 import { DUEL_EXPERIENCE, MIN_STEPS_FOR_LEVEL_IN_DUEL } from '../../../../utils/values/consts'
 import ExperienceService from '../level/ExperienceService'
+import SkillAttack from '../../../../enums/SkillAttack'
 
 type OptionalDuel = Omit<Duel, 'id' | 'steps'> & {
     id?: number,
 }
 
 type DuelStartOptions = OptionalDuel
-type DuelEndOptions = {
-    duel: Duel
-    winner: number
-    ctx: Context
-}
 
 export default class DuelService {
     static async create(data: OptionalDuel): Promise<Duel> {
@@ -31,9 +27,17 @@ export default class DuelService {
             id,
             steps: [
                 await DuelStepService.fromDuelists(
-                    data,
                     {
-                        duelist: data.firstDuelist
+                        ...data,
+                        steps: [],
+                        id
+                    },
+                    {
+                        duelist: data.firstDuelist,
+                        attack: SkillAttack.Normal,
+                        effects: [],
+                        skill: '',
+                        startTime: Date.now(),
                     }
                 )
             ]
@@ -169,14 +173,14 @@ export default class DuelService {
         return true
     }
 
-    static async changeDuelist(id: number) {
+    static async skipStep(id: number, lastDuelist?: number) {
         const duel = await this.get(id)
         if (!duel) return false
 
         const currentStep = DuelStepUtils.getCurrent(duel.steps)
         if (!currentStep) return false
 
-        const you = currentStep.duelist
+        const you = lastDuelist ?? currentStep.duelist
         const enemy = DuelUtils.getEnemy(duel, you)
 
         await DuelStepService.updateCurrent(
@@ -185,5 +189,7 @@ export default class DuelService {
                 duelist: enemy
             }
         )
+
+        return true
     }
 }

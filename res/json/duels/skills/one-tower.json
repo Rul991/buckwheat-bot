@@ -15,7 +15,7 @@
         ],
         "enemy": [
             {
-                "name": "attack",
+                "name": "damage",
                 "args": [
                     28
                 ]

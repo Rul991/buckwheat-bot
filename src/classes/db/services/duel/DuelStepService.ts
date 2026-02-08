@@ -1,3 +1,4 @@
+import Duel from '../../../../interfaces/schemas/duels/Duel'
 import DuelStep from '../../../../interfaces/schemas/duels/DuelStep'
 import ArrayUtils from '../../../../utils/ArrayUtils'
 import DuelStepUtils from '../../../../utils/duel/DuelStepUtils'
@@ -54,14 +55,14 @@ export default class {
         return true
     }
 
-    static async fromDuelists(duelists: DuelistsWithChatId, extra?: FromDuelistsExtra): Promise<DuelStep> {
+    static async fromDuelists(duel: Duel, extra?: FromDuelistsExtra): Promise<DuelStep> {
         const {
             firstDuelist,
             secondDuelist,
             chatId
-        } = duelists
+        } = duel
         
-        const duelist = extra?.duelist ?? DuelUtils.getRandomDuelist(duelists)
+        const duelist = extra?.duelist ?? DuelStepUtils.getOther(duel)
         const characteristics: DuelStep['characteristics'] = new Map()
 
         characteristics.set(`${firstDuelist}`, await DuelistService.getCurrentCharacteristics(chatId, firstDuelist))

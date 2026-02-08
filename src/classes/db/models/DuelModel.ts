@@ -63,6 +63,10 @@ export default createModelWithSubModel<Type, SubType>(
         effects: {
             type: [effectSchema],
             required: true
+        },
+        startTime: {
+            type: Number,
+            required: false
         }
     },
     sub => {

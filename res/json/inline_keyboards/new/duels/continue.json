@@ -1,0 +1,21 @@
+{
+    "markup": [
+        "btn"
+    ],
+    "definition": {
+        "btn": {
+            "name": "duelfight",
+            "data": {
+                "$vars": [
+                    "duel"
+                ]
+            },
+            "text": ["🔫 ", "@text"]
+        }
+    },
+    "variables": {
+        "duel": {
+            "id": "duelId"
+        }
+    }
+}

@@ -8,6 +8,8 @@ import { ConditionalCommandOptions } from '../../../utils/values/types/action-op
 import Duel from '../../../interfaces/schemas/duels/Duel'
 import ReplaceOptions from '../../../interfaces/options/ReplaceOptions'
 import DuelCheckService from '../../db/services/duel/DuelCheckService'
+import DuelStepUtils from '../../../utils/duel/DuelStepUtils'
+import DuelUtils from '../../../utils/duel/DuelUtils'
 
 type DuelHandlerOptions = NoDuelHandlerOptions & {
     duel: Duel
@@ -48,25 +50,44 @@ export default class extends ConditionalCommand {
         return message
     }
 
-    protected async _execute(options: ConditionalCommandOptions): Promise<void> {
+    protected async _execute(options: ConditionalCommandOptions): Promise<boolean | void> {
         const { ctx, chatId, id } = options
         const duel = await DuelService.getByUserId(chatId, id)
-        if (!duel) return
-
-        const changeValues = {
-            user: await ContextUtils.getUser(chatId, id)
+        if (!duel) {
+            await DuelistService.setField(
+                chatId,
+                id,
+                'onDuel',
+                false
+            )
+            return false
         }
 
-        const handlerOptions = {
-            ...options,
-            changeValues
+        const isTimeOut = DuelStepUtils.isTimeOut(duel)
+
+        if (isTimeOut) {
+            await DuelUtils.end({
+                chatId,
+                ctx,
+                duel,
+                winner: DuelStepUtils.getOther(duel)
+            })
         }
+        else {
+            const handleOptions = {
+                ...options,
+                changeValues: {
+                    user: await ContextUtils.getUser(chatId, id)
+                },
+                duel
+            }
 
-        const message = await this._duelHandle({ ...handlerOptions, duel })
-        const {
-            message_id: messageId
-        } = message
+            const message = await this._duelHandle(handleOptions)
+            const {
+                message_id: messageId
+            } = message
 
-        await DuelistService.deleteAndUpdateLastMessage(ctx, messageId)
+            await DuelistService.deleteAndUpdateLastMessage(ctx, messageId)
+        }
     }
 }

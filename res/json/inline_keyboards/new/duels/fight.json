@@ -47,7 +47,7 @@
     },
     "variables": {
         "duel": {
-            "id": "duelId"
+            "duel": "duelId"
         },
         "away": {
             "id": "userId"

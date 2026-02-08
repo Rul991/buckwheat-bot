@@ -149,7 +149,7 @@ export default class {
     }
 
     static async set(duelId: number, effects: Effect[]) {
-        return await DuelRepository.updateOne(
+        return await DuelStepService.updateCurrent(
             duelId,
             {
                 effects
@@ -191,12 +191,17 @@ export default class {
             })
         }
 
-        const newEffects = (await this.get(duel.id))
+        const newEffects = (await this.get(id))
             .filter(v => v.remainingSteps > 0)
 
         await this.set(
-            duel.id,
+            id,
             newEffects
         )
+
+        console.log({
+            currentEffects,
+            newEffects
+        })
     }
 }

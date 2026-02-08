@@ -24,7 +24,7 @@ export default class extends SkillMethod<Data> {
         const rawDamage = await this._getRawDamage(options)
         const damage = rawDamage * boost
 
-        return damage
+        return Math.ceil(damage)
     }
 
     protected async _preCheck({ }: MethodExecuteOptions<Data>): Promise<boolean> {

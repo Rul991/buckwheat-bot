@@ -190,6 +190,7 @@ import SkillAlertAction from '../classes/callback-button/skills/SkillAlertAction
 import InlineKeyboardManager from '../classes/main/InlineKeyboardManager'
 import CustomTitleCommand from '../classes/commands/buckwheat/admins/CustomTitleCommand'
 import SettingTelegramCommand from '../classes/commands/telegram/SettingTelegramCommand'
+import SkillUseAction from '../classes/callback-button/skills/SkillUseAction'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -332,6 +333,7 @@ const launchBot = async (bot: Bot) => {
         new SkillRemoveAction(),
         new SkillViewAction(),
         new SkillAlertAction(),
+        new SkillUseAction(),
     )
 
     // dice 

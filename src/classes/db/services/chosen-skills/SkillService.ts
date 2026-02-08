@@ -15,8 +15,13 @@ export default class {
         return SkillUtils.getAvailableSkills(type, level)
     }
 
+    static async hasByIndex(chatId: number, id: number, index: number) {
+        const skills = await this.get(chatId, id)
+        return Boolean(skills[index])
+    }
+
     static async get(chatId: number, id: number): Promise<string[]> {
-        const rawSkills = (await ChosenSkillsService.get(chatId, id)).skills
+        const rawSkills = (await ChosenSkillsService.get(chatId, id)).skills ?? []
         const availableSkills = await this.getAvailableSkills(chatId, id)
 
         const skills = rawSkills.filter(raw => {
@@ -29,6 +34,10 @@ export default class {
             })
         }
 
+        console.log({
+            rawSkills,
+            skills
+        })
         return skills
     }
 

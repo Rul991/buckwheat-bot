@@ -1,3 +1,4 @@
+include utils/mixins.pug
 include utils/duels.pug
 
 - let attackText = attack == 0 ? 'Критический провал' : attack == 1 ? 'Обычная атака' : 'Критический успех'
@@ -6,8 +7,10 @@ b #{attackText}!
 |
 |
 | Применен навык: "
-code #{skillName}
+code #{skillTitle}
 | "!
 |
-|
-+defaultEffects(enemyTexts, userTexts)
+| !{effectsText}
+| Игрок 
++link(user, false)
+| , ваш ход!

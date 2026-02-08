@@ -8,4 +8,5 @@ export default interface DuelStep {
     skill?: string
     attack?: SkillAttack
     effects?: Effect[]
+    startTime?: number
 }

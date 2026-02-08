@@ -1,0 +1,37 @@
+{
+    "definition": {
+        "skill": {
+            "text": [
+                "@"
+            ],
+            "name": "skillview",
+            "data": {
+                "$vars": [
+                    "duel"
+                ],
+                "$additional": {
+                    "type": "d"
+                },
+                "$each": "skill"
+            }
+        },
+        "back": {
+            "text": "🔙 Назад",
+            "name": "duelfight",
+            "data": {
+                "$vars": [
+                    "duel"
+                ]
+            }
+        }
+    },
+    "markup": [
+        "skill",
+        "back"
+    ],
+    "variables": {
+        "duel": {
+            "id": "duelId"
+        }
+    }
+}

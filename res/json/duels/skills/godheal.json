@@ -25,19 +25,6 @@
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "precentHeal",
-                "args": [
-                    100
-                ]
-            },
-            {
-                "name": "deleteEffects",
-                "args": [
-                    false
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

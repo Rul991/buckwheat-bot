@@ -226,3 +226,5 @@ export const MIN_DICE_VALUE = 1
 export const MAX_DICE_VALUE = 6
 
 export const HP_MIN_VALUE = 0
+export const EFFECT_LAST_STEP = 0
+export const DUEL_STEP_TIMEOUT = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * 5

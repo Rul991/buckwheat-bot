@@ -13,6 +13,7 @@ import ContextUtils from '../../../utils/ContextUtils'
 import { ClassTypes, Link } from '../../../utils/values/types/types'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import CharacteristicsProgressService from '../../db/services/duel/CharacteristicsProgressService'
+import CharacterUtils from '../../../utils/duel/CharacterUtils'
 
 type Data = {
     id: number
@@ -61,6 +62,9 @@ export default class extends CallbackButtonAction<Data> {
         if (await DuelCheckService.showAlertIfCantUse({ ctx, userId: id, duelId: duel })) return
 
         const className = await UserClassService.get(chatId, id)
+        const character = CharacterUtils.get(className)
+        const mainSkill = character.skill.main
+
         const {
             duelist: youId
         } = DuelStepUtils.getCurrent(duel.steps)!
@@ -90,7 +94,7 @@ export default class extends CallbackButtonAction<Data> {
                             globals: {
                                 duelId,
                                 userId: id,
-                                skillId: `attack-${className}`
+                                skillId: mainSkill
                             }
                         }
                     )

@@ -8,29 +8,41 @@ import SkillMethod from './SkillMethod'
 export default class <T extends any[] = [string, number]> extends SkillMethod<T> {
     args: JavascriptTypes[] = ['string', 'number']
 
-    protected async _preCheck({ }: MethodExecuteOptions<T>): Promise<boolean> {
-        return true
+    protected async _preCheck({ duel }: MethodExecuteOptions<T>): Promise<boolean> {
+        return Boolean(duel)
     }
 
-    protected _getSteps(steps: number, boost: number) {
+    protected async _getRawSteps(options: MethodExecuteOptions<T>) {
+        const {
+            args: [_, steps]
+        } = options
+
+        return steps as number
+    }
+
+    protected async _getSteps(options: MethodExecuteOptions<T>) {
+        const {
+            boost
+        } = options
+        const steps = await this._getRawSteps(options)
         return boost * steps
     }
 
-    protected async _execute({
-        args: [skillId, steps],
-        duel,
-        boost,
-        userId,
-        id
-    }: MethodExecuteOptions<T>): Promise<boolean> {
-        if(!duel) return false
+    protected async _execute(options: MethodExecuteOptions<T>): Promise<boolean> {
+        const {
+            args: [skillId],
+            duel,
+            userId,
+            id
+        } = options
+        if (!duel) return false
         const duelId = duel.id
 
         await EffectService.add(
             duelId,
             {
                 name: skillId,
-                remainingSteps: this._getSteps(steps, boost),
+                remainingSteps: await this._getSteps(options),
                 sender: userId,
                 target: id
             }
@@ -38,13 +50,13 @@ export default class <T extends any[] = [string, number]> extends SkillMethod<T>
         return true
     }
 
-    protected _getText({
-        args: [skillId, rawSteps],
-        boost
-    }: MethodGetTextOptions<T>): Promise<string> {
+    protected async _getText(options: MethodGetTextOptions<T>): Promise<string> {
+        const {
+            args: [skillId]
+        } = options
         const skill = SkillUtils.getSkillById(skillId)
         const title = skill.info.title
-        const steps = this._getSteps(rawSteps, boost)
+        const steps = await this._getSteps(options)
 
         return FileUtils.readPugFromResource(
             'text/methods/effect.pug',
