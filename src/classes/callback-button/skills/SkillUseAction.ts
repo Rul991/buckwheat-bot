@@ -126,9 +126,6 @@ export default class extends CallbackButtonAction<Data> {
         })
 
         const newEffects = await EffectService.get(duelId)
-        console.log({
-            newEffects
-        })
         const newStep = await DuelStepService.fromDuelists(
             duel,
             {

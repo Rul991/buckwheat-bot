@@ -20,14 +20,6 @@
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "effect",
-                "args": [
-                    "heal50",
-                    6
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

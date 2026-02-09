@@ -20,14 +20,6 @@
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "effect",
-                "args": [
-                    "morgart-heal",
-                    3
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

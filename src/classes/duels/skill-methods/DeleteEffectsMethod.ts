@@ -1,7 +1,7 @@
-import FileUtils from '../../utils/FileUtils'
-import { MethodExecuteOptions, MethodGetTextOptions } from '../../utils/values/types/skills'
-import { JavascriptTypes } from '../../utils/values/types/types'
-import EffectService from '../db/services/duel/EffectService'
+import FileUtils from '../../../utils/FileUtils'
+import { MethodExecuteOptions, MethodGetTextOptions } from '../../../utils/values/types/skills'
+import { JavascriptTypes } from '../../../utils/values/types/types'
+import EffectService from '../../db/services/duel/EffectService'
 import SkillMethod from './SkillMethod'
 
 type Data = [boolean]

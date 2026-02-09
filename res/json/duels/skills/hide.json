@@ -20,14 +20,6 @@
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "effect",
-                "args": [
-                    "damageup100",
-                    2
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

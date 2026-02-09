@@ -1,7 +1,7 @@
-import SkillMethodTextsUtils from '../../utils/SkillMethodTextsUtils'
-import { MethodExecuteOptions, MethodGetTextOptions } from '../../utils/values/types/skills'
-import { HpMana, JavascriptTypes } from '../../utils/values/types/types'
-import DuelistService from '../db/services/duelist/DuelistService'
+import SkillMethodTextsUtils from '../../../utils/SkillMethodTextsUtils'
+import { MethodExecuteOptions, MethodGetTextOptions } from '../../../utils/values/types/skills'
+import { HpMana, JavascriptTypes } from '../../../utils/values/types/types'
+import DuelistService from '../../db/services/duelist/DuelistService'
 import SkillMethod from './SkillMethod'
 
 export default class extends SkillMethod<[number, string]> {

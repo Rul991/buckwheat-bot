@@ -20,14 +20,6 @@
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "effect",
-                "args": [
-                    "invulnerable",
-                    3
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

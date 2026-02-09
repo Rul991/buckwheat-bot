@@ -20,14 +20,6 @@
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "effect",
-                "args": [
-                    "defend",
-                    25
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

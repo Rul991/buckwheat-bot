@@ -20,14 +20,6 @@
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "effect",
-                "args": [
-                    "love-heal",
-                    1
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

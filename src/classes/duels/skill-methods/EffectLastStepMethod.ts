@@ -1,9 +1,9 @@
-import FileUtils from '../../utils/FileUtils'
-import SkillUtils from '../../utils/skills/SkillUtils'
-import { EFFECT_LAST_STEP } from '../../utils/values/consts'
-import { MethodExecuteOptions, MethodGetTextOptions } from '../../utils/values/types/skills'
-import { JavascriptTypes } from '../../utils/values/types/types'
-import EffectService from '../db/services/duel/EffectService'
+import FileUtils from '../../../utils/FileUtils'
+import SkillUtils from '../../../utils/skills/SkillUtils'
+import { EFFECT_LAST_STEP } from '../../../utils/values/consts'
+import { MethodExecuteOptions, MethodGetTextOptions } from '../../../utils/values/types/skills'
+import { JavascriptTypes } from '../../../utils/values/types/types'
+import EffectService from '../../db/services/duel/EffectService'
 import SkillMethod from './SkillMethod'
 
 export default class extends SkillMethod<[string, string, number]> {

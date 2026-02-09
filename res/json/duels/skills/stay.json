@@ -20,14 +20,6 @@
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "effect",
-                "args": [
-                    "2precent-heal",
-                    3
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

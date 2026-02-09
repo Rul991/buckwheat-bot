@@ -1,6 +1,6 @@
-import FileUtils from '../../utils/FileUtils'
-import { MethodExecuteOptions, MethodGetTextOptions } from '../../utils/values/types/skills'
-import DuelistService from '../db/services/duelist/DuelistService'
+import FileUtils from '../../../utils/FileUtils'
+import { MethodExecuteOptions, MethodGetTextOptions } from '../../../utils/values/types/skills'
+import DuelistService from '../../db/services/duelist/DuelistService'
 import DamageMethod from './DamageMethod'
 
 export default class extends DamageMethod {

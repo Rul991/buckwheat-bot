@@ -2,7 +2,7 @@
     "level": 1,
     "info": {
         "title": "Неуязвимость",
-        "description": "Поглащает 100% урона"
+        "description": "Поглощает 100% урона"
     },
     "execute": {
         "user": [],

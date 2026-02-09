@@ -14,6 +14,7 @@ export type ExecuteSkillOptions = {
     duel?: Duel
     ctx: CallbackButtonContext
     skill: string | Skill
+    isEffect?: boolean
 }
 
 export type ExecuteSkillMethodOptions = Omit<ExecuteSkillOptions, 'skill'> & {

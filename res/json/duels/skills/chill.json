@@ -14,14 +14,6 @@
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "effect",
-                "args": [
-                    "mana50",
-                    10
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

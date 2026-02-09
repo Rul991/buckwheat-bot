@@ -26,20 +26,6 @@
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "heal",
-                "args": [
-                    200
-                ]
-            },
-            {
-                "name": "effect",
-                "args": [
-                    "damageup15",
-                    3
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

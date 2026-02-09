@@ -21,21 +21,6 @@
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "manaHasntEffect",
-                "args": [
-                    535,
-                    "used-mana-up"
-                ]
-            },
-            {
-                "name": "effect",
-                "args": [
-                    "used-mana-up",
-                    30
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

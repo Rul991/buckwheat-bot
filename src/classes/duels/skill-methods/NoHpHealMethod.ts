@@ -1,8 +1,8 @@
-import FileUtils from '../../utils/FileUtils'
-import { HP_SYMBOLS } from '../../utils/values/consts'
-import { MethodExecuteOptions, MethodGetTextOptions } from '../../utils/values/types/skills'
-import { JavascriptTypes } from '../../utils/values/types/types'
-import DuelistService from '../db/services/duelist/DuelistService'
+import FileUtils from '../../../utils/FileUtils'
+import { HP_SYMBOLS } from '../../../utils/values/consts'
+import { MethodExecuteOptions, MethodGetTextOptions } from '../../../utils/values/types/skills'
+import { JavascriptTypes } from '../../../utils/values/types/types'
+import DuelistService from '../../db/services/duelist/DuelistService'
 import SkillMethod from './SkillMethod'
 
 export default class extends SkillMethod<[number]> {

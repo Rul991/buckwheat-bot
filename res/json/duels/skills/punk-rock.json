@@ -20,14 +20,6 @@
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "effect",
-                "args": [
-                    "good-punk",
-                    3
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

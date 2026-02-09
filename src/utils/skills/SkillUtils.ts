@@ -1,26 +1,26 @@
-import AttackMethod from '../../classes/skill-methods/AttackMethod'
-import DamageMethod from '../../classes/skill-methods/DamageMethod'
-import DeleteEffectMethod from '../../classes/skill-methods/DeleteEffectMethod'
-import DeleteEffectsMethod from '../../classes/skill-methods/DeleteEffectsMethod'
-import DuelistFieldAddMethod from '../../classes/skill-methods/DuelistFieldAddMethod'
-import DuelistFieldHasntEffectMethod from '../../classes/skill-methods/DuelistFieldHasntEffectMethod'
-import EffectHasEffectMethod from '../../classes/skill-methods/EffectHasEffectMethod'
-import EffectLastStepMethod from '../../classes/skill-methods/EffectLastStepMethod'
-import EffectLevelMethod from '../../classes/skill-methods/EffectLevelMethod'
-import EffectMethod from '../../classes/skill-methods/EffectMethod'
-import InstantKillMethod from '../../classes/skill-methods/InstantKillMethod'
-import LostHpDamageMethod from '../../classes/skill-methods/LostHpDamageMethod'
-import MoneyMethod from '../../classes/skill-methods/MoneyMethod'
-import MoneyStepMethod from '../../classes/skill-methods/MoneyStepMethod'
-import NoHpHealMethod from '../../classes/skill-methods/NoHpHealMethod'
-import PrecentDamage from '../../classes/skill-methods/PrecentDamage'
-import PrecentDuelistFieldMethod from '../../classes/skill-methods/PrecentDuelistFieldMethod'
-import RandomDamageMethod from '../../classes/skill-methods/RandomDamageMethod'
-import RemoveSkillMethod from '../../classes/skill-methods/RemoveSkillMethod'
-import ReturnDamageMethod from '../../classes/skill-methods/ReturnDamageMethod'
-import SkillMethod from '../../classes/skill-methods/SkillMethod'
-import SkipStepMethod from '../../classes/skill-methods/SkipStepMethod'
-import UseSkillIndexMethod from '../../classes/skill-methods/UseSkillIndexMethod'
+import AttackMethod from '../../classes/duels/skill-methods/AttackMethod'
+import DamageMethod from '../../classes/duels/skill-methods/DamageMethod'
+import DeleteEffectMethod from '../../classes/duels/skill-methods/DeleteEffectMethod'
+import DeleteEffectsMethod from '../../classes/duels/skill-methods/DeleteEffectsMethod'
+import DuelistFieldAddMethod from '../../classes/duels/skill-methods/DuelistFieldAddMethod'
+import DuelistFieldHasntEffectMethod from '../../classes/duels/skill-methods/DuelistFieldHasntEffectMethod'
+import EffectHasEffectMethod from '../../classes/duels/skill-methods/EffectHasEffectMethod'
+import EffectLastStepMethod from '../../classes/duels/skill-methods/EffectLastStepMethod'
+import EffectLevelMethod from '../../classes/duels/skill-methods/EffectLevelMethod'
+import EffectMethod from '../../classes/duels/skill-methods/EffectMethod'
+import InstantKillMethod from '../../classes/duels/skill-methods/InstantKillMethod'
+import LostHpDamageMethod from '../../classes/duels/skill-methods/LostHpDamageMethod'
+import MoneyMethod from '../../classes/duels/skill-methods/MoneyMethod'
+import MoneyStepMethod from '../../classes/duels/skill-methods/MoneyStepMethod'
+import NoHpHealMethod from '../../classes/duels/skill-methods/NoHpHealMethod'
+import PrecentDamage from '../../classes/duels/skill-methods/PrecentDamage'
+import PrecentDuelistFieldMethod from '../../classes/duels/skill-methods/PrecentDuelistFieldMethod'
+import RandomDamageMethod from '../../classes/duels/skill-methods/RandomDamageMethod'
+import RemoveSkillMethod from '../../classes/duels/skill-methods/RemoveSkillMethod'
+import ReturnDamageMethod from '../../classes/duels/skill-methods/ReturnDamageMethod'
+import SkillMethod from '../../classes/duels/skill-methods/SkillMethod'
+import SkipStepMethod from '../../classes/duels/skill-methods/SkipStepMethod'
+import UseSkillIndexMethod from '../../classes/duels/skill-methods/UseSkillIndexMethod'
 import Skill from '../../interfaces/duel/Skill'
 import FileUtils from '../FileUtils'
 import LevelUtils from '../level/LevelUtils'
@@ -31,6 +31,7 @@ import { jsonSkillSchema } from '../values/schemas'
 import Logging from '../Logging'
 import { ExecuteSkillMethodOptions, ExecuteSkillOptions, ExecuteTarget, GetTextSkillOptions, MethodExecuteOptions } from '../values/types/skills'
 import { basename, join } from 'path'
+import DuelUtils from '../duel/DuelUtils'
 
 type SkillContainer = Map<string, Skill>
 type CharacterSkillContainer = Map<ClassTypes, Skill[]>
@@ -295,8 +296,11 @@ export default class SkillUtils {
 
     static async getTextsSkill(options: GetTextSkillOptions) {
         const {
+            chatId,
+            userId,
             bold = true,
-            isSecret = false
+            isSecret = false,
+            duel = DuelUtils.getDummy(chatId, userId)
         } = options
         if(isSecret) return ''
 
@@ -326,7 +330,8 @@ export default class SkillUtils {
                         ...options,
                         args,
                         id,
-                        boost
+                        boost,
+                        duel
                     })
                 )
             }

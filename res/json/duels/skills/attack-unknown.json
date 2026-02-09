@@ -1,11 +1,31 @@
 {
     "level": 1000,
     "info": {
-        "title": "",
-        "description": ""
+        "title": "https://music.yandex.ru/artist/10299164",
+        "description": "Как думаешь, почему я добавил эту ссылку сюда?"
     },
     "execute": {
-        "user": [],
-        "enemy": []
+        "user": [
+            {
+                "name": "mana",
+                "args": [
+                    1000000
+                ]
+            },
+            {
+                "name": "heal",
+                "args": [
+                    1000000
+                ]
+            }
+        ],
+        "enemy": [
+            {
+                "name": "damage",
+                "args": [
+                    1000000
+                ]
+            }
+        ]
     }
 }

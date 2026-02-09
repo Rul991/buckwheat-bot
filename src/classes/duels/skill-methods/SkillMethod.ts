@@ -1,6 +1,10 @@
-import SkillAttack from '../../enums/SkillAttack'
-import { MethodExecuteOptions, MethodGetTextOptions } from '../../utils/values/types/skills'
-import { JavascriptTypes } from '../../utils/values/types/types'
+import SkillAttack from '../../../enums/SkillAttack'
+import { SpecialEffectGetOptions } from '../../../utils/values/types/duels'
+import { MethodExecuteOptions, MethodGetTextOptions } from '../../../utils/values/types/skills'
+import { JavascriptTypes } from '../../../utils/values/types/types'
+import ReverseSkillEffect from '../special-effects/ReverseSkillEffect'
+import SkipSkillEffect from '../special-effects/SkipSkillEffect'
+import ZeroSkillEffect from '../special-effects/ZeroSkillEffect'
 
 export default abstract class <A extends any[]> {
     abstract args: JavascriptTypes[]
@@ -38,10 +42,31 @@ export default abstract class <A extends any[]> {
     }
 
     async execute(options: MethodExecuteOptions<A>): Promise<boolean> {
+        if(!options.duel) return false
+
+        const zeroSkillEffect = new ZeroSkillEffect({})
+        const isZeroSkill = await zeroSkillEffect.get(
+            options as SpecialEffectGetOptions
+        )
+        if(isZeroSkill) return true
+
+        const reverseSkillEffect = new ReverseSkillEffect({
+            methodOptions: options
+        })
+        await reverseSkillEffect.get(options as SpecialEffectGetOptions)
+
         return await this._execute(options)
     }
 
     async preCheck(options: MethodExecuteOptions<A>): Promise<boolean> {
+        if(!options.duel) return false
+        
+        const skipSkillEffect = new SkipSkillEffect({})
+        const isSkip = Boolean(
+            await skipSkillEffect.get(options as SpecialEffectGetOptions)
+        )
+
+        if(isSkip) return false
         return await this._preCheck(options)
     }
 

@@ -1,7 +1,7 @@
-import CharacteristicsUtils from '../../utils/duel/CharacteristicsUtils'
-import { MethodExecuteOptions } from '../../utils/values/types/skills'
-import { JavascriptTypes } from '../../utils/values/types/types'
-import LevelService from '../db/services/level/LevelService'
+import CharacteristicsUtils from '../../../utils/duel/CharacteristicsUtils'
+import { MethodExecuteOptions } from '../../../utils/values/types/skills'
+import { JavascriptTypes } from '../../../utils/values/types/types'
+import LevelService from '../../db/services/level/LevelService'
 import DamageMethod from './DamageMethod'
 
 export default class extends DamageMethod {

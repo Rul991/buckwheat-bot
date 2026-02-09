@@ -20,14 +20,6 @@
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "effect",
-                "args": [
-                    "frnd",
-                    3
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

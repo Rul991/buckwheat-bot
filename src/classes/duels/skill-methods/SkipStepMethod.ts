@@ -1,7 +1,7 @@
-import FileUtils from '../../utils/FileUtils'
-import { MethodExecuteOptions, MethodGetTextOptions } from '../../utils/values/types/skills'
-import { JavascriptTypes } from '../../utils/values/types/types'
-import DuelService from '../db/services/duel/DuelService'
+import FileUtils from '../../../utils/FileUtils'
+import { MethodExecuteOptions, MethodGetTextOptions } from '../../../utils/values/types/skills'
+import { JavascriptTypes } from '../../../utils/values/types/types'
+import DuelService from '../../db/services/duel/DuelService'
 import SkillMethod from './SkillMethod'
 
 export default class extends SkillMethod<[]> {

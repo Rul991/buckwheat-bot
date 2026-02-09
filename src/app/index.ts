@@ -191,6 +191,10 @@ import InlineKeyboardManager from '../classes/main/InlineKeyboardManager'
 import CustomTitleCommand from '../classes/commands/buckwheat/admins/CustomTitleCommand'
 import SettingTelegramCommand from '../classes/commands/telegram/SettingTelegramCommand'
 import SkillUseAction from '../classes/callback-button/skills/SkillUseAction'
+import ArrayUtils from '../utils/ArrayUtils'
+import RandomUtils from '../utils/RandomUtils'
+import Duel from '../interfaces/schemas/duels/Duel'
+import DamageUpEffect from '../classes/duels/special-effects/DamageUpEffect'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([

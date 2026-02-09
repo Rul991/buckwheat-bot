@@ -1,7 +1,7 @@
-import FileUtils from '../../utils/FileUtils'
-import RandomUtils from '../../utils/RandomUtils'
-import { MethodExecuteOptions, MethodGetTextOptions } from '../../utils/values/types/skills'
-import { JavascriptTypes } from '../../utils/values/types/types'
+import FileUtils from '../../../utils/FileUtils'
+import RandomUtils from '../../../utils/RandomUtils'
+import { MethodExecuteOptions, MethodGetTextOptions } from '../../../utils/values/types/skills'
+import { JavascriptTypes } from '../../../utils/values/types/types'
 import DamageMethod from './DamageMethod'
 
 export default class extends DamageMethod {

@@ -1,8 +1,8 @@
-import FileUtils from '../../utils/FileUtils'
-import SkillUtils from '../../utils/skills/SkillUtils'
-import { MethodExecuteOptions, MethodGetTextOptions } from '../../utils/values/types/skills'
-import { JavascriptTypes } from '../../utils/values/types/types'
-import SkillService from '../db/services/chosen-skills/SkillService'
+import FileUtils from '../../../utils/FileUtils'
+import SkillUtils from '../../../utils/skills/SkillUtils'
+import { MethodExecuteOptions, MethodGetTextOptions } from '../../../utils/values/types/skills'
+import { JavascriptTypes } from '../../../utils/values/types/types'
+import SkillService from '../../db/services/chosen-skills/SkillService'
 import SkillMethod from './SkillMethod'
 
 export default class extends SkillMethod<[number]> {

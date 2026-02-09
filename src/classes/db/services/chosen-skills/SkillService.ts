@@ -33,11 +33,6 @@ export default class {
                 skills
             })
         }
-
-        console.log({
-            rawSkills,
-            skills
-        })
         return skills
     }
 

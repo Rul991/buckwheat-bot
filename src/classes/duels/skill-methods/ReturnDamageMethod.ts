@@ -1,6 +1,6 @@
-import DuelStep from '../../interfaces/schemas/duels/DuelStep'
-import { MethodExecuteOptions } from '../../utils/values/types/skills'
-import { JavascriptTypes } from '../../utils/values/types/types'
+import DuelStep from '../../../interfaces/schemas/duels/DuelStep'
+import { MethodExecuteOptions } from '../../../utils/values/types/skills'
+import { JavascriptTypes } from '../../../utils/values/types/types'
 import DamageMethod from './DamageMethod'
 
 export default class extends DamageMethod {

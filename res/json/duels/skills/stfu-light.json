@@ -20,14 +20,6 @@
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "effect",
-                "args": [
-                    "stfu-energy",
-                    5
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

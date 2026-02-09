@@ -1,8 +1,8 @@
-import FileUtils from '../../utils/FileUtils'
-import SkillUtils from '../../utils/skills/SkillUtils'
-import { MethodExecuteOptions, MethodGetTextOptions } from '../../utils/values/types/skills'
-import { JavascriptTypes } from '../../utils/values/types/types'
-import EffectService from '../db/services/duel/EffectService'
+import FileUtils from '../../../utils/FileUtils'
+import SkillUtils from '../../../utils/skills/SkillUtils'
+import { MethodExecuteOptions, MethodGetTextOptions } from '../../../utils/values/types/skills'
+import { JavascriptTypes } from '../../../utils/values/types/types'
+import EffectService from '../../db/services/duel/EffectService'
 import SkillMethod from './SkillMethod'
 
 export default class <T extends any[] = [string, number]> extends SkillMethod<T> {

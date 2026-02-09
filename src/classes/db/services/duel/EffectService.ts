@@ -7,6 +7,7 @@ import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import Duel from '../../../../interfaces/schemas/duels/Duel'
 import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
 import DuelStepService from './DuelStepService'
+import EffectUtils from '../../../../utils/skills/EffectUtils'
 
 export default class {
     static async get(duelId: number): Promise<Effect[]> {
@@ -30,7 +31,7 @@ export default class {
         return await this._update(
             duelId,
             currentEffects => {
-                return [...currentEffects, ...effects]
+                return EffectUtils.add(currentEffects, effects)
             }
         )
     }
@@ -39,11 +40,7 @@ export default class {
         return await this._update(
             duelId,
             effects => {
-                const index = effects.findIndex(v => v.name == name)
-                if (index !== NOT_FOUND_INDEX) {
-                    effects.splice(index, 1)
-                }
-                return effects
+                return EffectUtils.deleteByName(effects, name)
             }
         )
     }
@@ -52,11 +49,7 @@ export default class {
         return await this._update(
             duelId,
             effects => {
-                const index = effects.findIndex(v => v.name == name && v.target == target)
-                if (index !== NOT_FOUND_INDEX) {
-                    effects.splice(index, 1)
-                }
-                return effects
+                return EffectUtils.deleteByNameAndTarget(effects, name, target)
             }
         )
     }
@@ -71,7 +64,6 @@ export default class {
         await this._update(
             duelId,
             effects => {
-
                 for (const effect of effects) {
                     if (steps <= 0) break
 
@@ -187,7 +179,8 @@ export default class {
                 enemyId: target,
                 skill,
                 chatId,
-                duel
+                duel,
+                isEffect: true
             })
         }
 
@@ -198,10 +191,5 @@ export default class {
             id,
             newEffects
         )
-
-        console.log({
-            currentEffects,
-            newEffects
-        })
     }
 }

@@ -1,6 +1,6 @@
-import { MethodExecuteOptions } from '../../utils/values/types/skills'
-import { JavascriptTypes } from '../../utils/values/types/types'
-import EffectService from '../db/services/duel/EffectService'
+import { MethodExecuteOptions } from '../../../utils/values/types/skills'
+import { JavascriptTypes } from '../../../utils/values/types/types'
+import EffectService from '../../db/services/duel/EffectService'
 import DuelistFieldAddMethod from './DuelistFieldAddMethod'
 
 export default class extends DuelistFieldAddMethod {

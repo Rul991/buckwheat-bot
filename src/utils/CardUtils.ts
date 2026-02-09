@@ -54,18 +54,10 @@ export default class {
     }
 
     static getRarity() {
-        let result = 0
-
-        while (result < this.maxRarity) {
-            if (RandomUtils.chance(this._rarityChance)) {
-                result++
-            }
-            else {
-                break
-            }
-        }
-
-        return result
+        return RandomUtils.getRarity(
+            this._rarityChance,
+            this.maxRarity
+        )
     }
 
     static getUnknown(isSuggested = false): Card {

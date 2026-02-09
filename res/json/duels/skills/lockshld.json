@@ -20,14 +20,6 @@
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "effect",
-                "args": [
-                    "keyshld",
-                    4
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

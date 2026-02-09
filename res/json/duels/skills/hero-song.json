@@ -19,13 +19,6 @@
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "precentHeal",
-                "args": [
-                    50
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

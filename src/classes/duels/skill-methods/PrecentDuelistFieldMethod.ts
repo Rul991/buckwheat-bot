@@ -1,7 +1,7 @@
-import SkillMethodTextsUtils from '../../utils/SkillMethodTextsUtils'
-import { MethodExecuteOptions, MethodGetTextOptions } from '../../utils/values/types/skills'
-import { JavascriptTypes } from '../../utils/values/types/types'
-import DuelistService from '../db/services/duelist/DuelistService'
+import SkillMethodTextsUtils from '../../../utils/SkillMethodTextsUtils'
+import { MethodExecuteOptions, MethodGetTextOptions } from '../../../utils/values/types/skills'
+import { JavascriptTypes } from '../../../utils/values/types/types'
+import DuelistService from '../../db/services/duelist/DuelistService'
 import DuelistFieldAddMethod from './DuelistFieldAddMethod'
 
 export default class extends DuelistFieldAddMethod {

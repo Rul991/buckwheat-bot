@@ -26,20 +26,6 @@
                 ]
             }
         ],
-        "enemy": [
-            {
-                "name": "heal",
-                "args": [
-                    100
-                ]
-            },
-            {
-                "name": "effect",
-                "args": [
-                    "invulnerable",
-                    1
-                ]
-            }
-        ]
+        "enemy": []
     }
 }

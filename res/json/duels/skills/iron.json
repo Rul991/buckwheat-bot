@@ -11,15 +11,6 @@
                 "args": [
                     -200
                 ]
-            }
-        ],
-        "enemy": [
-            {
-                "name": "effect",
-                "args": [
-                    "damageup-50",
-                    2
-                ]
             },
             {
                 "name": "effect",
@@ -29,16 +20,18 @@
                 ]
             },
             {
+                "name": "deleteEffects",
+                "args": [
+                    false
+                ]
+            }
+        ],
+        "enemy": [
+            {
                 "name": "effect",
                 "args": [
                     "damageup-50",
                     2
-                ]
-            },
-            {
-                "name": "deleteEffects",
-                "args": [
-                    false
                 ]
             }
         ]

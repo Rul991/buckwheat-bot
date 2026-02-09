@@ -1,8 +1,8 @@
-import FileUtils from '../../utils/FileUtils'
-import { MethodExecuteOptions, MethodGetTextOptions } from '../../utils/values/types/skills'
-import { JavascriptTypes } from '../../utils/values/types/types'
-import CasinoAddService from '../db/services/casino/CasinoAddService'
-import CasinoGetService from '../db/services/casino/CasinoGetService'
+import FileUtils from '../../../utils/FileUtils'
+import { MethodExecuteOptions, MethodGetTextOptions } from '../../../utils/values/types/skills'
+import { JavascriptTypes } from '../../../utils/values/types/types'
+import CasinoAddService from '../../db/services/casino/CasinoAddService'
+import CasinoGetService from '../../db/services/casino/CasinoGetService'
 import SkillMethod from './SkillMethod'
 
 export default class extends SkillMethod<[number, number]> {

@@ -11,13 +11,6 @@
                 "args": [
                     -500
                 ]
-            },
-            {
-                "name": "effect",
-                "args": [
-                    "robot",
-                    10
-                ]
             }
         ],
         "enemy": [
