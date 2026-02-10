@@ -40,16 +40,16 @@ export default class extends SkillMethod<Data> {
     }
 
     protected async _getDamageAfterDefend(damage: number, options: MethodExecuteOptions<Data>): Promise<number> {
-        if(!options.duel) return 0
         const {
             duel,
             id,
             skill,
             chatId
         } = options
+        if(!duel) return 0
 
-        const cloneEffect = new DefendEffect({ damage, })
-        return await cloneEffect.get({
+        const effect = new DefendEffect({ damage, })
+        return await effect.get({
             duel,
             id,
             skill,
@@ -66,8 +66,8 @@ export default class extends SkillMethod<Data> {
             chatId
         } = options
 
-        const cloneEffect = new CloneEffect({ damage, })
-        return await cloneEffect.get({
+        const effect = new CloneEffect({ damage, })
+        return await effect.get({
             duel,
             id,
             skill,

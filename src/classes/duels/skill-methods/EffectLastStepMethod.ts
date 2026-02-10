@@ -39,7 +39,7 @@ export default class extends SkillMethod<[string, string, number]> {
                 duelId,
                 {
                     name: givenSkillId,
-                    remainingSteps: steps * boost,
+                    remainingSteps: Math.ceil(steps * boost),
                     sender: userId,
                     target: id
                 }

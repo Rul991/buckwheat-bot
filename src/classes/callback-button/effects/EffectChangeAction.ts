@@ -25,12 +25,13 @@ export default class extends ButtonScrollerAction<Data, ButtonScrollerData> {
 
         for (const skill of rawSkills) {
             const text = skill.info.title
-            const id = skill.id
+            const skillId = skill.id
 
             result.push({
                 text,
                 data: JSON.stringify({
-                    name: id
+                    name: skillId,
+                    id
                 })
             })
         }

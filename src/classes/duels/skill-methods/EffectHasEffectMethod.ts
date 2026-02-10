@@ -34,12 +34,19 @@ export default class extends SkillMethod<[string, string, number]> {
             needSkill
         )
 
+        console.log({
+            hasEffect,
+            has: this._has,
+            id,
+            needSkill
+        })
+
         if (this._has == hasEffect) {
             await EffectService.add(
                 duelId,
                 {
                     name: givenSkill,
-                    remainingSteps: steps,
+                    remainingSteps: Math.ceil(steps),
                     sender: userId,
                     target: id
                 }

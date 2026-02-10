@@ -25,7 +25,7 @@ export default class <T extends any[] = [string, number]> extends SkillMethod<T>
             boost
         } = options
         const steps = await this._getRawSteps(options)
-        return boost * steps
+        return Math.ceil(boost * steps)
     }
 
     protected async _execute(options: MethodExecuteOptions<T>): Promise<boolean> {

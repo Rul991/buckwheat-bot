@@ -1,13 +1,12 @@
 import Effect from '../../../../interfaces/schemas/duels/Effect'
 import SkillUtils from '../../../../utils/skills/SkillUtils'
-import DuelRepository from '../../repositories/DuelRepository'
 import SkillAttack from '../../../../enums/SkillAttack'
 import { AsyncOrSync, DeleteEffectsByNameTargetStepsOptions } from '../../../../utils/values/types/types'
 import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import Duel from '../../../../interfaces/schemas/duels/Duel'
-import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
 import DuelStepService from './DuelStepService'
 import EffectUtils from '../../../../utils/skills/EffectUtils'
+import Logging from '../../../../utils/Logging'
 
 export default class {
     static async get(duelId: number): Promise<Effect[]> {
@@ -18,13 +17,15 @@ export default class {
         const effects = await this.get(duelId)
         const newEffects = await callback(Array.from(effects))
 
-        if (newEffects.length != effects.length) {
-            await DuelRepository.updateOne(duelId, {
-                $set: {
-                    effects: newEffects
-                }
-            })
-        }
+        Logging.log({
+            effects,
+            newEffects
+        })
+
+        await this.set(
+            duelId,
+            newEffects
+        )
     }
 
     static async add(duelId: number, ...effects: Effect[]) {
@@ -76,6 +77,10 @@ export default class {
                     if (!isEvery) break
                 }
 
+                console.log({
+                    steps,
+                    effects
+                })
                 return effects.filter(v => v.remainingSteps > 0)
             }
         )

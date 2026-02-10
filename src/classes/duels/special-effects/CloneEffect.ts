@@ -26,6 +26,11 @@ export default class extends SpecialEffect<DefendOptions> {
             isEvery: false
         })
 
+        console.log({
+            damage,
+            cloneRemainingDamage
+        })
+
         return cloneRemainingDamage < damage ?
             0 :
             damage

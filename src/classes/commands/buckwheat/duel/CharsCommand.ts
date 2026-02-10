@@ -67,7 +67,8 @@ export default class CharsCommand extends BuckwheatCommand {
                     ...user,
                     mana: getProgress('mana'),
                     hp: getProgress('hp'),
-                    className: ClassUtils.getName(className)
+                    className: ClassUtils.getName(className),
+                    classEmoji: ClassUtils.getEmoji(className)
                 }
             }
         )

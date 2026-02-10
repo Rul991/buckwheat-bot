@@ -37,7 +37,7 @@ export default class extends SpecialEffect<Options> {
                 this._name
             )
 
-            return +!hasEffect
+            return +hasEffect
         }
     }
 }

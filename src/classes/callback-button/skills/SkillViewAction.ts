@@ -205,7 +205,8 @@ export default class extends CallbackButtonAction<Data> {
         const {
             userId: id,
             enemyId,
-            keyboard
+            keyboard,
+            isSecret
         } = viewData
 
         if (await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return
@@ -218,7 +219,8 @@ export default class extends CallbackButtonAction<Data> {
                 userId: id,
                 enemyId,
                 chatId,
-                skill
+                skill,
+                isSecret
             }),
             {
                 reply_markup: {

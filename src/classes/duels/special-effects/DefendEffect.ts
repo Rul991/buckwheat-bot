@@ -18,6 +18,10 @@ export default class extends SpecialEffect<DefendOptions> {
         } = options
         const duelId = duel.id
 
+        console.log({
+            damage
+        })
+
         return await EffectService.deleteByNameTargetSteps({
             duelId,
             steps: damage,

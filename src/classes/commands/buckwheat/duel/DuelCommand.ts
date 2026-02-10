@@ -18,6 +18,7 @@ export default class DuelCommand extends BuckwheatCommand {
         ]
         this._description = 'выступаю посредником в дуэле'
         this._replySupport = true
+        // this._isPremium = true
     }
 
     async execute({ ctx, chatId, replyFrom: replyUser }: BuckwheatCommandOptions): Promise<void> {

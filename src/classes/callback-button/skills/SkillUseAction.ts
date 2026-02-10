@@ -19,6 +19,7 @@ import DuelistService from '../../db/services/duelist/DuelistService'
 import { ExecuteSkillOptions } from '../../../utils/values/types/skills'
 import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import ContextUtils from '../../../utils/ContextUtils'
+import FileUtils from '../../../utils/FileUtils'
 
 type Data = {
     name: string
@@ -88,7 +89,9 @@ export default class extends CallbackButtonAction<Data> {
         } = data
 
         const duel = await DuelService.get(duelId)
-        if (!duel) return 'no-duel'
+        if (!duel) return await FileUtils.readPugFromResource(
+            'text/actions/duel/hasnt.pug'
+        )
         if (await DuelCheckService.showAlertIfCantUse({
             ctx,
             duelId,
@@ -109,14 +112,16 @@ export default class extends CallbackButtonAction<Data> {
 
         const isPreChecked = await SkillUtils.precheckSkill(skillUseOptions)
         if (!isPreChecked) {
-            return 'not-prechecked'
+            return await FileUtils.readPugFromResource(
+                'text/actions/duel/not-prechecked.pug'
+            )
         }
 
-        // const oldEffects = await EffectService.get(duelId)
+        const oldEffects = await EffectService.get(duelId)
         await EffectService.use(
             ctx,
             duel,
-            // oldEffects
+            oldEffects
         )
 
         const attack = await this._getAttack(ctx)
