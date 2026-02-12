@@ -11,6 +11,7 @@ import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManag
 import ArrayUtils from '../../../../utils/ArrayUtils'
 import { FIRST_INDEX, MAX_COUNT_BUTTONS_LENGTH } from '../../../../utils/values/consts'
 import StringUtils from '../../../../utils/StringUtils'
+import CasinoGetService from '../../../db/services/casino/CasinoGetService'
 
 type Data = {
     slot: number
@@ -75,6 +76,8 @@ export default abstract class extends CallbackButtonAction<Data> {
             avoidNumber: needCount
         })
 
+        const balance = await CasinoGetService.money(chatId, seller)
+
         await MessageUtils.editText(
             ctx,
             await FileUtils.readPugFromResource(
@@ -83,8 +86,9 @@ export default abstract class extends CallbackButtonAction<Data> {
                     changeValues: {
                         item,
                         slot,
-                        user: await ContextUtils.getUser(chatId, seller),
-                        needCount
+                        seller: await ContextUtils.getUser(chatId, seller),
+                        needCount,
+                        balance
                     },
                 }
             ),

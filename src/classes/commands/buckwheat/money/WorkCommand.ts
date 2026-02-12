@@ -19,6 +19,8 @@ import PremiumChatService from '../../../db/services/chat/PremiumChatService'
 import ChatSettingsService from '../../../db/services/settings/ChatSettingsService'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import GrindSettingService from '../../../db/services/settings/GrindSettingService'
+import InventoryItemsUtils from '../../../../utils/InventoryItemsUtils'
+import ArrayUtils from '../../../../utils/ArrayUtils'
 
 type Boost = {
     value: boolean,
@@ -48,12 +50,32 @@ export default class WorkCommand extends BuckwheatCommand {
     }
 
     private _getMoney({ money, boosts }: TotalMoney) {
-        return Math.ceil(
+        const result = Math.ceil(
             money *
             boosts.reduce((prev, { value, procents }) => {
                 return prev * this._fromBooleanToBoost(value, procents)
             }, 1)
         )
+        
+        return isFinite(result) ?
+            result :
+            Number.MAX_SAFE_INTEGER
+    }
+
+    private async _getNewGames(chatId: number, id: number): Promise<Boost[]> {
+        const item = await InventoryItemService.get(
+            chatId,
+            id,
+            'newGame'
+        )
+        const count = item?.count ?? 0
+
+        return ArrayUtils.range(1, count).map(v => {
+            return {
+                value: true,
+                procents: 0.05
+            }
+        })
     }
 
     private async _getBoosts(chatId: number, id: number): Promise<Boost[]> {
@@ -63,20 +85,31 @@ export default class WorkCommand extends BuckwheatCommand {
             id,
             itemId: 'workUp'
         })
+        const [hasCraftUp] = await InventoryItemService.use({
+            chatId,
+            id,
+            itemId: 'craftWorkUp'
+        })
 
         return [
             { value: isPremium },
             { value: hasUp },
+            { value: hasCraftUp, procents: 0.15 }
         ]
     }
 
     private async _getTotalMoney(chatId: number, id: number) {
         const money = RandomUtils.range(MIN_WORK, MAX_WORK)
         const boosts = await this._getBoosts(chatId, id)
+        const newGames = await this._getNewGames(chatId, id)
+        const totalBoosts = [
+            ...boosts,
+            ...newGames
+        ]
 
         return this._getMoney({
             money,
-            boosts
+            boosts: totalBoosts
         })
     }
 
@@ -125,6 +158,41 @@ export default class WorkCommand extends BuckwheatCommand {
         return RandomUtils.choose(quests) ?? 'Неизвестный квест'
     }
 
+    private async _addMaterial(chatId: number, id: number) {
+        const material = InventoryItemsUtils.getRandomMaterial()
+        if (!material) return null
+
+        const {
+            id: materialId,
+            name,
+            material: workMaterial
+        } = material
+        if (!workMaterial) return null
+
+        const {
+            maxCount
+        } = workMaterial
+
+        if (maxCount !== undefined) {
+            const totalCount = await InventoryItemService.getTotalCount(
+                chatId,
+                materialId
+            )
+
+            if (totalCount >= maxCount) {
+                return null
+            }
+        }
+
+        await InventoryItemService.add({
+            chatId,
+            id,
+            itemId: materialId
+        })
+
+        return name
+    }
+
     async execute({ ctx, chatId, id }: BuckwheatCommandOptions): Promise<void> {
         const user = await ContextUtils.getUser(chatId, id)
         const isPrivate = ctx.chat.type == 'private'
@@ -144,7 +212,7 @@ export default class WorkCommand extends BuckwheatCommand {
 
         const workTime = await this._getWorkTime(chatId, id)
         const elapsed = await WorkTimeService.getElapsedTime(chatId, id, workTime)
-        
+
         const quest = await this._getQuest(chatId, id)
         const isSendMessage = await GrindSettingService.isSendMessage(ctx, id)
 
@@ -152,6 +220,7 @@ export default class WorkCommand extends BuckwheatCommand {
             const totalMoney = await this._getTotalMoney(chatId, id)
             const experience = await this._getExperience(chatId, id)
             const newLevel = await ExperienceService.isLevelUpAfterAdding(chatId, id, experience)
+            const material = await this._addMaterial(chatId, id)
 
             await CasinoAddService.money(chatId, id, totalMoney)
             if (isSendMessage) {
@@ -163,7 +232,8 @@ export default class WorkCommand extends BuckwheatCommand {
                             ...await ContextUtils.getUserFromContext(ctx),
                             money: totalMoney,
                             quest,
-                            experience
+                            experience,
+                            material
                         }
                     }
                 )

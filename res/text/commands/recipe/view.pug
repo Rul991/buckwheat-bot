@@ -1,0 +1,30 @@
+include utils/functions.pug
+include utils/mixins.pug
+
+- const recipeCount = recipe.count || 1
+- const totalCount = recipeCount * boost
+
+b 🧤 Рецепт предмета 
+    u #{resultItem.name}
+    |  x#{formatNumber(totalCount)}:
+|
+|
+|
+b 🧮 Количество:
+|
++param('📍 В рецепте', formatNumber(recipeCount), 2)
++param('📍 Выбранное', formatNumber(boost), 1)
++param('📍 В инвентаре', formatNumber(inventoryCount || 0))
+|
+|
+|
+b 📌 Материалы:
+|
+each material in materials
+    - const { title, count, inventoryCount } = material
+    - const boostCount = count * boost
+    |
+    | #{bool(inventoryCount >= boostCount)} #{title} - #{formatNumber(inventoryCount)} / #{formatNumber(boostCount)}
+|
+|
+| Скрафтить?

@@ -2,14 +2,11 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import RandomUtils from '../../../../utils/RandomUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import { MaybeString } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class ChooseCommand extends BuckwheatCommand {
-    private _separator = ';'
+    protected _separator = ';'
     protected _settingId: string = 'choose'
-
 
     constructor() {
         super()

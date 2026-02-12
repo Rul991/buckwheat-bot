@@ -1,6 +1,12 @@
 include utils/mixins.pug
 include utils/inventory.pug
 
+mixin seller(user)
+    |
+    b 👤 Продавец: 
+    +link(user)
+    |
+
 - const totalPrice = slot.price * needCount
 - const priceText = `${formatNumber(slot.price)} * ${formatNumber(needCount)} = ${formatNumber(totalPrice)}💰`
 
@@ -8,3 +14,8 @@ include utils/inventory.pug
 |
 +param('📍 Цена', priceText)
 +param('📍 Кол-во', formatNumber(slot.count))
+|
+|
+|
++seller(seller)
++param('💲 Баланс', formatNumber(balance))

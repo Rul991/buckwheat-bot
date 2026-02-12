@@ -1,0 +1,23 @@
+{
+    "definition": {
+        "craft": {
+            "text": "@",
+            "data": "craftview_@_@{page}"
+        },
+        "arrow": {
+            "text": "@",
+            "data": "recipechange_@_@{page}"
+        },
+        "pageNav": {
+            "text": "@",
+            "data": "recipechange_@_@{page}"
+        }
+    },
+    
+    "values": 
+    [
+        "craft",
+        ["arrow"],
+        ["pageNav"]
+    ]
+}

@@ -1,0 +1,8 @@
+{
+    "name": "Стекло",
+    "description": "Еще больше прозрачных пикселей!",
+    "type": "consumable",
+    "material": {
+        "rarity": 4
+    }
+}

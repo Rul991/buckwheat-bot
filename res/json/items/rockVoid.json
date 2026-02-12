@@ -1,0 +1,8 @@
+{
+    "name": "Камень из пустоты",
+    "description": "Опять он, артефакт из прошлого!",
+    "type": "consumable",
+    "material": {
+        "rarity": 15
+    }
+}

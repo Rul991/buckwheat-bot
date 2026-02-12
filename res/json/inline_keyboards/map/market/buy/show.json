@@ -15,7 +15,7 @@
             "notEach": true
         },
         "countTitle": {
-            "text": "Количество:",
+            "text": "🧮 Количество:",
             "data": "counttitle"
         }
     },

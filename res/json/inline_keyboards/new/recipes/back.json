@@ -1,0 +1,24 @@
+{
+    "markup": [
+        "back"
+    ],
+    
+    "definition": {
+        "back": {
+            "name": "craftview",
+            "text": "🔙 Обратно",
+            "data": {
+                "$vars": ["back"]
+            }
+        }
+    },
+
+    "variables": {
+        "back": {
+            "id": "id",
+            "page": "page",
+            "index": "index",
+            "count": "count"
+        }
+    }
+}

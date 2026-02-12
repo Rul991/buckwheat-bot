@@ -25,6 +25,11 @@ type HandleTextOptions = {
     globals: ReplaceKeyboardData['globals']
 }
 
+type HandleIfOptions = {
+    value: string | boolean
+    globals: ReplaceKeyboardData['globals']
+}
+
 type HandleMarkupOptions = {
     markup: JsonKeyboard['markup']
     maxWidth: ReplaceKeyboardData['maxWidth'] & {}
@@ -97,6 +102,17 @@ export default class {
         return result
     }
 
+    private static _handleIf({
+        globals = {},
+        value
+    }: HandleIfOptions) {
+        if (typeof value == 'boolean') return value
+        else {
+            const result = Boolean(globals[value])
+            return result
+        }
+    }
+
     private static _handleDefinition({
         definition,
         variables,
@@ -113,10 +129,17 @@ export default class {
                 name
             } = button
 
+            const ifKey = data.$if ?? true
+            const isShow = this._handleIf({ value: ifKey, globals })
+
             const eachKey = data.$each
-            const datas = eachKey ?
-                values[eachKey] ?? [] :
-                [{ text: '', data: {} }]
+            const datas =
+                isShow ?
+                    eachKey ?
+                        values[eachKey] ?? [] :
+                        [{ text: '', data: {} }] :
+                    []
+
 
             const row = datas.map(v => {
                 const handledData = this._handleData({
@@ -173,7 +196,10 @@ export default class {
                 }
             }
             else {
-                result.push(...definition[maybeRow].map(v => [v]))
+                result.push(
+                    ...(definition[maybeRow] ?? [])
+                        .map(v => [v])
+                )
             }
         }
 

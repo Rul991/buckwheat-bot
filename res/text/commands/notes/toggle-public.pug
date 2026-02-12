@@ -1,0 +1,5 @@
+include utils/functions.pug
+
+- const isPublic = note ? note.isPublic : false 
+
+| Публичность заметки изменено до #{bool(isPublic)}!

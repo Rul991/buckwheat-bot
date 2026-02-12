@@ -1,0 +1,54 @@
+{
+    "markup": [
+        "public",
+        "delete",
+        "back"
+    ],
+    "definition": {
+        "public": {
+            "name": "notepublic",
+            "text": "👁 Изменить видимость",
+            "data": {
+                "$vars": ["owner"],
+                "$additional": {
+
+                },
+                "$if": "isOwner"
+            }
+        },
+
+        "delete": {
+            "name": "notedelete",
+            "data": {
+                "$if": "isOwner",
+                "$vars": ["owner"]
+            },
+            "text": "🗑 Удалить"
+        },
+
+        "back": {
+            "name": "notechange",
+            "text": "🔙 Назад",
+            "data": {
+                "$vars": ["back"],
+                "$additional": {
+                    "i": 0
+                }
+            }
+        }
+    },
+    "variables": {
+        "owner": {
+            "id": "owner",
+            "note": "note",
+            "public": "isPublic",
+            "page": "page"
+        },
+        "back": {
+            "id": "id",
+            "c": "page",
+            "u": "owner",
+            "p": "isPublic"
+        }
+    }
+}

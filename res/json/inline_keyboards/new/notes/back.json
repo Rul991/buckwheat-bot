@@ -1,0 +1,25 @@
+{
+    "markup": [
+        "back"
+    ],
+    "definition": {
+        "back": {
+            "name": "notechange",
+            "text": "👀 В заметки",
+            "data": {
+                "$additional": {
+                    "i": 0
+                },
+                "$vars": ["back"]
+            }
+        }
+    },
+    "variables": {
+        "back": {
+            "id": "userId",
+            "u": "ownerId",
+            "p": "isPublic",
+            "c": "page"
+        }
+    }
+}

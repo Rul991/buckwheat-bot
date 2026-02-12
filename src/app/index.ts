@@ -187,14 +187,22 @@ import SkillAddAction from '../classes/callback-button/skills/SkillAddAction'
 import SkillRemoveAction from '../classes/callback-button/skills/SkillRemoveAction'
 import SkillViewAction from '../classes/callback-button/skills/SkillViewAction'
 import SkillAlertAction from '../classes/callback-button/skills/SkillAlertAction'
-import InlineKeyboardManager from '../classes/main/InlineKeyboardManager'
 import CustomTitleCommand from '../classes/commands/buckwheat/admins/CustomTitleCommand'
 import SettingTelegramCommand from '../classes/commands/telegram/SettingTelegramCommand'
 import SkillUseAction from '../classes/callback-button/skills/SkillUseAction'
-import ArrayUtils from '../utils/ArrayUtils'
-import RandomUtils from '../utils/RandomUtils'
-import Duel from '../interfaces/schemas/duels/Duel'
-import DamageUpEffect from '../classes/duels/special-effects/DamageUpEffect'
+import CraftCommand from '../classes/commands/buckwheat/engineer/CraftCommand'
+import RecipeChangeAction from '../classes/callback-button/recipe/RecipeChangeAction'
+import RecipeUtils from '../utils/RecipeUtils'
+import CraftAction from '../classes/callback-button/recipe/CraftAction'
+import CraftViewAction from '../classes/callback-button/recipe/CraftViewAction'
+import WhomCommand from '../classes/commands/buckwheat/other/WhomCommand'
+import WordCommand from '../classes/commands/buckwheat/other/WordCommand'
+import AvaChangeAction from '../classes/callback-button/ava/AvaChangeAction'
+import NoteChangeAction from '../classes/callback-button/notes/NoteChangeAction'
+import NoteCommand from '../classes/commands/buckwheat/note/NoteCommand'
+import NoteViewAction from '../classes/callback-button/notes/NoteViewAction'
+import NoteDeleteAction from '../classes/callback-button/notes/NoteDeleteAction'
+import NotePublicToggleAction from '../classes/callback-button/notes/NotePublicToggleAction'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -338,6 +346,14 @@ const launchBot = async (bot: Bot) => {
         new SkillViewAction(),
         new SkillAlertAction(),
         new SkillUseAction(),
+        new RecipeChangeAction(),
+        new CraftAction(),
+        new CraftViewAction(),
+        new AvaChangeAction(),
+        new NoteChangeAction(),
+        new NoteViewAction(),
+        new NoteDeleteAction(),
+        new NotePublicToggleAction()
     )
 
     // dice 
@@ -439,6 +455,10 @@ const launchBot = async (bot: Bot) => {
         new RemoveImageProfileCommand(),
         new RankSettingsCommand(),
         new CustomTitleCommand(),
+        new CraftCommand(),
+        new WhomCommand(),
+        new WordCommand(),
+        new NoteCommand(),
         ...await getSimpleCommands(),
     )
 
@@ -491,15 +511,21 @@ const launchBot = async (bot: Bot) => {
     await bot.launch(Boolean(DOMAIN))
 }
 
+const setup = async () => {
+    await Promise.allSettled([
+        await InventoryItemsUtils.setup(),
+        await RecipeUtils.setup()
+    ])
+    await CharacterUtils.setup()
+    await SkillUtils.setup(CharacterUtils.characters)
+}
+
 const test = async (): Promise<void | boolean> => {
     
 }
 
 const main = async () => {
-    if (!await InventoryItemsUtils.setup()) return
-    await CharacterUtils.setup()
-    await SkillUtils.setup(CharacterUtils.characters)
-
+    await setup()
     if (!isEnvVarsValidate()) return
     await connectDatabase()
 

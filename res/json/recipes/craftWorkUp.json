@@ -1,0 +1,11 @@
+{
+    "materials": {
+        "glass": 1,
+        "metal": 2,
+        "wood": 3
+    },
+    "result": {
+        "name": "craftWorkUp"
+    },
+    "level": 1
+}

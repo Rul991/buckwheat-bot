@@ -1,0 +1,10 @@
+include utils/functions.pug
+include utils/mixins.pug
+
+b 📔 Заметка игрока 
+    +link(user)
+| :
+blockquote #{text}
+|
+|
++param('Публичен', bool(isPublic))

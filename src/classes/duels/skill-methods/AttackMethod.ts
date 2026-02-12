@@ -7,8 +7,8 @@ import DamageMethod from './DamageMethod'
 export default class extends DamageMethod {
     args: JavascriptTypes[] = ['number', 'number']
 
-    protected async _getRawDamage({ args: [start, up], chatId, id }: MethodExecuteOptions<[number, number]>): Promise<number> {
-        const level = await LevelService.get(chatId, id)
+    protected async _getRawDamage({ args: [start, up], chatId, userId }: MethodExecuteOptions<[number, number]>): Promise<number> {
+        const level = await LevelService.get(chatId, userId)
         
         return CharacteristicsUtils.getMaxCharacteristic(
             {

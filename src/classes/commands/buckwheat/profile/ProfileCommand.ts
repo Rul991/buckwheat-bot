@@ -185,7 +185,12 @@ export default class ProfileCommand extends BuckwheatCommand {
             experiencePrecents: ExperienceUtils.precents(experience)
         }
 
-        const inlineKeyboard =  await LegacyInlineKeyboardManager.get('awards/start', `${id}`)
+        const inlineKeyboard =  await LegacyInlineKeyboardManager.get(
+            'profile/profile', 
+            {
+                id
+            }
+        )
 
         try {
             if(photoId) {

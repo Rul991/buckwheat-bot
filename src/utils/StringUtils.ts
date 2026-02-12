@@ -1,3 +1,4 @@
+import { FIRST_INDEX } from './values/consts'
 import { Progress } from './values/types/types'
 
 export default class StringUtils {
@@ -118,5 +119,14 @@ export default class StringUtils {
         else {
             return rawNumber
         }
+    }
+
+    static shorten(text: string, length: number) {
+        if(text.length <= length) return text
+
+        const shortText = text.substring(FIRST_INDEX, length)
+        const result = `${shortText}...`
+
+        return result
     }
 }

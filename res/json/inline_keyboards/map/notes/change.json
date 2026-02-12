@@ -1,0 +1,23 @@
+{
+    "definition": {
+        "note": {
+            "text": "@",
+            "data": "note_@_@{additional}"
+        },
+        "arrow": {
+            "text": "@",
+            "data": "notechange_@_@{additional}"
+        },
+        "pageNav": {
+            "text": "@",
+            "data": "notechange_@_@{additional}"
+        }
+    },
+    
+    "values": 
+    [
+        "note",
+        ["arrow"],
+        ["pageNav"]
+    ]
+}

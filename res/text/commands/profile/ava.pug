@@ -1,0 +1,9 @@
+include utils/functions.pug
+include utils/mixins.pug
+
+code [#{formatNumber(page + 1)} / #{formatNumber(length)}]
+|  Аватарка игрока 
++link(user)
+|
++param('Создано', time)
+b  назад

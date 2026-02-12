@@ -1,6 +1,7 @@
 import InventoryItem from '../../../../interfaces/schemas/items/InventoryItem'
 import Items from '../../../../interfaces/schemas/items/Items'
 import InventoryItemsUtils from '../../../../utils/InventoryItemsUtils'
+import { Recipe } from '../../../../utils/values/types/recipes'
 import { AsyncOrSync, InventoryItemDescription, InventoryItemType, ShowableItem } from '../../../../utils/values/types/types'
 import ItemsRepository from '../../repositories/ItemsRepository'
 import ItemsService from './ItemsService'
@@ -22,6 +23,10 @@ type ItemUpdateOptions = {
     id: number
     itemId: string
     count?: number
+}
+
+type ManyItemUpdateOptions = Omit<ItemUpdateOptions, 'itemId' | 'count'> & {
+    materials: Recipe['materials']
 }
 
 type _UpdateOptions = ItemUpdateOptions & {
@@ -115,31 +120,77 @@ export default class InventoryItemService {
         return result
     }
 
-    static async use(options: ItemUpdateOptions): Promise<[boolean, number]> {
+    static async useMany(options: ManyItemUpdateOptions) {
         const {
-            count: needCount = 1
+            materials,
+            chatId,
+            id,
         } = options
+        const result: [boolean, number][] = []
+        let items = await this.getAll(chatId, id) ?? []
 
-        return await this._update({
+        const callback = async (
+            item: InventoryItem,
+            { type }: InventoryItemDescription,
+            needCount: number
+        ) => {
+            const hasItem = needCount >= 1 && (item.count ?? 0) >= needCount
+
+            if (type == 'consumable') {
+                return hasItem ?
+                    { addValue: -needCount, isUpdated: true } :
+                    { addValue: 0, isUpdated: false }
+            }
+
+            else {
+                return { addValue: 0, isUpdated: hasItem }
+            }
+        }
+
+        for (const [itemId, needCount] of Object.entries(materials)) {
+            const itemDescription = InventoryItemsUtils.getItemDescription(itemId)
+
+            if (!itemDescription) {
+                continue
+            }
+
+            const userItem = items
+                .find(v => v.itemId == itemId)
+                ?? { itemId, count: 0 }
+
+            const { addValue, isUpdated } = await callback(
+                userItem, 
+                itemDescription,
+                needCount
+            )
+            items = InventoryItemsUtils.add(items, itemId, addValue)
+
+            result.push([
+                isUpdated,
+                userItem.count!
+            ])
+        }
+
+        await ItemsRepository.updateOne(
+            chatId,
+            id,
+            {
+                items
+            }
+        )
+
+        return result
+    }
+
+    static async use(options: ItemUpdateOptions): Promise<[boolean, number]> {
+        const result = await this.useMany({
             ...options,
-            callback: (item, { type }) => {
-                const hasItem = needCount >= 1 && (item.count ?? 0) >= needCount
-
-                if (type == 'consumable') {
-                    return hasItem ?
-                        { addValue: -needCount, isUpdated: true } :
-                        { addValue: 0, isUpdated: false }
-                }
-
-                else if (hasItem) {
-                    return { addValue: 0, isUpdated: true }
-                }
-
-                else {
-                    return { addValue: 0, isUpdated: false }
-                }
+            materials: {
+                [options.itemId]: options.count ?? 1
             }
         })
+
+        return result[0]
     }
 
     static async sub(options: ItemUpdateOptions) {
@@ -151,7 +202,7 @@ export default class InventoryItemService {
             ...options,
             callback: (item) => {
                 const itemCount = item.count ?? 0
-                if(needCount > itemCount) {
+                if (needCount > itemCount) {
                     return {
                         addValue: 0,
                         isUpdated: false

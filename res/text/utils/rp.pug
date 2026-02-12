@@ -1,0 +1,16 @@
+-
+    const setCase = (rpCase, [genitive, dative, creative]) => {
+        if(rpCase == 'dative') {
+            return dative
+        }
+        else if(rpCase == 'creative') {
+            return creative
+        }
+        else {
+            return genitive
+        }
+    }
+
+    const setPlayerCase = rpCase => {
+        return setCase(rpCase, ['игрока', 'игроку', 'игроком'])
+    }

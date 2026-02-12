@@ -77,10 +77,6 @@ export default class {
                     if (!isEvery) break
                 }
 
-                console.log({
-                    steps,
-                    effects
-                })
                 return effects.filter(v => v.remainingSteps > 0)
             }
         )

@@ -27,6 +27,7 @@ export type JsonButton = {
         $additional?: JsonButtonData
         $vars?: string[]
         $each?: string
+        $if?: string | boolean
     }
 }
 

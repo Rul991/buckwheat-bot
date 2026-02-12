@@ -1,3 +1,5 @@
+include utils/functions.pug
+
 | ✅ Побочный квест 
 b
     u #{quest}
@@ -5,4 +7,9 @@ b
 |
 | Игрок 
 a(href=link)=name 
-|  заработал #{money} монет и получил #{experience} опыта!
+|  заработал #{formatNumber(money)} монет и получил #{formatNumber(experience)} опыта!
+|
+if material
+    | ❕ Во время выполнения квеста вы нашли 
+    u #{material}
+    | !

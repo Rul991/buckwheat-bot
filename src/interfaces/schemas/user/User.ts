@@ -1,4 +1,5 @@
 import { ClassTypes } from '../../../utils/values/types/types'
+import AvaHistory from './AvaHistory'
 
 export default interface User {
     id: number
@@ -10,4 +11,5 @@ export default interface User {
     className?: ClassTypes
     isOld?: boolean
     isLeft?: boolean
+    avaHistory?: AvaHistory[]
 }

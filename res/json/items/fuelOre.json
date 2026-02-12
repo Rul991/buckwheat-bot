@@ -1,0 +1,8 @@
+{
+    "name": "Топливная руда",
+    "description": "Руда из недр пещер энвелла",
+    "type": "consumable",
+    "material": {
+        "rarity": 6
+    }
+}

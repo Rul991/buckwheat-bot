@@ -1,0 +1,9 @@
+{
+    "name": "Шкатулка жадности",
+    "description": "Поаккуратней с этой штукой",
+    "type": "manyInfinity",
+    "material": {
+        "rarity": 15,
+        "maxCount": 1
+    }
+}

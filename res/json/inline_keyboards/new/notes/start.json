@@ -1,0 +1,25 @@
+{
+    "markup": [
+        "start"
+    ],
+    "definition": {
+        "start": {
+            "name": "notechange",
+            "text": "👀 Просмотреть",
+            "data": {
+                "$additional": {
+                    "c": 0,
+                    "i": 0
+                },
+                "$vars": ["start"]
+            }
+        }
+    },
+    "variables": {
+        "start": {
+            "id": "userId",
+            "u": "replyOrUserId",
+            "p": "isPublic"
+        }
+    }
+}

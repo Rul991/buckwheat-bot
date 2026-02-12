@@ -43,6 +43,7 @@ export type InventoryItemDescription = {
     description: string
     material?: {
         rarity: number
+        maxCount?: number
     }
 }
 export type ShowableItem = InventoryItemDescription & {
@@ -360,3 +361,5 @@ export type DataFromCallbackButton<A> =
     A extends CallbackButtonAction<infer U> ? U : never
 
 export type CharactersMap = Map<DuelFilename, Character>
+export type FromArray<T extends Array<any>> = T extends Array<infer U> ? U : never
+export type RoleplayCase = 'genitive' | 'dative' | 'creative'

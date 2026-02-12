@@ -15,6 +15,8 @@ import RankUtils from '../RankUtils'
 import MarketData from '../../interfaces/callback-button-data/MarketData'
 import JsonSkill from '../../interfaces/duel/JsonSkill'
 import LevelUtils from '../level/LevelUtils'
+import { Recipe } from './types/recipes'
+import CraftData from '../../interfaces/callback-button-data/CraftData'
 
 export const simpleCommandSchema: ZodType<SimpleCommand> = object({
     name: string(),
@@ -210,7 +212,8 @@ export const inventoryItemDescriptionSchema: ZodType<InventoryItemDescription> =
     type: literal(['consumable', 'oneInfinity', 'manyInfinity']),
     description: string(),
     material: object({
-        rarity: number()
+        rarity: number(),
+        maxCount: number().optional()
     }).optional()
 })
 
@@ -257,3 +260,22 @@ export const marketDataSchema: ZodType<MarketData> = tinyCurrentIncreaseIdSchema
         id: number(),
         itemId: string().optional()
     }))
+
+export const recipeSchema: ZodType<Recipe> = object({
+    level: number(),
+    result: object({
+        name: string(),
+        count: number().optional()
+    }),
+    materials: record(
+        string(),
+        number()
+    )
+})
+
+export const craftSchema: ZodType<CraftData> = object({
+    id: number(),
+    index: number(),
+    page: number(),
+    count: number().optional()
+})

@@ -25,32 +25,33 @@ export default class extends CallbackButtonAction<Data> {
         this._name = 'wipe'
     }
 
-    private async _wipe(chatId: number): Promise<boolean> {
-        await TotalService.wipe(chatId)
-
-        const userItemId = 'greedBox'
-        return await InventoryItemService.anyHas(chatId, userItemId)
-    }
-
-    private async _giveNewGameIfGreedBox(chatId: number, has: boolean) {
-        const chatItemId = 'newGame'
-
-        if (has) {
-            await InventoryItemService.add({
-                chatId,
-                id: chatId,
-                itemId: chatItemId
-            })
-        }
-    }
-
     async execute({ ctx, data: { chatId, userId } }: CallbackButtonOptions<Data>): Promise<string | void> {
         if (await ContextUtils.showAlertIfIdNotEqual(ctx, userId)) return
 
-        await this._giveNewGameIfGreedBox(
+        const newGameId = 'newGame'
+        const endGameId = 'greedBox'
+
+        const endGameOwners = await InventoryItemService.getOwners(
             chatId,
-            await this._wipe(chatId)
+            endGameId
         )
+        const newGameOwners = await InventoryItemService.getOwners(
+            chatId,
+            newGameId
+        )
+
+        await TotalService.wipe(chatId)
+        for (const {
+            id,
+            count
+        } of [...endGameOwners, ...newGameOwners]) {
+            await InventoryItemService.add({
+                chatId,
+                id,
+                count,
+                itemId: newGameId
+            })
+        }
 
         const changeValues = {
             chatTitle: 'title' in ctx.chat! ? ctx.chat?.title : ''

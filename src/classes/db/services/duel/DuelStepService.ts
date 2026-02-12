@@ -36,9 +36,6 @@ export default class {
 
     static async updateCurrent(id: number, step: Partial<DuelStep>) {
         const steps = await this.get(id)
-        console.log({
-            old: steps
-        })
         const currentStepIndex = ArrayUtils.getLastIndex(steps)
         if (currentStepIndex == NOT_FOUND_INDEX) return false
 
@@ -49,9 +46,6 @@ export default class {
         }
 
         steps[currentStepIndex] = updatedStep
-        console.log({
-            new: steps
-        })
         await DuelRepository.updateOne(
             id,
             {

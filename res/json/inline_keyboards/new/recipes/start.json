@@ -1,0 +1,25 @@
+{
+    "markup": [
+        "start"
+    ],
+    
+    "definition": {
+        "start": {
+            "name": "recipechange",
+            "text": "👀 Просмотреть",
+            "data": {
+                "$vars": ["start"],
+                "$additional": {
+                    "c": -1,
+                    "i": 1
+                }
+            }
+        }
+    },
+
+    "variables": {
+        "start": {
+            "id": "id"
+        }
+    }
+}

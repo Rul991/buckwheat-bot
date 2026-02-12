@@ -14,7 +14,7 @@ export default class ContextUtils {
         const usedId = id ?? 0
         const usedChatId = chatId ?? 0
 
-        const name = await UserNameService.get(
+        const name = firstName ?? await UserNameService.get(
             usedChatId,
             usedId
         )

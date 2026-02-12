@@ -1,0 +1,13 @@
+[
+    [
+        {
+            "text": "<<",
+            "callback_data": "avachange_-1_@{current}_@{id}"
+        },
+        
+        {
+            "text": ">>",
+            "callback_data": "avachange_1_@{current}_@{id}"
+        }
+    ]
+]

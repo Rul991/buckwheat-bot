@@ -2,10 +2,9 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import StringUtils from '../../../../utils/StringUtils'
 import { FIRST_INDEX } from '../../../../utils/values/consts'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import { SubCommandObject } from '../../../../utils/values/types/types'
+import { RoleplayCase, SubCommandObject } from '../../../../utils/values/types/types'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import RoleplaysService from '../../../db/services/rp/RoleplaysService'
-import UserRankService from '../../../db/services/user/UserRankService'
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import BuckwheatCommandWithSub from '../../base/BuckwheatCommandWithSub'
 import RankUtils from '../../../../utils/RankUtils'
@@ -119,6 +118,57 @@ export default class RoleplayCommand extends BuckwheatCommandWithSub<SubCommand>
                     },
                     needData: true,
                     exampleData: 'накричать',
+                },
+
+                {
+                    name: 'падеж',
+                    needData: true,
+                    settingId: 'updateCaseRoleplay',
+                    minimumRank: RankUtils.min + 1,
+                    execute: async options => {
+                        const {
+                            chatId,
+                            data,
+                            ctx
+                        } = options
+
+                        const dataParts = StringUtils.splitBySpace(data ?? '')
+                        if (dataParts.length < 2) return false
+                        const [name, rawRpCase] = dataParts
+
+                        const getRpCase = (): RoleplayCase => {
+                            if (rawRpCase == 'д') {
+                                return 'dative'
+                            }
+                            else if (rawRpCase == 'т') {
+                                return 'creative'
+                            }
+                            else {
+                                return 'genitive'
+                            }
+                        }
+
+                        const rpCase = getRpCase()
+                        await MessageUtils.answerMessageFromResource(
+                            ctx,
+                            'text/commands/add-rp/case.pug',
+                            {
+                                changeValues: {
+                                    name,
+                                    rpCase
+                                }
+                            }
+                        )
+
+                        return Boolean(
+                            await RoleplaysService.updateCase(
+                                chatId,
+                                name,
+                                rpCase
+                            )
+                        )
+                    },
+                    exampleData: 'накричать р'
                 }
             ]
         )

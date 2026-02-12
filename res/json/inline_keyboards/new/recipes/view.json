@@ -1,0 +1,53 @@
+{
+    "markup": [
+        "countTitle",
+        ["count"],
+        "craft",
+        "back"
+    ],
+    "definition": {
+        "craft": {
+            "name": "craft",
+            "data": {
+                "$vars": ["count", "craft"]
+            },
+            "text": "🧤 Изготовить"
+        },
+        "countTitle": {
+            "name": "countitle",
+            "data": {},
+            "text": "🧮 Количество:"
+        },
+        "count": {
+            "name": "craftview",
+            "data": {
+                "$each": "count",
+                "$vars": ["craft"]
+            },
+            "text": ["@"]
+        },
+        "back": {
+            "name": "recipechange",
+            "data": {
+                "$additional": {
+                    "i": 0
+                },
+                "$vars": ["current", "id"]
+            },
+            "text": "🔙 Назад"
+        }
+    },
+    "variables": {
+        "current": {
+            "c": "page"
+        },
+        "craft": {
+            "index": "index",
+            "id": "id",
+            "page": "page"
+        },
+        "count": {
+            "count": "count"
+        }
+    }
+}

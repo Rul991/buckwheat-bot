@@ -1,8 +1,15 @@
-- let replyYourself = user.link == reply.link || !hasReply
+include utils/rp.pug
+
+- const replyYourself = user.link == reply.link || !hasReply
+- const playerWord = setPlayerCase(rpCase)
+- const selfWord = setCase(rpCase, ['себя', 'себе', 'собой'])
+
 | Игрок 
 a(href=user.link) #{user.name}
-|  #{text} #{!replyYourself ? 'игрока ' : ''}
-a(href=reply.link) #{replyYourself ? 'себя' : reply.name}
+|  #{text} #{!replyYourself ? `${playerWord} ` : ''}
+
+a(href=reply.link) #{replyYourself ? selfWord : reply.name}
+
 if other && other.length
     |  со словами: 
     b "#{other}"

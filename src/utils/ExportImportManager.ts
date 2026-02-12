@@ -56,7 +56,7 @@ export default class {
             id: 'rp',
             title: 'РП',
             description: 'Добавляет новые или заменяет существующие команды',
-            schema: tuple([string(), string()]).array(),
+            schema: string().array().min(2),
             type: 'chat',
             import: async (options: ImportOptions<object>): Promise<void> => {
                 const {
