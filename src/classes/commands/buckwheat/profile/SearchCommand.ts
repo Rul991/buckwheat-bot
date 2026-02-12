@@ -121,15 +121,6 @@ export default class extends BuckwheatCommand {
             ctx,
             other
         } = options
-        const isPrivate = ctx.chat.type == 'private'
-
-        if(!isPrivate) {
-            await MessageUtils.answerMessageFromResource(
-                ctx,
-                'text/commands/search/only-private.pug'
-            )
-            return
-        }
 
         if (!other) {
             await MessageUtils.answerMessageFromResource(
