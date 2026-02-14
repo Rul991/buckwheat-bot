@@ -21,7 +21,7 @@ export default class extends DamageMethod {
         const {
             args: [precents]
         } = options
-        const damage = await this._getDamage(options)
+        const damage = await this._getDamage(options, true)
         return await FileUtils.readPugFromResource(
             'text/methods/precent-damage.pug',
             {

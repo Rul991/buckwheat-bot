@@ -29,9 +29,14 @@ export default class extends ButtonScrollerAction<Skill, TinyCurrentIncreaseId> 
     protected async _editText({
         chatId,
         id,
-        slicedObjects
+        slicedObjects,
+        data
     }: ButtonScrollerFullOptions<Skill, TinyCurrentIncreaseId>): Promise<ButtonScrollerEditMessageResult> {
         const type = await UserClassService.get(chatId, id)
+        const {
+            c: current,
+            i: increase
+        } = data
 
         return {
             text: await FileUtils.readPugFromResource(
@@ -50,7 +55,7 @@ export default class extends ButtonScrollerAction<Skill, TinyCurrentIncreaseId> 
                     add: slicedObjects.map(v =>
                         ({
                             text: v.info.title,
-                            data: JSON.stringify({ id, index: v.id, type: 'a' })
+                            data: JSON.stringify({ id, index: v.id, type: 'a', p: current + increase })
                         })
                     )
                 }

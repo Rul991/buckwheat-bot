@@ -1,0 +1,16 @@
+[
+    {
+        "id": "stickGun",
+        "damage": [1000, 5000]
+    },
+
+    {
+        "id": "oneTimeGun",
+        "damage": [50, 200]
+    },
+
+    {
+        "id": "rockVoid",
+        "damage": [1, 1]
+    }
+]

@@ -1,12 +1,11 @@
 import FileUtils from '../../../../utils/FileUtils'
 import { ScrollerSendMessageOptions, ScrollerEditMessageResult, ScrollerGetObjectsOptions } from '../../../../utils/values/types/types'
 import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import RoleplaysService from '../../../db/services/rp/RoleplaysService'
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import ScrollerAction from './ScrollerAction'
 
-type Data = [string, string]
+type Data = string[]
 
 export default class RoleplayChangeAction extends ScrollerAction<Data> {
     protected _buttonTitle: string = 'РП: Пролистывание'

@@ -1,0 +1,18 @@
+include utils/functions.pug
+include utils/mixins.pug
+
+| Игрок 
++link(user)
+| выстрелил в 
+if replyId == id
+    | себя 
+else
+    +link(reply)
+| из 
+u #{gunTitle}
+| !
+| Игрок 
++link(reply)
+| получает 
+code #{formatNumber(damage)}
+|  урона #{isKicked ? 'и вылетает из чата' : ''}!

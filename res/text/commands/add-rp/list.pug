@@ -1,3 +1,5 @@
+include utils/rp
+
 b 
     i [#{page + 1} / #{length}]
     | 📌 Список пользовательских рп-команд:
@@ -5,7 +7,7 @@ b
 |
 |
 each command in commands
-    - let [name, text] = command
+    - let [name, text, rpCase] = command
     b 📍 #{name} 
-    | - "Игрок #{text} игрока"
+    | - "Игрок #{text} #{setPlayerCase(rpCase)}"
     |

@@ -1,6 +1,12 @@
 [
     [
         {
+            "text": "🖼 Поставить аватарку",
+            "callback_data": "avaset_{\"id\":@{id},\"index\":@{current}}"
+        }
+    ],
+    [
+        {
             "text": "<<",
             "callback_data": "avachange_-1_@{current}_@{id}"
         },

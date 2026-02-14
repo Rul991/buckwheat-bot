@@ -1,3 +1,4 @@
+import { RANKS_LIST } from '../../../utils/values/consts'
 import { ActionAccess } from '../../../utils/values/types/command-access'
 import { CommandDescription } from '../../../utils/values/types/types'
 import RankedAction from './RankedAction'
@@ -38,7 +39,7 @@ export default abstract class extends RankedAction {
                     default: this._minimumRank,
                     properties: {
                         values: this._canBeChanged ? 
-                            [0, 1, 2, 3, 4, 5] :
+                            RANKS_LIST :
                             []
                     }
                 },

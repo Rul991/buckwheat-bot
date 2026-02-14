@@ -1,3 +1,6 @@
+import Setting from '../../../../interfaces/other/Setting'
+import SettingUtils from '../../../../utils/settings/SettingUtils'
+import { COMMAND_ACCESS_TYPE, CUSTOM_ROLEPLAY_SETTING_ID, RANKS_LIST } from '../../../../utils/values/consts'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import { TextContext } from '../../../../utils/values/types/contexts'
 import { MaybeString } from '../../../../utils/values/types/types'
@@ -33,6 +36,23 @@ export default class CommandHandler extends ShowableActionHandler<BuckwheatComma
             replyFrom,
             replyOrUserFrom
         }
+    }
+
+    protected _setupSettings(): void {
+        super._setupSettings()
+
+        const settings = {
+            [CUSTOM_ROLEPLAY_SETTING_ID]: {
+                title: 'РП-команды',
+                description: 'Определяет ранг РП-команд',
+                type: 'enum',
+                properties: {
+                    values: RANKS_LIST
+                },
+                default: 0
+            }
+        } as Record<string, Setting<'enum'>>
+        SettingUtils.addSettings(COMMAND_ACCESS_TYPE, settings)
     }
 
     protected _getText(ctx: TextContext): string | undefined {

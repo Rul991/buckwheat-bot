@@ -24,6 +24,7 @@ export default class <T extends any[] = [string, number]> extends SkillMethod<T>
         const {
             boost
         } = options
+
         const steps = await this._getRawSteps(options)
         return Math.ceil(boost * steps)
     }
@@ -35,14 +36,16 @@ export default class <T extends any[] = [string, number]> extends SkillMethod<T>
             userId,
             id
         } = options
+
         if (!duel) return false
         const duelId = duel.id
+        const remainingSteps = await this._getSteps(options)
 
         await EffectService.add(
             duelId,
             {
                 name: skillId,
-                remainingSteps: await this._getSteps(options),
+                remainingSteps,
                 sender: userId,
                 target: id
             }
@@ -54,6 +57,7 @@ export default class <T extends any[] = [string, number]> extends SkillMethod<T>
         const {
             args: [skillId]
         } = options
+
         const skill = SkillUtils.getSkillById(skillId)
         const title = skill.info.title
         const steps = await this._getSteps(options)

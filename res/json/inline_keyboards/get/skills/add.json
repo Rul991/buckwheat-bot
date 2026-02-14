@@ -9,7 +9,7 @@
     [
         {
             "text": "🔙 Обратно",
-            "callback_data": "skillchange_{\"c\":-1, \"i\":1}_@{id}"
+            "callback_data": "skillchange_{\"c\":@{page},\"i\":0}_@{id}"
         }
     ]
 ]

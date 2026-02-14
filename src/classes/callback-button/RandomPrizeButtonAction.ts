@@ -25,7 +25,6 @@ export default class RandomPrizeButtonAction extends CallbackButtonAction<string
 
     async execute({ ctx, chatId, id }: CallbackButtonOptions<Data>): Promise<string | void> {
         const botId = ctx.botInfo.id
-        const name = ctx.from.first_name
 
         const randomMoney = RandomUtils.range(MIN_RANDOM_PRIZE, MAX_RANDOM_PRIZE)
         const money = Math.min(
@@ -44,7 +43,6 @@ export default class RandomPrizeButtonAction extends CallbackButtonAction<string
                     ...await ContextUtils.getUser(
                         chatId,
                         id,
-                        name
                     ),
                     money
                 }

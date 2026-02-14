@@ -1,10 +1,12 @@
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
 import MessageUtils from '../../../utils/MessageUtils'
+import { CUSTOM_ROLEPLAY_SETTING_ID } from '../../../utils/values/consts'
 import { ConditionalCommandOptions } from '../../../utils/values/types/action-options'
 import { MessageContext } from '../../../utils/values/types/contexts'
 import { MaybeString } from '../../../utils/values/types/types'
 import RoleplaysService from '../../db/services/rp/RoleplaysService'
+import CommandAccessService from '../../db/services/settings/access/CommandAccessService'
 import ConditionalCommand from '../base/ConditionalCommand'
 
 export default class CustomRoleplayCommand extends ConditionalCommand {
@@ -43,7 +45,7 @@ export default class CustomRoleplayCommand extends ConditionalCommand {
             chatId,
             command
         )
-        if(!roleplayCommand) return false
+        if (!roleplayCommand) return false
         const [
             _rpName,
             text,
@@ -53,6 +55,17 @@ export default class CustomRoleplayCommand extends ConditionalCommand {
         const dummyId = 0
         const reply = this._getReply(ctx, dummyId)
         const hasReply = reply.id != dummyId && reply.id != ctx.botInfo.id
+
+        const canUse = await CommandAccessService.canUse({
+            chatId,
+            id,
+            command: {
+                command,
+            },
+            settingId: CUSTOM_ROLEPLAY_SETTING_ID,
+            ctx
+        })
+        if (!canUse) return true
 
         await MessageUtils.answerMessageFromResource(
             ctx,

@@ -1,3 +1,4 @@
+import DuelUtils from '../../../utils/duel/DuelUtils'
 import FileUtils from '../../../utils/FileUtils'
 import { MethodExecuteOptions, MethodGetTextOptions } from '../../../utils/values/types/skills'
 import { JavascriptTypes } from '../../../utils/values/types/types'
@@ -20,7 +21,7 @@ export default class extends SkillMethod<[]> {
         const duelId = duel.id
         return await DuelService.skipStep(
             duelId,
-            id
+            DuelUtils.getEnemy(duel, id)
         )
     }
 

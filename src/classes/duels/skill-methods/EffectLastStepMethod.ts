@@ -22,11 +22,11 @@ export default class extends SkillMethod<[string, string, number]> {
     }: MethodExecuteOptions<[string, string, number]>): Promise<boolean> {
         if(!duel) return false
         const duelId = duel.id
-
         const effects = await EffectService.getByTarget(
             duelId,
             id
         )
+
         const hasLastStepEffect = effects.some((effect) => {
             return (
                 effect.remainingSteps == EFFECT_LAST_STEP &&

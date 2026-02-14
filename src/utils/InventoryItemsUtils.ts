@@ -125,7 +125,17 @@ export default class InventoryItemsUtils {
         return this._items[itemId] ?? this.getDummyShowableItem()
     }
 
-    static getDummyShowableItem(): ShowableItem {
+    static getDummyShowableItem(itemId?: string): ShowableItem {
+        if (itemId) {
+            const item = this.getItemDescription(itemId)
+            return {
+                ...item,
+                count: 0,
+                countText: 'x0',
+                itemId
+            }
+        }
+
         return {
             name: 'Предмет',
             type: 'consumable',

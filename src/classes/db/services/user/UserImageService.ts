@@ -6,8 +6,11 @@ export default class UserImageService {
         return await BaseUserService.get(chatId, id, 'imageId') ?? ''
     }
 
-    static async update(chatId: number, id: number, image: string): Promise<string> {
-        await AvaHistoryService.add(chatId, id, image)
+    static async update(chatId: number, id: number, image: string, updateHistory = true): Promise<string> {
+        if(updateHistory) {
+            await AvaHistoryService.add(chatId, id, image)
+        }
+        
         return await BaseUserService.update(chatId, id, 'imageId', image) ?? ''
     }
 }

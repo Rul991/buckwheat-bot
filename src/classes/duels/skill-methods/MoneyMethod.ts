@@ -1,4 +1,6 @@
 import FileUtils from '../../../utils/FileUtils'
+import RandomUtils from '../../../utils/RandomUtils'
+import { MAX_DEBT } from '../../../utils/values/consts'
 import { MethodExecuteOptions, MethodGetTextOptions } from '../../../utils/values/types/skills'
 import { JavascriptTypes } from '../../../utils/values/types/types'
 import CasinoAddService from '../../db/services/casino/CasinoAddService'
@@ -15,13 +17,24 @@ export default class extends SkillMethod<[number, number]> {
     }: MethodExecuteOptions<[number, number]>): Promise<boolean> {
         const enemyBalance = await CasinoGetService.money(chatId, id)
 
-        return enemyBalance >= needMoney
+        return (enemyBalance - needMoney) >= -MAX_DEBT
     }
 
-    protected async _getMoney({
+    protected async _getRawMoney({
         args: [money]
     }: MethodExecuteOptions<[number, number]>) {
         return money
+    }
+
+    protected async _getMoney(options: MethodExecuteOptions<[number, number]>) {
+        const {
+            boost
+        } = options
+
+        const money = await this._getRawMoney(options)
+        const totalMoney =  money * boost
+
+        return totalMoney
     }
 
     protected async _execute(options: MethodExecuteOptions<[number, number]>): Promise<boolean> {

@@ -22,7 +22,7 @@ export default class extends SkillMethod<[number, string]> {
             [this._characteristic]: currentChar
         } = await DuelistService.getCurrentCharacteristics(chatId, id)
 
-        return currentChar > -value
+        return currentChar >= -value
     }
 
     protected async _getRawValue({
@@ -35,8 +35,8 @@ export default class extends SkillMethod<[number, string]> {
         const {
             boost
         } = options
+        
         const value = await this._getRawValue(options)
-
         return value * boost
     }
 
@@ -45,6 +45,7 @@ export default class extends SkillMethod<[number, string]> {
             chatId,
             id,
         } = options
+
         const value = await this._getValue(options)
         await DuelistService.addField(
             chatId,

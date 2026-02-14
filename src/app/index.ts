@@ -203,6 +203,9 @@ import NoteCommand from '../classes/commands/buckwheat/note/NoteCommand'
 import NoteViewAction from '../classes/callback-button/notes/NoteViewAction'
 import NoteDeleteAction from '../classes/callback-button/notes/NoteDeleteAction'
 import NotePublicToggleAction from '../classes/callback-button/notes/NotePublicToggleAction'
+import AvaSetAction from '../classes/callback-button/ava/AvaSetAction'
+import GunCommand from '../classes/commands/buckwheat/game/GunCommand'
+import GunsUtils from '../utils/GunsUtils'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -353,7 +356,8 @@ const launchBot = async (bot: Bot) => {
         new NoteChangeAction(),
         new NoteViewAction(),
         new NoteDeleteAction(),
-        new NotePublicToggleAction()
+        new NotePublicToggleAction(),
+        new AvaSetAction(),
     )
 
     // dice 
@@ -459,6 +463,7 @@ const launchBot = async (bot: Bot) => {
         new WhomCommand(),
         new WordCommand(),
         new NoteCommand(),
+        new GunCommand(),
         ...await getSimpleCommands(),
     )
 
@@ -513,15 +518,16 @@ const launchBot = async (bot: Bot) => {
 
 const setup = async () => {
     await Promise.allSettled([
-        await InventoryItemsUtils.setup(),
-        await RecipeUtils.setup()
+        InventoryItemsUtils.setup(),
+        RecipeUtils.setup(),
+        GunsUtils.setup()
     ])
     await CharacterUtils.setup()
     await SkillUtils.setup(CharacterUtils.characters)
 }
 
 const test = async (): Promise<void | boolean> => {
-    
+
 }
 
 const main = async () => {

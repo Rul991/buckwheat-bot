@@ -6,14 +6,15 @@ export default class extends DamageMethod {
     protected async _getRawDamage({
         args: [damage],
         chatId,
-        id
+        userId
     }: MethodExecuteOptions<[number, number]>): Promise<number> {
         const {
             hp: currentHp
-        } = await DuelistService.getCurrentCharacteristics(chatId, id)
+        } = await DuelistService.getCurrentCharacteristics(chatId, userId)
+        
         const {
             hp: maxHp
-        } = await DuelistService.getMaxCharacteristics(chatId, id)
+        } = await DuelistService.getMaxCharacteristics(chatId, userId)
 
         return damage * (1 + (1 - (currentHp / maxHp)))
     }

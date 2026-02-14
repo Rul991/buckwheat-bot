@@ -66,7 +66,7 @@ export default abstract class extends CallbackButtonAction<Data> {
 
         const item = await InventoryItemService.showItem(
             chatId,
-            id,
+            seller,
             itemId
         )
 
@@ -76,7 +76,7 @@ export default abstract class extends CallbackButtonAction<Data> {
             avoidNumber: needCount
         })
 
-        const balance = await CasinoGetService.money(chatId, seller)
+        const balance = await CasinoGetService.money(chatId, id)
 
         await MessageUtils.editText(
             ctx,

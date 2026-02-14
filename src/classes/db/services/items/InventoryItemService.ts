@@ -293,7 +293,7 @@ export default class InventoryItemService {
         )
 
         if (!item) {
-            return InventoryItemsUtils.getDummyShowableItem()
+            return InventoryItemsUtils.getDummyShowableItem(itemId)
         }
 
         const {

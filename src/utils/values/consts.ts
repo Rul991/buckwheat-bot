@@ -231,3 +231,6 @@ export const DUEL_STEP_TIMEOUT = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * 5
 
 export const MAX_NOTE_PRESHOW_LENGTH = 10
 export const MAX_NOTE_LENGTH = 2048
+
+export const RANKS_LIST = [0, 1, 2, 3, 4, 5]
+export const CUSTOM_ROLEPLAY_SETTING_ID = 'rp'

@@ -36,6 +36,13 @@ type GetAlertMessageOptions = {
     isChatMode: boolean
 }
 
+type PayOptions = {
+    chatId: number
+    totalPrice: number
+    botId: number
+    buyerId: number
+}
+
 export default class BuyAction extends CallbackButtonAction<Data> {
     protected _buttonTitle: string = 'Магазин: Купить'
     protected _schema: ZodType<Data> = tuple([
@@ -97,7 +104,7 @@ export default class BuyAction extends CallbackButtonAction<Data> {
             ...shopOptions,
             updateIfInfinity: false
         })
-        if(!shopMessage) return
+        if (!shopMessage) return
 
         const {
             text,
@@ -109,6 +116,37 @@ export default class BuyAction extends CallbackButtonAction<Data> {
             text,
             options
         )
+    }
+
+    protected async _pay({
+        chatId,
+        totalPrice,
+        botId,
+        buyerId
+    }: PayOptions) {
+        const itemId = 'shopPrecent'
+        const owners = await InventoryItemService.getOwners(chatId, itemId)
+        let remainingPrice = totalPrice
+
+        for await (const { id, count } of owners) {
+            const stake = Math.floor(totalPrice * (count / 100))
+            remainingPrice -= stake
+            await CasinoAddService.money(chatId, id, stake)
+        }
+
+        await CasinoAddService.money(chatId, botId, remainingPrice)
+        await CasinoAddService.money(chatId, buyerId, -totalPrice)
+    }
+
+    protected async _hasFreeBuyCoupon(chatId: number, id: number) {
+        const couponItemId = 'freeBuy'
+        const [hasCoupon] = await InventoryItemService.use({
+            chatId,
+            id,
+            itemId: couponItemId,
+        })
+
+        return hasCoupon
     }
 
     protected async _getAlertMessage({
@@ -161,7 +199,7 @@ export default class BuyAction extends CallbackButtonAction<Data> {
         return ''
     }
 
-    async execute({ctx, data}: CallbackButtonOptions<Data>): Promise<string | void> {
+    async execute({ ctx, data }: CallbackButtonOptions<Data>): Promise<string | void> {
         const ids = await this._getIds(ctx)
         if (!ids) return
         const {
@@ -212,7 +250,7 @@ export default class BuyAction extends CallbackButtonAction<Data> {
             chatId
         })
 
-        if(alertMessage.length > 0) {
+        if (alertMessage.length > 0) {
             await ContextUtils.showCallbackMessage(
                 ctx,
                 alertMessage,
@@ -231,18 +269,16 @@ export default class BuyAction extends CallbackButtonAction<Data> {
         })
 
         if (isBought) {
-            const itemId = 'shopPrecent'
-            const owners = await InventoryItemService.getOwners(chatId, itemId)
-            let remainingPrice = totalPrice
+            const hasCoupon = await this._hasFreeBuyCoupon(chatId, id)
 
-            for await (const { id, count } of owners) {
-                const stake = Math.floor(totalPrice * (count / 100))
-                remainingPrice -= stake
-                await CasinoAddService.money(chatId, id, stake)
+            if (!hasCoupon) {
+                await this._pay({
+                    chatId,
+                    totalPrice,
+                    botId,
+                    buyerId: id
+                })
             }
-
-            await CasinoAddService.money(chatId, botId, remainingPrice)
-            await CasinoAddService.money(chatId, id, -totalPrice)
 
             await this._editMessage(
                 ctx,

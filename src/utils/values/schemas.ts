@@ -17,6 +17,7 @@ import JsonSkill from '../../interfaces/duel/JsonSkill'
 import LevelUtils from '../level/LevelUtils'
 import { Recipe } from './types/recipes'
 import CraftData from '../../interfaces/callback-button-data/CraftData'
+import { Gun } from './types/guns'
 
 export const simpleCommandSchema: ZodType<SimpleCommand> = object({
     name: string(),
@@ -279,3 +280,8 @@ export const craftSchema: ZodType<CraftData> = object({
     page: number(),
     count: number().optional()
 })
+
+export const gunsSchema: ZodType<Gun[]> = object({
+    id: string(),
+    damage: tuple([number(), number()])
+}).array()

@@ -27,6 +27,7 @@ type Data = {
         id: number
         index: IndexTypes[K],
         type?: K
+        p?: number
     }
 }[DataTypes]
 
@@ -71,6 +72,9 @@ export default class extends CallbackButtonAction<Data> {
                     })
                 )
         )
+        .and(object({
+            p: number().optional()
+        }))
 
     private _viewDatas: Record<DataTypes, ViewData<Data>> = {
         d: {
@@ -121,13 +125,15 @@ export default class extends CallbackButtonAction<Data> {
 
                 const {
                     id,
-                    index
+                    index,
+                    p: page
                 } = data
 
                 return {
                     keyboard: await LegacyInlineKeyboardManager.get('skills/add', {
                         skillId: JSON.stringify({ skill: index }),
-                        id: JSON.stringify({ id })
+                        id: JSON.stringify({ id }),
+                        page: page ?? 0
                     }),
                     userId: id,
                 }
@@ -199,7 +205,8 @@ export default class extends CallbackButtonAction<Data> {
         } = options
 
         const {
-            index
+            index,
+            p: page = 0
         } = data
 
         const {

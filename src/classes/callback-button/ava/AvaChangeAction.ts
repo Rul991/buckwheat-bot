@@ -5,6 +5,7 @@ import TimeUtils from '../../../utils/TimeUtils'
 import { CallbackButtonContext } from '../../../utils/values/types/contexts'
 import { ScrollerGetObjectsOptions, ScrollerSendMessageOptions, ScrollerEditMessageResult, AsyncOrSync } from '../../../utils/values/types/types'
 import AvaHistoryService from '../../db/services/user/AvaHistoryService'
+import UserImageService from '../../db/services/user/UserImageService'
 import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 import ScrollerAction from '../scrollers/page/ScrollerAction'
 
@@ -15,7 +16,7 @@ export default class extends ScrollerAction<T, D> {
     constructor () {
         super()
         this._name = 'avachange'
-        this._buttonTitle = 'История аватарок'
+        this._buttonTitle = 'Аватарка: История'
         this._objectsPerPage = 1
     }
 
@@ -39,7 +40,6 @@ export default class extends ScrollerAction<T, D> {
 
     protected async _editMessage(ctx: CallbackButtonContext, options: ScrollerSendMessageOptions<T, D>): Promise<ScrollerEditMessageResult> {
         const {
-            data,
             chatId,
             id,
             objects: [ava],
@@ -51,19 +51,21 @@ export default class extends ScrollerAction<T, D> {
             imageId,
             createdAt
         } = ava
-
+        const currentImageId = await UserImageService.get(chatId, id)
+        
         const elapsedTime = TimeUtils.getElapsed(createdAt)
         if (await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return null
 
         return {
             text: await FileUtils.readPugFromResource(
-                'text/commands/profile/ava.pug',
+                'text/commands/profile/ava/ava.pug',
                 {
                     changeValues: {
                         user: await ContextUtils.getUser(chatId, id),
                         page: currentPage,
                         length,
-                        time: TimeUtils.formatMillisecondsToTime(elapsedTime)
+                        time: TimeUtils.formatMillisecondsToTime(elapsedTime),
+                        isCurrentImage: currentImageId == imageId
                     }
                 }
             ),

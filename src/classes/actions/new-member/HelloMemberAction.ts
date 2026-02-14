@@ -68,7 +68,6 @@ export default class HelloMemberAction extends NewMemberAction {
             const changeValues = await ContextUtils.getUser(
                 chatId, 
                 id, 
-                name
             )
 
             const isNeedSetOld = await this._sendConditionMessage({

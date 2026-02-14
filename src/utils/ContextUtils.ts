@@ -41,7 +41,7 @@ export default class ContextUtils {
 
     static async getUserFromContext(ctx: Context) {
         const chatId = await LinkedChatService.getCurrent(ctx)
-        return await this.getUser(chatId ?? undefined, ctx.from?.id, ctx.from?.first_name)
+        return await this.getUser(chatId ?? undefined, ctx.from?.id)
     }
 
     static async sendDice(ctx: Context, id: number): Promise<number> {

@@ -1,8 +1,8 @@
 include utils/mixins.pug
 
 b 📌 Характеристики игрока 
-a(href=link) #{name}
-|  :
++link({link, name}, false)
+| :
 |
 +param('Класс', `${classEmoji} ${className}`)
 +param('Здоровье', hp)

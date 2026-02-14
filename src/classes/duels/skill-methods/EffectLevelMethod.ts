@@ -11,12 +11,12 @@ export default class extends EffectMethod<[string, number, number]> {
         const {
             args: [_, steps, perLevel],
             chatId,
-            id
+            userId,
         } = options
 
         const level = await LevelService.get(
             chatId,
-            id
+            userId
         )
         return CharacteristicsUtils.getMaxCharacteristic(
             {

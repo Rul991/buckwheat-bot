@@ -7,21 +7,22 @@ export default class extends DuelistFieldAddMethod {
     args: JavascriptTypes[] = ['number', 'string']
 
     protected async _getRawValue(options: MethodExecuteOptions<[number, string]>): Promise<number> {
-        const { 
-            args: [value, effectId], 
+        const {
+            args: [value, effectId],
             duel,
-            id, 
-        } = options
-        if(!duel) return 0
-
-        const duelId = duel.id
-        const hasEffect = await EffectService.userHas(
-            duelId,
             id,
-            effectId
-        )
+        } = options
 
-        if(hasEffect) {
+        const duelId = duel?.id
+        const hasEffect = duelId ?
+            await EffectService.userHas(
+                duelId,
+                id,
+                effectId
+            ) :
+            true
+
+        if (hasEffect) {
             return value
         }
         else {

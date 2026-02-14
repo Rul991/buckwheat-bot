@@ -1,0 +1,8 @@
+{
+    "name": "Палка-пистолет",
+    "description": "Раз в год и палка стреляет!",
+    "type": "consumable",
+    "material": {
+        "rarity": 15
+    }
+}
