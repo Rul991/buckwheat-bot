@@ -1,18 +1,23 @@
 import { disconnect } from 'mongoose'
 import { connectDatabase } from './db'
-import CubeModel from '../classes/db/models/CubeModel'
+import IdeasService from '../classes/db/services/ideas/IdeasService'
+import IdeasModel from '../classes/db/models/IdeasModel'
+import Ideas from '../interfaces/schemas/ideas/Ideas'
 
-const updateCubePlaying = async () => {
-    await CubeModel.updateMany(
-        {}, 
-        {
-            $set: { isNeedPlaying: false }
+const updateIdeas = async () => {
+    const ideas = await IdeasModel.findOne() as Ideas
+    await IdeasModel.deleteOne()
+    for (const idea of ideas.ideas ?? []) {
+        await IdeasService.add({
+            ...idea,
+            owner: idea.id
         })
+    }
 }
 
 const update = async () => {
     await Promise.allSettled([
-        // updateCubePlaying()
+        updateIdeas()
     ])
 }
 

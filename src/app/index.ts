@@ -206,6 +206,8 @@ import NotePublicToggleAction from '../classes/callback-button/notes/NotePublicT
 import AvaSetAction from '../classes/callback-button/ava/AvaSetAction'
 import GunCommand from '../classes/commands/buckwheat/game/GunCommand'
 import GunsUtils from '../utils/GunsUtils'
+import GeneratorUpgradeAllAction from '../classes/callback-button/generator/GeneratorUpgradeAllAction'
+import MarketDeleteAction from '../classes/callback-button/market/buy/MarketDeleteAction'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -358,6 +360,8 @@ const launchBot = async (bot: Bot) => {
         new NoteDeleteAction(),
         new NotePublicToggleAction(),
         new AvaSetAction(),
+        new GeneratorUpgradeAllAction(),
+        new MarketDeleteAction(),
     )
 
     // dice 

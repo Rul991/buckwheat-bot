@@ -110,7 +110,29 @@ export default class RuleCommand extends BuckwheatCommandWithSub<RuleSubCommand>
                             }
                         )
                     }
-                }
+                },
+
+                {
+                    name: 'сбросить',
+                    settingId: 'cleanRoleplay',
+                    minimumRank: RankUtils.max,
+                    title: 'Для удаления всех правил',
+                    description: 'баквит правила сбросить',
+
+                    needData: false,
+                    needAdmin: true,
+                    execute: async ({ chatId }) => {
+                        await RulesService.clean(chatId)
+                        return true
+                    },
+
+                    sendMessage: async ({ ctx }) => {
+                        await MessageUtils.answerMessageFromResource(
+                            ctx,
+                            'text/commands/rules/done/clean.pug'
+                        )
+                    }
+                },
             ]
         )
 

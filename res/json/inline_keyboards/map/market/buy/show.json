@@ -5,6 +5,11 @@
             "data": "marketbuy_{\"id\":@{id},\"page\":@{page},\"count\":@{count},\"slot\":@{slot}}_@{itemId}",
             "notEach": true
         },
+        "delete": {
+            "text": "🗑 Убрать",
+            "data": "marketdelete_{\"page\":@{page},\"slot\":@{slot}}_@{itemId}",
+            "notEach": true
+        },
         "count": {
             "text": "@",
             "data": "marketbuyshow_@"
@@ -24,7 +29,7 @@
     [
         "countTitle",
         ["count"],
-        "do",
+        ["do", "delete"],
         "back"
     ]
 }

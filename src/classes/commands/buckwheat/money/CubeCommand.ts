@@ -1,10 +1,7 @@
-import { MaybeString } from '../../../../utils/values/types/types'
-import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import StringUtils from '../../../../utils/StringUtils'
-import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import CasinoGetService from '../../../db/services/casino/CasinoGetService'
 import CubeLastMessageService from '../../../db/services/cube/CubeLastMessageService'
@@ -14,7 +11,7 @@ import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-o
 export default class CubeCommand extends BuckwheatCommand {
     protected _settingId: string = 'cube'
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'кубы'
         this._description = 'предлагает другому игроку сыграть в кубики на деньги или на интерес'
@@ -25,22 +22,18 @@ export default class CubeCommand extends BuckwheatCommand {
     }
 
     async execute({ ctx, other, id: userId, chatId, replyFrom }: BuckwheatCommandOptions): Promise<void> {
-        if(replyFrom) {
-            if(replyFrom.is_bot) {
-                await MessageUtils.answerMessageFromResource(
-                    ctx,
-                    'text/commands/cubes/bot.pug',
-                    {
-                        changeValues: {
-                            name: replyFrom.first_name
-                        }
-                    }
-                )
-                return
-            }
+        if (ctx.chat.type == 'private') {
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/cubes/private.pug'
+            )
+            return
+        }
 
+        if (replyFrom) {
             const replyId = replyFrom.id
-            if(userId == replyId) {
+
+            if (userId == replyId) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/cubes/no-reply.pug'
@@ -48,13 +41,17 @@ export default class CubeCommand extends BuckwheatCommand {
                 return
             }
 
+            const isBot = replyFrom.is_bot
+            const firstId = isBot ? replyId : userId
+            const secondId = isBot ? userId : replyId
+
             const rawMoney = StringUtils.getNumberFromString(other ?? '0')
             const needMoney = Math.min(
                 Math.ceil(other && !isNaN(rawMoney) ? rawMoney : 0),
-                await CasinoGetService.money(chatId, userId) + MAX_DEBT
+                await CasinoGetService.money(chatId, firstId) + MAX_DEBT
             )
 
-            if(needMoney < 0) {
+            if (needMoney < 0) {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/cubes/negative.pug'
@@ -62,35 +59,36 @@ export default class CubeCommand extends BuckwheatCommand {
                 return
             }
 
-            const user = await ContextUtils.getUser(chatId, userId)
-            const reply = await ContextUtils.getUser(chatId, replyId)
+            const first = await ContextUtils.getUser(chatId, firstId)
+            const second = await ContextUtils.getUser(chatId, secondId)
 
             const message = await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/cubes/done.pug',
                 {
                     changeValues: {
-                        replyUrl: reply.link,
-                        userUrl: user.link,
-                        replyName: reply.name,
-                        userName: user.name,
-                        cost: needMoney > 0 ? `${StringUtils.toFormattedNumber(needMoney)} монет` : 'интерес'
+                        first,
+                        second,
+                        cost: needMoney
                     },
-                    inlineKeyboard: await LegacyInlineKeyboardManager.get('cubes', JSON.stringify({
-                        r: replyId,
-                        u: userId,
-                        m: needMoney
-                    }))
+                    inlineKeyboard: await LegacyInlineKeyboardManager.get(
+                        'cubes',
+                        JSON.stringify({
+                            r: secondId,
+                            u: firstId,
+                            m: needMoney
+                        })
+                    )
                 }
             )
 
             const lastMessages = await Promise.all([userId]
-                .map(async id => 
-                    ({id, lastMessage: await CubeLastMessageService.get(chatId, userId)})
+                .map(async id =>
+                    ({ id, lastMessage: await CubeLastMessageService.get(chatId, userId) })
                 ))
 
-            for (const {id, lastMessage} of lastMessages) {
-                if(lastMessage) {
+            for (const { id, lastMessage } of lastMessages) {
+                if (lastMessage) {
                     await MessageUtils.deleteMessage(ctx, lastMessage)
                 }
                 await CubeLastMessageService.set(chatId, id, message.message_id)

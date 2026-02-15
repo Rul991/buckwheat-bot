@@ -23,10 +23,7 @@ export default class {
 
             this._gunsRecord[id] = damage
         }
-        console.log({
-            guns,
-            record: this._gunsRecord
-        })
+        
         return true
     }
 

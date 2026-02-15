@@ -14,25 +14,34 @@ import { CallbackButtonOptions } from '../../../utils/values/types/action-option
 export default class DeleteIdeaAction extends CallbackButtonAction<ScrollerWithIdData> {
     protected _schema: ZodType<ScrollerWithIdData> = scrollerWithIdDataSchema
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'deleteidea'
     }
 
-    async execute({ctx, data}: CallbackButtonOptions<ScrollerWithIdData>): Promise<string | void> {
-        if(ctx.from.id !== DEV_ID) return await FileUtils.readPugFromResource('text/actions/idea/no-dev.pug')
-
-        const {current, id} = data
+    async execute({ ctx, data }: CallbackButtonOptions<ScrollerWithIdData>): Promise<string | void> {
+        const { current, id } = data
         const ideas = await IdeasService.getIdeas()
-        
-        if(!ideas[current]) return await FileUtils.readPugFromResource('text/actions/idea/no-idea.pug')
+        const idea = ideas[current]
+
+        if (!idea) {
+            return await FileUtils.readPugFromResource(
+                'text/actions/idea/no-idea.pug'
+            )
+        }
         else {
+            const {
+                id: owner
+            } = idea
+            if (id !== DEV_ID && id !== owner) {
+                return await FileUtils.readPugFromResource('text/actions/idea/no-dev.pug')
+            }
             await IdeasService.delete(current)
-            
+
             const newIdeas = await IdeasService.getIdeas()
             const newPage = ArrayUtils.getNearIndex(current, newIdeas)
 
-            if(newPage != NOT_FOUND_INDEX) {
+            if (newPage != NOT_FOUND_INDEX) {
                 await IdeaChangeAction.editMessage(
                     ctx,
                     newIdeas[newPage],
@@ -44,7 +53,7 @@ export default class DeleteIdeaAction extends CallbackButtonAction<ScrollerWithI
             else {
                 await MessageUtils.deleteMessage(ctx)
             }
-            
+
             return await FileUtils.readPugFromResource(
                 'text/actions/idea/delete-idea.pug',
                 {

@@ -53,13 +53,6 @@ export default class CookieCommand extends BuckwheatCommand {
                 }
             )
         }
-        else if (RandomUtils.chance(BAD_COOKIE_CHANCE)) {
-            if(!isSendMessage) return
-            await MessageUtils.answerMessageFromResource(
-                ctx,
-                'text/commands/cookie/bad.pug'
-            )
-        }
         else {
             await WorkTimeService.add(chatId, userId, COOKIE_WORK_TIME)
             if(!isSendMessage) return

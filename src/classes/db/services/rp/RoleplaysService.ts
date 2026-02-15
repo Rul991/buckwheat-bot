@@ -82,6 +82,20 @@ export default class RoleplaysService {
         )
     }
 
+    static async updateText(chatId: number, commandName: string, text: string) {
+        return await this.update(
+            chatId,
+            commands => {
+                const command = commands.find(([name]) => name == commandName)
+                if (!command) return commands
+
+                command[1] = text
+                return commands
+            },
+            false
+        )
+    }
+
     static async set(chatId: number, command: string, text: string): Promise<RoleplayCommand[] | null> {
         if (CommandDescriptionUtils.has(command)) return null
 

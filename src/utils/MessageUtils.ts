@@ -10,8 +10,16 @@ import ExceptionUtils from './ExceptionUtils'
 import ObjectValidator from './ObjectValidator'
 import { invoiceSchema } from './values/schemas'
 import KeyboardService from '../classes/db/services/keyboard/KeyboardService'
+import RandomUtils from './RandomUtils'
 
 export default class MessageUtils {
+    private static readonly _wrongMessageFilenames = [
+        'dont-give',
+        'commands',
+        'dont-want',
+        'broken-people'
+    ]
+
     private static async _handleInlineKeyboard(
         ctx: Context,
         inlineKeyboard: AnswerOptions['inlineKeyboard']
@@ -158,9 +166,10 @@ export default class MessageUtils {
     }
 
     static async sendWrongCommandMessage(ctx: Context): Promise<void> {
+        const filename = RandomUtils.choose(this._wrongMessageFilenames)!
         await this.answerMessageFromResource(
             ctx,
-            'text/commands/other/wrong-command.pug'
+            `text/commands/wrong-command/${filename}.pug`
         )
     }
 

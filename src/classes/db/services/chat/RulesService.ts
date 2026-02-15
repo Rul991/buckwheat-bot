@@ -18,7 +18,7 @@ export default class RulesService {
     }
 
     static async set(chatId: number, data: string[]): Promise<void> {
-        this._updateRules(
+        await this._updateRules(
             chatId,
             rules => {
                 return data
@@ -26,8 +26,17 @@ export default class RulesService {
         )
     }
 
+    static async clean(chatId: number): Promise<void> {
+        await this._updateRules(
+            chatId,
+            _ => {
+                return []
+            }
+        )
+    }
+
     static async add(chatId: number, ...data: string[]): Promise<void> {
-        this._updateRules(
+        await this._updateRules(
             chatId,
             rules => {
                 rules.push(...data)
@@ -38,7 +47,7 @@ export default class RulesService {
 
     static async extend(chatId: number, index: number, data: string) {
         let result = true
-        this._updateRules(
+        await this._updateRules(
             chatId,
             (rules) => {
                 const rule = rules[index]
@@ -57,7 +66,7 @@ export default class RulesService {
     }
 
     static async delete(chatId: number, index: number): Promise<void> {
-        this._updateRules(
+        await this._updateRules(
             chatId,
             (rules) => {
                 rules.splice(index, 1)

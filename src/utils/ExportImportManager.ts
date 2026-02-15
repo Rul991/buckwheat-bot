@@ -56,7 +56,7 @@ export default class {
             id: 'rp',
             title: 'РП',
             description: 'Добавляет новые или заменяет существующие команды',
-            schema: string().min(2).array().array(),
+            schema: string().array().min(2).array(),
             type: 'chat',
             import: async (options: ImportOptions<object>): Promise<void> => {
                 const {
@@ -118,7 +118,7 @@ export default class {
             id: 'rules',
             title: 'Правила',
             description: 'Добавляет правила',
-            schema: string().array(),
+            schema: string().max(MAX_EXPORT_DATA_LENGTH).array(),
             type: 'chat',
             import: async (options: ImportOptions<object>): Promise<void> => {
                 const {

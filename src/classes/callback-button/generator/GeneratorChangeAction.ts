@@ -3,8 +3,9 @@ import MoneyGenerator from '../../../interfaces/schemas/generator/MoneyGenerator
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
 import GeneratorUtils from '../../../utils/GeneratorUtils'
+import StringUtils from '../../../utils/StringUtils'
 import { GENERATOR_MAX_COUNT } from '../../../utils/values/consts'
-import { ButtonScrollerOptions, ButtonScrollerFullOptions, AsyncOrSync, ButtonScrollerEditMessageResult } from '../../../utils/values/types/types'
+import { ButtonScrollerOptions, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult, Ids } from '../../../utils/values/types/types'
 import GeneratorsService from '../../db/services/generators/GeneratorsService'
 import InventoryItemService from '../../db/services/items/InventoryItemService'
 import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
@@ -31,13 +32,20 @@ export default class extends ButtonScrollerAction<Data> {
         return generators
     }
 
+    protected async _getUpgradePrice(
+        chatId: number,
+        id: number
+    ) {
+        return await GeneratorsService.getTotalUpgradePrice(chatId, id)
+    }
+
     protected async _editText({
         slicedObjects,
         id,
         chatId,
         ctx,
         data
-    }: ButtonScrollerFullOptions<Data, ButtonScrollerData>): AsyncOrSync<ButtonScrollerEditMessageResult> {
+    }: ButtonScrollerFullOptions<Data, ButtonScrollerData>): Promise<ButtonScrollerEditMessageResult> {
         const generator = await GeneratorsService.get(chatId, id)
         const {
             generators
@@ -52,6 +60,12 @@ export default class extends ButtonScrollerAction<Data> {
         const hasAdd = hasDevices && generators.length < GENERATOR_MAX_COUNT
         const page = this._getNewPage(data)
 
+        const upgradePrice = await this._getUpgradePrice(
+            chatId,
+            id
+        )
+        const hasUpgradeAllButton = upgradePrice > 0
+
         return {
             text: await GeneratorUtils.getInfoMessage({
                 chatId,
@@ -64,10 +78,15 @@ export default class extends ButtonScrollerAction<Data> {
                         [
                             {
                                 text: '',
-                                data: JSON.stringify({
-                                    id,
-                                    p: page
-                                })
+                                data: ''
+                            }
+                        ] :
+                        [],
+                    upgradeAll: hasUpgradeAllButton ?
+                        [
+                            {
+                                text: StringUtils.toFormattedNumber(upgradePrice),
+                                data: ''
                             }
                         ] :
                         [],

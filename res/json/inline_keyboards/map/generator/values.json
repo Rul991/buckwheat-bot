@@ -6,8 +6,8 @@
         },
 
         "add": {
-            "text": "+",
-            "data": "ga_@"
+            "text": "➕ Добавить",
+            "data": "ga_@{collect}"
         },
 
         "arrow": {
@@ -24,14 +24,20 @@
             "text": "💸 Собрать",
             "data": "gg_@{collect}",
             "notEach": true
+        },
+
+        "upgradeAll": {
+            "text": "📈 Улучшить полностью (@ 💰)",
+            "data": "gua_@{collect}"
         }
     },
     
     "values": 
     [
+        "add",
+        "upgradeAll",
         "collect",
         "generators",
-        "add",
         ["arrow"],
         ["pageNav"]
     ]

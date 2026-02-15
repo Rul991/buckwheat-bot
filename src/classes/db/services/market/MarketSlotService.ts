@@ -157,8 +157,8 @@ export default class {
         await CasinoAddService.money(chatId, seller, totalPrice)
         await CasinoAddService.money(chatId, buyer, -totalPrice)
 
-        if(needCount == count) {
-            await MarketSlotRepository.deleteOne(slotId)
+        if (needCount == count) {
+            await this.delete(slotId)
         }
         else {
             await MarketSlotRepository.updateOne(
@@ -175,5 +175,9 @@ export default class {
             done: true,
             reason: 'done'
         }
+    }
+
+    static async delete(slotId: number) {
+        return await MarketSlotRepository.deleteOne(slotId)
     }
 }

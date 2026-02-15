@@ -149,27 +149,95 @@ export default class RoleplayCommand extends BuckwheatCommandWithSub<SubCommand>
                         }
 
                         const rpCase = getRpCase()
-                        await MessageUtils.answerMessageFromResource(
-                            ctx,
-                            'text/commands/add-rp/case.pug',
-                            {
-                                changeValues: {
-                                    name,
-                                    rpCase
-                                }
-                            }
+
+                        const isUpdated = await RoleplaysService.updateCase(
+                            chatId,
+                            name,
+                            rpCase
                         )
 
-                        return Boolean(
-                            await RoleplaysService.updateCase(
-                                chatId,
-                                name,
-                                rpCase
+                        if (isUpdated) {
+                            await MessageUtils.answerMessageFromResource(
+                                ctx,
+                                'text/commands/add-rp/case.pug',
+                                {
+                                    changeValues: {
+                                        name,
+                                        rpCase
+                                    }
+                                }
                             )
-                        )
+                        }
+                        else {
+                            await MessageUtils.answerMessageFromResource(
+                                ctx,
+                                'text/commands/add-rp/not-exist.pug',
+                                {
+                                    changeValues: {
+                                        name
+                                    }
+                                }
+                            )
+                        }
+
+                        return true
                     },
                     exampleData: 'накричать р'
-                }
+                },
+
+                {
+                    name: 'редактировать',
+                    needData: true,
+                    settingId: 'updateTextRoleplay',
+                    minimumRank: RankUtils.min + 1,
+                    execute: async options => {
+                        const {
+                            chatId,
+                            data,
+                            ctx
+                        } = options
+
+                        const dataParts = StringUtils.splitByCommands(
+                            data ?? '',
+                            1
+                        )
+                        if (dataParts.length < 2) return false
+                        const [name, text] = dataParts
+
+                        const isUpdated = await RoleplaysService.updateText(
+                            chatId,
+                            name,
+                            text
+                        )
+
+                        if (isUpdated) {
+                            await MessageUtils.answerMessageFromResource(
+                                ctx,
+                                'text/commands/add-rp/done.pug',
+                                {
+                                    changeValues: {
+                                        name,
+                                        act: 'отредактирована'
+                                    }
+                                }
+                            )
+                        }
+                        else {
+                            await MessageUtils.answerMessageFromResource(
+                                ctx,
+                                'text/commands/add-rp/not-exist.pug',
+                                {
+                                    changeValues: {
+                                        name
+                                    }
+                                }
+                            )
+                        }
+
+                        return true
+                    },
+                    exampleData: 'накричать сильно накричал'
+                },
             ]
         )
 
