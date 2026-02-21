@@ -21,9 +21,11 @@ type RawOptionsWithOther = RawOptions & {
     other: MaybeString
 }
 
-export type EveryMessageOptions = RawOptions & {
+export type EveryMessageOptions = {
     ctx: MessageContext
     chatMember: ChatMember | null
+    chatId: number | null
+    id: number
 }
 
 export type LeftMemberOptions = RawOptions & {

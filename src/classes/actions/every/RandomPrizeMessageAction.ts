@@ -11,6 +11,7 @@ import { EveryMessageOptions } from '../../../utils/values/types/action-options'
 
 export default class RandomPrizeMessageAction extends EveryMessageAction {
     async execute({ ctx, chatId, id }: EveryMessageOptions): Promise<void | true> {
+        if(!chatId) return
         const canSend = await ChatSettingsService.get<'boolean'>(chatId, 'spawnBox')
         if(!canSend) return
 

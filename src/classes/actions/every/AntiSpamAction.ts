@@ -9,8 +9,9 @@ import TimeUtils from '../../../utils/TimeUtils'
 import { EveryMessageOptions } from '../../../utils/values/types/action-options'
 
 export default class AntiSpamAction extends EveryMessageAction {
-    async execute({ ctx, chatId, id }: EveryMessageOptions): Promise<void | true> {
-        const status = await ContextUtils.getStatus(ctx)
+    async execute({ ctx, chatId, id, chatMember }: EveryMessageOptions): Promise<void | true> {
+        if(!chatId) return
+        const status = chatMember?.status
         if (status == 'creator' || status == 'administrator') return
 
         await AntiSpamService.add(id, 'lastMessagesCount', 1)

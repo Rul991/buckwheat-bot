@@ -8,19 +8,19 @@ export default class UpdateCommand extends BuckwheatCommand {
     protected _settingId: string = 'ava'
     protected _canBeChanged: boolean = false
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'обновись'
         this._isShow = false
     }
 
     async execute({ ctx, id }: BuckwheatCommandOptions): Promise<void> {
-        if(id == +DEV_ID!) {
+        if (id == +DEV_ID!) {
             exec('git pull && bun run restart:prod', async (_, stdout) => {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/update/stdout.pug',
-                    {changeValues: {stdout}}
+                    { changeValues: { stdout } }
                 )
             })
         }

@@ -6,9 +6,9 @@
     "db": "bun run src/app/update-db.ts",
     "dev": "bun run --watch src/app/index.ts",
     "start": "bun run src/app/index.ts",
-    "start:prod": "bunx --bun pm2 start pm2.config.js --env prod",
-    "restart:prod": "bun install && bun run stop:prod && bun run start:prod",
-    "stop:prod": "bunx --bun pm2 delete pm2.config.js"
+    "start:prod": "bunx bm2 start bm2.config.js --env prod",
+    "restart:prod": "bun install && bunx bm2 restart bm2.config.js",
+    "stop:prod": "bunx bm2 stop bm2.config.js && bunx bm2 delete bm2.config.js"
   },
   "keywords": [
     "telegraf",
@@ -17,7 +17,6 @@
     "bot",
     "telegram"
   ],
-  "type": "module",
   "author": "Rul",
   "license": "CC BY-NC",
   "description": "",
@@ -34,7 +33,7 @@
     "https-proxy-agent": "^7.0.6",
     "mongoose": "^9.1.4",
     "p-queue": "^9.0.1",
-    "pm2": "^6.0.10",
+    "bm2": "^6.0.10",
     "pug": "^3.0.3",
     "telegraf": "^4.16.3",
     "typescript": "^5.9.3",

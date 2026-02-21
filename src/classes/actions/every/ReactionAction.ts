@@ -11,6 +11,7 @@ export default class extends EveryMessageAction {
     }
 
     async execute({ ctx, chatId }: EveryMessageOptions): Promise<void | true> {
+        if(!chatId) return
         const reactionChance = await ChatSettingsService.get<'number'>(
             chatId, 
             'reactChance'

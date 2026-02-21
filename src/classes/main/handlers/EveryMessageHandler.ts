@@ -21,13 +21,12 @@ export default class EveryMessageHandler extends BaseHandler<EveryMessageAction,
                 ctx,
                 id
             )
-            if (!chatId) return next()
 
-            const chatMember = await ContextUtils.getChatMemberByIds(
+            const chatMember = chatId ? await ContextUtils.getChatMemberByIds(
                 ctx,
                 chatId,
                 id
-            )
+            ) : null
 
             const options = {
                 ctx,

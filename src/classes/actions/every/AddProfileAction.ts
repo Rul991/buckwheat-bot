@@ -5,6 +5,7 @@ import EveryMessageAction from './EveryMessageAction'
 
 export default class extends EveryMessageAction {
     async execute({ ctx, chatId, id }: EveryMessageOptions): Promise<void | true> {
+        if(!chatId) return
         const firstName = ctx.from.first_name
 
         if (!await UserProfileService.get(chatId, id)) {
