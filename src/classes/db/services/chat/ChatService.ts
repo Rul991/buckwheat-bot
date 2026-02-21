@@ -2,7 +2,7 @@ import Chat from '../../../../interfaces/schemas/chat/Chat'
 import PremiumUtils from '../../../../utils/PremiumUtils'
 import ChatRepository from '../../repositories/ChatRepository'
 
-type SetData = Required<Omit<Chat, 'id' | 'premiumUntilDate'>>
+type SetData = Partial<Omit<Chat, 'id' | 'premiumUntilDate'>>
 
 type Stats = {
     total: number
@@ -48,5 +48,18 @@ export default class ChatService {
             chatId,
             data
         )
+    }
+
+    static async getName(chatId: number) {
+        const chat = await this.get(chatId)
+        return chat.name ?? `${chat.id}`
+    }
+
+    static async getChatsByIds(ids: number[]) {
+        return await ChatRepository.findMany({
+            id: {
+                $in: ids
+            }
+        })
     }
 }

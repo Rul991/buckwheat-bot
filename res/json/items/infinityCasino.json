@@ -1,5 +1,5 @@
 {
     "name": "Беспроигрышное казино",
     "description": "Разрешаю не отдавать деньги в случае проигрыша в казино",
-    "type": "oneInfinity"
+    "type": "manyInfinity"
 }

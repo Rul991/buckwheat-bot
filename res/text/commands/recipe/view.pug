@@ -3,6 +3,7 @@ include utils/mixins.pug
 
 - const recipeCount = recipe.count || 1
 - const totalCount = recipeCount * boost
+- const level = recipe.level
 
 b 🧤 Рецепт предмета 
     u #{resultItem.name}
@@ -12,9 +13,13 @@ b 🧤 Рецепт предмета
 |
 b 🧮 Количество:
 |
-+param('📍 В рецепте', formatNumber(recipeCount), 2)
-+param('📍 Выбранное', formatNumber(boost), 1)
-+param('📍 В инвентаре', formatNumber(inventoryCount || 0))
++param('📖 В рецепте', formatNumber(recipeCount), 2)
++param('🧮 Выбранное', formatNumber(boost), 1)
++param('📦 В инвентаре', formatNumber(inventoryCount || 0))
+|
+|
++param('📈 Мин. уровень', level)
++param('💡 Опыт', formatNumber(experience))
 |
 |
 |
@@ -24,7 +29,9 @@ each material in materials
     - const { title, count, inventoryCount } = material
     - const boostCount = count * boost
     |
-    | #{bool(inventoryCount >= boostCount)} #{title} - #{formatNumber(inventoryCount)} / #{formatNumber(boostCount)}
+    | #{bool(inventoryCount >= boostCount)} 
+    i #{title} 
+    | - #{formatNumber(inventoryCount)} / #{formatNumber(boostCount)}
 |
 |
 | Скрафтить?

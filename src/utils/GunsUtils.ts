@@ -1,29 +1,28 @@
 import InventoryItem from '../interfaces/schemas/items/InventoryItem'
-import FileUtils from './FileUtils'
-import ObjectValidator from './ObjectValidator'
 import RandomUtils from './RandomUtils'
-import { gunsSchema } from './values/schemas'
 import { Gun } from './values/types/guns'
+import { InventoryItemDescriptionWithId } from './values/types/types'
+
+type Id = InventoryItemDescriptionWithId['id']
 
 export default class {
-    private static _gunsRecord: Record<Gun['id'], Gun['damage']> = {}
+    private static _gunsRecord: Record<Id, Gun['damage']> = {}
 
-    static async setup() {
-        const guns = await FileUtils.readJsonFromResource<Gun[]>(
-            'json/other/guns.json'
-        )
-        if (!guns) return false
-        if(!ObjectValidator.isValidatedObject(guns, gunsSchema)) return false
+    static setup(
+        items: InventoryItemDescriptionWithId[]
+    ) {
+        for (const item of items) {
+            if(item.gun) {
+                const {
+                    id,
+                    gun: {
+                        damage
+                    }
+                } = item
 
-        for (const gun of guns) {
-            const {
-                id,
-                damage
-            } = gun
-
-            this._gunsRecord[id] = damage
+                this._gunsRecord[id] = damage
+            }
         }
-        
         return true
     }
 
@@ -40,7 +39,7 @@ export default class {
         } as Gun
     }
 
-    static getDamage(id: Gun['id']) {
+    static getDamage(id: Id) {
         const damage = this._gunsRecord[id]
         if (!damage) return this.getDummyDamage()
 

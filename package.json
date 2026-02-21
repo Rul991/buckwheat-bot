@@ -1,16 +1,14 @@
 {
   "name": "buckwheat-bot",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "main": "src/app/index.ts",
   "scripts": {
-    "start": "npx tsx src/app/index.ts",
-    "dev": "npx tsx watch src/app/index.ts",
-    "build": "npm i && npm run build:no-i",
-    "build:no-i": "npx tsup src/app/index.ts",
-    "db": "npx tsx src/app/update-db.ts",
-    "start:prod": "npm run build && pm2 start dist/index.js --name buckwheat",
-    "stop:prod": "pm2 stop buckwheat && pm2 delete buckwheat",
-    "restart:prod": "npm run build && pm2 restart buckwheat"
+    "db": "bun run src/app/update-db.ts",
+    "dev": "bun run --watch src/app/index.ts",
+    "start": "bun run src/app/index.ts",
+    "start:prod": "bunx --bun pm2 start pm2.config.js --env prod",
+    "restart:prod": "bun install && bun run stop:prod && bun run start:prod",
+    "stop:prod": "bunx --bun pm2 delete pm2.config.js"
   },
   "keywords": [
     "telegraf",

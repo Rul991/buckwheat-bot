@@ -1,5 +1,8 @@
 {
     "name": "Процент от магазина",
     "description": "При покупке товара из магазина любым игроком, вы будете получать доход",
-    "type": "manyInfinity"
+    "type": "manyInfinity",
+    "maxCount": {
+        "chat": 100
+    }
 }

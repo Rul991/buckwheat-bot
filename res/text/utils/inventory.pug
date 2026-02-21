@@ -1,7 +1,8 @@
 include ./mixins.pug
 include ./functions.pug
 
-mixin item(item)
+mixin item(options)
+    - const { item, chance = 0 } = options
     - 
         const typeName = item.type == 'consumable' ?
             'Одноразовый' :
@@ -14,5 +15,17 @@ mixin item(item)
     |
     |
     |
-    +parameter('Тип', typeName)
     +parameter('Находится', bool(item.material))
+    if chance > 0
+        +parameter('Шанс', `${formatNumber(chance)}%`)
+        |
+        |
+    |
+    +parameter('Оружие', bool(item.gun))
+    if item.gun
+        - const [min, max] = item.gun.damage
+        +parameter('Урон', `${formatNumber(min)} - ${formatNumber(min)}`)
+        |
+        |
+    |
+    +parameter('Тип', typeName)

@@ -1,3 +1,5 @@
+include utils/functions.pug
+
 - const premiumEmoji = '👑'
 - const infinityEmoji = '♾️'
 - const moneyEmoji = '💰'
@@ -34,13 +36,10 @@ blockquote #{description}
 |
 +conditionText(isPremium, premiumEmoji, `Премиум-товар`)
 |
-+param('Осталось', `${isRestInfinity ? infinityEmoji : rest}`)
-+param('Текущее количество', `${currentCount}`)
-|
-|
-+param('Общий склад', `${isChatMode ? yesEmoji : noEmoji}`)
++param('Осталось', `${isRestInfinity ? infinityEmoji : formatNumber(rest)}`)
++param('Текущее количество', `${formatNumber(currentCount)}`)
 +param('Скидка за премиум', `${premiumDiscount}%`)
 |
 |
-+param('Цена', `${price} * ${count}${discount < baseDiscount ? ` * ${discount}%`: ``} = ${totalPrice} ${moneyEmoji}`)
-+param('Твой баланс', `${balance} ${moneyEmoji}`, true)
++param('Цена', `${formatNumber(price)} * ${formatNumber(count)}${discount < baseDiscount ? ` * ${discount}%`: ``} = ${totalPrice} ${moneyEmoji}`)
++param('Твой баланс', `${formatNumber(balance)} ${moneyEmoji}`, true)

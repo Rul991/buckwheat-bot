@@ -177,7 +177,8 @@ export default class {
                     id
                 } = options
 
-                const user = await UserProfileService.create(chatId, id)
+                const user = await UserProfileService.get(chatId, id)
+                if(!user) return {}
                 const {
                     name,
                     description,

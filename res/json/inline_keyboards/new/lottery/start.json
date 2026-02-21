@@ -1,0 +1,30 @@
+{
+    "markup": [
+        "list",
+        "create"
+    ],
+
+    "definition": {
+        "list": {
+            "text": "👀 Просмотреть",
+            "name": "lotterylist",
+            "data": {
+                "$vars": ["shared"]
+            }
+        },
+
+        "create": {
+            "text": "➕ Создать",
+            "name": "lotterycreate",
+            "data": {
+                "$vars": ["shared"]
+            }
+        }
+    },
+
+    "variables": {
+        "shared": {
+            "id": "id"
+        }
+    }
+}

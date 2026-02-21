@@ -1,4 +1,5 @@
 import RecipeUtils from '../../../../utils/RecipeUtils'
+import ExperienceService from '../level/ExperienceService'
 import LevelService from '../level/LevelService'
 import UserClassService from '../user/UserClassService'
 import InventoryItemService from './InventoryItemService'
@@ -88,6 +89,10 @@ export default class {
                 resultMaterials
             } = craftResult
 
+            const {
+                experience
+            } = recipe
+
             await InventoryItemService.useMany({
                 chatId,
                 id,
@@ -100,6 +105,11 @@ export default class {
                 itemId: recipeName,
                 count: count * chosenCount
             })
+            await ExperienceService.add(
+                chatId,
+                id,
+                experience
+            )
 
             return {
                 done: true,

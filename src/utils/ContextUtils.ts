@@ -122,11 +122,22 @@ export default class ContextUtils {
     }
 
     static async getChatMember(ctx: Context, id?: number): Promise<ChatMember | null> {
+        return await this.getChatMemberByIds(
+            ctx,
+            ctx.chat?.id ?? 0,
+            id ?? ctx.from?.id ?? 0
+        )
+    }
+
+    static async getChatMemberByIds(ctx: Context, chatId: number, id: number) {
         try {
-            const user = await ctx.telegram.getChatMember(ctx.chat?.id ?? 0, id ?? ctx.from?.id ?? 0)
+            const user = await ctx.telegram.getChatMember(
+                chatId,
+                id
+            )
             return user
         }
-        catch (e) {
+        catch(e) {
             Logging.error(e)
             return null
         }
@@ -143,5 +154,14 @@ export default class ContextUtils {
             return true
         }
         return false
+    }
+
+    static getTitle(ctx: Context) {
+        if(ctx.chat && ctx.chat?.type != 'private') {
+            return ctx.chat.title
+        }
+        else {
+            return ctx.botInfo.first_name
+        }
     }
 }

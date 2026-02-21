@@ -1,6 +1,6 @@
 import ExperienceUtils from '../../../../utils/level/ExperienceUtils'
 import LevelUtils from '../../../../utils/level/LevelUtils'
-import { DUEL_EXPERIENCE } from '../../../../utils/values/consts'
+import { DUEL_EXPERIENCE, LEVEL_BOOST } from '../../../../utils/values/consts'
 import { ExperienceWithId, FirstSecond, TopLevelObject } from '../../../../utils/values/types/types'
 import LevelRepository from '../../repositories/LevelRepository'
 import InventoryItemService from '../items/InventoryItemService'
@@ -34,9 +34,31 @@ export default class ExperienceService {
         return experience
     }
 
+    static async getBoostByLevelBoosts(chatId: number, id: number) {
+        const levelBoosts = await InventoryItemService.getCount(
+            chatId,
+            id,
+            'levelBoost'
+        )
+
+        return levelBoosts * LEVEL_BOOST / 100
+    }
+
+    static async getAddedExperience(chatId: number, id: number, experience: number) {
+        const boost = await this.getBoostByLevelBoosts(chatId, id)
+        return Math.ceil(experience * boost)
+    }
+
     static async add(chatId: number, id: number, experience = 1): Promise<number> {
         const currentExperience = await this.get(chatId, id)
-        return await this.set(chatId, id, currentExperience + experience)
+        const addedExperience = await this.getAddedExperience(
+            chatId,
+            id,
+            experience
+        )
+
+        await this.set(chatId, id, currentExperience + addedExperience)
+        return addedExperience
     }
 
     static async isLevelUpAfterAdding(chatId: number, id: number, added = 1): Promise<number | null> {
@@ -46,52 +68,5 @@ export default class ExperienceService {
         return ExperienceUtils.isNewLevel(currentExperience, added) ?
             LevelUtils.get(currentExperience + added) :
             null
-    }
-
-    static async addExperienceAfterDuel(chatId: number, firstDuelist: number, secondDuelist: number) {
-        const getLevel = async (id: number) => (
-            await LevelService.get(chatId, id)
-        )
-
-        const getLevelBoost = async (id: number) => (
-            (await InventoryItemService.use({
-                chatId,
-                id,
-                itemId: 'levelBoost'
-            }))[1]
-        )
-
-        const getLevelDiff = (first: keyof FirstSecond, second: keyof FirstSecond) => (
-            level[first] / level[second]
-        )
-
-        const getAddedExperience = (key: keyof FirstSecond) => (
-            levelDiff[key] * DUEL_EXPERIENCE * levelBoosts[key]
-        )
-
-        const level = {
-            first: await getLevel(firstDuelist),
-            second: await getLevel(secondDuelist),
-        }
-
-        const levelDiff = {
-            first: getLevelDiff('first', 'second'),
-            second: getLevelDiff('second', 'first'),
-        }
-
-        const levelBoosts = {
-            first: await getLevelBoost(firstDuelist),
-            second: await getLevelBoost(secondDuelist),
-        }
-
-        const addedExperience = {
-            first: getAddedExperience('first'),
-            second: getAddedExperience('second')
-        }
-
-        await this.add(chatId, firstDuelist, addedExperience.first)
-        await this.add(chatId, firstDuelist, addedExperience.second)
-
-        return addedExperience
     }
 }

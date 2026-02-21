@@ -9,12 +9,5 @@
             "text": "🔙 Назад",
             "callback_data": "duelskills_@{duel}"
         }
-    ],
-
-    [
-        {
-            "text": "❔ Что умеет?",
-            "callback_data": "skillalert_@{alert}_@{skill}"
-        }
     ]
 ]

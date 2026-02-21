@@ -1,9 +1,11 @@
 {
     "name": "Шкатулка жадности",
-    "description": "Поаккуратней с этой штукой",
+    "description": "Дает деньги, стоит дорого, ничего не берет взамен",
     "type": "manyInfinity",
     "material": {
-        "rarity": 15,
-        "maxCount": 1
+        "rarity": 15
+    },
+    "maxCount": {
+        "chat": 1
     }
 }

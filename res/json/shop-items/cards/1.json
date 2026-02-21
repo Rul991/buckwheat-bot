@@ -3,7 +3,6 @@
     "description": "Маленький набор карточек для коллекционеров",
     "emoji": "🃏",
     "price": 200,
-    "maxCount": 100,
     "premiumDiscount": 10,
     "itemName": "cardBox"
 }

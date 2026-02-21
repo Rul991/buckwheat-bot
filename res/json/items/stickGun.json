@@ -3,6 +3,9 @@
     "description": "Раз в год и палка стреляет!",
     "type": "consumable",
     "material": {
-        "rarity": 15
+        "rarity": 9
+    },
+    "gun": {
+        "damage": [1000, 5000]
     }
 }

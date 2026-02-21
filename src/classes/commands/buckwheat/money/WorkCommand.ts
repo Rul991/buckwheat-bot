@@ -126,13 +126,8 @@ export default class WorkCommand extends BuckwheatCommand {
                 multiplier * (currentLevel + currentLevelUp)
             )
         )
-        const [_, count] = await InventoryItemService.use({
-            chatId,
-            id,
-            itemId: 'levelBoost'
-        })
 
-        return Math.ceil(rawExperience * (1 + (count * LEVEL_BOOST / 100)))
+        return Math.ceil(rawExperience)
     }
 
     private async _getWorkQuests(): Promise<Record<ClassTypes, string[]>> {
@@ -159,27 +154,26 @@ export default class WorkCommand extends BuckwheatCommand {
     }
 
     private async _addMaterial(chatId: number, id: number) {
+        const addedCount = 1
         const material = InventoryItemsUtils.getRandomMaterial()
         if (!material) return null
 
         const {
-            id: materialId,
+            id: itemId,
             name,
-            material: workMaterial
-        } = material
-        if (!workMaterial) return null
-
-        const {
             maxCount
-        } = workMaterial
+        } = material
 
         if (maxCount !== undefined) {
-            const totalCount = await InventoryItemService.getTotalCount(
+            const {
+                rest
+            } = await InventoryItemService.getRestAndCurrentCount(
                 chatId,
-                materialId
+                id,
+                itemId
             )
 
-            if (totalCount >= maxCount) {
+            if (rest < addedCount) {
                 return null
             }
         }
@@ -187,7 +181,8 @@ export default class WorkCommand extends BuckwheatCommand {
         await InventoryItemService.add({
             chatId,
             id,
-            itemId: materialId
+            itemId,
+            count: addedCount
         })
 
         return name

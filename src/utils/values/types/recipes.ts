@@ -5,4 +5,5 @@ export type Recipe = {
         count?: number
     }
     level: number
+    experience: number
 }

@@ -64,15 +64,10 @@ export default class BuyAction extends CallbackButtonAction<Data> {
     }
 
     protected async _getIds(ctx: CallbackButtonContext) {
-        const id = ctx.from.id
         const botId = ctx.botInfo.id
-        const chatId = await LinkedChatService.getCurrent(ctx, id)
-        if (!chatId) return null
 
         return {
-            id,
             botId,
-            chatId
         }
     }
 
@@ -199,17 +194,16 @@ export default class BuyAction extends CallbackButtonAction<Data> {
         return ''
     }
 
-    async execute({ ctx, data }: CallbackButtonOptions<Data>): Promise<string | void> {
+    async execute({ ctx, data, chatId, id }: CallbackButtonOptions<Data>): Promise<string | void> {
         const ids = await this._getIds(ctx)
         if (!ids) return
+
         const {
             botId,
-            chatId,
-            id
         } = ids
+
         const [index, scrollingUserId, rawCount, page] = data
         const count = Math.max(1, rawCount)
-
         if (index === NOT_FOUND_INDEX) return
 
         const item = await this._getItem(index)
@@ -220,14 +214,13 @@ export default class BuyAction extends CallbackButtonAction<Data> {
         } = item
 
         const user = await ContextUtils.getUser(chatId, id)
-        const totalCount = ShopItems.getCount(item, count)
         const hasPremium = await PremiumChatService.isPremium(chatId)
 
         const hasItemsOptions = {
             chatId,
             id,
             item,
-            count: totalCount,
+            count: count,
             hasPremium
         }
 
@@ -236,12 +229,10 @@ export default class BuyAction extends CallbackButtonAction<Data> {
             totalPrice
         } = await this._getMoneyValues(hasItemsOptions)
 
-        const isChatMode = ShopItems.isChatMode(item)
         const hasRest = await ShopItems.hasEnoughItems(hasItemsOptions)
-
         const alertMessage = await this._getAlertMessage({
             name,
-            isChatMode,
+            isChatMode: true,
             hasRest,
             user,
             totalPrice,
@@ -263,7 +254,7 @@ export default class BuyAction extends CallbackButtonAction<Data> {
             ctx,
             user,
             item,
-            count: totalCount,
+            count: count,
             id,
             chatId
         })

@@ -1,9 +1,6 @@
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import MessageUtils from '../../../../utils/MessageUtils'
-import UserRankService from '../../../db/services/user/UserRankService'
-import RankUtils from '../../../../utils/RankUtils'
 import Logging from '../../../../utils/Logging'
-import ContextUtils from '../../../../utils/ContextUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 
 export default class EchoCommand extends BuckwheatCommand {
@@ -20,20 +17,10 @@ export default class EchoCommand extends BuckwheatCommand {
     }
 
     async execute({ ctx, other, chatId, id }: BuckwheatCommandOptions): Promise<void> {
-        const rank = await UserRankService.get(chatId, id)
-        const chatMember = await ctx.telegram.getChatMember(chatId, id)
-
-        if(chatMember.status == 'restricted' || chatMember.status == 'kicked' || chatMember.status == 'left') {
-            await MessageUtils.answerMessageFromResource(
-                ctx,
-                'text/commands/echo/status-issue.pug'
-            )
-            return
-        }
-
-        if(typeof other == 'string' && other.length) {
+        if(other?.length) {
+            const name = ctx.from.username ? `@${ctx.from.username}` : ctx.from.first_name
             Logging.log(
-                `${ctx.from.username ? `@${ctx.from.username}` : ctx.from.first_name}(${id}) echoed "${other}"`
+                `${name}(${id}) echoed "${other}"`
             )
             const isPrivate = ctx.chat.type == 'private'
 
@@ -43,7 +30,6 @@ export default class EchoCommand extends BuckwheatCommand {
                 {
                     changeValues: {
                         other,
-                        user: rank >= RankUtils.admin ? {} : await ContextUtils.getUserFromContext(ctx)
                     },
                     chatId,
                     isReply: false
@@ -54,7 +40,10 @@ export default class EchoCommand extends BuckwheatCommand {
             await MessageUtils.deleteMessage(ctx)
         }
         else {
-            await MessageUtils.answerMessageFromResource(ctx, 'text/commands/echo/echoError.pug')
+            await MessageUtils.answerMessageFromResource(
+                ctx, 
+                'text/commands/echo/echo-error.pug'
+            )
         }
     }
 }

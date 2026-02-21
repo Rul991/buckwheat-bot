@@ -7,6 +7,7 @@ import InventoryItemService from '../../db/services/items/InventoryItemService'
 import FileUtils from '../../../utils/FileUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
+import InventoryItemsUtils from '../../../utils/InventoryItemsUtils'
 
 type Data = {
     id: number
@@ -47,11 +48,13 @@ export default class extends CallbackButtonAction<Data> {
             itemId
         )
 
+        const chance = InventoryItemsUtils.getChancePrecents(itemId)
         const text = await FileUtils.readPugFromResource(
             'text/commands/inventory/show.pug',
             {
                 changeValues: {
-                    item
+                    item,
+                    chance
                 }
             }
         )

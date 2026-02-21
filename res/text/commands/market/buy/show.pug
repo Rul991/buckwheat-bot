@@ -10,7 +10,7 @@ mixin seller(user)
 - const totalPrice = slot.price * needCount
 - const priceText = `${formatNumber(slot.price)} * ${formatNumber(needCount)} = ${formatNumber(totalPrice)}💰`
 
-+item(item)
++item({item, chance})
 |
 +param('📍 Цена', priceText)
 +param('📍 Кол-во', formatNumber(slot.count))

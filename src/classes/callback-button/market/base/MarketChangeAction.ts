@@ -26,9 +26,13 @@ export default abstract class extends ButtonScrollerAction<Data, ButtonScrollerD
             itemId
         }
     }: ButtonScrollerOptions<ButtonScrollerData>): Promise<Data[]> {
-        return await MarketSlotService.getAll({
+        const result = await MarketSlotService.getAll({
             chatId,
             itemId
+        })
+
+        return result.sort((a, b) => {
+            return a.itemId > b.itemId ? 1 : -1
         })
     }
 
@@ -53,13 +57,15 @@ export default abstract class extends ButtonScrollerAction<Data, ButtonScrollerD
                     slot: slicedObjects.map(({
                         itemId,
                         count: rawCount,
-                        id
+                        id,
+                        price: rawPrice
                     }) => {
                         const { name } = globalItemDescription ?? InventoryItemsUtils.getItemDescription(itemId)
                         const count = StringUtils.toFormattedNumber(rawCount)
+                        const price = StringUtils.toFormattedNumber(rawPrice)
 
                         return {
-                            text: `${name} x${count}`,
+                            text: `${name} x${count} (${price}💰)`,
                             data: JSON.stringify({
                                 slot: id,
                                 page,

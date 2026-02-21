@@ -1,0 +1,10 @@
+{
+    "materials": {
+        "wood": 7
+    },
+    "result": {
+        "name": "woodSword"
+    },
+    "level": 2,
+    "experience": 7
+}

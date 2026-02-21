@@ -9,6 +9,7 @@ import { CallbackButtonContext, ContextData, MyChatMemberContext, TextContext } 
 import { BuckwheatCommandOptions } from './action-options'
 import CallbackButtonAction from '../../../classes/callback-button/CallbackButtonAction'
 import Character from '../../../interfaces/duel/Character'
+import { Gun } from './guns'
 
 export type MaybeString = string | undefined
 export type CommandStrings = [string, MaybeString, MaybeString]
@@ -43,8 +44,15 @@ export type InventoryItemDescription = {
     description: string
     material?: {
         rarity: number
-        maxCount?: number
     }
+    maxCount?: {
+        user?: number
+        chat?: number
+    }
+    gun?: Gun
+}
+export type InventoryItemDescriptionWithId = InventoryItemDescription & {
+    id: string
 }
 export type ShowableItem = InventoryItemDescription & {
     itemId: string
@@ -52,7 +60,8 @@ export type ShowableItem = InventoryItemDescription & {
     count: number
 }
 
-export type InventoryItemType = 'consumable' | 'oneInfinity' | 'manyInfinity'
+export type InventoryItemType = 'consumable' | 'manyInfinity'
+export type InventoryItemCountType = 'user' | 'chat'
 export type AsyncOrSync<T = void> = Promise<T> | T
 
 export type PlayerTypes = 'knight' | 'thief' | 'sorcerer' | 'engineer' | 'bard'
@@ -117,17 +126,13 @@ export type ShopMessageOptions = {
 export type TotalCountMode = 'user' | 'chat'
 export type JsonShopItem = {
     id?: string
-    name: string
-    description: string
+    name?: string
+    description?: string
     emoji: string
     price: number
-    maxCount?: number
     premiumDiscount?: number
     isPremium?: boolean
-    totalCount?: number
-    totalCountMode?: TotalCountMode
     itemName?: string
-    execute?: ShopItemDescription['execute']
 }
 
 export type ShopItemDescription = {
@@ -136,7 +141,9 @@ export type ShopItemDescription = {
     item?: ShopItem
 }
 
-export type ShopItem = Required<JsonShopItem>
+export type ShopItem = Required<JsonShopItem> & {
+    execute: ShopItemDescription['execute']
+}
 export type ShopItemWithLength = ShopItem & { length: number, index: number }
 
 export type ScrollerGetObjectsOptions<D = string> = {

@@ -234,3 +234,4 @@ export const MAX_NOTE_LENGTH = 2048
 
 export const RANKS_LIST = [0, 1, 2, 3, 4, 5]
 export const CUSTOM_ROLEPLAY_SETTING_ID = 'rp'
+export const LINKED_CHATS_MAX_COUNT = 10

@@ -1,4 +1,4 @@
-import { PreCheckoutQuery, SuccessfulPayment, Update, User } from 'telegraf/types'
+import { ChatMember, PreCheckoutQuery, SuccessfulPayment, Update, User } from 'telegraf/types'
 import { ChatMemberStatus, CommandStrings, Ids, MaybeString } from './types'
 import { MessageContext, MyChatMemberContext } from './contexts'
 import { SuccessfulPaymentContext } from './contexts'
@@ -23,6 +23,7 @@ type RawOptionsWithOther = RawOptions & {
 
 export type EveryMessageOptions = RawOptions & {
     ctx: MessageContext
+    chatMember: ChatMember | null
 }
 
 export type LeftMemberOptions = RawOptions & {

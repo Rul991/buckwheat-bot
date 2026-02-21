@@ -3,6 +3,6 @@
     "description": "Довольно важный и распространенный материал",
     "type": "consumable",
     "material": {
-        "rarity": 2
+        "rarity": 1
     }
 }

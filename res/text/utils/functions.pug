@@ -1,5 +1,11 @@
 -
-    const formatNumber = (number, separator = ' ') => {
+    const floor = (raw, afterDot = 0) => {
+        const afterDotValue = 10 ** afterDot
+        return Math.round(raw * afterDotValue) / afterDotValue
+    }
+
+    const formatNumber = (raw, separator = ' ') => {
+        const number = floor(raw, 3)
         if (number >= 1e+21) {
             const zeroCount = Math.floor(Math.log10(number))
             const afterDot = 2

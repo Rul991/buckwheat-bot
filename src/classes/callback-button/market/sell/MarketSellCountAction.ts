@@ -10,6 +10,7 @@ import { FIRST_INDEX, MAX_COUNT_BUTTONS_LENGTH } from '../../../../utils/values/
 import MessageUtils from '../../../../utils/MessageUtils'
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import StringUtils from '../../../../utils/StringUtils'
+import InventoryItemsUtils from '../../../../utils/InventoryItemsUtils'
 
 type Data = {
     id: number
@@ -65,6 +66,7 @@ export default class extends CallbackButtonAction<Data> {
             maxLength: MAX_COUNT_BUTTONS_LENGTH,
             maxValue: count
         })
+        const chance = InventoryItemsUtils.getChancePrecents(itemId)
 
         await MessageUtils.editText(
             ctx,
@@ -73,7 +75,8 @@ export default class extends CallbackButtonAction<Data> {
                 {
                     changeValues: {
                         item,
-                        needCount
+                        needCount,
+                        chance
                     }
                 }
             ),

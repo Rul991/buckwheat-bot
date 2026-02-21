@@ -280,14 +280,15 @@ export default class MessageUtils {
     }
 
     static async editText(ctx: Context, text: string, options?: ExtraEditMessageText): Promise<boolean> {
+        const editOptions = await this._updateEditOptions(ctx, options)
         try {
-            await ctx.editMessageText(text, await this._updateEditOptions(ctx, options))
+            await ctx.editMessageText(text, editOptions)
             return true
         }
         catch (e) {
             Logging.error(e)
 
-            await ctx.reply(text, await this._updateEditOptions(ctx, options))
+            await ctx.reply(text, editOptions)
             await this.deleteMessage(ctx)
             return false
         }

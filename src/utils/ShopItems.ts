@@ -19,6 +19,7 @@ import UserClassService from '../classes/db/services/user/UserClassService'
 import ExperienceService from '../classes/db/services/level/ExperienceService'
 import ExperienceUtils from './level/ExperienceUtils'
 import DuelistService from '../classes/db/services/duelist/DuelistService'
+import InventoryItemsUtils from './InventoryItemsUtils'
 
 type ItemDescriptionKey = string
 
@@ -30,37 +31,64 @@ type HasEnoughItemsOptions = {
 }
 
 const buyItem = async (
-    itemId: string,
     {
         chatId,
         id,
-        count
+        count,
+        item: {
+            itemName
+        }
     }: ItemCallbackOptions
 ) => {
     const [isBought] = await InventoryItemService.add({
         chatId,
         id,
-        itemId,
+        itemId: itemName,
         count
     })
 
     return isBought
 }
 
-const buyCard = async ({
-    count,
-    cardCount,
-    id,
-    chatId
-}: ItemCallbackOptions & { cardCount: number }) => {
+const buyCard = async (options: ItemCallbackOptions & { cardCount: number }) => {
+    const {
+        count,
+        cardCount
+    } = options
     const totalCount = cardCount * count
 
-    const [isBought] = await InventoryItemService.add({
-        chatId,
-        id,
-        itemId: 'cardBox',
-        count: totalCount
-    })
+    return buyItem(
+        {
+            ...options,
+            count: totalCount
+        }
+    )
+}
+
+const buyItemAndAlert = async (
+    options: ItemCallbackOptions & {
+        path?: (itemId: string) => string
+    }
+) => {
+    const {
+        item: {
+            itemName: itemId
+        },
+        path = itemId => `work/${itemId}`,
+        ctx
+    } = options
+
+    const isBought = await buyItem(
+        options
+    )
+
+    if (isBought) {
+        await ContextUtils.showCallbackMessageFromFile(
+            ctx,
+            `text/commands/items/${path(itemId)}.pug`
+        )
+    }
+
     return isBought
 }
 
@@ -72,11 +100,8 @@ export default class ShopItems {
             description: DEFAULT_DESCRIPTION,
             emoji: '🥀',
             price: 0,
-            maxCount: DEFAULT_MAX_COUNT,
             premiumDiscount: DEFAULT_PREMIUM_DISCOUNT,
             isPremium: true,
-            totalCount: DEFAULT_TOTAL_COUNT,
-            totalCountMode: DEFAULT_TOTAL_COUNT_MODE,
             execute: () => false,
             itemName: DEFAULT_ITEMNAME
         }
@@ -84,24 +109,26 @@ export default class ShopItems {
 
     private static _itemDescriptions: ShopItemDescription[] = [
         {
-            execute: async ({ ctx, count: boughtCount, chatId, id }) => {
-                const [_isBought, count] = await InventoryItemService.add({
+            execute: async ({ count, chatId, id, ctx }) => {
+                const [_isBought, totalCount] = await InventoryItemService.add({
                     chatId,
                     id,
                     itemId: 'cookie',
-                    count: boughtCount
+                    count
                 })
+
+                const text = await FileUtils.readPugFromResource(
+                    'text/commands/items/cookie.pug',
+                    {
+                        changeValues: {
+                            count: totalCount
+                        }
+                    }
+                )
 
                 await ContextUtils.showCallbackMessage(
                     ctx,
-                    await FileUtils.readPugFromResource(
-                        'text/commands/items/cookie.pug',
-                        {
-                            changeValues: {
-                                count
-                            }
-                        }
-                    )
+                    text
                 )
 
                 return true
@@ -110,70 +137,35 @@ export default class ShopItems {
         },
 
         {
-            execute: async ({ ctx, chatId, id }) => {
-                await InventoryItemService.add({
-                    chatId,
-                    id,
-                    itemId: 'workUp'
-                })
-                await ContextUtils.showCallbackMessageFromFile(
-                    ctx,
-                    'text/commands/items/work/workUp.pug'
-                )
-
-                return true
+            execute: async (options) => {
+                return await buyItemAndAlert(options)
             },
             filename: 'workUp'
         },
 
         {
-            execute: async ({ ctx, chatId, id }) => {
-                await InventoryItemService.add({
-                    chatId,
-                    id,
-                    itemId: 'workCatalog'
-                })
-                await ContextUtils.showCallbackMessageFromFile(
-                    ctx,
-                    'text/commands/items/work/workCatalog.pug'
-                )
-
-                return true
+            execute: async (options) => {
+                return await buyItemAndAlert(options)
             },
             filename: 'workCatalog'
         },
 
         {
-            execute: async ({ ctx, chatId, id }) => {
-                const [isUpdated] = await InventoryItemService.add({
-                    chatId,
-                    id,
-                    itemId: 'manyCasino'
+            execute: async (options) => {
+                return await buyItemAndAlert({
+                    ...options,
+                    path: itemId => `casino/${itemId}`
                 })
-                await ContextUtils.showCallbackMessageFromFile(
-                    ctx,
-                    'text/commands/items/casino/many.pug'
-                )
-
-                return isUpdated
             },
             filename: 'manyCasino'
         },
 
         {
-            execute: async ({ ctx, chatId, id }) => {
-                const [isUpdated] = await InventoryItemService.add({
-                    chatId,
-                    id,
-                    itemId: 'infinityCasino'
+            execute: async (options) => {
+                return await buyItemAndAlert({
+                    ...options,
+                    path: itemId => `casino/${itemId}`
                 })
-
-                await ContextUtils.showCallbackMessageFromFile(
-                    ctx,
-                    'text/commands/items/casino/infinity.pug'
-                )
-
-                return isUpdated
             },
             filename: 'infinityCasino'
         },
@@ -340,19 +332,11 @@ export default class ShopItems {
         },
 
         {
-            execute: async ({ ctx, id, chatId }) => {
-                const [isBought] = await InventoryItemService.add({
-                    chatId,
-                    id,
-                    itemId: 'effectBook'
+            execute: async (options) => {
+                return await buyItemAndAlert({
+                    ...options,
+                    path: _ => 'effectBook/bought'
                 })
-                await ContextUtils.showCallbackMessageFromFile(
-                    ctx,
-                    'text/commands/items/effectBook/bought.pug',
-                    false
-                )
-
-                return isBought
             },
             filename: 'effectBook'
         },
@@ -391,7 +375,6 @@ export default class ShopItems {
             filename: "moneyGrind/license",
             execute: async options => {
                 return await buyItem(
-                    'moneyGrindLicense',
                     options
                 )
             }
@@ -401,7 +384,6 @@ export default class ShopItems {
             filename: "moneyGrind/device",
             execute: async (options) => {
                 return await buyItem(
-                    'moneyGrindDevice',
                     options
                 )
             }
@@ -417,10 +399,10 @@ export default class ShopItems {
                         'unknown'
                     ),
                     ExperienceService.set(
-                            chatId,
-                            id,
-                            ExperienceUtils.min
-                        )
+                        chatId,
+                        id,
+                        ExperienceUtils.min
+                    )
                 ])
 
                 return true
@@ -494,7 +476,7 @@ export default class ShopItems {
 
     private static async _readFromFile(key: ItemDescriptionKey): Promise<JsonShopItem | null> {
         const jsonItem = await FileUtils.readJsonFromResource<JsonShopItem>(
-            `json/shop_items/${key}.json`
+            `json/shop-items/${key}.json`
         )
 
         if (jsonItem && this._isValid(jsonItem))
@@ -505,26 +487,27 @@ export default class ShopItems {
     private static async _valid({ execute, filename }: ShopItemDescription): Promise<ShopItem | null> {
         const item = await this._readFromFile(filename)
 
-        if (item && this._isValid(item)) {
+        if (item) {
             const {
-                maxCount,
                 isPremium,
-                totalCount,
-                totalCountMode,
                 premiumDiscount,
-                itemName
+                itemName,
+                name,
+                description
             } = item
+
+            const itemId = itemName ?? filename
+            const itemDescription = InventoryItemsUtils.getItemDescription(itemId)
 
             return {
                 ...item,
-                maxCount: maxCount ?? DEFAULT_MAX_COUNT,
                 isPremium: isPremium ?? false,
-                totalCount: totalCount ?? DEFAULT_TOTAL_COUNT,
-                totalCountMode: totalCountMode ?? DEFAULT_TOTAL_COUNT_MODE,
                 premiumDiscount: premiumDiscount ?? DEFAULT_PREMIUM_DISCOUNT,
-                itemName: itemName ?? filename,
+                itemName: itemId,
                 execute,
-                id: filename
+                id: filename,
+                name: name ?? itemDescription.name,
+                description: description ?? itemDescription.description,
             }
         }
 
@@ -558,44 +541,17 @@ export default class ShopItems {
         return this._itemDescriptions.length
     }
 
-    static getMaxCount(item: ShopItem): number {
-        const maxCount = item.maxCount <= 0 ? Number.MAX_SAFE_INTEGER : item.maxCount
-        const totalCount = item.totalCount <= DEFAULT_TOTAL_COUNT ? Infinity : item.totalCount
-        return Math.min(
-            maxCount,
-            totalCount
-        )
-    }
-
-    static getCount(item: ShopItem, count: number): number {
-        const maxCount = this.getMaxCount(item)
-        return Math.min(
-            count,
-            maxCount
-        )
-    }
-
     static async getRestAndCurrentCount(chatId: number, id: number, item: ShopItem) {
-        const minValue = 0
-
-        const { totalCount, itemName: itemId } = item
-        const isChatMode = this.isChatMode(item)
-
-        const userCount = (await InventoryItemService.get(chatId, id, itemId))?.count ?? minValue
-        const count = isChatMode ?
-            await InventoryItemService.getTotalCount(chatId, itemId) :
-            userCount
-
-        return {
-            rest: item.totalCount === DEFAULT_TOTAL_COUNT ?
-                Infinity :
-                Math.max(totalCount - count, minValue),
-            current: userCount
-        }
+        const { itemName: itemId } = item
+        return await InventoryItemService.getRestAndCurrentCount(
+            chatId,
+            id,
+            itemId
+        )
     }
 
     static getPriceByCount(item: ShopItem, count: number, hasPremium: boolean): number {
-        return this.getCount(item, count) * this.getPrice(hasPremium, item)
+        return count * this.getPrice(hasPremium, item)
     }
 
     static getPrice(hasPremium: boolean, item: ShopItem) {
@@ -610,10 +566,6 @@ export default class ShopItems {
 
     static getFormattedPriceByCount(item: ShopItem, count: number, hasPremium: boolean,): string {
         return StringUtils.toFormattedNumber(this.getPriceByCount(item, count, hasPremium))
-    }
-
-    static isChatMode(item: ShopItem) {
-        return item.totalCountMode == 'chat'
     }
 
     static async hasEnoughItems({
@@ -660,19 +612,17 @@ export default class ShopItems {
         }
 
         const hasPremium = await PremiumChatService.isPremium(chatId)
-        const totalCount = ShopItems.getCount(item, count)
-        const maxCount = ShopItems.getMaxCount(item)
         const totalPrice = ShopItems.getFormattedPriceByCount(item, count, hasPremium)
-        const isChatMode = ShopItems.isChatMode(item)
         const balance = await CasinoGetService.money(chatId, userId)
 
         const maxLength = MAX_COUNT_BUTTONS_LENGTH
-        const maxValue = Math.min(maxCount, rest)
+        const maxValue = rest
 
         const counts = ArrayUtils.generateMultipliedSequence({
             maxLength,
             maxValue,
-            avoidNumber: count
+            avoidNumber: count,
+            isAddLastValue: isFinite(maxValue)
         })
 
         return {
@@ -682,16 +632,15 @@ export default class ShopItems {
                     changeValues: {
                         ...item,
                         isRestInfinity,
-                        rest: StringUtils.toFormattedNumber(rest),
-                        count: StringUtils.toFormattedNumber(totalCount),
-                        price: StringUtils.toFormattedNumber(item.price),
+                        rest,
+                        count: count,
+                        price: item.price,
                         totalPrice,
                         index,
                         length: ShopItems.len(),
-                        isChatMode,
                         hasPremium,
-                        balance: StringUtils.toFormattedNumber(balance),
-                        currentCount: StringUtils.toFormattedNumber(current)
+                        balance,
+                        currentCount: current
                     }
                 }
             ),
@@ -702,7 +651,7 @@ export default class ShopItems {
                             count: counts
                                 .map(v => {
                                     return {
-                                        text: `${v}`,
+                                        text: `${StringUtils.toFormattedNumber(v)}`,
                                         data: `${v}`,
                                     }
                                 }),

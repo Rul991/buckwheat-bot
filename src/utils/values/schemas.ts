@@ -105,17 +105,13 @@ export const settingSchema: ZodType<Setting<any>> = stringSetting
 
 export const jsonShopItemSchema: ZodType<JsonShopItem> = object({
     id: string().optional(),
-    name: string(),
-    description: string(),
+    name: string().optional(),
+    description: string().optional(),
     emoji: string(),
     price: number(),
-    maxCount: number().optional(),
     premiumDiscount: number().optional(),
     isPremium: boolean().optional(),
-    totalCount: number().optional(),
-    totalCountMode: literal(['user', 'chat']).optional(),
     itemName: string().optional(),
-    execute: any().optional(),
 })
 
 export const invoiceSchema: ZodType<NewInvoiceParameters> = object({
@@ -210,11 +206,17 @@ export const userReplyIdsDataSchema: ZodType<UserReplyIdsData> = object({
 
 export const inventoryItemDescriptionSchema: ZodType<InventoryItemDescription> = object({
     name: string(),
-    type: literal(['consumable', 'oneInfinity', 'manyInfinity']),
+    type: literal(['consumable', 'manyInfinity']),
     description: string(),
     material: object({
-        rarity: number(),
-        maxCount: number().optional()
+        rarity: number()
+    }).optional(),
+    maxCount: object({
+        user: number().optional(),
+        chat: number().optional()
+    }).optional(),
+    gun: object({
+        damage: tuple([number(), number()])
     }).optional()
 })
 
@@ -264,6 +266,7 @@ export const marketDataSchema: ZodType<MarketData> = tinyCurrentIncreaseIdSchema
 
 export const recipeSchema: ZodType<Recipe> = object({
     level: number(),
+    experience: number(),
     result: object({
         name: string(),
         count: number().optional()

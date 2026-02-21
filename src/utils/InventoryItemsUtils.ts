@@ -1,7 +1,7 @@
 import InventoryItem from '../interfaces/schemas/items/InventoryItem'
 import { INFINITY_SYMB } from './values/consts'
 import Logging from './Logging'
-import { InventoryItemDescription, InventoryItemType, ShowableItem } from './values/types/types'
+import { InventoryItemCountType, InventoryItemDescription, InventoryItemDescriptionWithId, InventoryItemType, ShowableItem } from './values/types/types'
 import FileUtils from './FileUtils'
 import StringUtils from './StringUtils'
 import ObjectValidator from './ObjectValidator'
@@ -10,12 +10,22 @@ import { basename } from 'path'
 import RandomUtils from './RandomUtils'
 
 type ItemsRecord = Record<string, InventoryItemDescription>
-type Material = InventoryItemDescription & { id: string }
-type MaterialLevelRecord = Record<number, Material[]>
+type ItemWithId = InventoryItemDescriptionWithId
+type MaterialLevelRecord = Record<number, ItemWithId[]>
 
 export default class InventoryItemsUtils {
     private static _items: ItemsRecord = {}
     private static _materialsByLevel: MaterialLevelRecord = {}
+
+    static get items(): ItemWithId[] {
+        return Object.entries(this._items)
+            .map(([id, item]) => {
+                return {
+                    ...item,
+                    id
+                }
+            })
+    }
 
     private static readonly _materialChance = 0.5
     private static _maxMaterialRarity: number = 0
@@ -64,7 +74,7 @@ export default class InventoryItemsUtils {
         return true
     }
 
-    static getRandomMaterial(): Material | null {
+    static getRandomMaterial(): ItemWithId | null {
         const rarity = RandomUtils.getRarity(
             this._materialChance,
             this._maxMaterialRarity
@@ -74,29 +84,36 @@ export default class InventoryItemsUtils {
         return material
     }
 
+    static getChancePrecents(id: string) {
+        const item = this.getItemDescription(id)
+        const rarity = item.material?.rarity
+        if (!rarity) return 0
+        const count = this._materialsByLevel[rarity].length
+
+        return (this._materialChance ** rarity) / count * 100
+    }
+
     static getCountString(count: number, type?: InventoryItemType): string {
-        let result: string = 'x'
-
-        const hasItem = count > 0
         const countString = StringUtils.toFormattedNumber(count)
-
-        if (!(type && hasItem)) {
-            result += `${countString}`
-        }
-        else if (type == 'oneInfinity') {
-            result += INFINITY_SYMB
-        }
-        else {
-            const ending = type == 'manyInfinity' ? ` (${INFINITY_SYMB})` : ''
-
-            result += `${countString}${ending}`
-        }
-
-        return result
+        const ending = type == 'manyInfinity' ? ` (${INFINITY_SYMB})` : ''
+        return `x${countString}${ending}`
     }
 
     static find(items: InventoryItem[], itemId: string): InventoryItem | null {
         return items.find(v => v.itemId == itemId) ?? null
+    }
+
+    static getMaxCount(id: string, countType: InventoryItemCountType) {
+        const item = this._items[id]
+        if (!item) return 0
+
+        const {
+            maxCount: {
+                [countType]: maxCount = Infinity
+            } = {}
+        } = item
+
+        return maxCount
     }
 
     static add(items: InventoryItem[], itemId: string, addValue: number): InventoryItem[] {

@@ -109,10 +109,7 @@ export default class InventoryItemService {
 
         const result = await this._update({
             ...options,
-            callback: (item, { type }) => {
-                if (item.count! > 0 && type == 'oneInfinity') {
-                    return { addValue: 0, isUpdated: false }
-                }
+            callback: () => {
                 return { addValue: count, isUpdated: true }
             }
         })
@@ -159,7 +156,7 @@ export default class InventoryItemService {
                 ?? { itemId, count: 0 }
 
             const { addValue, isUpdated } = await callback(
-                userItem, 
+                userItem,
                 itemDescription,
                 needCount
             )
@@ -310,6 +307,68 @@ export default class InventoryItemService {
             countText: InventoryItemsUtils.getCountString(count, type),
             count,
             itemId
+        }
+    }
+
+    static async getTotalCountForUserAndChat(
+        chatId: number,
+        id: number,
+        itemId: string
+    ) {
+        const result = {
+            user: 0,
+            chat: 0,
+        }
+        const owners = await InventoryItemService.getOwners(
+            chatId,
+            itemId
+        )
+
+        for (const owner of owners) {
+            const {
+                id: ownerId,
+                count
+            } = owner
+
+            result.chat += count
+            if (ownerId == id) {
+                result.user += count
+            }
+        }
+
+        return result
+    }
+
+    static async getRestAndCurrentCount(
+        chatId: number,
+        id: number,
+        itemId: string
+    ) {
+        const minValue = 0
+        const userMaxCount = InventoryItemsUtils.getMaxCount(itemId, 'user')
+        const chatMaxCount = InventoryItemsUtils.getMaxCount(itemId, 'chat')
+
+        const {
+            user: userCount,
+            chat: chatCount
+        } = await this.getTotalCountForUserAndChat(
+            chatId,
+            id,
+            itemId
+        )
+
+        const rawRest = Math.min(
+            userMaxCount - userCount,
+            chatMaxCount - chatCount
+        )
+        const rest = Math.max(
+            minValue,
+            rawRest
+        )
+
+        return {
+            rest,
+            current: userCount
         }
     }
 }

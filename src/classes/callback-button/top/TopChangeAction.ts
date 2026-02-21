@@ -84,12 +84,16 @@ export default class extends ScrollerAction<Object> {
         const isUsePlayerId = isPrivate ||
             await ChatSettingsService.get<'boolean'>(chatId, 'link')
 
-        const sorted = await Promise.all(
+        const sorted = (await Promise.all(
             objects.map(async ({ id: objId, value }) => {
+                const user = await UserProfileService.get(chatId, objId)
+                if(!user) return null
+
                 const {
                     name,
                     id
-                } = await UserProfileService.create(chatId, objId)
+                } = user
+
                 return {
                     user: {
                         name,
@@ -101,7 +105,7 @@ export default class extends ScrollerAction<Object> {
                         StringUtils.toFormattedNumber(value)
                 }
             })
-        )
+        )).filter(user => !user)
 
         let isNumbers = true
         const totalCount = hasTotalCount ? objects.reduce((prev, { value }) => {

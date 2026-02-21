@@ -9,14 +9,14 @@ type Stats = {
 
 export default class UserProfileService {
     static async create(chatId: number, id: number, name?: string): Promise<User> {
-        const foundUser = await this.get(chatId, id)
-        if(foundUser) return foundUser
-
-        const user = await UserRepository.create({
-            id,
+        const user = await UserRepository.getOrCreate(
             chatId,
-            name: name || await this.getDefaultUserName(chatId),
-        })
+            id,
+            {
+                id,
+                chatId,
+                name: name || await this.getDefaultUserName(chatId),
+            })
 
         return user
     }
@@ -31,7 +31,7 @@ export default class UserProfileService {
         const users = await UserRepository.findMany()
 
         for (const user of users) {
-            if(!ids.includes(user.id)) {
+            if (!ids.includes(user.id)) {
                 ids.push(user.id)
                 uniqueUsers.push(user)
             }
@@ -53,7 +53,7 @@ export default class UserProfileService {
     }
 
     static async findByName(chatId: number, name: string): Promise<User | null> {
-        return (await UserRepository.findByFilter({chatId, name}))
+        return (await UserRepository.findByFilter({ chatId, name }))
     }
 
     static async getAll(chatId: number): Promise<User[]> {

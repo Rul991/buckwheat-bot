@@ -12,6 +12,10 @@ export default createModel<LinkedChat>({
         linkedChat: {
             type: Number,
             default: 0
+        },
+        linkedChats: {
+            type: [Number],
+            required: false
         }
     }
 })

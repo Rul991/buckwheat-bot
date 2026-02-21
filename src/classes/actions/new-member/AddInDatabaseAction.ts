@@ -50,10 +50,9 @@ export default class AddInDatabaseAction extends NewMemberAction {
     }
 
     private async _addInDatabase(ctx: NewMemberContext, from: User, chatId: number): Promise<void> {
-        const { id, first_name } = from
+        const { id } = from
 
         await Promise.allSettled([
-            UserProfileService.create(chatId, id, await UserNameService.getUniqueName(chatId, first_name)),
             CasinoAccountService.get(chatId, id),
             WorkService.get(chatId, id),
             ItemsService.get(chatId, id),

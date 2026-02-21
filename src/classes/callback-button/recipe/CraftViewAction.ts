@@ -11,6 +11,7 @@ import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import { Recipe } from '../../../utils/values/types/recipes'
 import CraftData from '../../../interfaces/callback-button-data/CraftData'
 import ArrayUtils from '../../../utils/ArrayUtils'
+import ExperienceService from '../../db/services/level/ExperienceService'
 
 type Data = CraftData
 
@@ -97,6 +98,11 @@ export default class extends CallbackButtonAction<Data> {
             recipe.result.name
         )
         const inventoryCount = inventoryItem?.count
+        const experience = await ExperienceService.getAddedExperience(
+            chatId,
+            id,
+            recipe.experience * count * (recipe.result.count ?? 1)
+        )
 
         await MessageUtils.editTextFromResource(
             ctx,
@@ -107,7 +113,8 @@ export default class extends CallbackButtonAction<Data> {
                     recipe,
                     materials,
                     boost: count,
-                    inventoryCount
+                    inventoryCount,
+                    experience
                 },
                 inlineKeyboard: await InlineKeyboardManager.get(
                     'recipes/view',

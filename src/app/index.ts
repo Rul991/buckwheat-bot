@@ -208,6 +208,9 @@ import GunCommand from '../classes/commands/buckwheat/game/GunCommand'
 import GunsUtils from '../utils/GunsUtils'
 import GeneratorUpgradeAllAction from '../classes/callback-button/generator/GeneratorUpgradeAllAction'
 import MarketDeleteAction from '../classes/callback-button/market/buy/MarketDeleteAction'
+import LotteryCommand from '../classes/commands/buckwheat/money/LotteryCommand'
+import { inventoryItemDescriptionSchema } from '../utils/values/schemas'
+import LinkAction from '../classes/callback-button/linked/LinkAction'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -267,7 +270,7 @@ const launchBot = async (bot: Bot) => {
     const paymentHandler = new PaymentHandler()
     const myChatMemberHandler = new MyChatMemberHandler()
 
-    // every message 
+    // every message
     everyMessageHandler.add(
         new NotAllowedChatAction(), // it should be first
         new WrongChatAction(), // it should be second
@@ -278,7 +281,7 @@ const launchBot = async (bot: Bot) => {
         new ReactionAction()
     )
 
-    // left member 
+    // left member
     leftMemberHandler.add(
         new AddLeftInDatabaseAction()
     )
@@ -362,6 +365,7 @@ const launchBot = async (bot: Bot) => {
         new AvaSetAction(),
         new GeneratorUpgradeAllAction(),
         new MarketDeleteAction(),
+        new LinkAction()
     )
 
     // dice 
@@ -468,6 +472,7 @@ const launchBot = async (bot: Bot) => {
         new WordCommand(),
         new NoteCommand(),
         new GunCommand(),
+        // new LotteryCommand(),
         ...await getSimpleCommands(),
     )
 
@@ -524,8 +529,8 @@ const setup = async () => {
     await Promise.allSettled([
         InventoryItemsUtils.setup(),
         RecipeUtils.setup(),
-        GunsUtils.setup()
     ])
+    GunsUtils.setup(InventoryItemsUtils.items)
     await CharacterUtils.setup()
     await SkillUtils.setup(CharacterUtils.characters)
 }

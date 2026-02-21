@@ -20,6 +20,7 @@ type GenerateMultipliedSequenceOptions = {
     maxLength: number
     values?: number[]
     avoidNumber?: number
+    isAddLastValue?: boolean
 }
 
 export default class ArrayUtils {
@@ -76,7 +77,8 @@ export default class ArrayUtils {
         startValue = 1,
         maxValue,
         maxLength,
-        values = [2, 5, 10]
+        values = [2, 5, 10],
+        isAddLastValue = true
     }: GenerateMultipliedSequenceOptions): number[] {
         if (maxLength <= 0 || startValue > maxValue) {
             return []
@@ -86,6 +88,11 @@ export default class ArrayUtils {
         }
 
         const result: number[] = [startValue]
+        const addLastValue = () => {
+            if (isAddLastValue) {
+                result.push(maxValue)
+            }
+        }
 
         while (true) {
             const targetValue = result[result.length - 1]
@@ -93,13 +100,13 @@ export default class ArrayUtils {
             for (const value of values) {
                 const resultLength = result.length
                 if (resultLength >= maxLength - 1) {
-                    result.push(maxValue)
+                    addLastValue()
                     return result
                 }
 
                 const newValue = targetValue * value
                 if (newValue >= maxValue) {
-                    result.push(maxValue)
+                    addLastValue()
                     return result
                 }
                 else {

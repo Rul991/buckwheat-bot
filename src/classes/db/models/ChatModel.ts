@@ -21,6 +21,10 @@ export default createModel<Chat>({
         premiumUntilDate: {
             type: Number,
             required: false
+        },
+        name: {
+            type: String,
+            required: false
         }
     }
 })

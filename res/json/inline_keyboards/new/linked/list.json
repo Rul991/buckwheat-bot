@@ -1,0 +1,16 @@
+{
+    "markup": [
+        "chat"
+    ],
+    
+    "definition": {
+        "chat": {
+            "name": "link",
+            "data": {
+                "$each": "chat",
+                "$vars": ["user"]
+            },
+            "text": ["@"]
+        }
+    }
+}

@@ -12,6 +12,7 @@ import ArrayUtils from '../../../../utils/ArrayUtils'
 import { FIRST_INDEX, MAX_COUNT_BUTTONS_LENGTH } from '../../../../utils/values/consts'
 import StringUtils from '../../../../utils/StringUtils'
 import CasinoGetService from '../../../db/services/casino/CasinoGetService'
+import InventoryItemsUtils from '../../../../utils/InventoryItemsUtils'
 
 type Data = {
     slot: number
@@ -77,6 +78,7 @@ export default abstract class extends CallbackButtonAction<Data> {
         })
 
         const balance = await CasinoGetService.money(chatId, id)
+        const chance = InventoryItemsUtils.getChancePrecents(itemId)
 
         await MessageUtils.editText(
             ctx,
@@ -88,7 +90,8 @@ export default abstract class extends CallbackButtonAction<Data> {
                         slot,
                         seller: await ContextUtils.getUser(chatId, seller),
                         needCount,
-                        balance
+                        balance,
+                        chance
                     },
                 }
             ),

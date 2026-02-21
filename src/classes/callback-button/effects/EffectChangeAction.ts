@@ -17,10 +17,8 @@ export default class extends ButtonScrollerAction<Data, ButtonScrollerData> {
 
     protected async _getObjects({
         id,
-        chatId
     }: ButtonScrollerOptions<ButtonScrollerData>): Promise<Data[]> {
-        const type = await UserClassService.get(chatId, id)
-        const rawSkills = SkillUtils.getEffects(type)
+        const rawSkills = SkillUtils.getEffects()
         const result: CallbackButtonValue[] = []
 
         for (const skill of rawSkills) {

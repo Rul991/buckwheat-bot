@@ -4,6 +4,7 @@ import Logging from '../../../utils/Logging'
 import { MyTelegraf } from '../../../utils/values/types/types'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import ArrayContainer from '../containers/ArrayContainer'
+import ContextUtils from '../../../utils/ContextUtils'
 
 export default class EveryMessageHandler extends BaseHandler<EveryMessageAction, ArrayContainer<EveryMessageAction>> {
     constructor () {
@@ -22,10 +23,17 @@ export default class EveryMessageHandler extends BaseHandler<EveryMessageAction,
             )
             if (!chatId) return next()
 
-            const options = {
+            const chatMember = await ContextUtils.getChatMemberByIds(
                 ctx,
                 chatId,
                 id
+            )
+
+            const options = {
+                ctx,
+                chatId,
+                id,
+                chatMember
             }
 
             for (const action of this._container) {

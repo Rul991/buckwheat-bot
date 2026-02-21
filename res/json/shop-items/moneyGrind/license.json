@@ -1,0 +1,7 @@
+{
+    "emoji": "💸",
+    "price": 10000,
+    "isPremium": true,
+    "itemName": "moneyGrindLicense",
+    "totalCountMode": "chat"
+}

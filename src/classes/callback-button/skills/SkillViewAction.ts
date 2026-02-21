@@ -104,15 +104,11 @@ export default class extends CallbackButtonAction<Data> {
                         'duels/view',
                         {
                             duel: JSON.stringify({ duel: duelId }),
-                            alert: JSON.stringify({
-                                id: userId
-                            }),
                             skill: JSON.stringify({ name: skill }),
                         }
                     ),
                     userId,
                     enemyId: DuelUtils.getEnemy(duel, userId),
-                    isSecret: true
                 }
             }
         },

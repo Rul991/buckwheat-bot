@@ -1,5 +1,4 @@
 import { EveryMessageOptions } from '../../../utils/values/types/action-options'
-import { MessageContext } from '../../../utils/values/types/contexts'
 import MessagesService from '../../db/services/messages/MessagesService'
 import EveryMessageAction from './EveryMessageAction'
 

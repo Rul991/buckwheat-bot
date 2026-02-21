@@ -1,5 +1,4 @@
 import BaseAction from '../base/BaseAction'
-import { MessageContext } from '../../../utils/values/types/contexts'
 import { EveryMessageOptions } from '../../../utils/values/types/action-options'
 
 export default abstract class EveryMessageAction extends BaseAction {
