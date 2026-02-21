@@ -3,8 +3,8 @@ import UserProfileService from './UserProfileService'
 
 export default class BaseUserService {
     static async get<Key extends keyof User>(chatId: number, id: number, key: Key): Promise<User[Key] | null> {
-        const user = await UserProfileService.create(chatId, id)
-        return user[key] as User[Key]
+        const user = await UserProfileService.get(chatId, id)
+        return user?.[key] as User[Key] | null
     }
 
     static async update<Key extends keyof User>(chatId: number, id: number, key: Key, data: User[Key]): Promise<User[Key] | null> {

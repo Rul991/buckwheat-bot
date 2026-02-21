@@ -105,7 +105,7 @@ export default class extends ScrollerAction<Object> {
                         StringUtils.toFormattedNumber(value)
                 }
             })
-        )).filter(user => !user)
+        )).filter(user => user)
 
         let isNumbers = true
         const totalCount = hasTotalCount ? objects.reduce((prev, { value }) => {

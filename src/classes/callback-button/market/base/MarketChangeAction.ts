@@ -65,7 +65,7 @@ export default abstract class extends ButtonScrollerAction<Data, ButtonScrollerD
                         const price = StringUtils.toFormattedNumber(rawPrice)
 
                         return {
-                            text: `(${price}💰) ${name} x${count}`,
+                            text: `${name} x${count} | ${price}💰`,
                             data: JSON.stringify({
                                 slot: id,
                                 page,
