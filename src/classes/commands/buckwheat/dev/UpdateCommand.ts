@@ -16,7 +16,7 @@ export default class UpdateCommand extends BuckwheatCommand {
 
     async execute({ ctx, id }: BuckwheatCommandOptions): Promise<void> {
         if(id == +DEV_ID!) {
-            exec('git pull && npm run restart:prod', async (_, stdout) => {
+            exec('git pull && bun run restart:prod', async (_, stdout) => {
                 await MessageUtils.answerMessageFromResource(
                     ctx,
                     'text/commands/update/stdout.pug',
