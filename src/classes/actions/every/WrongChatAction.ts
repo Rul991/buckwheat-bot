@@ -1,7 +1,7 @@
 import EveryMessageAction from './EveryMessageAction'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
-import MessageUtils from '../../../utils/MessageUtils'
 import { EveryMessageOptions } from '../../../utils/values/types/action-options'
+import MessageUtils from '../../../utils/MessageUtils'
 
 export default class WrongChatAction extends EveryMessageAction {
     constructor () {

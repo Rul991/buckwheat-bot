@@ -1,7 +1,9 @@
 import { Context } from 'telegraf'
 import LinkedChat from '../../../../interfaces/schemas/user/LinkedChat'
 import LinkedChatRepository from '../../repositories/LinkedChatRepository'
-import { LINKED_CHATS_MAX_COUNT } from '../../../../utils/values/consts'
+import MessageUtils from '../../../../utils/MessageUtils'
+import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import ChatService from '../chat/ChatService'
 
 export default class LinkedChatService {
     static async create(id: number): Promise<LinkedChat> {
@@ -51,13 +53,60 @@ export default class LinkedChatService {
     }
 
     static async getLinkedChats(id: number) {
-        const linkedChat = await this.create(id)
-        return linkedChat.linkedChats ?? []
+        const chat = await LinkedChatService.create(id)
+        const linkedChats = chat.linkedChats ?? []
+        const linkedChat = chat.linkedChat
+
+        if(linkedChat && linkedChats.some(v => v != linkedChat)) {
+            linkedChats.unshift(linkedChat)
+        }
+
+        return linkedChats
     }
 
     static async getAll(): Promise<LinkedChat[]> {
         return await LinkedChatRepository.findMany({
             linkedChat: { $ne: 0, $exists: true }
         })
+    }
+
+    static async sendMessage(ctx: Context, id: number) {
+        const linkedChats = await this.getLinkedChats(id)
+
+        if (!linkedChats.length) {
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/link/no-chats.pug'
+            )
+            return
+        }
+
+        const chats = await ChatService.getChatsByIds(linkedChats)
+        await MessageUtils.answerMessageFromResource(
+            ctx,
+            'text/commands/link/list.pug',
+            {
+                inlineKeyboard: await InlineKeyboardManager.get(
+                    'linked/list',
+                    {
+                        values: {
+                            chat: chats.map((chat) => {
+                                const {
+                                    id,
+                                    name = id.toString()
+                                } = chat
+
+                                return {
+                                    text: `${name}`,
+                                    data: {
+                                        chat: id
+                                    }
+                                }
+                            })
+                        }
+                    }
+                )
+            }
+        )
     }
 }

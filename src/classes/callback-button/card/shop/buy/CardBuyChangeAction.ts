@@ -44,7 +44,7 @@ export default class extends ButtonScrollerAction<Object, Data> {
             const rarityEmoji = CardUtils.getEmoji(card?.rarity ?? CardUtils.unknownRarity)
             
             const formattedPrice = StringUtils.toFormattedNumber(price)
-            const text = `${rarityEmoji}${name} (${formattedPrice}💰)`
+            const text = `(${formattedPrice}💰) ${rarityEmoji}${name}`
 
             return {
                 text,

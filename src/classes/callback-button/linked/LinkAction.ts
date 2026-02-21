@@ -24,19 +24,12 @@ export default class extends CallbackButtonAction<Data> {
         const {
             id,
             data,
-            ctx,
             chatId: currentChatId
         } = options
 
         const {
             chat: chatId
         } = data
-
-        if(currentChatId == chatId) {
-            return await FileUtils.readPugFromResource(
-                'text/commands/link/already.pug'
-            )
-        }
 
         const linkedChats = await LinkedChatService.getLinkedChats(id)
         const inChat = linkedChats.some(v => v == chatId)
@@ -51,6 +44,12 @@ export default class extends CallbackButtonAction<Data> {
             id,
             chatId
         )
+
+        if(currentChatId == chatId) {
+            return await FileUtils.readPugFromResource(
+                'text/commands/link/already.pug'
+            )
+        }
 
         const chatName = await ChatService.getName(chatId)
         return await FileUtils.readPugFromResource(

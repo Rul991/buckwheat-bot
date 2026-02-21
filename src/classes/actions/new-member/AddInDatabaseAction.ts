@@ -59,8 +59,10 @@ export default class AddInDatabaseAction extends NewMemberAction {
             MessagesService.get(chatId, id),
             LevelService.get(chatId, id),
             UserLeftService.update(chatId, id, false),
-            LinkedChatService.getRaw(id)
         ])
+
+        await LinkedChatService.getRaw(id)
+        await LinkedChatService.set(id, chatId)
 
         await this._updateIfBot(ctx, from, chatId)
     }
