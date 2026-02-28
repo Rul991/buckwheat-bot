@@ -4,11 +4,11 @@ import ContextUtils from '../../../../utils/ContextUtils'
 import { ScrollerGetObjectsOptions, AsyncOrSync, ScrollerSendMessageOptions, ScrollerEditMessageResult } from '../../../../utils/values/types/types'
 import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import CardService from '../../../db/services/card/CardService'
-import ScrollerAction from '../../scrollers/page/ScrollerAction'
+import LegacyScrollerAction from '../../scrollers/page/LegacyScrollerAction'
 
 type Data = Card
 
-export default class extends ScrollerAction<Data> {
+export default class extends LegacyScrollerAction<Data> {
     protected _buttonTitle?: string | undefined = "Предложение карты: Пролистывание"
     constructor() {
         super()

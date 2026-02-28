@@ -9,7 +9,7 @@ export default class extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'скажи'
-        this._description = 'повторяю то, что скажите вы'
+        this._description = 'процитирую ваши слова'
         this._needData = true
         this._argumentText = 'ваши слова'
     }

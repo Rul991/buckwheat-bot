@@ -1,0 +1,24 @@
+{
+    "markup": [
+        "search"
+    ],
+    "definition": {
+        "search": {
+            "text": "👀 Просмотреть",
+            "name": "searchg",
+            "data": {
+                "$vars": ["shared"],
+                "$additional": {
+                    "c": 0,
+                    "i": 0
+                }
+            }
+        }
+    },
+    "variables": {
+        "shared": {
+            "id": "id",
+            "other": "other"
+        }
+    }
+}

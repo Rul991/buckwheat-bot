@@ -8,7 +8,7 @@ import { NOT_FOUND_INDEX } from '../../../../utils/values/consts'
 import FileUtils from '../../../../utils/FileUtils'
 import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
 
-export default abstract class ScrollerAction<T, D = string> extends CallbackButtonAction<string> {
+export default abstract class LegacyScrollerAction<T, D = string> extends CallbackButtonAction<string> {
     protected _objectsPerPage: number = 0
     protected _schema: ZodType<string> = string()
     protected abstract _getObjects(ctx: CallbackButtonContext, { id }: ScrollerGetObjectsOptions<D>): AsyncOrSync<T[]>

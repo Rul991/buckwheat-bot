@@ -67,7 +67,7 @@ export default class RankCommand extends BuckwheatCommand {
     constructor () {
         super()
         this._name = 'ранг'
-        this._description = 'изменяю ранг игрока в диапазоне от 0 до 5'
+        this._description = 'показываю или изменяю ранг игрока в диапазоне от 0 до 5'
         this._needData = true
         this._replySupport = true
         this._argumentText = '0-5'

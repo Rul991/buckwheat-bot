@@ -182,7 +182,7 @@ export default class RoleplayCommand extends BuckwheatCommandWithSub<SubCommand>
 
                         return true
                     },
-                    exampleData: 'накричать р'
+                    exampleData: 'накричать р (р - родителеный, д - дательный, т - творительный)'
                 },
 
                 {
@@ -242,7 +242,7 @@ export default class RoleplayCommand extends BuckwheatCommandWithSub<SubCommand>
         )
 
         this._name = 'рп'
-        this._description = 'обновляю или показываю доступные кастомные рп команды'
+        this._description = 'обновляю или показываю доступные кастомные рп команды\nвиды падежей: р, д, т'
     }
 
     protected async _checkAccess(options: BuckwheatCommandOptions, [sub]: [SubCommand, string]): Promise<boolean> {

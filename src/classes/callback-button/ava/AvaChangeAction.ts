@@ -1,18 +1,18 @@
 import AvaHistory from '../../../interfaces/schemas/user/AvaHistory'
 import ContextUtils from '../../../utils/ContextUtils'
-import FileUtils from '../../../utils/FileUtils'
 import TimeUtils from '../../../utils/TimeUtils'
-import { CallbackButtonContext } from '../../../utils/values/types/contexts'
-import { ScrollerGetObjectsOptions, ScrollerSendMessageOptions, ScrollerEditMessageResult, AsyncOrSync } from '../../../utils/values/types/types'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
+import { NewScrollerData, ScrollerEditMessageOptions, ScrollerEditMessageResult } from '../../../utils/values/types/scrollers'
 import AvaHistoryService from '../../db/services/user/AvaHistoryService'
 import UserImageService from '../../db/services/user/UserImageService'
-import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
-import ScrollerAction from '../scrollers/page/ScrollerAction'
+import ScrollerAction from '../scrollers/new/ScrollerAction'
 
 type T = AvaHistory
-type D = [number, number, number] // increase, current, id
+type A = {}
 
-export default class extends ScrollerAction<T, D> {
+export default class extends ScrollerAction<T, A> {
+    protected _keyboardFilename: string = 'profile/ava'
+
     constructor () {
         super()
         this._name = 'avachange'
@@ -20,68 +20,54 @@ export default class extends ScrollerAction<T, D> {
         this._objectsPerPage = 1
     }
 
-    protected _convertDataToObject(raw: string): D {
-        return raw.split('_').map(v => +v) as D
-    }
-
-    protected _getId(ctx: CallbackButtonContext, data: D): AsyncOrSync<number> {
-        return data[2]
-    }
-
-    protected async _getObjects(
-        ctx: CallbackButtonContext,
-        {
-            id,
+    protected async _getRawObjects(options: CallbackButtonOptions<NewScrollerData<A>>): Promise<AvaHistory[]> {
+        const {
             chatId,
-        }: ScrollerGetObjectsOptions<D>
-    ): Promise<T[]> {
+            id
+        } = options
         return await AvaHistoryService.get(chatId, id)
     }
 
-    protected async _editMessage(ctx: CallbackButtonContext, options: ScrollerSendMessageOptions<T, D>): Promise<ScrollerEditMessageResult> {
+    protected async _editMessage(options: ScrollerEditMessageOptions<AvaHistory, A>): Promise<ScrollerEditMessageResult> {
         const {
             chatId,
             id,
-            objects: [ava],
-            length,
-            currentPage
+            slicedObjects: [ava],
+            maxPage,
+            page: currentPage,
+            ctx
         } = options
+        if (!ava) return
 
+        const length = maxPage + 1
         const {
             imageId,
             createdAt
         } = ava
         const currentImageId = await UserImageService.get(chatId, id)
-        
+
         const elapsedTime = TimeUtils.getElapsed(createdAt)
-        if (await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return null
+        if (await ContextUtils.showAlertIfIdNotEqual(ctx, id)) return
 
         return {
-            text: await FileUtils.readPugFromResource(
-                'text/commands/profile/ava/ava.pug',
-                {
-                    changeValues: {
-                        user: await ContextUtils.getUser(chatId, id),
-                        page: currentPage,
-                        length,
-                        time: TimeUtils.formatMillisecondsToTime(elapsedTime),
-                        isCurrentImage: currentImageId == imageId
-                    }
+            message: {
+                path: 'text/commands/profile/ava/ava.pug',
+                changeValues: {
+                    user: await ContextUtils.getUser(chatId, id),
+                    page: currentPage,
+                    length,
+                    time: TimeUtils.formatMillisecondsToTime(elapsedTime),
+                    isCurrentImage: currentImageId == imageId
                 }
-            ),
+            },
             media: {
                 type: 'photo',
                 media: imageId
             },
-            options: {
-                reply_markup: {
-                    inline_keyboard: await LegacyInlineKeyboardManager.get(
-                        'profile/ava',
-                        {
-                            current: currentPage,
-                            id
-                        }
-                    )
+            keyboard: {
+                globals: {
+                    current: currentPage,
+                    id
                 }
             }
         }

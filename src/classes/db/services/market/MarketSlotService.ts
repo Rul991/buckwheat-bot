@@ -180,4 +180,10 @@ export default class {
     static async delete(slotId: number) {
         return await MarketSlotRepository.deleteOne(slotId)
     }
+
+    static async wipe(chatId: number) {
+        return await MarketSlotRepository.deleteMany({
+            chatId
+        })
+    }
 }

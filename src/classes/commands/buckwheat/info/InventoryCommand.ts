@@ -15,7 +15,7 @@ export default class InventoryCommand extends BuckwheatCommand {
             'вещи',
             'предметы'
         ]
-        this._description = 'показываю все доступные тебе предметы'
+        this._description = 'показываю все доступные тебе предметы\nвыбрав предмет, можно купить или продать его на рынке'
     }
 
     async execute({ ctx, id }: BuckwheatCommandOptions): Promise<void> {

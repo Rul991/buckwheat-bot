@@ -14,7 +14,7 @@ export default class ShopCommand extends BuckwheatCommand {
             'магаз',
             'купить'
         ]
-        this._description = 'открываю магазин\nЕсли дописать в конце число, то я продам вам именно столько товара за раз'
+        this._description = 'открываю магазин'
     }
 
     async execute({ ctx, id, chatId }: BuckwheatCommandOptions): Promise<void> {

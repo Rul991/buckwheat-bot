@@ -7,9 +7,13 @@
     "definition": {
         "list": {
             "text": "👀 Просмотреть",
-            "name": "lotterylist",
+            "name": "lotterychg",
             "data": {
-                "$vars": ["shared"]
+                "$vars": ["shared"],
+                "$additional": {
+                    "c": 0,
+                    "i": 0
+                }
             }
         },
 

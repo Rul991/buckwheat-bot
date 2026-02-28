@@ -34,7 +34,7 @@ export default class ProfileCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'профиль'
-        this._description = 'я показываю профиль\nесли скинуть изображение, то поменяю вашу аватарку'
+        this._description = 'я показываю профиль\nесли ответить на сообщение человека, то покажет его профиль\nесли написать после команды ник, то покажет профиль человека с этим ником'
         this._replySupport = true
         this._needData = true
         this._argumentText = 'ник'
@@ -46,7 +46,7 @@ export default class ProfileCommand extends BuckwheatCommand {
         if(!chatId) return null
 
         let photoId: string = await UserImageService.get(chatId, id)
-        if(photoId.length) {
+        if(photoId?.length) {
             return photoId
         }
         

@@ -14,7 +14,7 @@ export default class extends BuckwheatCommand {
     constructor () {
         super()
         this._name = 'настройки'
-        this._description = 'показываю доступные вам настройки'
+        this._description = 'показываю доступные вам настройки\nв чате показываются настройки чата, в личных сообщениях - настройки игрока'
         this._aliases = [
             'настрой',
             'настроить',

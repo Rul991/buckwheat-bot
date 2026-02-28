@@ -3,11 +3,17 @@
         "btn": {
             "text": "@",
             "data": "test_@"
+        },
+        "scroller": {
+            "text": "test scrollers",
+            "data": "testscr_{\"c\":0,\"i\":0}",
+            "notEach": true
         }
     },
     
     "values": 
     [
-        ["btn"]
+        ["btn"],
+        "scroller"
     ]
 }

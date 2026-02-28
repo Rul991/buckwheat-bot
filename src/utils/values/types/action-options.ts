@@ -1,6 +1,6 @@
 import { ChatMember, PreCheckoutQuery, SuccessfulPayment, Update, User } from 'telegraf/types'
 import { ChatMemberStatus, CommandStrings, Ids, MaybeString } from './types'
-import { MessageContext, MyChatMemberContext } from './contexts'
+import { ChatJoinRequestContext, MessageContext, MyChatMemberContext } from './contexts'
 import { SuccessfulPaymentContext } from './contexts'
 import { PreCheckoutQueryContext } from './contexts'
 import { PhotoContext } from './contexts'
@@ -85,4 +85,8 @@ export type MyChatMemberOptions = RawOptions & {
 export type ContextOptions = {
     text: BuckwheatCommandOptions
     photo: PhotoOptions
+}
+
+export type ChatJoinRequestOptions = RawOptions & {
+    ctx: ChatJoinRequestContext
 }

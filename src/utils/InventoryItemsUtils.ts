@@ -138,6 +138,14 @@ export default class InventoryItemsUtils {
         return Object.keys(this._items)
     }
 
+    static getTotalCountEveryItems(items?: InventoryItem[]) {
+        if(!items || !items.length) return 0
+
+        return items.reduce((prev, { count }) => {
+            return prev + (count ?? 0)
+        }, 0)
+    }
+
     static getItemDescription(itemId: string): InventoryItemDescription {
         return this._items[itemId] ?? this.getDummyShowableItem()
     }

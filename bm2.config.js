@@ -6,12 +6,6 @@ module.exports = {
         watch: false,
         instances: 1,
         exec_mode: 'fork',
-        env_prod: {
-            MODE: 'prod'
-        },
-        env: {
-            MODE: 'dev'
-        },
         time: true,
     }]
 }

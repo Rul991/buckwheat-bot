@@ -208,9 +208,13 @@ import GunCommand from '../classes/commands/buckwheat/game/GunCommand'
 import GunsUtils from '../utils/GunsUtils'
 import GeneratorUpgradeAllAction from '../classes/callback-button/generator/GeneratorUpgradeAllAction'
 import MarketDeleteAction from '../classes/callback-button/market/buy/MarketDeleteAction'
-import LotteryCommand from '../classes/commands/buckwheat/money/LotteryCommand'
-import { inventoryItemDescriptionSchema } from '../utils/values/schemas'
 import LinkAction from '../classes/callback-button/linked/LinkAction'
+import TestScrollerAction from '../classes/callback-button/scrollers/new/TestScrollerAction'
+import SearchChangeAction from '../classes/callback-button/search/SearchChangeAction'
+import LotteryChangeAction from '../classes/callback-button/lottery/LotteryChangeAction'
+import ChatJoinRequestHandler from '../classes/main/handlers/ChatJoinRequestHandler'
+import JoinMemberAction from '../classes/actions/chat-join/JoinMemberAction'
+import ChatJoinAction from '../classes/callback-button/join/ChatJoinAction'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -269,6 +273,7 @@ const launchBot = async (bot: Bot) => {
     const leftMemberHandler = new LeftMemberHandler()
     const paymentHandler = new PaymentHandler()
     const myChatMemberHandler = new MyChatMemberHandler()
+    const chatJoinRequestHandler = new ChatJoinRequestHandler()
 
     // every message
     everyMessageHandler.add(
@@ -289,6 +294,7 @@ const launchBot = async (bot: Bot) => {
     // callback button 
     callbackButtonActionHandler.add(
         new TestAction(),
+        new TestScrollerAction(),
         new CubeYesAction(),
         new CubeNoAction(),
         new RuleChangeAction(),
@@ -365,7 +371,10 @@ const launchBot = async (bot: Bot) => {
         new AvaSetAction(),
         new GeneratorUpgradeAllAction(),
         new MarketDeleteAction(),
-        new LinkAction()
+        new LinkAction(),
+        new SearchChangeAction(),
+        new LotteryChangeAction(),
+        new ChatJoinAction(),
     )
 
     // dice 
@@ -505,6 +514,10 @@ const launchBot = async (bot: Bot) => {
         new CheckDeletingFromChatAction()
     )
 
+    chatJoinRequestHandler.add(
+        new JoinMemberAction(),
+    )
+
     // setup handlers
     bot.addHandlers(
         sceneActionHandler,
@@ -518,7 +531,8 @@ const launchBot = async (bot: Bot) => {
         photoHandler,
         leftMemberHandler,
         paymentHandler,
-        myChatMemberHandler
+        myChatMemberHandler,
+        chatJoinRequestHandler
     )
 
     console.log('Start launching!')
@@ -536,7 +550,7 @@ const setup = async () => {
 }
 
 const test = async (): Promise<void | boolean> => {
-
+    
 }
 
 const main = async () => {

@@ -4,9 +4,9 @@ import { COMMANDS_PER_PAGE } from '../../../../utils/values/consts'
 import { CommandDescription, ScrollerEditMessage, ScrollerGetObjectsOptions, ScrollerSendMessageOptions } from '../../../../utils/values/types/types'
 import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
-import ScrollerAction from './ScrollerAction'
+import LegacyScrollerAction from './LegacyScrollerAction'
 
-export default class CommandsChangeAction extends ScrollerAction<CommandDescription> {
+export default class CommandsChangeAction extends LegacyScrollerAction<CommandDescription> {
     protected _buttonTitle: string = 'Команды: Пролистывание'
     constructor () {
         super()

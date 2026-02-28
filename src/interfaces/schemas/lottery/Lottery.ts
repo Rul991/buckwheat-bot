@@ -5,4 +5,6 @@ export default interface Lottery {
     tickets: LotteryTicket[]
     price: number
     owner: number
+    chatId: number
+    isPublic: boolean
 }

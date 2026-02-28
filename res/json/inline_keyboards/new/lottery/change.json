@@ -1,0 +1,30 @@
+{
+    "markup": [
+        "lottery",
+        ["arrow"],
+        ["pageNav"]
+    ],
+    "definition": {
+        "lottery": {
+            "name": "_",
+            "text": ["@"],
+            "data": {
+                "$each": "lottery",
+                "$vars": ["user"]
+            }
+        }
+    },
+    "variables": {
+        "user": {
+            "id": "id"
+        }
+    },
+    "definitionExtends": [
+        {
+            "path": "extends/scroller",
+            "button": {
+                "name": "lotterychg"
+            }
+        }
+    ]
+}

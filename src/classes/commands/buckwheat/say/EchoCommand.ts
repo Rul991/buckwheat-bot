@@ -9,7 +9,7 @@ export default class EchoCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'эхо'
-        this._description = 'повторяю текст'
+        this._description = 'повторяю текст\nесли написать сообщение из личных сообщений, пишу их в привязанный чат'
         this._needData = true
         this._argumentText = 'текст'
         this._isPremium = true

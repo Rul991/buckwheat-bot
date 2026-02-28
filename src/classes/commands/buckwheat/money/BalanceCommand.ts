@@ -15,7 +15,7 @@ export default class BalanceCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'баланс'
-        this._description = 'показываю ваш баланс'
+        this._description = 'показываю ваш баланс и выигрыши в разных играх'
         this._aliases = ['кошелек', 'казино', 'дуэли']
     }
 

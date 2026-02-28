@@ -3,6 +3,7 @@ import FileUtils from '../../utils/FileUtils'
 import { JsonButtonData, JsonButton, JsonKeyboard, Keyboard, ReplaceKeyboardData, Variables, Button } from '../../utils/values/types/keyboards'
 import { MAX_BUTTONS_IN_HORISONTAL } from '../../utils/values/consts'
 import ArrayUtils from '../../utils/ArrayUtils'
+import { InlineKeyboardButton } from 'telegraf/types'
 
 type HandleVariablesOptions = {
     variables: JsonKeyboard['variables']
@@ -17,6 +18,7 @@ type HandleDataOptions = {
 type HandleDefinitionOptions = Required<Omit<ReplaceKeyboardData, 'maxWidth'>> & {
     definition: JsonKeyboard['definition']
     variables: Variables
+    definitionExtends: JsonKeyboard['definitionExtends'] & {}
 }
 type HandleDefinitionResult = Record<string, Button[]>
 
@@ -113,13 +115,64 @@ export default class {
         }
     }
 
-    private static _handleDefinition({
+    private static async _handleDefinitionExtends(definitionExtends: JsonKeyboard['definitionExtends'] & {}) {
+        const result: Record<string, JsonButton> = {}
+
+        for (const definitionExtend of definitionExtends) {
+            const {
+                path,
+                definitions,
+                button
+            } = definitionExtend
+
+            const jsonKeyboard = await this._getJsonKeyboard(path)
+            if (!jsonKeyboard) continue
+
+            const {
+                definition
+            } = jsonKeyboard
+
+            for (const [key, value] of Object.entries(definition)) {
+                if (definitions?.length && !definitions.includes(key)) continue
+
+                result[key] = {
+                    ...value,
+                    ...button,
+                    data: {
+                        ...value.data,
+                        ...button.data,
+                        $additional: {
+                            ...value.data.$additional,
+                            ...button.data?.$additional
+                        },
+                        $vars: [
+                            ...value.data.$vars ?? [],
+                            ...button.data?.$vars ?? []
+                        ]
+                    }
+                }
+            }
+        }
+
+        return result
+    }
+
+    private static async _handleDefinition({
         definition,
         variables,
         globals,
-        values
-    }: HandleDefinitionOptions): HandleDefinitionResult {
+        values,
+        definitionExtends
+    }: HandleDefinitionOptions): Promise<HandleDefinitionResult> {
         const result = {} as HandleDefinitionResult
+
+        const extendsDefinition = await this._handleDefinitionExtends(
+            definitionExtends
+        )
+        definition = {
+            ...extendsDefinition,
+            ...definition
+        }
 
         for (const key in definition) {
             const button = definition[key]
@@ -137,11 +190,23 @@ export default class {
                 isShow ?
                     eachKey ?
                         values[eachKey] ?? [] :
-                        [{ text: '', data: {} }] :
+                        [
+                            {
+                                text: '',
+                                data: {}
+                            }
+                        ] :
                     []
 
-
             const row = datas.map(v => {
+                const handledText = this._handleText({
+                    text,
+                    globals: {
+                        ...globals,
+                        '': v.text
+                    }
+                })
+
                 const handledData = this._handleData({
                     data,
                     variables
@@ -150,14 +215,6 @@ export default class {
                     ...handledData,
                     ...v.data
                 }
-
-                const handledText = this._handleText({
-                    text,
-                    globals: {
-                        ...globals,
-                        '': v.text
-                    }
-                })
 
                 return {
                     text: handledText,
@@ -184,16 +241,23 @@ export default class {
             const isArray = maybeRow instanceof Array
 
             if (isArray) {
-                const row = maybeRow.map(key => definition[key])
+                const row = maybeRow.reduce(
+                    (prev, key) => {
+                        const buttons = definition[key]
+                        if(buttons?.length) {
+                            prev.push(...buttons)
+                        }
+                        return prev
+                    },
+                    [] as InlineKeyboardButton.CallbackButton[]
+                )
 
-                for (const subRow of row) {
-                    result.push(
-                        ...ArrayUtils.objectsGrid({
-                            objects: subRow,
-                            width: maxWidth
-                        })
-                    )
-                }
+                result.push(
+                    ...ArrayUtils.objectsGrid({
+                        objects: row,
+                        width: maxWidth
+                    })
+                )
             }
             else {
                 result.push(
@@ -206,19 +270,24 @@ export default class {
         return result
     }
 
-    static async get(filename: string, data: ReplaceKeyboardData = {}): Promise<Keyboard> {
-        const jsonKeyboard = await FileUtils.readJsonFromResource<JsonKeyboard>(
+    private static async _getJsonKeyboard(filename: string) {
+        return await FileUtils.readJsonFromResource<JsonKeyboard>(
             join(
                 this._keyboardFolder,
                 `${filename}.${this._keyboardExtension}`
             )
         )
+    }
+
+    static async get(filename: string, data: ReplaceKeyboardData = {}): Promise<Keyboard> {
+        const jsonKeyboard = await this._getJsonKeyboard(filename)
         if (!jsonKeyboard) return []
 
         const {
             variables,
             definition,
-            markup
+            markup,
+            definitionExtends = []
         } = jsonKeyboard
 
         const {
@@ -232,11 +301,12 @@ export default class {
             globals
         })
 
-        const handledDefinition = this._handleDefinition({
+        const handledDefinition = await this._handleDefinition({
             definition,
             variables: handledVariables,
             values: values ?? {},
             globals: globals ?? {},
+            definitionExtends
         })
 
         return this._handleMarkup({

@@ -8,7 +8,7 @@ export default class extends SettingsCommand {
         this._aliases = [
             'дк'
         ]
-        this._description = 'показываю ранг для команд'
+        this._description = 'показываю и позволяю редактировать ранг для команд'
         this._settingId = 'access'
         this._userSettingsType = COMMAND_ACCESS_TYPE
         this._chatSettingsType = COMMAND_ACCESS_TYPE

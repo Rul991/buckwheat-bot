@@ -1,0 +1,30 @@
+{
+    "markup": [
+        "object",
+        ["arrow"],
+        ["pageNav"]
+    ],
+
+    "definition": {
+        "object": {
+            "name": "_",
+            "data": {
+                "$each": "object"
+            },
+            "text": ["@"]
+        }
+    },
+
+    "variables": {
+
+    },
+
+    "definitionExtends": [
+        {
+            "path": "extends/scroller",
+            "button": {
+                "name": "testscr"
+            }
+        }
+    ]
+}

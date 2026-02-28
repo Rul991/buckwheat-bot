@@ -5,9 +5,9 @@ import { ScrollerSendMessageOptions, ScrollerEditMessageResult, AsyncOrSync, Scr
 import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import AwardsService from '../../../db/services/awards/AwardsService'
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
-import ScrollerAction from './ScrollerAction'
+import LegacyScrollerAction from './LegacyScrollerAction'
 
-export default class AwardsChangeAction extends ScrollerAction<Award> {
+export default class AwardsChangeAction extends LegacyScrollerAction<Award> {
     protected _buttonTitle: string = 'Награды: Пролистывание'
     private static _emojis = [
         '🎗',

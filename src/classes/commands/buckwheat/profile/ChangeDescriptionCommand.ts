@@ -11,7 +11,7 @@ export default class ChangeDescriptionCommand extends ChangeProfileCommand {
     constructor() {
         super()
         this._name = 'описание'
-        this._description = 'меняю вам описание профиля в беседе'
+        this._description = 'меняю вам описание профиля в беседе\nкоманда без аргументов убирает описание\nесли выделить сообщение бота, можно изменить описание боту'
         this._argumentText = 'описание'
     }
 

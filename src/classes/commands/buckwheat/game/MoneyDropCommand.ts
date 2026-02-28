@@ -10,7 +10,7 @@ export default class MoneyDropCommand extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'монетка'
-        this._description = 'кидаю монетку'
+        this._description = 'бросаю монетку'
     }
 
     async execute({ ctx, chatId, id }: BuckwheatCommandOptions): Promise<void> {

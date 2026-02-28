@@ -1,6 +1,7 @@
 import CardsService from '../classes/db/services/card/CardsService'
 import CasinoGetAllService from '../classes/db/services/casino/CasinoGetAllService'
 import CubeWinsService from '../classes/db/services/cube/CubeWinsService'
+import ItemsService from '../classes/db/services/items/ItemsService'
 import ExperienceService from '../classes/db/services/level/ExperienceService'
 import MessagesService from '../classes/db/services/messages/MessagesService'
 import RouletteService from '../classes/db/services/roulette/RouletteService'
@@ -9,6 +10,7 @@ import RankSettingsService from '../classes/db/services/settings/RankSettingsSer
 import UserProfileService from '../classes/db/services/user/UserProfileService'
 import UserRankService from '../classes/db/services/user/UserRankService'
 import ClassUtils from './ClassUtils'
+import InventoryItemsUtils from './InventoryItemsUtils'
 import LevelUtils from './level/LevelUtils'
 import RankUtils from './RankUtils'
 import SettingUtils from './settings/SettingUtils'
@@ -75,7 +77,7 @@ export default class {
                     const rankName = settings[settingName] || SettingUtils.dummyDefault
                     const rankEmoji = RankUtils.getEmojiByRank(rank)
                     const rankNumber = isShowRank ? `[${rank}]` : ''
-                    
+
                     return {
                         id,
                         value: `${rankEmoji} ${rankName} ${rankNumber}`
@@ -218,6 +220,22 @@ export default class {
                 return (await CardsService.getAllCardsWithId(chatId))
                     .filter(({ cards }) => cards > 0)
                     .map(({ id, cards: value }) => ({ id, value }))
+            }
+        },
+
+        items: {
+            title: 'Инвентарь',
+            emoji: '📦',
+            changeValues: {
+                rawTitle: 'Топ самых больших инвентарей'
+            },
+            getUnsortedValues: async chatId => {
+                return (await ItemsService.getAll(chatId))
+                    .filter(({ items }) => items && items.length > 0)
+                    .map(({ id, items }) => ({
+                        id,
+                        value: InventoryItemsUtils.getTotalCountEveryItems(items)
+                    }))
             }
         }
     }

@@ -213,6 +213,7 @@ export const USER_SETTINGS_TYPES = [
 export const DATABASE_KEYBOARD_NAME = '#'
 export const DB_KEYBOARD_EXPIRES_SECONDS = MINUTES_IN_HOUR * 2 * SECONDS_IN_MINUTE
 export const CALLBACK_DATA_MAX_SIZE = 64
+export const CACHE_SCROLLER_OBJECTS_EXPIRES_SECOND = SECONDS_IN_MINUTE * 5
 
 export const MIN_RANK_NAME_LENGTH = 1
 export const MAX_RANK_NAME_LENGTH = 32
@@ -235,3 +236,6 @@ export const MAX_NOTE_LENGTH = 2048
 export const RANKS_LIST = [0, 1, 2, 3, 4, 5]
 export const CUSTOM_ROLEPLAY_SETTING_ID = 'rp'
 export const LINKED_CHATS_MAX_COUNT = 10
+
+export const ALWAYS_JOIN_SYMBOL = '✅'
+export const MESSAGE_JOIN_SYMBOL = '✉️'

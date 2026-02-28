@@ -1,26 +1,41 @@
-import ContextUtils from '../../../utils/ContextUtils'
-import FileUtils from '../../../utils/FileUtils'
 import RankUtils from '../../../utils/RankUtils'
-import StringUtils from '../../../utils/StringUtils'
 import TopUtils from '../../../utils/TopUtils'
-import { ScrollerSendMessageOptions, ScrollerEditMessageResult, ScrollerGetObjectsOptions } from '../../../utils/values/types/types'
-import { CallbackButtonContext } from '../../../utils/values/types/contexts'
+import ScrollerAction from '../scrollers/new/ScrollerAction'
+import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
+import { NewScrollerData, ScrollerEditMessageOptions, ScrollerEditMessageResult } from '../../../utils/values/types/scrollers'
+import ContextUtils from '../../../utils/ContextUtils'
+import StringUtils from '../../../utils/StringUtils'
 import ChatSettingsService from '../../db/services/settings/ChatSettingsService'
 import UserProfileService from '../../db/services/user/UserProfileService'
-import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
-import ScrollerAction from '../scrollers/page/ScrollerAction'
+import { object, string, ZodType } from 'zod'
 
 type Object = {
     id: number
     value: number | string
 }
+type Additional = {
+    type: string
+}
 
-export default class extends ScrollerAction<Object> {
+export default class extends ScrollerAction<Object, Additional> {
+    protected _keyboardFilename: string = 'top/change'
     protected _buttonTitle: string = 'Топ: Пролистывание'
     protected _minimumRank = RankUtils.min
 
-    protected async _getObjects(ctx: CallbackButtonContext, { data, chatId }: ScrollerGetObjectsOptions): Promise<Object[]> {
-        const type = this._getType(data)
+    protected _additionalDataSchema: ZodType<Additional> = object({
+        type: string()
+    })
+
+    protected async _getRawObjects(options: CallbackButtonOptions<NewScrollerData<Additional>>): Promise<Object[]> {
+        const {
+            chatId,
+            data
+        } = options
+
+        const {
+            type
+        } = data
+
         const subCommand = TopUtils.getSubCommand(type)
         const unsortedValues = await subCommand.getUnsortedValues(chatId)
 
@@ -53,23 +68,21 @@ export default class extends ScrollerAction<Object> {
         this._objectsPerPage = 20
     }
 
-    protected async _editMessage(
-        ctx: CallbackButtonContext,
-        options: ScrollerSendMessageOptions<Object>,
-    ): Promise<ScrollerEditMessageResult> {
+    protected async _editMessage(options: ScrollerEditMessageOptions<Object, Additional>): Promise<ScrollerEditMessageResult> {
         const {
-            id,
-            chatId
+            slicedObjects: objects,
+            data,
+            ctx,
+            chatId,
+            page: currentPage,
+            maxPage
         } = options
+        const length = maxPage + 1
 
         const {
-            currentPage,
-            length,
-            objects,
-            data
-        } = options
+            type
+        } = data
 
-        const type = this._getType(data)
         const {
             changeValues,
             emoji,
@@ -87,7 +100,7 @@ export default class extends ScrollerAction<Object> {
         const sorted = (await Promise.all(
             objects.map(async ({ id: objId, value }) => {
                 const user = await UserProfileService.get(chatId, objId)
-                if(!user) return null
+                if (!user) return null
 
                 const {
                     name,
@@ -118,39 +131,28 @@ export default class extends ScrollerAction<Object> {
         }, 0) : 0
 
         return {
-            text: await FileUtils.readPugFromResource(
-                `text/commands/top/${topOrRole ? 'top' : 'role'}.pug`,
-                {
-                    changeValues: {
-                        emoji,
-                        ...changeValues,
-                        sorted,
-                        page: currentPage,
-                        perPage: this._objectsPerPage,
-                        length,
-                        isNumbers,
-                        rawTotalCount: totalCount,
-                        totalCount: StringUtils.toFormattedNumber(totalCount),
-                        totalName: name,
-                        hasWinner
-                    }
+            message: {
+                path: `text/commands/top/${topOrRole ? 'top' : 'role'}.pug`,
+                changeValues: {
+                    ...changeValues,
+                    emoji,
+                    sorted,
+                    page: currentPage,
+                    perPage: this._objectsPerPage,
+                    length,
+                    isNumbers,
+                    rawTotalCount: totalCount,
+                    totalCount: StringUtils.toFormattedNumber(totalCount),
+                    totalName: name,
+                    hasWinner
                 }
-            ),
-            options: {
-                reply_markup: {
-                    inline_keyboard: await LegacyInlineKeyboardManager.get(
-                        'top/change',
-                        {
-                            page: currentPage,
-                            type
-                        }
-                    )
-                },
-                link_preview_options: {
-                    is_disabled: true
+            },
+            keyboard: {
+                globals: {
+                    page: currentPage,
+                    type
                 }
             }
         }
     }
-
 }

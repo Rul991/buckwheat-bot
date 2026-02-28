@@ -8,7 +8,7 @@ export default class extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'рынок'
-        this._description = 'открываю рынок б/у предметы'
+        this._description = 'открываю рынок б/у предметов других игроков\nчтобы продать свои предметы, выберите вещь из инвентаря и нажмите "Продать"'
         this._aliases = [
             'маркет'
         ]

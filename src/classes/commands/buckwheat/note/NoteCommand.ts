@@ -57,7 +57,7 @@ export default class extends BuckwheatCommandWithSub<Sub> {
         ])
 
         this._name = 'заметки'
-        this._description = 'показываю заметки'
+        this._description = 'показываю твои заметки или заметки другого игрока, если выделить его сообщение'
         this._aliases = [
             'заметка'
         ]

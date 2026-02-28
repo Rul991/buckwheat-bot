@@ -1,3 +1,5 @@
+import { InlineKeyboardButton } from 'telegraf/types'
+
 export type StringOrStringArray = string | string[]
 export type JsonButtonData = Record<string, any>
 
@@ -14,10 +16,7 @@ export type ReplaceKeyboardData = {
     maxWidth?: number
 }
 
-export type Button = {
-    text: string
-    callback_data: string
-}
+export type Button = InlineKeyboardButton.CallbackButton
 export type Keyboard = Button[][]
 
 export type JsonButton = {
@@ -31,8 +30,15 @@ export type JsonButton = {
     }
 }
 
+export type DefinitionExtendsValue = {
+    path: string
+    definitions?: string[]
+    button: Partial<JsonButton>
+}
+
 export type JsonKeyboard = {
     markup: StringOrStringArray[]
     definition: Record<string, JsonButton>
     variables?: Record<string, Record<string, string>>
+    definitionExtends?: DefinitionExtendsValue[]
 }

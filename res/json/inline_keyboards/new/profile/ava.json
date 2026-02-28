@@ -1,0 +1,30 @@
+{
+    "markup": [
+        "set",
+        ["arrow"],
+        ["pageNav"]
+    ],
+    "definition": {
+        "set": {
+            "text": "🖼 Поставить аватарку",
+            "name": "avaset",
+            "data": {
+                "$vars": ["set"]
+            }
+        }
+    },
+    "variables": {
+        "set": {
+            "id": "id",
+            "index": "current"
+        }
+    },
+    "definitionExtends": [
+        {
+            "path": "extends/scroller",
+            "button": {
+                "name": "avachange"
+            }
+        }
+    ]
+}

@@ -5,9 +5,9 @@ import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import RulesService from '../../../db/services/chat/RulesService'
 import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService'
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
-import ScrollerAction from './ScrollerAction'
+import LegacyScrollerAction from './LegacyScrollerAction'
 
-export default class RuleChangeAction extends ScrollerAction<string> {
+export default class RuleChangeAction extends LegacyScrollerAction<string> {
     protected _buttonTitle: string = 'Правила: Пролистывание'
     constructor() {
         super()

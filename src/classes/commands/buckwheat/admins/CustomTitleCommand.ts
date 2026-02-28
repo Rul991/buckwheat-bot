@@ -14,12 +14,12 @@ export default class extends BuckwheatCommand {
             'подпись'
         ]
 
-        this._description = 'выдаю приписку администатора'
+        this._description = 'выдаю приписку администратора\nбез аргументов убираю приписку'
         this._minimumRank = 5
 
         this._replySupport = true
         this._needData = true
-        this._argumentText = ''
+        this._argumentText = 'приписка'
     }
 
     async execute(options: BuckwheatCommandOptions): Promise<void> {

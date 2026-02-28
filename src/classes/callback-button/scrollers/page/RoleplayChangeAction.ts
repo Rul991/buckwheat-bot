@@ -3,11 +3,11 @@ import { ScrollerSendMessageOptions, ScrollerEditMessageResult, ScrollerGetObjec
 import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import RoleplaysService from '../../../db/services/rp/RoleplaysService'
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
-import ScrollerAction from './ScrollerAction'
+import LegacyScrollerAction from './LegacyScrollerAction'
 
 type Data = string[]
 
-export default class RoleplayChangeAction extends ScrollerAction<Data> {
+export default class RoleplayChangeAction extends LegacyScrollerAction<Data> {
     protected _buttonTitle: string = 'РП: Пролистывание'
     constructor() {
         super()

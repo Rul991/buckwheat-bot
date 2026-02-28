@@ -10,7 +10,7 @@ export default class extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'как'
-        this._description = 'даю вам подсказки'
+        this._description = 'даю вам различные подсказки (FAQ)'
         this._aliases = [
             'чаво',
             'помоги',

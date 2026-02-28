@@ -164,4 +164,16 @@ export default class ContextUtils {
             return ctx.botInfo.first_name
         }
     }
+
+    static async approveChatJoinRequest(ctx: Context, id: number) {
+        return await ExceptionUtils.handle(async () => {
+            await ctx.approveChatJoinRequest(id)
+        })
+    }
+
+    static async declineChatJoinRequest(ctx: Context, id: number) {
+        return await ExceptionUtils.handle(async () => {
+            await ctx.declineChatJoinRequest(id)
+        })
+    }
 }

@@ -1,0 +1,25 @@
+{
+    "markup": [
+        ["arrow"],
+        ["pageNav"]
+    ],
+    "definition": {
+        
+    },
+    "variables": {
+        "arrow": {
+            "type": "type"
+        }
+    },
+    "definitionExtends": [
+        {
+            "path": "extends/scroller",
+            "button": {
+                "name": "topch",
+                "data": {
+                    "$vars": ["arrow"]
+                }
+            }
+        }
+    ]
+}

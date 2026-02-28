@@ -55,7 +55,8 @@ export default abstract class BaseRepository<K, T extends typeof Model<K>> {
             filter as any,
             data,
             {
-                upsert: true
+                upsert: true,
+                new: true
             }
         ).exec()
     }

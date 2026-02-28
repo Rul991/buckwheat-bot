@@ -14,7 +14,7 @@ export default class ChangeNameCommand extends ChangeProfileCommand {
     constructor () {
         super()
         this._name = 'ник'
-        this._description = 'показываю или меняю вам имя в беседе'
+        this._description = 'показываю/меняю вам имя в беседе\nесли выделить сообщение бота, можно изменить имя боту'
         this._argumentText = 'имя'
         this._aliases = ['имя']
     }

@@ -15,7 +15,7 @@ export default class CharsCommand extends BuckwheatCommand {
     constructor () {
         super()
         this._name = 'характеристики'
-        this._description = 'показываю ваши характеристики',
+        this._description = 'показываю ваши здоровье и ману',
             this._aliases = [
                 'хп',
                 'мана'

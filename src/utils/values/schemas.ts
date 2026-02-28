@@ -18,6 +18,7 @@ import LevelUtils from '../level/LevelUtils'
 import { Recipe } from './types/recipes'
 import CraftData from '../../interfaces/callback-button-data/CraftData'
 import { Gun } from './types/guns'
+import { JsonButton, JsonKeyboard } from './types/keyboards'
 
 export const simpleCommandSchema: ZodType<SimpleCommand> = object({
     name: string(),
@@ -288,3 +289,34 @@ export const gunsSchema: ZodType<Gun[]> = object({
     id: string(),
     damage: tuple([number(), number()])
 }).array()
+
+export const stringOrStringArray: ZodType<string | string[]> = string()
+    .or(string().array())
+
+export const jsonButtonSchema = object({
+    text: stringOrStringArray,
+    name: string(),
+    data: object({
+        $additional: record(string(), any()).optional(),
+        $vars: string().array().optional(),
+        $each: string().optional(),
+        $if: string().or(boolean()).optional()
+    })
+})
+
+export const jsonKeyboardSchema: ZodType<JsonKeyboard> = object({
+    markup: stringOrStringArray.array(),
+    definition: record(
+        string(),
+        jsonButtonSchema
+    ),
+    variables: record(
+        string(),
+        record(string(), string())
+    ).optional(),
+    definitionExtends: object({
+        path: string(),
+        definitions: string().array().optional(),
+        button: jsonButtonSchema.partial()
+    }).array().optional()
+})

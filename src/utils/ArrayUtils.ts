@@ -66,7 +66,7 @@ export default class ArrayUtils {
     }: ObjectsGrid<T>): T[][] {
         const result: T[][] = []
 
-        for (let i = 0; i < objects.length; i += width) {
+        for (let i = 0; i < (objects?.length ?? 0); i += width) {
             result.push(objects.slice(i, i + width))
         }
 

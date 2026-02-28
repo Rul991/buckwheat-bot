@@ -1,0 +1,19 @@
+{
+    "markup": [],
+    "definition": {
+        "arrow": {
+            "name": "",
+            "data": {
+                "$each": "arrow"
+            },
+            "text": ["@"]
+        },
+        "pageNav": {
+            "name": "",
+            "data": {
+                "$each": "pageNav"
+            },
+            "text": ["@"]
+        }
+    }
+}

@@ -56,6 +56,12 @@ export type SuccessfulPaymentContext = NarrowedContext<Context<Update>, {
 
 export type MessageContext<D extends {} = any> = NarrowedContext<Context<Update>, Update.MessageUpdate<Message>> & ContextData<D>
 
+export type ChatJoinRequestContext = NarrowedContext<
+    & Context<Update>
+    & SceneContextData<{}>
+    & IdContextData, Update.ChatJoinRequestUpdate
+>
+
 export type Contexts = {
     text: TextContext,
     photo: PhotoContext

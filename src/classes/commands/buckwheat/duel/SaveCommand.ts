@@ -29,7 +29,7 @@ export default class SaveCommand extends BuckwheatCommand {
             'сейв',
             'отхил'
         ]
-        this._description = 'сохраняю вас на чекпоинте и восстанавливаю вас'
+        this._description = 'сохраняю на чекпоинте и восстанавливаю вас'
     }
 
     private _isLeave(other: MaybeString): boolean {

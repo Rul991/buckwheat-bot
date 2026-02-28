@@ -9,7 +9,7 @@
     [
         {
             "text": "📸 История аватарок",
-            "callback_data": "avachange_1_-1_@{id}"
+            "callback_data": "avachange_{\"id\":@{id},\"c\":0,\"i\":0}"
         }
     ]
 ]

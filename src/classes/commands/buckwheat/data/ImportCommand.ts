@@ -6,7 +6,7 @@ export default class extends DataCommand {
     constructor() {
         super()
         this._name = 'импорт'
-        this._description = 'позволяю импортировать некоторые данные\nиспользуется парно с "баквит экспорт"'
+        this._description = 'позволяю импортировать некоторые данные из другого чата\nиспользуется парно с "баквит экспорт"'
         this._filename = 'import'
     }
 }

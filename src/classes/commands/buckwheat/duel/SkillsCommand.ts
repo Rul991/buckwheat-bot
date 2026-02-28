@@ -15,7 +15,7 @@ export default class SkillsCommand extends BuckwheatCommand {
             'скиллы',
             'спеллы'
         ]
-        this._description = 'позволяю работать с навыками'
+        this._description = 'позволяю выбирать навыки, используемые в дуэли'
     }
 
     async execute({ ctx, chatId, id }: BuckwheatCommandOptions): Promise<void> {

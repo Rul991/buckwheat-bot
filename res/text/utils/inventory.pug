@@ -24,7 +24,7 @@ mixin item(options)
     +parameter('Оружие', bool(item.gun))
     if item.gun
         - const [min, max] = item.gun.damage
-        +parameter('Урон', `${formatNumber(min)} - ${formatNumber(min)}`)
+        +parameter('Урон', `${formatNumber(min)} - ${formatNumber(max)}`)
         |
         |
     |

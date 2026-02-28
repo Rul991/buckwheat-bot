@@ -1,0 +1,20 @@
+{
+    "markup": [
+        ["arrow"],
+        ["pageNav"]
+    ],
+    "definition": {
+        
+    },
+    "variables": {
+        
+    },
+    "definitionExtends": [
+        {
+            "path": "extends/scroller",
+            "button": {
+                "name": "searchg"
+            }
+        }
+    ]
+}

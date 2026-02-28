@@ -14,7 +14,7 @@ export default class extends BuckwheatCommand {
     constructor () {
         super()
         this._name = 'призыв'
-        this._description = 'призывает людей из чата'
+        this._description = 'призываю людей из чата'
         this._minimumRank = RankUtils.admin
     }
 

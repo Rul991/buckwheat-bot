@@ -15,7 +15,7 @@ export default class extends BuckwheatCommand {
             'коллекция',
             'карточка'
         ]
-        this._description = 'открываю меню с карточками'
+        this._description = 'открываю меню с коллекционными карточками'
     }
 
     async execute({ ctx, id }: BuckwheatCommandOptions): Promise<void> {

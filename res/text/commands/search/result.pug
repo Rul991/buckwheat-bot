@@ -1,0 +1,15 @@
+include utils/mixins.pug
+
+b 🔍 Найденные игроки по запросу: 
+code #{other}
+|
+|
+|
+each user in users
+    | 📍  
+    +link(user)
+    |
+    |
+|
+|
+b 📌 Всего найдено: #{searchUsersLength}

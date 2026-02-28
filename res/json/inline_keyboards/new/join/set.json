@@ -1,0 +1,33 @@
+{
+    "markup": [
+        ["yes", "no"]
+    ],
+    "definition": {
+        "yes": {
+            "name": "chatjoin",
+            "text": "✅",
+            "data": {
+                "$vars": ["shared"],
+                "$additional": {
+                    "approve": true
+                }
+            }
+        },
+
+        "no": {
+            "name": "chatjoin",
+            "text": "❌",
+            "data": {
+                "$vars": ["shared"],
+                "$additional": {
+                    "approve": false
+                }
+            }
+        }
+    },
+    "variables": {
+        "shared": {
+            "id": "id"
+        }
+    }
+}

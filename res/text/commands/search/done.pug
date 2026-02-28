@@ -1,17 +1,5 @@
 include utils/mixins.pug
 include utils/functions.pug
 
-b 🔍 Игроки с #{search.text} 
-code #{data}
-|
-|
-|
-each user in users
-    | 📍  
-    +link(user)
-    |
-    |
-|
-|
-if otherUsers > 0
-    tg-spoiler ...и прочие игроки: #{formatNumber(otherUsers)}
+b 🔍 Найденные игроки по запросу: 
+code #{other}

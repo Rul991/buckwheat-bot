@@ -20,6 +20,7 @@ import ChatService from '../chat/ChatService'
 import GeneratorsService from '../generators/GeneratorsService'
 import ItemsService from '../items/ItemsService'
 import LevelService from '../level/LevelService'
+import MarketSlotService from '../market/MarketSlotService'
 import RoleplaysService from '../rp/RoleplaysService'
 import WorkService from '../work/WorkService'
 
@@ -58,6 +59,7 @@ export default class {
             WorkService.wipe(chatId),
             CasinoWipeService.money(chatId),
             GeneratorsService.wipe(chatId),
+            MarketSlotService.wipe(chatId)
         ])
     }
 }

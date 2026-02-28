@@ -14,7 +14,7 @@ export default class CookieCommand extends BuckwheatCommand {
     constructor () {
         super()
         this._name = 'печенька'
-        this._description = 'вы можете съесть или поделиться печенькой'
+        this._description = 'вы можете съесть или поделиться печенькой, если выделить сообщение игрока'
         this._replySupport = true
         this._aliases = [
             'печенье'

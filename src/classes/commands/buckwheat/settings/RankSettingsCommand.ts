@@ -8,7 +8,7 @@ export default class extends SettingsCommand {
         this._aliases = [
             'гниды'
         ]
-        this._description = 'показываю названия для рангов'
+        this._description = 'показываю и позволяю менять названия для рангов'
         this._settingId = 'ranks-settings'
         this._userSettingsType = RANK_SETTINGS_TYPE
         this._chatSettingsType = RANK_SETTINGS_TYPE
