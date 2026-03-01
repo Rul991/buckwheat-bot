@@ -216,6 +216,7 @@ export default abstract class <Object, Additional = {}> extends CallbackButtonAc
             slicedObjects
         })
         if(!editMessageResult) return
+        if(typeof editMessageResult == 'string') return editMessageResult
 
         const {
             message,

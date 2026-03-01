@@ -35,7 +35,7 @@ export type ScrollerEditMessageResult = {
     }
     keyboard: ReplaceKeyboardData
     rawOptions?: ExtraEditMessageText
-} | void
+} | void | string
 
 export type ArrowsOptions<T> = {
     id?: number

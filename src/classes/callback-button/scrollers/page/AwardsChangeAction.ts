@@ -4,6 +4,7 @@ import ScrollerAction from '../new/ScrollerAction'
 import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
 import { NewScrollerData, ScrollerEditMessageOptions, ScrollerEditMessageResult } from '../../../../utils/values/types/scrollers'
 import ContextUtils from '../../../../utils/ContextUtils'
+import FileUtils from '../../../../utils/FileUtils'
 
 type T = Award
 type A = {}
@@ -50,6 +51,9 @@ export default class AwardsChangeAction extends ScrollerAction<T, A> {
 
         const length = objects.length
         const [object] = slicedObjects
+        if(!object) return await FileUtils.readPugFromResource(
+            'text/commands/award/no-award.pug'
+        )
 
         return {
             message: {
