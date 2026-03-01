@@ -18,7 +18,7 @@ export const TOKEN = env.BOT_TOKEN!
 export const CHAT_ID = fromEnvToNumber('CHAT_ID')
 export const DEV_ID = fromEnvToNumber('DEV_ID')
 
-export const HTTP_PROXY = env.HTTP_PROXY
+export const SOCKS_PROXY = env.SOCKS_PROXY
 
 export const MODE: ModeTypes = env.MODE == 'dev' || env.MODE == 'prod' ? env.MODE : 'dev'
 export const ALLOWED_CHATS = [

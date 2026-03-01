@@ -1,0 +1,49 @@
+{
+    "markup": [
+        "award",
+        "ava",
+        "note"
+    ],
+
+    "definition": {
+        "ava": {
+            "text": "📸 История аватарок",
+            "name": "avachange",
+            "data": {
+                "$vars": ["id"],
+                "$additional": {
+                    "c": 0,
+                    "i": 0
+                }
+            }
+        }
+    },
+
+    "variables": {
+        "id": {
+            "id": "id"
+        },
+
+        "notes": {
+            "id": "requester",
+            "u": "id",
+            "p": "public"
+        }
+    },
+
+    "definitionExtends": [
+        {
+            "path": "awards/start",
+            "button": {
+
+            }
+        },
+
+        {
+            "path": "notes/start",
+            "button": {
+                
+            }
+        }
+    ]
+}

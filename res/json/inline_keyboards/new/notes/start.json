@@ -1,22 +1,22 @@
 {
     "markup": [
-        "start"
+        "note"
     ],
     "definition": {
-        "start": {
+        "note": {
             "name": "notechange",
-            "text": "👀 Просмотреть",
+            "text": "📔 Заметки",
             "data": {
                 "$additional": {
                     "c": 0,
                     "i": 0
                 },
-                "$vars": ["start"]
+                "$vars": ["notes"]
             }
         }
     },
     "variables": {
-        "start": {
+        "notes": {
             "id": "userId",
             "u": "replyOrUserId",
             "p": "isPublic"

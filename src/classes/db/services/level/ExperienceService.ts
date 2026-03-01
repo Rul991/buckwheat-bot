@@ -41,7 +41,7 @@ export default class ExperienceService {
             'levelBoost'
         )
 
-        return levelBoosts * LEVEL_BOOST / 100
+        return (levelBoosts * LEVEL_BOOST / 100) + 1
     }
 
     static async getAddedExperience(chatId: number, id: number, experience: number) {
@@ -61,12 +61,21 @@ export default class ExperienceService {
         return addedExperience
     }
 
-    static async isLevelUpAfterAdding(chatId: number, id: number, added = 1): Promise<number | null> {
+    static async isLevelUpAfterAdding(chatId: number, id: number, added = 1) {
         const currentExperience = await this.get(chatId, id)
-        await this.add(chatId, id, added)
+        const addedExperience = await this.add(chatId, id, added)
 
-        return ExperienceUtils.isNewLevel(currentExperience, added) ?
-            LevelUtils.get(currentExperience + added) :
-            null
+        if (!ExperienceUtils.isNewLevel(currentExperience, added)) {
+            return {
+                experience: addedExperience,
+                level: null
+            }
+        }
+
+        const level = LevelUtils.get(currentExperience + added)
+        return {
+            experience: addedExperience,
+            level
+        }
     }
 }

@@ -1,15 +1,14 @@
 import { Telegraf } from 'telegraf'
 import { session } from 'telegraf/session'
 import Logging from '../../utils/Logging'
-import { CHAT_ID, DOMAIN, HOOK_PORT, MODE, SECRET_PATH, HTTP_PROXY } from '../../utils/values/consts'
+import { CHAT_ID, DOMAIN, HOOK_PORT, MODE, SECRET_PATH, SOCKS_PROXY } from '../../utils/values/consts'
 import FileUtils from '../../utils/FileUtils'
 import BaseHandler from './handlers/BaseHandler'
 import MessageUtils from '../../utils/MessageUtils'
 import express from 'express'
 import { MyTelegraf } from '../../utils/values/types/types'
-import { HttpsProxyAgent } from 'https-proxy-agent'
 import QueueUtils from '../../utils/ratelimit/QueueUtils'
-import RateLimitUtils from '../../utils/ratelimit/RateLimitUtils'
+import { SocksProxyAgent } from 'socks-proxy-agent'
 
 export default class Bot {
     private _bot: MyTelegraf
@@ -20,7 +19,7 @@ export default class Bot {
             token,
             {
                 telegram: {
-                    agent: HTTP_PROXY ? new HttpsProxyAgent(HTTP_PROXY) : undefined
+                    agent: SOCKS_PROXY ? new SocksProxyAgent(SOCKS_PROXY) : undefined
                 }
             }
         )

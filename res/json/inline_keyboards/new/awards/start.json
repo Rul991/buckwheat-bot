@@ -1,0 +1,23 @@
+{
+    "markup": [
+        "award"
+    ],
+    "definition": {
+        "award": {
+            "name": "awardschange",
+            "text": "🏆 Награды",
+            "data": {
+                "$vars": ["id"],
+                "$additional": {
+                    "c": 0,
+                    "i": 0
+                }
+            }
+        }
+    },
+    "variables": {
+        "id": {
+            "id": "id"
+        }
+    }
+}

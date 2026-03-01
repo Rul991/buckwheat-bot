@@ -28,13 +28,14 @@
     "tsup": "^8.5.1"
   },
   "dependencies": {
+    "bm2": "^1.0.21",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "https-proxy-agent": "^7.0.6",
     "mongoose": "^9.1.4",
     "p-queue": "^9.0.1",
-    "bm2": "^6.0.10",
     "pug": "^3.0.3",
+    "socks-proxy-agent": "^8.0.5",
     "telegraf": "^4.16.3",
     "typescript": "^5.9.3",
     "zod": "^4.3.5"

@@ -1,4 +1,4 @@
-import { FIRST_INDEX } from './../../../../utils/values/consts';
+import { FIRST_INDEX } from './../../../../utils/values/consts'
 import { MaybeString } from '../../../../utils/values/types/types'
 import { TextContext } from '../../../../utils/values/types/contexts'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
@@ -20,8 +20,9 @@ import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import MarriageService from '../../../db/services/marriage/MarriageService'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
-import RankSettingsService from '../../../db/services/settings/RankSettingsService';
+import RankSettingsService from '../../../db/services/settings/RankSettingsService'
 import UserSettingsService from '../../../db/services/settings/UserSettingsService'
+import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 
 type IdAndName = {
     id: number
@@ -31,7 +32,7 @@ type IdAndName = {
 export default class ProfileCommand extends BuckwheatCommand {
     protected _settingId: string = 'profile'
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'профиль'
         this._description = 'я показываю профиль\nесли ответить на сообщение человека, то покажет его профиль\nесли написать после команды ник, то покажет профиль человека с этим ником'
@@ -43,22 +44,22 @@ export default class ProfileCommand extends BuckwheatCommand {
 
     private async _getPhotoId(ctx: TextContext, id: number): Promise<string | null> {
         const chatId = await LinkedChatService.getCurrent(ctx)
-        if(!chatId) return null
+        if (!chatId) return null
 
         let photoId: string = await UserImageService.get(chatId, id)
-        if(photoId?.length) {
+        if (photoId?.length) {
             return photoId
         }
-        
+
         try {
-            if(id != 0) {
+            if (id != 0) {
                 let profilePhotos = await ctx
                     .telegram
                     .getUserProfilePhotos(id, 0, 1)
 
 
-                return profilePhotos.total_count > 0 ? 
-                    profilePhotos.photos[FIRST_INDEX][FIRST_INDEX].file_id : 
+                return profilePhotos.total_count > 0 ?
+                    profilePhotos.photos[FIRST_INDEX][FIRST_INDEX].file_id :
                     null
             }
 
@@ -71,16 +72,16 @@ export default class ProfileCommand extends BuckwheatCommand {
         }
     }
 
-    private async _getIdAndName({ctx, other, replyFrom}: BuckwheatCommandOptions): Promise<IdAndName | null> {
+    private async _getIdAndName({ ctx, other, replyFrom }: BuckwheatCommandOptions): Promise<IdAndName | null> {
         let id: number
         let name: string
 
-        if(other) {
+        if (other) {
             const chatId = await LinkedChatService.getCurrent(ctx)
-            if(!chatId) return null
+            if (!chatId) return null
             const user = await UserProfileService.findByName(chatId, other)
 
-            if(!user) {
+            if (!user) {
                 return null
             }
 
@@ -89,8 +90,8 @@ export default class ProfileCommand extends BuckwheatCommand {
                 name = user.name
             }
         }
-        else if(replyFrom) {
-            const {id: replyId, first_name} = replyFrom
+        else if (replyFrom) {
+            const { id: replyId, first_name } = replyFrom
 
             id = replyId
             name = first_name
@@ -100,7 +101,7 @@ export default class ProfileCommand extends BuckwheatCommand {
             name = ctx.from.first_name
         }
 
-        return {id, name}
+        return { id, name }
     }
 
     private async _getFamily(chatId: number, id: number) {
@@ -110,7 +111,7 @@ export default class ProfileCommand extends BuckwheatCommand {
             startedAt
         } = marriage
 
-        if(!partnerId) {
+        if (!partnerId) {
             return null
         }
 
@@ -125,15 +126,20 @@ export default class ProfileCommand extends BuckwheatCommand {
     }
 
     private async _getLeft(ctx: TextContext, id: number) {
-        if(ctx.chat.type == 'private') return false
+        if (ctx.chat.type == 'private') return false
         return await ContextUtils.isLeft(ctx, id)
     }
 
     async execute(options: BuckwheatCommandOptions): Promise<void> {
-        const { ctx, other, chatId } = options
+        const { 
+            ctx, 
+            other, 
+            chatId,
+            id: requester
+        } = options
         let idAndName = await this._getIdAndName(options)
 
-        if(!idAndName) {
+        if (!idAndName) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/profile/no-user.pug',
@@ -146,10 +152,10 @@ export default class ProfileCommand extends BuckwheatCommand {
             return
         }
 
-        const {id, name} = idAndName
+        const { id, name } = idAndName
         const user = await UserProfileService.create(chatId, id, name)
         const photoId = await this._getPhotoId(ctx, id)
-        
+
         const rank = user.rank ?? RankUtils.min
         const rankName = await RankSettingsService.get<'string'>(chatId, `rank-${rank}`)
         const summonEmoji = await UserSettingsService.get<'enum'>(id, 'summonEmoji')
@@ -185,28 +191,32 @@ export default class ProfileCommand extends BuckwheatCommand {
             experiencePrecents: ExperienceUtils.precents(experience)
         }
 
-        const inlineKeyboard =  await LegacyInlineKeyboardManager.get(
-            'profile/profile', 
+        const inlineKeyboard = await InlineKeyboardManager.get(
+            'profile/profile',
             {
-                id
+                globals: {
+                    id,
+                    public: true,
+                    requester
+                }
             }
         )
 
         try {
-            if(photoId) {
+            if (photoId) {
                 const messageText = await FileUtils.readPugFromResource(
                     path,
-                    {changeValues}
+                    { changeValues }
                 )
 
                 const isSend = await MessageUtils.answerPhoto(
                     ctx,
                     messageText,
                     photoId,
-                    {inlineKeyboard}
+                    { inlineKeyboard }
                 )
 
-                if(!isSend) {
+                if (!isSend) {
                     throw 'cant send photo'
                 }
             }
@@ -214,12 +224,12 @@ export default class ProfileCommand extends BuckwheatCommand {
                 throw 'no photo id'
             }
         }
-        catch(e) {
+        catch (e) {
             Logging.warn(e)
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 path,
-                {changeValues, inlineKeyboard}
+                { changeValues, inlineKeyboard }
             )
         }
     }

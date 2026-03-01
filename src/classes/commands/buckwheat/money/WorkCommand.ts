@@ -213,8 +213,11 @@ export default class WorkCommand extends BuckwheatCommand {
 
         if (!elapsed) {
             const totalMoney = await this._getTotalMoney(chatId, id)
-            const experience = await this._getExperience(chatId, id)
-            const newLevel = await ExperienceService.isLevelUpAfterAdding(chatId, id, experience)
+            const rawExperience = await this._getExperience(chatId, id)
+            const {
+                level: newLevel,
+                experience
+            } = await ExperienceService.isLevelUpAfterAdding(chatId, id, rawExperience)
             const material = await this._addMaterial(chatId, id)
 
             await CasinoAddService.money(chatId, id, totalMoney)

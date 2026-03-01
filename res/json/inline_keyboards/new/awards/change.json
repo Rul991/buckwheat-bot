@@ -1,0 +1,17 @@
+{
+    "markup": [
+        ["arrow"],
+        ["pageNav"]
+    ],
+    "definition": {
+
+    },
+    "definitionExtends": [
+        {
+            "path": "extends/scroller",
+            "button": {
+                "name": "awardschange"
+            }
+        }
+    ]
+}

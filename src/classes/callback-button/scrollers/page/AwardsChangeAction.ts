@@ -1,14 +1,17 @@
 import Award from '../../../../interfaces/schemas/awards/Award'
-import ContextUtils from '../../../../utils/ContextUtils'
-import FileUtils from '../../../../utils/FileUtils'
-import { ScrollerSendMessageOptions, ScrollerEditMessageResult, AsyncOrSync, ScrollerGetObjectsOptions } from '../../../../utils/values/types/types'
-import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
 import AwardsService from '../../../db/services/awards/AwardsService'
-import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
-import LegacyScrollerAction from './LegacyScrollerAction'
+import ScrollerAction from '../new/ScrollerAction'
+import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
+import { NewScrollerData, ScrollerEditMessageOptions, ScrollerEditMessageResult } from '../../../../utils/values/types/scrollers'
+import ContextUtils from '../../../../utils/ContextUtils'
 
-export default class AwardsChangeAction extends LegacyScrollerAction<Award> {
+type T = Award
+type A = {}
+
+export default class AwardsChangeAction extends ScrollerAction<T, A> {
+    protected _keyboardFilename: string = 'awards/change'
     protected _buttonTitle: string = 'Награды: Пролистывание'
+
     private static _emojis = [
         '🎗',
         '🥉',
@@ -20,51 +23,47 @@ export default class AwardsChangeAction extends LegacyScrollerAction<Award> {
         '👑',
     ]
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'awardschange'
         this._objectsPerPage = 1
     }
 
-    protected _getId(_: CallbackButtonContext, data: string): AsyncOrSync<number> {
-        const [_increase, _page, id] = data.split('_').map(v => +v)
-        return id
-    }
+    protected async _getRawObjects(options: CallbackButtonOptions<NewScrollerData<A>>): Promise<T[]> {
+        const {
+            chatId,
+            id
+        } = options
 
-    protected async _getObjects(ctx: CallbackButtonContext, { id, chatId }: ScrollerGetObjectsOptions): Promise<Award[]> {
         const awards = await AwardsService.get(chatId, id)
         return awards.awards ?? []
     }
 
-    protected async _editMessage(
-        ctx: CallbackButtonContext, 
-        {
-            currentPage,
-            objects,
-            length,
+    protected async _editMessage(options: ScrollerEditMessageOptions<Award, A>): Promise<ScrollerEditMessageResult> {
+        const {
+            slicedObjects,
+            chatId,
             id,
-            chatId
-        }: ScrollerSendMessageOptions<Award>
-    ): Promise<ScrollerEditMessageResult> {
-        const [object] = objects
+            objects,
+            page: currentPage
+        } = options
+
+        const length = objects.length
+        const [object] = slicedObjects
 
         return {
-            text: await FileUtils.readPugFromResource(
-                'text/commands/award/get.pug',
-                {
-                    changeValues: {
-                        ...await ContextUtils.getUser(chatId, id),
-                        award: object,
-                        length,
-                        page: currentPage,
-                        emoji: AwardsChangeAction._emojis[object.rank - 1]
-                    }
+            message: {
+                path: 'text/commands/award/get.pug',
+                changeValues: {
+                    ...await ContextUtils.getUser(chatId, id),
+                    award: object,
+                    length,
+                    page: currentPage,
+                    emoji: AwardsChangeAction._emojis[object.rank - 1]
                 }
-            ),
-            options: {
-                reply_markup: {
-                    inline_keyboard: await LegacyInlineKeyboardManager.get('awards/change', `${currentPage}_${id}`)
-                }
+            },
+            keyboard: {
+                
             }
         }
     }
