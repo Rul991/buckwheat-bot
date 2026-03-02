@@ -14,6 +14,10 @@
             "data": "itemchange_{\"id\":@{idNum},\"c\":@{pageNum},\"i\":0}",
             "notEach": true
         },
+        "market": {
+            "text": "📊 На рынок",
+            "data": "marketbuychange_{\"id\":@{idNum},\"c\":0,\"i\":0}_@"
+        },
         "countTitle": {
             "text": "🧮 Количество:",
             "data": "counttitle"
@@ -24,7 +28,7 @@
     [
         "countTitle",
         ["count"],
-        "buy",
+        ["buy", "market"],
         "back"
     ]
 }

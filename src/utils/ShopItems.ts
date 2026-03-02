@@ -268,12 +268,14 @@ export default class ShopItems {
                     return false
                 }
 
-                await InventoryItemService.add({
+                const [isAdded] = await InventoryItemService.add({
                     chatId,
                     id,
                     itemId,
                     count
                 })
+
+                if (!isAdded) return false
 
                 await MessageUtils.answerMessageFromResource(
                     ctx,
@@ -423,49 +425,16 @@ export default class ShopItems {
                 )
                 return true
             }
-        }
+        },
 
-        // {
-        //     execute: async ({ ctx, id, chatId }) => {
-        //         const [hasGreedBox] = await InventoryItemService.use({
-        //              chatId,
-        //              id,
-        //              itemId: 'greedBox'
-        //         })
-        //         if (hasGreedBox) {
-        //             await ContextUtils.showCallbackMessageFromFile(
-        //                 ctx,
-        //                 'text/commands/items/businessPaper/hasGreedBox.pug',
-        //                 false
-        //             )
-        //             return false
-        //         }
-
-        //         const [isBought] = await InventoryItemService.add(chatId, id, 'businessPaper')
-        //         await ContextUtils.showCallbackMessageFromFile(
-        //             ctx,
-        //             'text/commands/items/businessPaper/bought.pug',
-        //             false
-        //         )
-
-        //         return isBought
-        //     },
-        //     filename: 'businessPaper'
-        // },
-
-        // {
-        //     execute: async ({ ctx, id, chatId }) => {
-        //         const [isBought] = await InventoryItemService.add(chatId, id, 'corporation')
-        //         await ContextUtils.showCallbackMessageFromFile(
-        //             ctx,
-        //             'text/commands/items/corporation/bought.pug',
-        //             false
-        //         )
-
-        //         return isBought
-        //     },
-        //     filename: 'corporation'
-        // },
+        {
+            filename: "defaultPistol",
+            execute: async (options) => {
+                return await buyItem(
+                    options
+                )
+            }
+        },
     ]
 
     private static _isValid(item: JsonShopItem): boolean {
@@ -602,7 +571,12 @@ export default class ShopItems {
         } = options
 
         const item = await ShopItems.get(index)
-        if (!item) return null
+        const itemDescription = InventoryItemsUtils.getItemDescription(
+            item.itemName
+        )
+        const itemId = itemDescription.description.length > 0 ?
+            item.itemName :
+            undefined
 
         const { rest, current } = await ShopItems.getRestAndCurrentCount(chatId, userId, item)
         const isRestInfinity = !isFinite(rest)
@@ -655,7 +629,17 @@ export default class ShopItems {
                                         data: `${v}`,
                                     }
                                 }),
-                            countTitle: counts.length > 0 ? [{ text: '', data: '' }] : []
+                            countTitle: counts.length > 0 ? [{ text: '', data: '' }] : [],
+                            market: itemId ?
+                                [
+                                    {
+                                        text: '',
+                                        data: JSON.stringify({
+                                            itemId
+                                        })
+                                    }
+                                ] :
+                                []
                         },
                         globals: {
                             pageNum: page,

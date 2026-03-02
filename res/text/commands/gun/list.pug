@@ -1,0 +1,6 @@
+include utils/mixins.pug
+
+b 🔫 Список оружия:
+|
+if selectedGun
+    +param('Выбранное оружие', selectedGun.name)

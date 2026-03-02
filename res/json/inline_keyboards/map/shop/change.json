@@ -5,6 +5,11 @@
             "data": "invchange_{\"c\":0,\"i\":0,\"id\":@{id}}",
             "notEach": true
         },
+        "market": {
+            "text": "📊 На рынок",
+            "data": "marketbuychange_{\"c\":0,\"i\":0,\"id\":@{id}}",
+            "notEach": true
+        },
         "item": {
             "text": "@",
             "data": "itemshow_@"
@@ -22,7 +27,7 @@
     "values": 
     [
         "item",
-        "inventory",
+        ["inventory", "market"],
         ["arrow"],
         ["pageNav"]
     ]

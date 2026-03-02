@@ -215,6 +215,9 @@ import LotteryChangeAction from '../classes/callback-button/lottery/LotteryChang
 import ChatJoinRequestHandler from '../classes/main/handlers/ChatJoinRequestHandler'
 import JoinMemberAction from '../classes/actions/chat-join/JoinMemberAction'
 import ChatJoinAction from '../classes/callback-button/join/ChatJoinAction'
+import ReturnAdminTitleAction from '../classes/actions/new-member/ReturnAdminTitleAction'
+import { inventoryItemDescriptionSchema } from '../utils/values/schemas'
+import SelectGunAction from '../classes/callback-button/gun/SelectGunAction'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -375,6 +378,7 @@ const launchBot = async (bot: Bot) => {
         new SearchChangeAction(),
         new LotteryChangeAction(),
         new ChatJoinAction(),
+        new SelectGunAction(),
     )
 
     // dice 
@@ -388,6 +392,7 @@ const launchBot = async (bot: Bot) => {
         new AddInDatabaseAction(),
         new DebtMemberAction(),
         new HelloMemberAction(),
+        new ReturnAdminTitleAction(),
     )
 
     // payment

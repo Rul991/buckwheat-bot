@@ -1,0 +1,11 @@
+{
+    "materials": {
+        "metal": 2
+    },
+    "result": {
+        "name": "pistolAmmo",
+        "count": 10
+    },
+    "level": 10,
+    "experience": 1
+}

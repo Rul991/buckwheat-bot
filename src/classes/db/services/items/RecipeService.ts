@@ -99,11 +99,12 @@ export default class {
                 materials: resultMaterials
             })
 
-            await InventoryItemService.add({
+            const [isAdded] = await InventoryItemService.add({
                 chatId,
                 id,
                 itemId: recipeName,
-                count: count * chosenCount
+                count: count * chosenCount,
+                isAddRest: true
             })
             await ExperienceService.add(
                 chatId,
@@ -113,7 +114,7 @@ export default class {
 
             return {
                 done: true,
-                reason: 'crafted'
+                reason: isAdded ? 'crafted' : 'many-items'
             }
         }
         else {

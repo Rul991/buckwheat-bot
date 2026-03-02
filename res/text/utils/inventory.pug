@@ -25,6 +25,7 @@ mixin item(options)
     if item.gun
         - const [min, max] = item.gun.damage
         +parameter('Урон', `${formatNumber(min)} - ${formatNumber(max)}`)
+        +parameter('Патроны', ammo ? ammo.name : item.gun.id)
         |
         |
     |

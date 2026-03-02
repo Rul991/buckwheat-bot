@@ -49,7 +49,7 @@ export default class extends CallbackButtonAction<Data> {
         if (done) {
             await MessageUtils.editTextFromResource(
                 ctx,
-                'text/commands/recipe/crafted.pug',
+                `text/commands/recipe/${reason}.pug`,
                 {
                     inlineKeyboard: await InlineKeyboardManager.get(
                         'recipes/back',

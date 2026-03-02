@@ -217,7 +217,8 @@ export const inventoryItemDescriptionSchema: ZodType<InventoryItemDescription> =
         chat: number().optional()
     }).optional(),
     gun: object({
-        damage: tuple([number(), number()])
+        damage: tuple([number(), number()]),
+        ammo: string().optional()
     }).optional()
 })
 

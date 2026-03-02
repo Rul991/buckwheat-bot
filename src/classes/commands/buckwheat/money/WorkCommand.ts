@@ -160,30 +160,19 @@ export default class WorkCommand extends BuckwheatCommand {
 
         const {
             id: itemId,
-            name,
-            maxCount
+            name
         } = material
 
-        if (maxCount !== undefined) {
-            const {
-                rest
-            } = await InventoryItemService.getRestAndCurrentCount(
-                chatId,
-                id,
-                itemId
-            )
-
-            if (rest < addedCount) {
-                return null
-            }
-        }
-
-        await InventoryItemService.add({
+        const [isAdded] = await InventoryItemService.add({
             chatId,
             id,
             itemId,
             count: addedCount
         })
+
+        if(!isAdded) {
+            return null
+        }
 
         return name
     }

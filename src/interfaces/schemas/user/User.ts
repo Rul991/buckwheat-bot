@@ -12,4 +12,5 @@ export default interface User {
     isOld?: boolean
     isLeft?: boolean
     avaHistory?: AvaHistory[]
+    adminTitle?: string
 }

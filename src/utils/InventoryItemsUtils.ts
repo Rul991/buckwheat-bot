@@ -9,6 +9,7 @@ import { inventoryItemDescriptionSchema } from './values/schemas'
 import { basename } from 'path'
 import RandomUtils from './RandomUtils'
 
+type ItemChanceRecord = Record<string, number>
 type ItemsRecord = Record<string, InventoryItemDescription>
 type ItemWithId = InventoryItemDescriptionWithId
 type MaterialLevelRecord = Record<number, ItemWithId[]>
@@ -16,6 +17,7 @@ type MaterialLevelRecord = Record<number, ItemWithId[]>
 export default class InventoryItemsUtils {
     private static _items: ItemsRecord = {}
     private static _materialsByLevel: MaterialLevelRecord = {}
+    private static _itemChances: ItemChanceRecord = {}
 
     static get items(): ItemWithId[] {
         return Object.entries(this._items)
@@ -85,12 +87,17 @@ export default class InventoryItemsUtils {
     }
 
     static getChancePrecents(id: string) {
+        if(this._itemChances[id]) return this._itemChances[id]
+
         const item = this.getItemDescription(id)
         const rarity = item.material?.rarity
         if (!rarity) return 0
+        
         const count = this._materialsByLevel[rarity].length
+        const chance = (this._materialChance ** rarity) / count * 100
+        this._itemChances[id] = chance
 
-        return (this._materialChance ** rarity) / count * 100
+        return chance
     }
 
     static getCountString(count: number, type?: InventoryItemType): string {

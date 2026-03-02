@@ -5,7 +5,9 @@ import InventoryItemsUtils from '../../../../utils/InventoryItemsUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import DuelistService from '../../../db/services/duelist/DuelistService'
+import SelectedGunService from '../../../db/services/gun/SelectedGunService'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
+import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 
 export default class extends BuckwheatCommand {
@@ -19,23 +21,25 @@ export default class extends BuckwheatCommand {
             'выстрел'
         ]
 
-        this._description = 'позволяю вам выстрелить в игрока из оружия в вашем инвентаре'
+        this._description = 'позволяю вам выстрелить в игрока из оружия в вашем инвентаре\nесли написать команду, не отвечая на сообщение цели, можно выбрать стандартное оружие\nможешь даже не пытаться стрелять в меня'
         this._replySupport = true
         this._isPremium = true
     }
 
     private async _getGunAndItem(chatId: number, id: number) {
-        const items = await InventoryItemService.getAll(chatId, id)
-        const gun = GunsUtils.getGun(items)
+        const gun = await SelectedGunService.getSelected(chatId, id)
 
         const gunId = gun.id
-        if (!gunId.length) return null
+        const ammoId = GunsUtils.getAmmoItemId(gunId)
+        if (!ammoId.length) return null
 
-        await InventoryItemService.use({
+        const [isUsed] = await InventoryItemService.use({
             chatId,
             id,
-            itemId: gunId
+            itemId: ammoId
         })
+        if (!isUsed) return null
+
         return {
             gun,
             item: InventoryItemsUtils.getItemDescription(gunId)
@@ -47,12 +51,74 @@ export default class extends BuckwheatCommand {
             chatId,
             replyOrUserFrom,
             id,
-            ctx
+            ctx,
+            replyFrom
         } = options
 
-        const replyId = replyOrUserFrom.id
-        const gunAndItem = await this._getGunAndItem(chatId, id)
+        const replyId = replyOrUserFrom.id != ctx.botInfo.id ?
+            replyOrUserFrom.id :
+            id
+            
+        if (id == replyId && !replyFrom) {
+            const items = await InventoryItemService.getAll(chatId, id)
+            const guns = items
+                .map(({ itemId }) => {
+                    const itemDescription = InventoryItemsUtils.getItemDescription(itemId)
+                    return itemDescription.gun ?
+                        {
+                            ...itemDescription,
+                            itemId
+                        } :
+                        null
+                })
+                .filter(v => v !== null)
 
+            const selectedGun = await SelectedGunService.get(
+                chatId,
+                id
+            )
+
+            const {
+                gunId: selectedGunId
+            } = selectedGun
+
+            const selectedGunItemDescription = selectedGunId &&
+                InventoryItemsUtils.getItemDescription(selectedGunId)
+
+            await MessageUtils.answerMessageFromResource(
+                ctx,
+                'text/commands/gun/list.pug',
+                {
+                    inlineKeyboard: await InlineKeyboardManager.get(
+                        'gun/list',
+                        {
+                            values: {
+                                guns: guns
+                                    .map(({ name, itemId }) => {
+                                        return {
+                                            text: name,
+                                            data: {
+                                                item: itemId
+                                            }
+                                        }
+                                    })
+                            },
+
+                            globals: {
+                                id
+                            }
+                        }
+                    ),
+
+                    changeValues: {
+                        selectedGun: selectedGunItemDescription
+                    }
+                }
+            )
+            return
+        }
+
+        const gunAndItem = await this._getGunAndItem(chatId, id)
         if (!gunAndItem) {
             await MessageUtils.answerMessageFromResource(
                 ctx,

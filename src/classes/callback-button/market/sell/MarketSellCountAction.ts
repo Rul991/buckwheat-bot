@@ -11,6 +11,7 @@ import MessageUtils from '../../../../utils/MessageUtils'
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import StringUtils from '../../../../utils/StringUtils'
 import InventoryItemsUtils from '../../../../utils/InventoryItemsUtils'
+import GunsUtils from '../../../../utils/GunsUtils'
 
 type Data = {
     id: number
@@ -50,6 +51,7 @@ export default class extends CallbackButtonAction<Data> {
             id,
             itemId
         )
+        const ammo = GunsUtils.getAmmoDescription(itemId)
 
         const {
             count
@@ -76,7 +78,8 @@ export default class extends CallbackButtonAction<Data> {
                     changeValues: {
                         item,
                         needCount,
-                        chance
+                        chance,
+                        ammo
                     }
                 }
             ),

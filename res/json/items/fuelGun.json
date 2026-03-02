@@ -1,0 +1,15 @@
+{
+    "name": "Топливный лазер",
+    "description": "Используется для ускоренной добычи руды, но может послужить и неплохим оружием",
+    "type": "manyInfinity",
+    "material": {
+        "rarity": 8
+    },
+    "gun": {
+        "damage": [50, 100],
+        "ammo": "fuelOre"
+    },
+    "maxCount": {
+        "user": 1
+    }
+}

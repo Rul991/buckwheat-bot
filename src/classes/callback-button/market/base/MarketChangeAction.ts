@@ -50,6 +50,11 @@ export default abstract class extends ButtonScrollerAction<Data, ButtonScrollerD
             undefined
 
         const page = this._getNewPage(data)
+        const scrollerJson = JSON.stringify({
+            c: 0,
+            i: 0,
+            id: userId
+        })
 
         return {
             values: {
@@ -87,11 +92,7 @@ export default abstract class extends ButtonScrollerAction<Data, ButtonScrollerD
                             id: userId,
                             itemId: globalItemId
                         })}` :
-                        `invchange_${JSON.stringify({
-                            c: 0,
-                            i: 0,
-                            id: userId
-                        })}`
+                        `invchange_${scrollerJson}`,
                 }
             },
             text: await FileUtils.readPugFromResource(

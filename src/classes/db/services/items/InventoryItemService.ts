@@ -102,15 +102,41 @@ export default class InventoryItemService {
         return items.items ?? []
     }
 
-    static async add(options: ItemUpdateOptions): Promise<[boolean, number]> {
+    static async add(options: ItemUpdateOptions & {isAddRest?: boolean}): Promise<[boolean, number]> {
         const {
-            count = 1
+            count: addedCount = 1,
+            chatId,
+            id,
+            isAddRest = false
         } = options
 
         const result = await this._update({
             ...options,
-            callback: () => {
-                return { addValue: count, isUpdated: true }
+            callback: async (
+                {
+                    itemId
+                },
+                {
+                    maxCount
+                }
+            ) => {
+                if (maxCount !== undefined) {
+                    const {
+                        rest
+                    } = await InventoryItemService.getRestAndCurrentCount(
+                        chatId,
+                        id,
+                        itemId
+                    )
+
+                    if (rest < addedCount) {
+                        return {
+                            addValue: isAddRest ? rest : 0,
+                            isUpdated: false
+                        }
+                    }
+                }
+                return { addValue: addedCount, isUpdated: true }
             }
         })
 
@@ -237,12 +263,15 @@ export default class InventoryItemService {
     }
 
     static async getOwners(chatId: number, itemId: string): Promise<Owner[]> {
-        let owners: Owner[] = []
+        const owners: Owner[] = []
 
         await this._forEach(chatId, itemId, (item, items) => {
+            const count = item.count ?? 0
+            if(count <= 0) return
+
             owners.push({
                 id: items.id,
-                count: item.count ?? 0
+                count
             })
         })
 

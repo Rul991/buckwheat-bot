@@ -5,6 +5,11 @@
             "data": "@{toInventory}",
             "notEach": true
         },
+        "shop": {
+            "text": "🛒 В магазин",
+            "data": "itemchange_{\"c\":0,\"i\":0,\"id\":@{id}}",
+            "notEach": true
+        },
         "slot": {
             "text": "@",
             "data": "marketbuyshow_@"
@@ -22,7 +27,7 @@
     "values": 
     [
         "slot",
-        "inventory",
+        ["inventory", "shop"],
         ["arrow"],
         ["pageNav"]
     ]

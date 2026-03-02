@@ -22,7 +22,8 @@ export default createModelWithSubModel<User, AvaHistory>(
                 className: { type: String, default: ClassUtils.defaultClassName },
                 isOld: { type: Boolean, default: false },
                 isLeft: { type: Boolean, default: false },
-                avaHistory: { type: [sub], required: false }
+                avaHistory: { type: [sub], required: false },
+                adminTitle: { type: String, required: false },
             }
         }
     }

@@ -1,0 +1,12 @@
+{
+    "name": "Пистолет",
+    "description": "Доступный, но слабый",
+    "type": "manyInfinity",
+    "gun": {
+        "damage": [
+            5,
+            7
+        ],
+        "ammo": "pistolAmmo"
+    }
+}

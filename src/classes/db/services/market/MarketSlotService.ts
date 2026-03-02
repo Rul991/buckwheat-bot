@@ -149,10 +149,22 @@ export default class {
             }
         }
 
-        await InventoryItemService.add({
+        const [isAdded] = await InventoryItemService.add({
             ...partOptions,
             id: buyer,
         })
+
+        if (!isAdded) {
+            await InventoryItemService.add({
+                ...partOptions,
+                id: seller,
+                isAddRest: true
+            })
+            return {
+                done: false,
+                reason: 'many-items'
+            }
+        }
 
         await CasinoAddService.money(chatId, seller, totalPrice)
         await CasinoAddService.money(chatId, buyer, -totalPrice)

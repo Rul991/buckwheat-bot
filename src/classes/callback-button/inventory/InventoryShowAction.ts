@@ -8,6 +8,7 @@ import FileUtils from '../../../utils/FileUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 import InventoryItemsUtils from '../../../utils/InventoryItemsUtils'
+import GunsUtils from '../../../utils/GunsUtils'
 
 type Data = {
     id: number
@@ -54,7 +55,8 @@ export default class extends CallbackButtonAction<Data> {
             {
                 changeValues: {
                     item,
-                    chance
+                    chance,
+                    ammo: GunsUtils.getAmmoDescription(itemId)
                 }
             }
         )

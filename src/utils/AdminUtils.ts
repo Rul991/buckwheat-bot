@@ -1,10 +1,11 @@
-import { Context, Types } from 'telegraf'
+import { Context } from 'telegraf'
 import TimeUtils from './TimeUtils'
 import Logging from './Logging'
 import ExceptionUtils from './ExceptionUtils'
 import { KICK_TIME } from './values/consts'
 import { Ids } from './values/types/types'
 import ChatSettingsService from '../classes/db/services/settings/ChatSettingsService'
+import AdminTitleService from '../classes/db/services/user/AdminTitleService'
 
 type GameKickOptions = Ids & {
     ctx: Context
@@ -123,18 +124,28 @@ export default class AdminUtils {
     static async setAdminTitle(ctx: Context, id: number, title: string) {
         return await ExceptionUtils.handle(async () => {
             const isAdmin = title.length > 0
+
             await ctx.promoteChatMember(
                 id,
                 {
                     can_manage_chat: isAdmin
                 }
             )
-            
-            if(!isAdmin) return
+
+            if (!isAdmin) return
             await ctx.setChatAdministratorCustomTitle(
                 id,
                 title
             )
+
+            const chatId = ctx.chat?.id
+            if (chatId) {
+                await AdminTitleService.update(
+                    chatId,
+                    id,
+                    title
+                )
+            }
         })
     }
 }

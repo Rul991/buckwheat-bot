@@ -49,7 +49,8 @@ export default class extends CallbackButtonAction<Data> {
                 chatId,
                 id,
                 count,
-                itemId: newGameId
+                itemId: newGameId,
+                isAddRest: true
             })
         }
 
