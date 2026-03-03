@@ -373,6 +373,14 @@ export default class InventoryItemService {
         id: number,
         itemId: string
     ) {
+        const hasItem = InventoryItemsUtils.has(itemId)
+        if(!hasItem) {
+            return {
+                rest: 1,
+                current: 0
+            }
+        }
+
         const minValue = 0
         const userMaxCount = InventoryItemsUtils.getMaxCount(itemId, 'user')
         const chatMaxCount = InventoryItemsUtils.getMaxCount(itemId, 'chat')

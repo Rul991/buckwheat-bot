@@ -153,6 +153,10 @@ export default class InventoryItemsUtils {
         }, 0)
     }
 
+    static has(itemId: string) {
+        return Boolean(this._items[itemId])
+    }
+
     static getItemDescription(itemId: string): InventoryItemDescription {
         return this._items[itemId] ?? this.getDummyShowableItem()
     }
