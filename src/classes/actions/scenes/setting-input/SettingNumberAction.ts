@@ -16,9 +16,4 @@ export default class extends SettingInputAction<'number'> {
 
         return value
     }
-
-    constructor() {
-        super()
-        this._name = 'setting-number'
-    }
 }

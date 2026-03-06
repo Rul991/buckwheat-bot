@@ -10,6 +10,9 @@ export default class extends BuckwheatCommand {
     constructor() {
         super()
         this._name = 'кого'
+        this._aliases = [
+            'кому'
+        ]
         this._description = 'выбираю одного из игроков в чате'
         this._replySupport = true
     }
@@ -23,7 +26,7 @@ export default class extends BuckwheatCommand {
 
         const users = await UserProfileService.getAll(chatId)
         const user = RandomUtils.choose(users) ?? {
-            id: 0,
+            id: ctx.botInfo.id,
             name: 'никого',
         }
 

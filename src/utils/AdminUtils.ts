@@ -10,6 +10,7 @@ import AdminTitleService from '../classes/db/services/user/AdminTitleService'
 type GameKickOptions = Ids & {
     ctx: Context
     isLongKick?: boolean
+    settingId?: string
 }
 
 export default class AdminUtils {
@@ -62,11 +63,12 @@ export default class AdminUtils {
         ctx,
         chatId,
         id,
-        isLongKick = false
+        isLongKick = false,
+        settingId = 'gameKick'
     }: GameKickOptions) {
         const isKick = await ChatSettingsService.get<'boolean'>(
             chatId,
-            'gameKick'
+            settingId
         )
 
         if (isKick) {

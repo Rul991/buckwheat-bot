@@ -1,13 +1,13 @@
 import ContextUtils from '../../../utils/ContextUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../utils/values/types/action-options'
-import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
+import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 import BuckwheatCommand from '../base/BuckwheatCommand'
 
 export default class GetAwardCommand extends BuckwheatCommand {
     protected _settingId: string = 'getAward'
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'награды'
         this._aliases = [
@@ -25,15 +25,22 @@ export default class GetAwardCommand extends BuckwheatCommand {
     async execute(options: BuckwheatCommandOptions): Promise<void> {
         const { ctx, chatId } = options
 
-        const id = this._getId(options)
-        const user = await ContextUtils.getUser(chatId, id)
+        const ownerId = this._getId(options)
+        const user = await ContextUtils.getUser(chatId, ownerId)
 
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/commands/award/start-get.pug',
             {
-                changeValues: {user},
-                inlineKeyboard: await LegacyInlineKeyboardManager.get('awards/start', `${id}`)
+                changeValues: { user },
+                inlineKeyboard: await InlineKeyboardManager.get(
+                    'awards/start', 
+                    {
+                        globals: {
+                            owner: ownerId
+                        }
+                    }
+                )
             }
         )
     }

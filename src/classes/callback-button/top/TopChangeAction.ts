@@ -70,7 +70,8 @@ export default class extends ScrollerAction<Object, Additional> {
 
     protected async _editMessage(options: ScrollerEditMessageOptions<Object, Additional>): Promise<ScrollerEditMessageResult> {
         const {
-            slicedObjects: objects,
+            objects,
+            slicedObjects,
             data,
             ctx,
             chatId,
@@ -98,7 +99,7 @@ export default class extends ScrollerAction<Object, Additional> {
             await ChatSettingsService.get<'boolean'>(chatId, 'link')
 
         const sorted = (await Promise.all(
-            objects.map(async ({ id: objId, value }) => {
+            slicedObjects.map(async ({ id: objId, value }) => {
                 const user = await UserProfileService.get(chatId, objId)
                 if (!user) return null
 

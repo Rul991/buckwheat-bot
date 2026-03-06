@@ -1,9 +1,13 @@
+include utils/mixins.pug
+
 - let {rank, text} = award
 
-code [#{page + 1} / #{length}]
-|  #{emoji} Награда игрока 
-a(href=link) #{name} 
-b [#{rank}]
-| :
+b #{emoji} Награда игрока 
+    +link(user)
+    | [#{rank}]:
 |
-| #{text}
+blockquote #{text}
+|
+|
+| 🎁 Выдал: 
++link(giver)

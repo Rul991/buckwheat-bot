@@ -1,54 +1,60 @@
 import CommandDescriptionUtils from '../../../../utils/CommandDescriptionUtils'
-import FileUtils from '../../../../utils/FileUtils'
 import { COMMANDS_PER_PAGE } from '../../../../utils/values/consts'
-import { CommandDescription, ScrollerEditMessage, ScrollerGetObjectsOptions, ScrollerSendMessageOptions } from '../../../../utils/values/types/types'
-import { CallbackButtonContext } from '../../../../utils/values/types/contexts'
-import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
-import LegacyScrollerAction from './LegacyScrollerAction'
+import { CommandDescription } from '../../../../utils/values/types/types'
+import ScrollerAction from '../new/ScrollerAction'
+import { object, string, ZodType } from 'zod'
+import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
+import { NewScrollerData, ScrollerEditMessageOptions, ScrollerEditMessageResult } from '../../../../utils/values/types/scrollers'
 
-export default class CommandsChangeAction extends LegacyScrollerAction<CommandDescription> {
+type T = CommandDescription
+type A = {
+    type: string
+}
+
+export default class CommandsChangeAction extends ScrollerAction<T, A> {
+    protected _keyboardFilename: string = 'commands/change'
     protected _buttonTitle: string = 'Команды: Пролистывание'
+    protected _additionalDataSchema: ZodType<A> = object({
+        type: string()
+    })
     constructor () {
         super()
         this._name = 'commandschange'
         this._objectsPerPage = COMMANDS_PER_PAGE
     }
 
-    private _getType(data: string) {
-        const [_increase, _current, type] = data.split('_')
-        return type
-    }
+    protected async _getRawObjects(options: CallbackButtonOptions<NewScrollerData<A>>): Promise<CommandDescription[]> {
+        const {
+            data
+        } = options
 
-    protected _getObjects(_: CallbackButtonContext, { data }: ScrollerGetObjectsOptions<string>): CommandDescription[] {
-        const type = this._getType(data)
+        const {
+            type
+        } = data
+
         return CommandDescriptionUtils.getVisibleByType(type)
     }
 
-    protected async _editMessage(
-        _: CallbackButtonContext,
-        {
-            currentPage,
-            length,
-            objects,
+    protected async _editMessage(options: ScrollerEditMessageOptions<CommandDescription, A>): Promise<ScrollerEditMessageResult> {
+        const {
+            slicedObjects,
             data
-        }: ScrollerSendMessageOptions<CommandDescription>
-    ): Promise<ScrollerEditMessage> {
-        const type = this._getType(data)
+        } = options
+
+        const {
+            type
+        } = data
+        const title = CommandDescriptionUtils.getTitleByType(type)
+
         return {
-            text: await FileUtils.readPugFromResource(
-                'text/actions/commands/commands.pug',
-                {
-                    changeValues: {
-                        commands: objects,
-                        page: currentPage,
-                        length,
-                        title: CommandDescriptionUtils.getTitleByType(type)
-                    }
-                }
-            ),
-            options: {
-                reply_markup: {
-                    inline_keyboard: await LegacyInlineKeyboardManager.get('commands/pager', `${currentPage}_${type}`)
+            keyboard: {
+
+            },
+            message: {
+                path: 'text/actions/commands/commands.pug',
+                changeValues: {
+                    title,
+                    commands: slicedObjects
                 }
             }
         }

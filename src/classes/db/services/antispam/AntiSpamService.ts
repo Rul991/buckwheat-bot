@@ -32,9 +32,9 @@ export default class AntiSpamService {
         const notSpamTime = (await ChatSettingsService.get<'number'>(
             chatId,
             'notSpamTime'
-        ) ?? NOT_SPAM_TIME) * MILLISECONDS_IN_SECOND
+        ) ?? NOT_SPAM_TIME)
 
-        if(notSpamTime == 0)
+        if(notSpamTime < MILLISECONDS_IN_SECOND)
             return true
 
         if(TimeUtils.isTimeExpired(time, notSpamTime)) {

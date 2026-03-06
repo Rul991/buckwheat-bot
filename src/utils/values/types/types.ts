@@ -268,7 +268,8 @@ export type DeleteEffectsByNameTargetStepsOptions = {
 }
 
 export type HpMana = 'hp' | 'mana'
-export type SettingType = 'string' | 'any' | 'enum' | 'boolean' | 'number'
+export type SettingType = keyof SettingTypeDefault
+export type SettingInputType = 'string' | 'number' | 'date'
 
 export type SettingTypeDefault = {
     string: string
@@ -276,6 +277,7 @@ export type SettingTypeDefault = {
     enum: BooleanNumberString
     boolean: boolean
     number: number
+    date: number
 }
 
 export type SettingPropertiesValues = {
@@ -294,6 +296,7 @@ export type SettingPropertiesValues = {
 
     boolean: SettingPropertiesValues['any']
     number: SettingPropertiesValues['string']
+    date: SettingPropertiesValues['string']
 }
 
 export type SettingWithId<T extends SettingType = any> = Setting<T> & {

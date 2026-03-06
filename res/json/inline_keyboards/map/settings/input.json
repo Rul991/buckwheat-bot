@@ -1,0 +1,14 @@
+{
+    "definition": {
+        "input": {
+            "text": "🔙 Назад",
+            "data": "setch_{\"c\":@{page},\"i\":1,\"id\":@{id},\"t\":@{type}}",
+            "notEach": true
+        }
+    },
+    
+    "values": 
+    [
+        "input"
+    ]
+}

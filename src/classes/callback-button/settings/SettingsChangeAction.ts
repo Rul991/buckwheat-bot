@@ -1,4 +1,4 @@
-import { ButtonScrollerOptions, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult, SettingWithId, TinyCurrentIncreaseId } from '../../../utils/values/types/types'
+import { ButtonScrollerOptions, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult, SettingWithId, TinyCurrentIncreaseId, SettingType, SettingTypeDefault } from '../../../utils/values/types/types'
 import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
 import StringUtils from '../../../utils/StringUtils'
 import FileUtils from '../../../utils/FileUtils'
@@ -7,6 +7,7 @@ import { tinyCurrentIncreaseIdSchema } from '../../../utils/values/schemas'
 import SettingUtils from '../../../utils/settings/SettingUtils'
 import SettingsService from '../../db/services/settings/SettingsService'
 import { DEFAULT_SETTINGS_TYPE } from '../../../utils/values/consts'
+import SettingShowUtils from '../../../utils/settings/SettingShowUtils'
 
 type Data = TinyCurrentIncreaseId & {
     t?: string
@@ -40,25 +41,30 @@ export default class extends ButtonScrollerAction<Object, Data> {
         return await SettingsService.getSettingsArray(settingsId, type)
     }
 
-    protected _getShowValueValue(defaultValue: any): string {
-        return StringUtils.getShowValue(defaultValue)
+    protected _getShowValue<K extends SettingType>(type: K, defaultValue: SettingTypeDefault[K]): string {
+        return SettingShowUtils.getShowValue(
+            type,
+            defaultValue
+        )
     }
 
     protected async _editText({
         id,
         slicedObjects,
-        data
+        data,
+        ctx
     }: ButtonScrollerFullOptions<Object, Data>): Promise<ButtonScrollerEditMessageResult> {
         const {
             t: type
         } = data
 
+        await ctx.scene.leave()
         return {
             text: await FileUtils.readPugFromResource('text/commands/settings/done.pug'),
             values: {
                 values: {
-                    settings: slicedObjects.map(({ id: objId, title, default: defaultValue }) => {
-                        const value = this._getShowValueValue(defaultValue)
+                    settings: slicedObjects.map(({ id: objId, title, default: defaultValue, type: settingType }) => {
+                        const value = this._getShowValue(settingType, defaultValue)
                         return ({
                             data: JSON.stringify({
                                 n: objId,

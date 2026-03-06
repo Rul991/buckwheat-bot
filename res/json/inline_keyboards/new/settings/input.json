@@ -1,0 +1,26 @@
+{
+    "markup": [
+        "input"
+    ],
+
+    "definition": {
+        "input": {
+            "text": "🔙 Назад",
+            "name": "setch",
+            "data": {
+                "$additional": {
+                    "i": 1
+                },
+                "$vars": ["input"]
+            }
+        }
+    },
+
+    "variables": {
+        "input": {
+            "c": "page",
+            "id": "id",
+            "t": "type"
+        }
+    }
+}

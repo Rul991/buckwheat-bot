@@ -21,7 +21,7 @@ export default class AntiSpamAction extends EveryMessageAction {
             const muteTime = (await ChatSettingsService.get<'number'>(
                 chatId,
                 'antiSpamMute'
-            ) ?? (DEFAULT_MUTE_TIME / MILLISECONDS_IN_SECOND)) * MILLISECONDS_IN_SECOND
+            ) ?? DEFAULT_MUTE_TIME)
 
             if (status != 'restricted') {
                 await AdminUtils.mute(ctx, id, muteTime)

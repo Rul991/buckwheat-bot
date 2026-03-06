@@ -10,7 +10,7 @@ export default abstract class<D extends {}> extends BaseAction {
     protected abstract _execute(options: SceneOptions<D>): AsyncOrSync
 
     async execute(): Promise<BaseScene<Context & ContextData<D>>> {
-        const scene = new BaseScene<Context<Update> & ContextData<D>>(this._name)
+        const scene = new BaseScene<Context<Update> & ContextData<D>>(this.name)
         await this._execute({
             scene
         })

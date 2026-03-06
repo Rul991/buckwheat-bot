@@ -1,6 +1,6 @@
 {
   "name": "buckwheat-bot",
-  "version": "1.5.6",
+  "version": "1.5.7",
   "main": "src/app/index.ts",
   "scripts": {
     "db": "bun run src/app/update-db.ts",

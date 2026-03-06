@@ -5,9 +5,11 @@ import Award from '../../../interfaces/schemas/awards/Award'
 type Type = Awards
 type SubType = Award
 
-export default createModelWithSubModel<Type, SubType>({
+export default createModelWithSubModel<Type, SubType>(
+    {
         text: { type: String, required: true },
         rank: { type: Number, required: true },
+        givenBy: { type: Number, required: false },
     },
     sub => {
         return {

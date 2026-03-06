@@ -15,9 +15,4 @@ export default class extends SettingInputAction<'string'> {
 
         return text
     }
-
-    constructor () {
-        super()
-        this._name = 'setting-string'
-    }
 }

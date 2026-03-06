@@ -49,7 +49,7 @@ export default abstract class extends CallbackButtonAction<Data> {
                         globals: {
                             id,
                             ownerId: id,
-                            p: isPublic,
+                            isPublic,
                             page
                         }
                     }

@@ -23,7 +23,6 @@ export default class extends BuckwheatCommand {
 
         this._description = 'позволяю вам выстрелить в игрока из оружия в вашем инвентаре\nесли написать команду, не отвечая на сообщение цели, можно выбрать стандартное оружие\nможешь даже не пытаться стрелять в меня'
         this._replySupport = true
-        this._isPremium = true
     }
 
     private async _getGunAndItem(chatId: number, id: number) {
@@ -143,7 +142,8 @@ export default class extends BuckwheatCommand {
             await AdminUtils.gameKick({
                 ctx,
                 chatId,
-                id: replyId
+                id: replyId,
+                settingId: 'pvp'
             }) :
             false
 

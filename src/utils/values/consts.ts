@@ -181,6 +181,12 @@ export const ALLOW_SYMBOL = '✅'
 
 export const SET_STRING_PHRASE = '+s'
 export const SET_NUMBER_PHRASE = '+n'
+export const SET_DATE_PHRASE = '+d'
+export const SET_PHRASE_DICT = {
+    [SET_STRING_PHRASE]: 'string',
+    [SET_NUMBER_PHRASE]: 'number',
+    [SET_DATE_PHRASE]: 'date',
+} as const
 
 export const MAX_CARD_NAME_LENGTH = MAX_NAME_LENGTH
 export const MAX_CARD_DESCRIPTION_LENGTH = MAX_DESCRIPTION_LENGTH

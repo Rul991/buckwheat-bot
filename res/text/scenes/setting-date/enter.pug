@@ -1,0 +1,10 @@
+include utils/functions.pug
+
+- let minNumber = min ?? `-${infinitySymbol}`
+- let maxNumber = max ?? `${infinitySymbol}`
+
+| Введите время от 
+code #{minNumber}
+|  до 
+code #{maxNumber}
+| :

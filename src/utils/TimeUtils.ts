@@ -21,7 +21,7 @@ export default class TimeUtils {
         return (setting ?? (this.maxTime / MILLISECONDS_IN_SECOND)) * MILLISECONDS_IN_SECOND
     }
 
-    static parseTimeToMilliseconds(time: string): number {
+    static parseTimeToMilliseconds(time: string, ignoreClamp = false): number {
         if(time == MAX_TIME_WORD) return 0
 
         let date = ''
@@ -44,16 +44,16 @@ export default class TimeUtils {
         
         if(!additionalTime)
             return NOT_FOUND_INDEX
-        else if(additionalTime > this.maxTime || additionalTime < this.minTime)
+        else if(!ignoreClamp && (additionalTime > this.maxTime || additionalTime < this.minTime))
             return 0
         else 
             return additionalTime
     }
 
-    static formatMillisecondsToTime(ms: number): string {
+    static formatMillisecondsToTime(ms: number, toHHMMSS = true): string {
         if(ms <= 0 || isNaN(ms)) return INFINITY_SYMB
 
-        if(ms < MILLISECONDS_IN_DAY) {
+        if(toHHMMSS && ms < MILLISECONDS_IN_DAY) {
             return this.toHHMMSS(ms)
         }
 

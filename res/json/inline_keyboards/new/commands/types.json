@@ -1,0 +1,19 @@
+{
+    "markup": [
+        "command"
+    ],
+    "definition": {
+        "command": {
+            "text": ["@"],
+            "name": "commandschange",
+            "data": {
+                "$additional": {
+                    "c": 0,
+                    "i": 0
+                },
+                "$vars": ["command"],
+                "$each": "command"
+            }
+        }
+    }
+}

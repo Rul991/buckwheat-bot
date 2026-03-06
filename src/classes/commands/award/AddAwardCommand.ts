@@ -69,7 +69,8 @@ export default class AddAwardCommand extends BuckwheatCommand {
 
         await AwardsService.add(chatId, replyId, {
             rank,
-            text
+            text,
+            givenBy: id
         })
 
         await MessageUtils.answerMessageFromResource(

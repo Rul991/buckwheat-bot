@@ -18,7 +18,6 @@ include utils/mixins.pug
 blockquote #{text || 'Призываю!'}
 |
 |
-|
 each linkAndEmoji in linksAndEmojies
     - const {link, emoji: userEmoji} = linkAndEmoji
     +link({link, name: userEmoji || emoji()})

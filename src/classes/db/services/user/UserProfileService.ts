@@ -60,6 +60,10 @@ export default class UserProfileService {
         return await UserRepository.findManyInChat(chatId)
     }
 
+    static async getAllInDb() {
+        return await UserRepository.findMany()
+    }
+
     static async deleteChat(chatId: number) {
         return await UserRepository.deleteAllInChat(chatId)
     }

@@ -1,0 +1,23 @@
+{
+    "markup": [
+        "award"
+    ],
+    "definition": {
+        "award": {
+            "name": "awardschange",
+            "text": "🔄 Обновить",
+            "data": {
+                "$vars": ["id"],
+                "$additional": {
+                    "update": true
+                }
+            }
+        }
+    },
+    "variables": {
+        "id": {
+            "id": "id",
+            "u": "owner"
+        }
+    }
+}

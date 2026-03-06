@@ -39,6 +39,6 @@ each obj in sorted
     |
 |
 |
-if isNumbers && rawTotalCount > 0
-    b 🎖 Суммарно#{totalName ? ` ${totalName}` : ''} на этой странице: 
+if isNumbers && rawTotalCount != 0
+    b 🎖 Суммарно#{totalName ? ` ${totalName}` : ''}: 
     code #{totalCount}

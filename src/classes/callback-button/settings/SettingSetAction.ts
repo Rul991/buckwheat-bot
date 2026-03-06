@@ -3,13 +3,15 @@ import CallbackButtonAction from '../CallbackButtonAction'
 import RankUtils from '../../../utils/RankUtils'
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
-import { DEFAULT_SETTINGS_TYPE, SET_NUMBER_PHRASE, SET_STRING_PHRASE } from '../../../utils/values/consts'
+import { DEFAULT_SETTINGS_TYPE, SET_PHRASE_DICT } from '../../../utils/values/consts'
 import StringUtils from '../../../utils/StringUtils'
 import SettingShowUtils from '../../../utils/settings/SettingShowUtils'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 import { booleanNumberStringSchema, idSchema } from '../../../utils/values/schemas'
 import SettingUtils from '../../../utils/settings/SettingUtils'
 import SettingsService from '../../db/services/settings/SettingsService'
+import MessageUtils from '../../../utils/MessageUtils'
+import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 
 type Data = {
     id: number
@@ -64,15 +66,26 @@ export default class extends CallbackButtonAction<Data> {
             type,
         }
 
-        if (value == SET_NUMBER_PHRASE) {
+        await MessageUtils.editMarkup(
+            ctx,
+            {
+                inline_keyboard: await InlineKeyboardManager.get(
+                    'settings/input',
+                    {
+                        globals: {
+                            page,
+                            id,
+                            type
+                        }
+                    }
+                )
+            }
+        )
+
+        const phrase = SET_PHRASE_DICT[value as any as keyof typeof SET_PHRASE_DICT]
+        if (phrase) {
             await ctx.scene.enter(
-                'setting-number',
-                initialState
-            )
-        }
-        else if(value == SET_STRING_PHRASE) {
-            await ctx.scene.enter(
-                'setting-string',
+                `setting-${phrase}`,
                 initialState
             )
         }

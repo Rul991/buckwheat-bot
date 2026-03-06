@@ -1,4 +1,4 @@
-import { AsyncOrSync, SettingTypeDefault } from '../../../../utils/values/types/types'
+import { AsyncOrSync, SettingInputType, SettingTypeDefault } from '../../../../utils/values/types/types'
 import SceneAction from '../SceneAction'
 import MessageUtils from '../../../../utils/MessageUtils'
 import SettingUtils from '../../../../utils/settings/SettingUtils'
@@ -6,10 +6,27 @@ import { INFINITY_SYMB } from '../../../../utils/values/consts'
 import { SceneOptions } from '../../../../utils/values/types/action-options'
 import SettingsService from '../../../db/services/settings/SettingsService'
 import { SettingInputData } from '../../../../utils/values/types/scene-datas'
+import SettingShowUtils from '../../../../utils/settings/SettingShowUtils'
 
-export default abstract class<K extends 'string' | 'number'> extends SceneAction<SettingInputData<K>> {
+export default abstract class <K extends SettingInputType> extends SceneAction<SettingInputData<K>> {
     protected abstract _settingType: K
     protected abstract _getValue(text: string, min: number, max: number): SettingTypeDefault[K]
+
+    constructor () {
+        super()
+    }
+
+    get name() {
+        const result = `setting-${this._settingType}`
+        return result
+    }
+
+    protected _getShowValue(value: SettingTypeDefault[K]): string {
+        return SettingShowUtils.getShowValue(
+            this._settingType,
+            value
+        )
+    }
 
     protected _execute({ scene }: SceneOptions<SettingInputData<K>>): AsyncOrSync {
         const getSetting = async (key: string, type: string) => {
@@ -28,8 +45,6 @@ export default abstract class<K extends 'string' | 'number'> extends SceneAction
                 type
             } = state
 
-            await MessageUtils.deleteMessage(ctx)
-
             const setting = await getSetting(settingId, type)
             state.setting = setting
 
@@ -40,7 +55,10 @@ export default abstract class<K extends 'string' | 'number'> extends SceneAction
                     isReply: false,
                     changeValues: {
                         infinitySymbol: INFINITY_SYMB,
-                        ...setting.properties
+                        ...SettingShowUtils.getShowProperties(
+                            setting.type,
+                            setting.properties
+                        )
                     }
                 }
             )
@@ -67,13 +85,14 @@ export default abstract class<K extends 'string' | 'number'> extends SceneAction
                 max = Number.MAX_SAFE_INTEGER
             } = setting.properties ?? {}
 
-            const value = this._getValue(text, min, max)
+            const result = this._getValue(text, min, max)
+            const showValue = this._getShowValue(result)
 
             await SettingsService.setSetting(
                 settingsId,
                 type,
                 settingId,
-                value
+                result
             )
 
             await MessageUtils.answerMessageFromResource(
@@ -82,7 +101,7 @@ export default abstract class<K extends 'string' | 'number'> extends SceneAction
                 {
                     changeValues: {
                         title,
-                        value
+                        value: showValue
                     }
                 }
             )

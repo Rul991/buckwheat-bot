@@ -231,11 +231,11 @@ export default class {
             },
             getUnsortedValues: async chatId => {
                 return (await ItemsService.getAll(chatId))
-                    .filter(({ items }) => items && items.length > 0)
                     .map(({ id, items }) => ({
                         id,
                         value: InventoryItemsUtils.getTotalCountEveryItems(items)
                     }))
+                    .filter(({ value }) => value > 0)
             }
         }
     }

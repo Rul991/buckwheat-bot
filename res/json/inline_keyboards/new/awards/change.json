@@ -1,10 +1,25 @@
 {
     "markup": [
+        "remove",
         ["arrow"],
         ["pageNav"]
     ],
     "definition": {
-
+        "remove": {
+            "text": "🗑 Удалить",
+            "name": "awardremove",
+            "data": {
+                "$if": "isGiver",
+                "$vars": ["remove"]
+            }
+        }
+    },
+    "variables": {
+        "remove": {
+            "owner": "ownerId",
+            "index": "currentPage",
+            "id": "dataId"
+        }
     },
     "definitionExtends": [
         {

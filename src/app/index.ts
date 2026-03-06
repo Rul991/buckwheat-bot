@@ -216,8 +216,10 @@ import ChatJoinRequestHandler from '../classes/main/handlers/ChatJoinRequestHand
 import JoinMemberAction from '../classes/actions/chat-join/JoinMemberAction'
 import ChatJoinAction from '../classes/callback-button/join/ChatJoinAction'
 import ReturnAdminTitleAction from '../classes/actions/new-member/ReturnAdminTitleAction'
-import { inventoryItemDescriptionSchema } from '../utils/values/schemas'
 import SelectGunAction from '../classes/callback-button/gun/SelectGunAction'
+import AwardRemoveAction from '../classes/callback-button/award/AwardRemoveAction'
+import SettingDateAction from '../classes/actions/scenes/setting-input/SettingDateAction'
+import KickCommand from '../classes/commands/buckwheat/admins/KickCommand'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -234,7 +236,7 @@ const isEnvVarsValidate = () => {
         StartValidator.createVariable('DB_USERNAME', false),
         StartValidator.createVariable('DB_PASSWORD', false),
         StartValidator.createVariable('ALLOWED_CHATS', false),
-        StartValidator.createVariable('HTTP_PROXY', false),
+        StartValidator.createVariable('SOCKS_PROXY', false),
     ])
 
     return true
@@ -379,6 +381,7 @@ const launchBot = async (bot: Bot) => {
         new LotteryChangeAction(),
         new ChatJoinAction(),
         new SelectGunAction(),
+        new AwardRemoveAction(),
     )
 
     // dice 
@@ -432,6 +435,7 @@ const launchBot = async (bot: Bot) => {
         new UnmuteCommand(),
         new BanCommand(),
         new UnbanCommand(),
+        new KickCommand(),
         new DeleteCommand(),
         new PingCommand(),
         new CubeCommand(),
@@ -508,6 +512,7 @@ const launchBot = async (bot: Bot) => {
     sceneActionHandler.add(
         new SettingNumberAction(),
         new SettingStringAction(),
+        new SettingDateAction(),
         new SuggestCardAction(),
         new CardPriceSellAction(),
         new ImportSceneAction(),
@@ -519,6 +524,7 @@ const launchBot = async (bot: Bot) => {
         new CheckDeletingFromChatAction()
     )
 
+    // chat join
     chatJoinRequestHandler.add(
         new JoinMemberAction(),
     )

@@ -47,7 +47,7 @@
 
     "notesPublic": {
         "title": "Публичность заметок",
-        "description": "Определяет, будут ли заметки публичны по умолчанию",
+        "description": "Будут ли заметки публичны по умолчанию?",
         "type": "boolean",
         "properties": {},
         "default": false

@@ -18,7 +18,7 @@ import LevelUtils from '../level/LevelUtils'
 import { Recipe } from './types/recipes'
 import CraftData from '../../interfaces/callback-button-data/CraftData'
 import { Gun } from './types/guns'
-import { JsonButton, JsonKeyboard } from './types/keyboards'
+import { JsonKeyboard } from './types/keyboards'
 
 export const simpleCommandSchema: ZodType<SimpleCommand> = object({
     name: string(),
@@ -55,6 +55,15 @@ export const numberSettingSchema: ZodType<Setting<'number'>> = settingPartSchema
     .and(
         object({
             type: literal('number'),
+            default: number(),
+            properties: minMaxOptionalProperties
+        })
+    )
+
+export const dateSettingSchema: ZodType<Setting<'date'>> = settingPartSchema
+    .and(
+        object({
+            type: literal('date'),
             default: number(),
             properties: minMaxOptionalProperties
         })
@@ -103,6 +112,7 @@ export const settingSchema: ZodType<Setting<any>> = stringSetting
     .or(enumSettingSchema)
     .or(booleanSettingSchema)
     .or(anySettingSchema)
+    .or(dateSettingSchema)
 
 export const jsonShopItemSchema: ZodType<JsonShopItem> = object({
     id: string().optional(),

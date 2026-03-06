@@ -5,11 +5,12 @@ import { MaybeString } from '../../../../utils/values/types/types'
 import { TextContext } from '../../../../utils/values/types/contexts'
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
+import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
 
 export default class CommandsCommand extends BuckwheatCommand {
     protected _settingId: string = 'commands'
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'команды'
         this._description = 'я выдаю данный список'
@@ -33,14 +34,16 @@ export default class CommandsCommand extends BuckwheatCommand {
                 changeValues: {
                     length: commands.length
                 },
-                inlineKeyboard: await LegacyInlineKeyboardManager.map(
+                inlineKeyboard: await InlineKeyboardManager.get(
                     'commands/types',
                     {
                         values: {
                             command: CommandDescriptionUtils.getVisibleTypes()
-                                .map(({type, title}) => {
+                                .map(({ type, title }) => {
                                     return {
-                                        data: type,
+                                        data: {
+                                            type
+                                        },
                                         text: title
                                     }
                                 })
