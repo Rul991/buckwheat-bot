@@ -85,17 +85,6 @@
         "properties": {},
         "default": true
     },
-
-    "maxAdminTime": {
-        "title": "Максимальное время бана/мута",
-        "description": "Макс. кол-во секунд, на которое можно дать бан/мут\nБан/мут навсегда работает в любом случае",
-        "type": "date",
-        "properties": {
-            "min": 31,
-            "max": 31536000
-        },
-        "default": 31536000
-    },
     
     "oldCheck": {
         "title": "Кнопка вступления",
@@ -113,7 +102,7 @@
         "default": false
     },
 
-    "cbu": {
+    "canBuyUnmute": {
         "title": "Покупаемый ''Размут''",
         "description": "Можно ли купить ''Размут'' в магазине?",
         "type": "boolean",
@@ -121,7 +110,7 @@
         "default": false
     },
 
-    "nRank": {
+    "negativeRank": {
         "title": "Получаемый Огузок",
         "description": "Можно ли получить -1 ранг из-за мута?",
         "type": "boolean",

@@ -1,5 +1,6 @@
 {
     "name": "Беспроигрышное казино",
     "description": "Разрешаю не отдавать деньги в случае проигрыша в казино",
-    "type": "manyInfinity"
+    "type": "manyInfinity",
+    "basePrice": 75000
 }

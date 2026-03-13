@@ -1,45 +1,24 @@
-import { appendFile, readdir, readFile, stat, writeFile } from 'fs/promises'
+import { appendFile, readdir } from 'fs/promises'
 import { basename, join } from 'path'
-import FileCache from '../interfaces/other/FileCache'
 import Logging from './Logging'
 import ReplaceOptions from '../interfaces/options/ReplaceOptions'
 import { render } from 'pug'
 import { MODE } from './values/consts'
 
 export default class FileUtils {
-    private static _cache: Record<string, FileCache> = {}
+    private static _cache: Record<string, string> = {}
     private static _resourceFolder = './res/'
 
     static async readToString(path: string): Promise<string> {
         try {
-            let isCached = false
-            const cachedValue = this._cache[path] ?? {}
+            const file = Bun.file(path)
+            const text = await file.text()
 
-            if (MODE == 'dev') {
-                const stats = await stat(path)
-                if (stats.ctimeMs == cachedValue.lastEdited) {
-                    isCached = true
-                }
-                else {
-                    cachedValue.lastEdited = stats.ctimeMs
-                }
+            if (MODE == 'prod') {
+                this._cache[path] = text
             }
 
-            let result: string
-
-            if (isCached) {
-                result = cachedValue.text
-            }
-
-            else {
-                const buffer = await readFile(path)
-                result = buffer.toString('utf-8')
-            }
-
-            cachedValue.text = result
-            this._cache[path] = cachedValue
-
-            return result
+            return text
         }
         catch (e) {
             Logging.error(`Cant read text from ${path}: ${e}`)
@@ -49,7 +28,7 @@ export default class FileUtils {
 
     static async write(path: string, data: string): Promise<boolean> {
         try {
-            await writeFile(path, data)
+            await Bun.write(path, data)
             return true
         }
         catch (e) {

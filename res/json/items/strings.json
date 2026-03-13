@@ -3,6 +3,7 @@
     "description": "Используется для удочки, лука, шерсти.... Стоп, это другая вселенная!",
     "type": "consumable",
     "material": {
-        "rarity": 3
-    }
+        "rarity": 2
+    },
+    "basePrice": 35
 }

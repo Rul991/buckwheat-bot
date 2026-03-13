@@ -1,5 +1,9 @@
 {
     "name": "Набор с карточками",
     "description": "Набор с коллекционными карточками, содержит редкие экземпляры",
-    "type": "consumable"
+    "type": "consumable",
+    "basePrice": 200,
+    "material": {
+        "rarity": 2
+    }
 }

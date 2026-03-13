@@ -1,6 +1,7 @@
 import ButtonScrollerData from '../../../interfaces/callback-button-data/ButtonScrollerData'
 import FileUtils from '../../../utils/FileUtils'
-import { ButtonScrollerEditMessageResult, ButtonScrollerFullOptions, ButtonScrollerOptions, ShowableItem } from '../../../utils/values/types/types'
+import { ButtonScrollerEditMessageResult, ButtonScrollerFullOptions, ButtonScrollerOptions } from '../../../utils/values/types/types'
+import { ShowableItem } from '../../../utils/values/types/items'
 import InventoryItemService from '../../db/services/items/InventoryItemService'
 import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
 

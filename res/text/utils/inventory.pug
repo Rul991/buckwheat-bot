@@ -1,6 +1,20 @@
 include ./mixins.pug
 include ./functions.pug
 
+mixin subproperty(title, value)
+    |       ➖ #{title}: 
+    code #{value}
+    |
+    |
+
+mixin property(title, key, condition = item[key])
+    |
+    +parameter(title, bool(item[key]))
+    if condition
+        block 
+        |
+    |
+
 mixin item(options)
     - const { item, chance = 0 } = options
     - 
@@ -14,19 +28,15 @@ mixin item(options)
     blockquote #{item.description || '...'}
     |
     |
-    |
-    +parameter('Находится', bool(item.material))
-    if chance > 0
-        +parameter('Шанс', `${formatNumber(chance)}%`)
-        |
-        |
-    |
-    +parameter('Оружие', bool(item.gun))
-    if item.gun
+    +property('Находится', 'material', chance > 0)
+        +subproperty('Шанс', `${formatNumber(chance)}%`)
+    +property('Оружие', 'gun')
         - const [min, max] = item.gun.damage
-        +parameter('Урон', `${formatNumber(min)} - ${formatNumber(max)}`)
-        +parameter('Патроны', ammo ? ammo.name : item.gun.id)
-        |
-        |
+        +subproperty('Урон', `${formatNumber(min)} - ${formatNumber(max)}`)
+        +subproperty('Патроны', ammo ? ammo.name : item.gun.id)
+    +property('Щит', 'shield')
+        +subproperty('Шанс срабатывания', `${formatNumber(item.shield.triggeringChance * 100)}%`)
+    |
     |
     +parameter('Тип', typeName)
+    +parameter('Рыночная цена', `${formatNumber(item.basePrice)}💰`)

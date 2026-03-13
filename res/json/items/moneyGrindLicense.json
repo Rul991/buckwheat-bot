@@ -4,5 +4,6 @@
     "type": "manyInfinity",
     "maxCount": {
         "chat": 15
-    }
+    },
+    "basePrice": 10000
 }

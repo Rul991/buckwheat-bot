@@ -9,7 +9,6 @@ import { CallbackButtonContext, ContextData, MyChatMemberContext, TextContext } 
 import { BuckwheatCommandOptions } from './action-options'
 import CallbackButtonAction from '../../../classes/callback-button/CallbackButtonAction'
 import Character from '../../../interfaces/duel/Character'
-import { Gun } from './guns'
 
 export type MaybeString = string | undefined
 export type CommandStrings = [string, MaybeString, MaybeString]
@@ -37,31 +36,6 @@ export type IdContextData = {
 
 export type DiceValues = '🎲' | '🎯' | '🏀' | '⚽' | '🎳' | '🎰'
 export type ModeTypes = 'prod' | 'dev'
-
-export type InventoryItemDescription = {
-    name: string,
-    type: InventoryItemType
-    description: string
-    material?: {
-        rarity: number
-    }
-    maxCount?: {
-        user?: number
-        chat?: number
-    }
-    gun?: Gun
-}
-export type InventoryItemDescriptionWithId = InventoryItemDescription & {
-    id: string
-}
-export type ShowableItem = InventoryItemDescription & {
-    itemId: string
-    countText: string
-    count: number
-}
-
-export type InventoryItemType = 'consumable' | 'manyInfinity'
-export type InventoryItemCountType = 'user' | 'chat'
 export type AsyncOrSync<T = void> = Promise<T> | T
 
 export type PlayerTypes = 'knight' | 'thief' | 'sorcerer' | 'engineer' | 'bard'
@@ -129,7 +103,7 @@ export type JsonShopItem = {
     name?: string
     description?: string
     emoji: string
-    price: number
+    price?: number
     premiumDiscount?: number
     isPremium?: boolean
     itemName?: string
@@ -273,7 +247,6 @@ export type SettingInputType = 'string' | 'number' | 'date'
 
 export type SettingTypeDefault = {
     string: string
-    any: any
     enum: BooleanNumberString
     boolean: boolean
     number: number
@@ -286,15 +259,13 @@ export type SettingPropertiesValues = {
         max?: number
     }
 
-    any: {
-
-    }
-
     enum: {
         values: BooleanNumberString[]
     }
 
-    boolean: SettingPropertiesValues['any']
+    boolean: {
+        
+    }
     number: SettingPropertiesValues['string']
     date: SettingPropertiesValues['string']
 }

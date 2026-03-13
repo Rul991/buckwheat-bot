@@ -143,7 +143,18 @@ export default class ContextUtils {
         }
     }
 
+    static async getChat(ctx: Context) {
+        try {
+            return ctx.getChat()
+        }
+        catch(e) {
+            Logging.error('ContextUtils.getChat', e)
+            return undefined
+        }
+    }
+
     static async isLeft(ctx: Context, id: number) {
+        if (ctx.chat?.type == 'private') return false
         const status = await this.getStatus(ctx, id)
         return status == 'kicked' || status == 'left'
     }

@@ -6,5 +6,56 @@
     "search.exclude": {
         "**/node_modules/**": true,
         "**/dist/**": true
-    }
+    },
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "res/json/inline_keyboards/new/**/*.json"
+            ],
+            "url": "./.vscode/schemas/json-keyboard.schema.json"
+        },
+        {
+            "fileMatch": [
+                "res/json/items/**/*.json"
+            ],
+            "url": "./.vscode/schemas/inventory-item-description.schema.json"
+        },
+        {
+            "fileMatch": [
+                "res/json/duels/characters/**/*.json"
+            ],
+            "url": "./.vscode/schemas/character.schema.json"
+        },
+        {
+            "fileMatch": [
+                "res/json/duels/effects/**/*.json",
+                "res/json/duels/skills/**/*.json"
+            ],
+            "url": "./.vscode/schemas/skill.schema.json"
+        },
+        {
+            "fileMatch": [
+                "res/json/payment/**/*.json"
+            ],
+            "url": "./.vscode/schemas/payment.schema.json"
+        },
+        {
+            "fileMatch": [
+                "res/json/recipes/**/*.json"
+            ],
+            "url": "./.vscode/schemas/recipe.schema.json"
+        },
+        {
+            "fileMatch": [
+                "res/json/shop-items/**/*.json"
+            ],
+            "url": "./.vscode/schemas/shop-item.schema.json"
+        },
+        {
+            "fileMatch": [
+                "res/json/simple-commands/**/*.json"
+            ],
+            "url": "./.vscode/schemas/simple-command.schema.json"
+        }
+    ]
 }

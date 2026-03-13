@@ -14,6 +14,12 @@ u #{gunTitle}
 | !
 | Игрок 
 +link(reply)
-| получает 
-code #{formatNumber(damage)}
-|  урона #{isKicked ? 'и вылетает из чата' : ''}!
+if shield
+    | не получает урон!
+    | Он был защищен предметом 
+    u #{shield.name}
+    | !
+else
+    | получает 
+    code #{formatNumber(damage)}
+    |  урона #{isKicked ? 'и вылетает из чата' : ''}!

@@ -1,5 +1,5 @@
 import InventoryItemService from '../classes/db/services/items/InventoryItemService'
-import { DEFAULT_DESCRIPTION, DEFAULT_ITEMNAME, DEFAULT_MAX_COUNT, DEFAULT_PREMIUM_DISCOUNT, DEFAULT_TOTAL_COUNT, DEFAULT_TOTAL_COUNT_MODE, FOREVER, MAX_COUNT_BUTTONS_LENGTH } from './values/consts'
+import { DEFAULT_DESCRIPTION, DEFAULT_ITEMNAME, DEFAULT_PREMIUM_DISCOUNT, FOREVER, MAX_COUNT_BUTTONS_LENGTH } from './values/consts'
 import MessageUtils from './MessageUtils'
 import { ItemCallbackOptions, ShopItem, ShopItemWithLength, JsonShopItem, ShopItemDescription, ShopMessageOptions } from './values/types/types'
 import ContextUtils from './ContextUtils'
@@ -174,7 +174,7 @@ export default class ShopItems {
             execute: async ({ ctx, id, chatId }) => {
                 const hasSetting = await ChatSettingsService.get<'boolean'>(
                     chatId,
-                    'cbu'
+                    'canBuyUnmute'
                 )
 
                 if (!hasSetting) {
@@ -435,6 +435,24 @@ export default class ShopItems {
                 )
             }
         },
+
+        {
+            filename: "simpleShield",
+            execute: async (options) => {
+                return await buyItem(
+                    options
+                )
+            }
+        },
+
+        {
+            filename: "unbreakableShield",
+            execute: async (options) => {
+                return await buyItem(
+                    options
+                )
+            }
+        },
     ]
 
     private static _isValid(item: JsonShopItem): boolean {
@@ -462,7 +480,8 @@ export default class ShopItems {
                 premiumDiscount,
                 itemName,
                 name,
-                description
+                description,
+                price
             } = item
 
             const itemId = itemName ?? filename
@@ -477,6 +496,7 @@ export default class ShopItems {
                 id: filename,
                 name: name ?? itemDescription.name,
                 description: description ?? itemDescription.description,
+                price: price ?? itemDescription.basePrice
             }
         }
 

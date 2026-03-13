@@ -1,9 +1,6 @@
-import { configDotenv } from 'dotenv'
 import { env } from 'process'
 import { ConstSymbol, ModeTypes, TotalCountMode } from './types/types'
 import { TelegramEmoji } from 'telegraf/types'
-
-configDotenv()
 
 const fromEnvToNumber = (key: string) =>
     !env[key] || isNaN(+env[key]) ? undefined : +env[key]

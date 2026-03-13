@@ -26,7 +26,7 @@ export default class MuteCommand extends AdminCommand {
     protected async _do(ctx: TextContext, replyId: number, time: number, chatId: number): Promise<boolean> {
         const muted = await AdminUtils.mute(ctx, replyId, time)
 
-        if(muted && await ChatSettingsService.get<'boolean'>(chatId, 'nRank')) {
+        if(muted && await ChatSettingsService.get<'boolean'>(chatId, 'negativeRank')) {
             await UserRankService.update(chatId, replyId, NOT_FOUND_INDEX)
         }
 

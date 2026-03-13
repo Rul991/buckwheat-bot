@@ -2,7 +2,8 @@ import { any, boolean, int, literal, number, object, record, string, tuple, ZodL
 import Character from '../../interfaces/duel/Character'
 import Characteristics from '../../interfaces/duel/Characteristics'
 import SimpleCommand from '../../interfaces/other/SimpleComand'
-import { NewInvoiceParameters, JsonShopItem, InventoryItemDescription, TinyCurrentIncreaseId, ClassTypes, KeyboardDatabaseData, SettingPropertiesValues, BooleanNumberString } from './types/types'
+import { NewInvoiceParameters, JsonShopItem, TinyCurrentIncreaseId, ClassTypes, KeyboardDatabaseData, SettingPropertiesValues, BooleanNumberString } from './types/types'
+import { InventoryItemDescription } from './types/items'
 import StartUp from '../../interfaces/other/StartUp'
 import CubeData from '../../interfaces/callback-button-data/CubeData'
 import ScrollerWithIdData from '../../interfaces/callback-button-data/ScrollerWithIdData'
@@ -17,8 +18,9 @@ import JsonSkill from '../../interfaces/duel/JsonSkill'
 import LevelUtils from '../level/LevelUtils'
 import { Recipe } from './types/recipes'
 import CraftData from '../../interfaces/callback-button-data/CraftData'
-import { Gun } from './types/guns'
+import { Gun } from './types/items'
 import { JsonKeyboard } from './types/keyboards'
+import { CommonSettingPart, UniqueSettingPart } from './types/schemas'
 
 export const simpleCommandSchema: ZodType<SimpleCommand> = object({
     name: string(),
@@ -26,11 +28,6 @@ export const simpleCommandSchema: ZodType<SimpleCommand> = object({
     text: string().or(string().array()).optional(),
     avoidOther: boolean().optional(),
     aliases: string().array().optional()
-})
-
-export const settingPartSchema: ZodType<Omit<Setting<any>, 'type' | 'default' | 'properties'>> = object({
-    title: string(),
-    description: string(),
 })
 
 export const minMaxOptionalProperties: ZodType<SettingPropertiesValues['number' | 'string']> = object({
@@ -42,84 +39,67 @@ export const booleanNumberStringSchema: ZodType<BooleanNumberString> = string()
     .or(number())
     .or(boolean())
 
-export const stringSetting: ZodType<Setting<'string'>> = settingPartSchema
-    .and(
-        object({
-            type: literal('string'),
-            default: string(),
-            properties: minMaxOptionalProperties
-        })
+export const settingPartSchema: ZodType<CommonSettingPart<any>> = object({
+    title: string(),
+    description: string(),
+})
+
+export const stringSetting: ZodType<UniqueSettingPart<'string'>> = object({
+    type: literal('string'),
+    default: string(),
+    properties: minMaxOptionalProperties
+})
+
+export const numberSettingSchema: ZodType<UniqueSettingPart<'number'>> = object({
+    type: literal('number'),
+    default: number(),
+    properties: minMaxOptionalProperties
+})
+
+export const dateSettingSchema: ZodType<UniqueSettingPart<'date'>> = object({
+    type: literal('date'),
+    default: number(),
+    properties: minMaxOptionalProperties
+})
+
+export const enumSettingSchema: ZodType<UniqueSettingPart<'enum'>> = object({
+    type: literal('enum'),
+    default: booleanNumberStringSchema,
+    properties: object({
+        values: booleanNumberStringSchema.array()
+    })
+})
+    .refine(
+        ({ default: defaultValue, properties: { values } }) => {
+            return values.length == 0 || values.includes(defaultValue)
+        },
+        {
+            path: ['default'],
+            error: 'default can be only like in values'
+        }
     )
 
-export const numberSettingSchema: ZodType<Setting<'number'>> = settingPartSchema
-    .and(
-        object({
-            type: literal('number'),
-            default: number(),
-            properties: minMaxOptionalProperties
-        })
-    )
+export const booleanSettingSchema: ZodType<UniqueSettingPart<'boolean'>> = object({
+    type: literal('boolean'),
+    default: boolean(),
+    properties: object()
+})
 
-export const dateSettingSchema: ZodType<Setting<'date'>> = settingPartSchema
+export const settingSchema: ZodType<Setting<any>> = settingPartSchema
     .and(
-        object({
-            type: literal('date'),
-            default: number(),
-            properties: minMaxOptionalProperties
-        })
+        stringSetting
+            .or(numberSettingSchema)
+            .or(enumSettingSchema)
+            .or(booleanSettingSchema)
+            .or(dateSettingSchema)
     )
-
-export const enumSettingSchema: ZodType<Setting<'enum'>> = settingPartSchema
-    .and(
-        object({
-            type: literal('enum'),
-            default: booleanNumberStringSchema,
-            properties: object({
-                values: booleanNumberStringSchema.array()
-            })
-        })
-            .refine(
-                ({ default: defaultValue, properties: { values } }) => {
-                    return values.length == 0 || values.includes(defaultValue)
-                },
-                {
-                    path: ['default'],
-                    error: 'default can be only like in values'
-                }
-            )
-    )
-
-export const booleanSettingSchema: ZodType<Setting<'boolean'>> = settingPartSchema
-    .and(
-        object({
-            type: literal('boolean'),
-            default: boolean(),
-            properties: object()
-        })
-    )
-
-export const anySettingSchema: ZodType<Setting<'any'>> = settingPartSchema
-    .and(
-        object({
-            type: literal('any'),
-            default: any(),
-            properties: object()
-        })
-    )
-
-export const settingSchema: ZodType<Setting<any>> = stringSetting
-    .or(numberSettingSchema)
-    .or(enumSettingSchema)
-    .or(booleanSettingSchema)
-    .or(anySettingSchema)
-    .or(dateSettingSchema)
 
 export const jsonShopItemSchema: ZodType<JsonShopItem> = object({
     id: string().optional(),
     name: string().optional(),
     description: string().optional(),
     emoji: string(),
-    price: number(),
+    price: number().optional(),
     premiumDiscount: number().optional(),
     isPremium: boolean().optional(),
     itemName: string().optional(),
@@ -229,7 +209,11 @@ export const inventoryItemDescriptionSchema: ZodType<InventoryItemDescription> =
     gun: object({
         damage: tuple([number(), number()]),
         ammo: string().optional()
-    }).optional()
+    }).optional(),
+    shield: object({
+        triggeringChance: number()
+    }).optional(),
+    basePrice: number()
 })
 
 export const tinyCurrentIncreaseIdSchema: ZodType<TinyCurrentIncreaseId> = object({

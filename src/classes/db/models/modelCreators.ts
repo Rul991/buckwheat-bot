@@ -1,4 +1,4 @@
-import { model, ObtainDocumentType, Schema, SchemaDefinition } from 'mongoose'
+import { model, Schema, SchemaDefinition } from 'mongoose'
 
 type ModelOptions<T> = {
     name: string,

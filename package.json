@@ -1,43 +1,40 @@
 {
-  "name": "buckwheat-bot",
-  "version": "1.5.7",
-  "main": "src/app/index.ts",
-  "scripts": {
-    "db": "bun run src/app/update-db.ts",
-    "dev": "bun run --watch src/app/index.ts",
-    "start": "bun run src/app/index.ts",
-    "start:prod": "bunx bm2 start bm2.config.js --env prod",
-    "restart:prod": "bun install && bunx bm2 restart buckwheat-bot",
-    "stop:prod": "bunx bm2 stop bm2.config.js && bunx bm2 delete bm2.config.js"
-  },
-  "keywords": [
-    "telegraf",
-    "mongoose",
-    "buckwheat",
-    "bot",
-    "telegram"
-  ],
-  "author": "Rul",
-  "license": "CC BY-NC",
-  "description": "",
-  "devDependencies": {
-    "@types/express": "^5.0.3",
-    "@types/mongoose": "^5.11.97",
-    "@types/node": "^24.1.0",
-    "@types/pug": "^2.0.10",
-    "tsup": "^8.5.1"
-  },
-  "dependencies": {
-    "bm2": "^1.0.21",
-    "dotenv": "^17.2.0",
-    "express": "^5.1.0",
-    "mongoose": "^9.1.4",
-    "p-queue": "^9.0.1",
-    "pug": "^3.0.3",
-    "socks-proxy-agent": "^8.0.5",
-    "telegraf": "^4.16.3",
-    "typescript": "^5.9.3",
-    "zod": "^4.3.5"
-  },
-  "packageManager": "yarn@1.22.22"
+    "name": "buckwheat-bot",
+    "version": "1.5.8",
+    "main": "src/app/index.ts",
+    "scripts": {
+        "dev": "bun run --watch .",
+        "start": "bun run .",
+        "start:prod": "bunx bm2 start bm2.config.js --env prod",
+        "restart:prod": "bun install && bunx bm2 restart buckwheat-bot",
+        "stop:prod": "bunx bm2 stop bm2.config.js && bunx bm2 delete bm2.config.js"
+    },
+    "keywords": [
+        "telegraf",
+        "mongoose",
+        "buckwheat",
+        "bot",
+        "telegram"
+    ],
+    "author": "Rul",
+    "license": "CC BY-NC",
+    "description": "",
+    "devDependencies": {
+        "@types/express": "^5.0.3",
+        "@types/node": "^25.3.5",
+        "@types/pug": "^2.0.10",
+        "@types/bun": "^1.3.10"
+    },
+    "dependencies": {
+        "bm2": "^1.0.21",
+        "express": "^5.1.0",
+        "mongoose": "^9.1.4",
+        "p-queue": "^9.0.1",
+        "pug": "^3.0.3",
+        "socks-proxy-agent": "^8.0.5",
+        "telegraf": "^4.16.3",
+        "typescript": "^5.9.3",
+        "zod": "^4.3.5"
+    },
+    "packageManager": "bun@1.3.10"
 }

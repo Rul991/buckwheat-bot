@@ -1,0 +1,10 @@
+{
+    "materials": {
+        "wood": 100
+    },
+    "level": 35,
+    "experience": 100,
+    "result": {
+        "name": "dam"
+    }
+}

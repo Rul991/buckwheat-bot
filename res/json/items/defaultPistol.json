@@ -8,5 +8,6 @@
             7
         ],
         "ammo": "pistolAmmo"
-    }
+    },
+    "basePrice": 1000
 }

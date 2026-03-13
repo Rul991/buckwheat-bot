@@ -1,8 +1,8 @@
 import InventoryItem from '../interfaces/schemas/items/InventoryItem'
 import InventoryItemsUtils from './InventoryItemsUtils'
 import RandomUtils from './RandomUtils'
-import { Gun, GunWithId } from './values/types/guns'
-import { InventoryItemDescriptionWithId } from './values/types/types'
+import { Gun, GunWithId } from './values/types/items'
+import { InventoryItemDescriptionWithId } from './values/types/items'
 
 type Id = GunWithId['id']
 

@@ -220,6 +220,10 @@ import SelectGunAction from '../classes/callback-button/gun/SelectGunAction'
 import AwardRemoveAction from '../classes/callback-button/award/AwardRemoveAction'
 import SettingDateAction from '../classes/actions/scenes/setting-input/SettingDateAction'
 import KickCommand from '../classes/commands/buckwheat/admins/KickCommand'
+import ShieldUtils from '../utils/ShieldUtils'
+import { ZodType } from 'zod'
+import DeleteUserAction from '../classes/callback-button/delete-user/DeleteUserAction'
+import { inventoryItemDescriptionSchema } from '../utils/values/schemas'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -261,7 +265,7 @@ const getCommands = async <
 }
 
 const getSimpleCommands = async () => {
-    return await getCommands('simple_commands', SimpleBuckwheatCommand)
+    return await getCommands('simple-commands', SimpleBuckwheatCommand)
 }
 
 const launchBot = async (bot: Bot) => {
@@ -382,6 +386,7 @@ const launchBot = async (bot: Bot) => {
         new ChatJoinAction(),
         new SelectGunAction(),
         new AwardRemoveAction(),
+        new DeleteUserAction(),
     )
 
     // dice 
@@ -555,9 +560,31 @@ const setup = async () => {
         InventoryItemsUtils.setup(),
         RecipeUtils.setup(),
     ])
+
     GunsUtils.setup(InventoryItemsUtils.items)
+    ShieldUtils.setup(InventoryItemsUtils.items)
+
     await CharacterUtils.setup()
     await SkillUtils.setup(CharacterUtils.characters)
+}
+
+const addSchema = async (
+    basename: string,
+    schema: ZodType<any>
+) => {
+    const input = JSON.stringify(
+        schema.toJSONSchema(),
+        null,
+        4
+    )
+
+    await Bun.write(
+        `.vscode/schemas/${basename}.schema.json`,
+        input
+    )
+    console.log(input)
+
+    return true
 }
 
 const test = async (): Promise<void | boolean> => {

@@ -4,5 +4,9 @@
     "type": "consumable",
     "material": {
         "rarity": 15
-    }
+    },
+    "gun": {
+        "damage": [1, 1]
+    },
+    "basePrice": 1
 }

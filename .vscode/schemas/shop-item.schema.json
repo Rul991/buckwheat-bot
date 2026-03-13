@@ -1,0 +1,34 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "emoji": {
+            "type": "string"
+        },
+        "price": {
+            "type": "number"
+        },
+        "premiumDiscount": {
+            "type": "number"
+        },
+        "isPremium": {
+            "type": "boolean"
+        },
+        "itemName": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "emoji"
+    ],
+    "additionalProperties": false
+}

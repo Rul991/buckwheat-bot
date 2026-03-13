@@ -1,50 +1,59 @@
 {
     "markup": [
-        "award",
         "ava",
-        "note"
+        [
+            "award",
+            "note"
+        ],
+        "wipe"
     ],
-
     "definition": {
         "ava": {
             "text": "📸 История аватарок",
             "name": "avachange",
             "data": {
-                "$vars": ["id"],
+                "$vars": [
+                    "id"
+                ],
                 "$additional": {
                     "c": 0,
                     "i": 0
                 }
             }
+        },
+        "wipe": {
+            "text": "🗑 Забыть",
+            "name": "deleteuser",
+            "data": {
+                "$vars": [
+                    "wipe"
+                ],
+                "$if": "isLeft"
+            }
         }
     },
-
     "variables": {
         "id": {
             "u": "id",
             "id": "requester"
         },
-
+        "wipe": {
+            "id": "id"
+        },
         "notes": {
             "id": "requester",
             "u": "id",
             "p": "public"
         }
     },
-
     "definitionExtends": [
         {
             "path": "awards/start",
-            "button": {
-
-            }
+            "button": {}
         },
-
         {
             "path": "notes/start",
-            "button": {
-                
-            }
+            "button": {}
         }
     ]
 }

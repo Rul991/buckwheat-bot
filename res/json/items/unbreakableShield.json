@@ -1,0 +1,9 @@
+{
+    "name": "Неразрушимый щит",
+    "description": "Щит не пропустит ни один выстрел",
+    "type": "consumable",
+    "shield": {
+        "triggeringChance": 1
+    },
+    "basePrice": 10000
+}

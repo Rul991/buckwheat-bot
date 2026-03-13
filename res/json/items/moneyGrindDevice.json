@@ -4,5 +4,6 @@
     "type": "consumable",
     "maxCount": {
         "user": 100
-    }
+    },
+    "basePrice": 2500
 }

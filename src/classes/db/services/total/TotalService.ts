@@ -25,23 +25,25 @@ import RoleplaysService from '../rp/RoleplaysService'
 import WorkService from '../work/WorkService'
 
 export default class {
+    private static _chatRepositories: ChatIdRepository<any, any>[] = [
+        AwardsRepository,
+        CasinoRepository,
+        ChosenSkillsRepository,
+        CubeRepository,
+        DuelistRepository,
+        ItemsRepository,
+        LevelRepository,
+        GeneratorsRepository,
+        MarriageRepository,
+        MessagesRepository,
+        RouletteRepository,
+        CardsRepository,
+        UserRepository,
+        WorkRepository
+    ]
+
     static async deleteChat(chatId: number) {
-        const repos: ChatIdRepository<any, any>[] = [
-            AwardsRepository,
-            CasinoRepository,
-            ChosenSkillsRepository,
-            CubeRepository,
-            DuelistRepository,
-            ItemsRepository,
-            LevelRepository,
-            GeneratorsRepository,
-            MarriageRepository,
-            MessagesRepository,
-            RouletteRepository,
-            CardsRepository,
-            UserRepository,
-            WorkRepository
-        ]
+        const repos = this._chatRepositories
 
         return await Promise.allSettled([
             ...repos.map(repo => repo.deleteAllInChat(chatId)),
@@ -49,6 +51,14 @@ export default class {
             SettingsRepository.deleteMany({ id: chatId }),
             RoleplaysService.deleteAll(chatId),
             ShopCardService.deleteAllInChat(chatId)
+        ])
+    }
+
+    static async deleteUser(chatId: number, id: number) {
+        return await Promise.allSettled([
+            ...this._chatRepositories.map(
+                repo => repo.deleteOne(chatId, id)
+            )
         ])
     }
 

@@ -12,13 +12,8 @@ export default class TimeUtils {
     static minTime = 30_000
     static maxTime = 365 * this._nameToNumber['д']
 
-    static async getMaxAdminTime(chatId: number) {
-        const setting = await ChatSettingsService.get<'number'>(
-            chatId,
-            'maxAdminTime'
-        )
-
-        return (setting ?? (this.maxTime / MILLISECONDS_IN_SECOND)) * MILLISECONDS_IN_SECOND
+    static async getMaxAdminTime(_chatId: number) {
+        return this.maxTime
     }
 
     static parseTimeToMilliseconds(time: string, ignoreClamp = false): number {

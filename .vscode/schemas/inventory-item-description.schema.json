@@ -1,0 +1,88 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "type": {
+            "type": "string",
+            "enum": [
+                "consumable",
+                "manyInfinity"
+            ]
+        },
+        "description": {
+            "type": "string"
+        },
+        "material": {
+            "type": "object",
+            "properties": {
+                "rarity": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "rarity"
+            ],
+            "additionalProperties": false
+        },
+        "maxCount": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "type": "number"
+                },
+                "chat": {
+                    "type": "number"
+                }
+            },
+            "additionalProperties": false
+        },
+        "gun": {
+            "type": "object",
+            "properties": {
+                "damage": {
+                    "type": "array",
+                    "prefixItems": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "number"
+                        }
+                    ]
+                },
+                "ammo": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "damage"
+            ],
+            "additionalProperties": false
+        },
+        "shield": {
+            "type": "object",
+            "properties": {
+                "triggeringChance": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "triggeringChance"
+            ],
+            "additionalProperties": false
+        },
+        "basePrice": {
+            "type": "number"
+        }
+    },
+    "required": [
+        "name",
+        "type",
+        "description",
+        "basePrice"
+    ],
+    "additionalProperties": false
+}

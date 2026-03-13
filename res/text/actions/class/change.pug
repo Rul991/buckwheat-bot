@@ -1,4 +1,7 @@
-a(href=user.link) #{user.name}
+include utils/mixins.pug
+
+| Игрок 
++link(user, false)
 | , ваш новый класс - 
 b #{className}
 | !

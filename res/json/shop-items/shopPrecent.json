@@ -2,7 +2,5 @@
     "name": "Процент от магазина Баквита",
     "description": "Игрок 99ур. может получить 1% от магазина Баквита путем выгодной инвестиции",
     "emoji": "💰",
-    "price": 10000,
-    "premiumDiscount": 50,
-    "totalCountMode": "chat"
+    "premiumDiscount": 50
 }

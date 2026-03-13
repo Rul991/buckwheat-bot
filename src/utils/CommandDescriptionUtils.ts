@@ -1,13 +1,20 @@
+import RandomUtils from './RandomUtils'
 import { CommandDescription, CommandVisibleTypes } from './values/types/types'
 
 export default class CommandDescriptionUtils {
-    private static _commandDescriptions: CommandDescription[] = []
+    private static _visibleCommandDescriptions: CommandDescription[] = []
     private static _secretCommandDescriptions: CommandDescription[] = []
     private static _allCommandDescriptions: CommandDescription[] = []
     private static _visibleTypes = [] as CommandVisibleTypes[]
 
     static getVisible(): CommandDescription[] {
-        return this._commandDescriptions
+        return this._visibleCommandDescriptions
+    }
+
+    static getRandomVisible(): CommandDescription {
+        return RandomUtils.choose(
+            this.getVisible()
+        )!
     }
 
     static getSecret(): CommandDescription[] {
@@ -38,7 +45,7 @@ export default class CommandDescriptionUtils {
 
     static add(description: CommandDescription): void {
         if(description.isShow) {
-            this._commandDescriptions.push(description)
+            this._visibleCommandDescriptions.push(description)
             if(this._visibleTypes.every(v => v.type != description.type)) {
                 this._visibleTypes.push({
                     type: description.type,

@@ -237,6 +237,36 @@ export default class {
                     }))
                     .filter(({ value }) => value > 0)
             }
+        },
+
+        inventoryPrice: {
+            title: 'Состояние',
+            emoji: '💳',
+            changeValues: {
+                property: 'состоятельных'
+            },
+
+            getUnsortedValues: async (chatId: number): Promise<GetUnsortedValuesResult[]> => {
+                const balances = await CasinoGetAllService.money(chatId)
+                const items = await ItemsService.getAll(chatId)
+
+                return items
+                    .map(item => {
+                        const {
+                            items = [],
+                            id
+                        } = item
+
+                        const inventoryPrice = InventoryItemsUtils.getInventoryPrice(items)
+                        const balance = balances.find(v => v.id == id)?.value ?? 0
+
+                        return {
+                            id,
+                            value: balance + inventoryPrice
+                        }
+                    })
+                    .filter(({ value }) => value != 0)
+            }
         }
     }
 

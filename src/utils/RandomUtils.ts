@@ -18,8 +18,8 @@ export default class RandomUtils {
         return this.chance(0.5)
     }
 
-    static choose<T>(arr: T[]): T | null {
-        if(!arr.length) return null
+    static choose<T>(arr: T[]): T | undefined {
+        if(!arr.length) return undefined
         const index = this.range(FIRST_INDEX, arr.length - 1)
         return arr[index]
     }

@@ -1,7 +1,11 @@
 import InventoryItem from '../interfaces/schemas/items/InventoryItem'
 import { INFINITY_SYMB } from './values/consts'
 import Logging from './Logging'
-import { InventoryItemCountType, InventoryItemDescription, InventoryItemDescriptionWithId, InventoryItemType, ShowableItem } from './values/types/types'
+import { InventoryItemCountType } from './values/types/items'
+import { InventoryItemType } from './values/types/items'
+import { ShowableItem } from './values/types/items'
+import { InventoryItemDescriptionWithId } from './values/types/items'
+import { InventoryItemDescription } from './values/types/items'
 import FileUtils from './FileUtils'
 import StringUtils from './StringUtils'
 import ObjectValidator from './ObjectValidator'
@@ -76,7 +80,7 @@ export default class InventoryItemsUtils {
         return true
     }
 
-    static getRandomMaterial(): ItemWithId | null {
+    static getRandomMaterial(): ItemWithId | undefined {
         const rarity = RandomUtils.getRarity(
             this._materialChance,
             this._maxMaterialRarity
@@ -108,6 +112,24 @@ export default class InventoryItemsUtils {
 
     static find(items: InventoryItem[], itemId: string): InventoryItem | null {
         return items.find(v => v.itemId == itemId) ?? null
+    }
+
+    static getInventoryPrice(items: InventoryItem[]) {
+        let result = 0
+
+        for (const item of items) {
+            const {
+                count = 0,
+                itemId
+            } = item
+
+            const itemDescription = this.getItemDescription(itemId)
+            const basePrice = itemDescription.basePrice
+
+            result += count * basePrice
+        }
+
+        return result
     }
 
     static getMaxCount(id: string, countType: InventoryItemCountType) {
@@ -178,7 +200,8 @@ export default class InventoryItemsUtils {
             description: '',
             count: 0,
             countText: 'x0',
-            itemId: ''
+            itemId: '',
+            basePrice: 0
         }
     }
 }

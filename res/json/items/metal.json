@@ -4,5 +4,6 @@
     "type": "consumable",
     "material": {
         "rarity": 3
-    }
+    },
+    "basePrice": 50
 }

@@ -1,5 +1,6 @@
 {
     "name": "Печеньки",
     "description": "🍪🍪🍪",
-    "type": "consumable"
+    "type": "consumable",
+    "basePrice": 13
 }

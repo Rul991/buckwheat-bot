@@ -1,0 +1,79 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "characteristics": {
+            "type": "object",
+            "properties": {
+                "hp": {
+                    "type": "object",
+                    "properties": {
+                        "start": {
+                            "type": "number"
+                        },
+                        "up": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "start",
+                        "up"
+                    ],
+                    "additionalProperties": false
+                },
+                "mana": {
+                    "type": "object",
+                    "properties": {
+                        "start": {
+                            "type": "number"
+                        },
+                        "up": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "start",
+                        "up"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "required": [
+                "hp",
+                "mana"
+            ],
+            "additionalProperties": false
+        },
+        "skill": {
+            "type": "object",
+            "properties": {
+                "showable": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "main": {
+                    "type": "string"
+                },
+                "effects": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "showable",
+                "main",
+                "effects"
+            ],
+            "additionalProperties": false
+        }
+    },
+    "required": [
+        "characteristics",
+        "skill"
+    ],
+    "additionalProperties": false
+}

@@ -1,0 +1,183 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "markup": {
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "string"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "definition": {
+            "type": "object",
+            "propertyNames": {
+                "type": "string"
+            },
+            "additionalProperties": {
+                "type": "object",
+                "properties": {
+                    "text": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        ]
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "$additional": {
+                                "type": "object",
+                                "propertyNames": {
+                                    "type": "string"
+                                },
+                                "additionalProperties": {}
+                            },
+                            "$vars": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "$each": {
+                                "type": "string"
+                            },
+                            "$if": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "boolean"
+                                    }
+                                ]
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                },
+                "required": [
+                    "text",
+                    "name",
+                    "data"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "variables": {
+            "type": "object",
+            "propertyNames": {
+                "type": "string"
+            },
+            "additionalProperties": {
+                "type": "object",
+                "propertyNames": {
+                    "type": "string"
+                },
+                "additionalProperties": {
+                    "type": "string"
+                }
+            }
+        },
+        "definitionExtends": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string"
+                    },
+                    "definitions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "button": {
+                        "type": "object",
+                        "properties": {
+                            "text": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                ]
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "data": {
+                                "type": "object",
+                                "properties": {
+                                    "$additional": {
+                                        "type": "object",
+                                        "propertyNames": {
+                                            "type": "string"
+                                        },
+                                        "additionalProperties": {}
+                                    },
+                                    "$vars": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "$each": {
+                                        "type": "string"
+                                    },
+                                    "$if": {
+                                        "anyOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "boolean"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "additionalProperties": false
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                },
+                "required": [
+                    "path",
+                    "button"
+                ],
+                "additionalProperties": false
+            }
+        }
+    },
+    "required": [
+        "markup",
+        "definition"
+    ],
+    "additionalProperties": false
+}

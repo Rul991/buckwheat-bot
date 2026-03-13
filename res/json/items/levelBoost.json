@@ -1,5 +1,6 @@
 {
     "name": "Ускоритель уровня",
     "description": "Позволяет увеличить получаемый опыт на 7.5%",
-    "type": "manyInfinity"
+    "type": "manyInfinity",
+    "basePrice": 1000
 }

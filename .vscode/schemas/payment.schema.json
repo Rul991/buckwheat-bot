@@ -1,0 +1,89 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "title": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "payload": {
+            "type": "string"
+        },
+        "prices": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "label": {
+                        "type": "string"
+                    },
+                    "amount": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "label",
+                    "amount"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "max_tip_amount": {
+            "type": "number"
+        },
+        "suggested_tip_amounts": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            }
+        },
+        "start_parameter": {
+            "type": "string"
+        },
+        "provider_data": {
+            "type": "string"
+        },
+        "photo_url": {
+            "type": "string"
+        },
+        "photo_size": {
+            "type": "number"
+        },
+        "photo_width": {
+            "type": "number"
+        },
+        "photo_height": {
+            "type": "number"
+        },
+        "need_name": {
+            "type": "boolean"
+        },
+        "need_email": {
+            "type": "boolean"
+        },
+        "need_phone_number": {
+            "type": "boolean"
+        },
+        "need_shipping_address": {
+            "type": "boolean"
+        },
+        "send_phone_number_to_provider": {
+            "type": "boolean"
+        },
+        "send_email_to_provider": {
+            "type": "boolean"
+        },
+        "is_flexible": {
+            "type": "boolean"
+        }
+    },
+    "required": [
+        "title",
+        "description",
+        "payload",
+        "prices"
+    ],
+    "additionalProperties": false
+}

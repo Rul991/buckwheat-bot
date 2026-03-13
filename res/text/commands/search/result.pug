@@ -1,15 +1,23 @@
 include utils/mixins.pug
 
+- const ZOOM_EMOJI = '🔎'
+
 b 🔍 Найденные игроки по запросу: 
 code #{other}
 |
 |
 |
 each user in users
-    | 📍  
+    +link({
+        name: ZOOM_EMOJI,
+        link: `tg://msg_url?url=баквит%20кто%20${user.name}`
+    }) 
     +link(user)
     |
     |
 |
 |
 b 📌 Всего найдено: #{searchUsersLength}
+blockquote
+    | 📍 Символ #{ZOOM_EMOJI} копирует текст команды для поиска
+|

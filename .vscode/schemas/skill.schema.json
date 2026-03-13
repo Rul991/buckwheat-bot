@@ -1,0 +1,105 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "level": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+        },
+        "info": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "title",
+                "description"
+            ],
+            "additionalProperties": false
+        },
+        "execute": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "args": {
+                                "type": "array",
+                                "items": {}
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "args"
+                        ],
+                        "additionalProperties": false
+                    }
+                },
+                "enemy": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "args": {
+                                "type": "array",
+                                "items": {}
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "args"
+                        ],
+                        "additionalProperties": false
+                    }
+                }
+            },
+            "required": [
+                "user",
+                "enemy"
+            ],
+            "additionalProperties": false
+        },
+        "effect": {
+            "type": "object",
+            "properties": {
+                "className": {
+                    "type": "string",
+                    "enum": [
+                        "unknown",
+                        "boss",
+                        "bot",
+                        "bard",
+                        "engineer",
+                        "knight",
+                        "sorcerer",
+                        "thief"
+                    ]
+                }
+            },
+            "required": [
+                "className"
+            ],
+            "additionalProperties": false
+        }
+    },
+    "required": [
+        "level",
+        "info",
+        "execute"
+    ],
+    "additionalProperties": false
+}
