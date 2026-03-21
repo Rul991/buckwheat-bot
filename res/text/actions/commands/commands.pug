@@ -12,18 +12,18 @@ b 📌 По правилам я могу отвечать только на эт
 |
 |
 each command in commands
-    | 👉 
+    | #{command.rank.emoji} 
     code баквит #{command.name}#{command.needData ? ` [${command.argumentText || 'аргументы'}]` : ''}
     |  #{command.replySupport ? replySymbol : ''} #{command.isPremium ? premiumSymbol : ''}
     |
     - let lines = command.description.split('\n')
     - let aliasesText = command.aliases.join(', ')
         |     ➖ ранг: 
-        b #{command.rank.value}+ (#{command.rank.emoji})
+        b #{command.rank.title} (#{command.rank.value}+) 
         |
         |
     if aliasesText.length
-        |     ➖ также доступны как: 
+        |     ➖ также доступны как баквит: 
         b #{aliasesText}
         |
         |

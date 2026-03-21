@@ -7,6 +7,7 @@ import { CallbackButtonOptions } from '../../../../utils/values/types/action-opt
 import { NewScrollerData, ScrollerEditMessageOptions, ScrollerEditMessageResult } from '../../../../utils/values/types/scrollers'
 import CommandAccessService from '../../../db/services/settings/access/CommandAccessService'
 import RankUtils from '../../../../utils/RankUtils'
+import RankSettingsService from '../../../db/services/settings/RankSettingsService'
 
 type T = CommandDescription & {
     rank: {
@@ -42,6 +43,7 @@ export default class CommandsChangeAction extends ScrollerAction<T, A> {
 
         const visible = CommandDescriptionUtils.getVisibleByType(type)
         const ranks = await CommandAccessService.getObject(chatId)
+        const rankNames = await RankSettingsService.getObject(chatId)
 
         return visible.map(command => {
             const rank = ranks[command.settingId] ?? RankUtils.unknown
@@ -49,7 +51,8 @@ export default class CommandsChangeAction extends ScrollerAction<T, A> {
                 ...command,
                 rank: {
                     value: rank,
-                    emoji: RankUtils.getEmojiByRank(rank)
+                    emoji: RankUtils.getEmojiByRank(rank),
+                    title: rankNames[`rank-${rank}`]
                 }
             }
         })
