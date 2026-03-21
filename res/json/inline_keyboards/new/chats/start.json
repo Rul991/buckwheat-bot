@@ -1,0 +1,23 @@
+{
+    "markup": [
+        "start"
+    ],
+    "definition": {
+        "start": {
+            "name": "chatschange",
+            "data": {
+                "$vars": ["id"],
+                "$additional": {
+                    "c": 0,
+                    "i": 0
+                }
+            },
+            "text": "👀 Просмотреть"
+        }
+    },
+    "variables": {
+        "id": {
+            "id": "id"
+        }
+    }
+}

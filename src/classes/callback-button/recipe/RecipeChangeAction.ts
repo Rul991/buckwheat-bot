@@ -1,6 +1,7 @@
 import ButtonScrollerData from '../../../interfaces/callback-button-data/ButtonScrollerData'
 import FileUtils from '../../../utils/FileUtils'
 import InventoryItemsUtils from '../../../utils/InventoryItemsUtils'
+import JsonUtils from '../../../utils/JsonUtils'
 import RecipeUtils from '../../../utils/RecipeUtils'
 import StringUtils from '../../../utils/StringUtils'
 import { Recipe } from '../../../utils/values/types/recipes'
@@ -54,7 +55,7 @@ export default class extends ButtonScrollerAction<Data> {
 
                         return {
                             text: `${resultItem.name} x${StringUtils.toFormattedNumber(count)}`,
-                            data: JSON.stringify({
+                            data: JsonUtils.stringify({
                                 id,
                                 index: pageIndex + i,
                             })
@@ -62,7 +63,7 @@ export default class extends ButtonScrollerAction<Data> {
                     })
                 },
                 globals: {
-                    page: JSON.stringify({ page: newPage })
+                    page: JsonUtils.stringify({ page: newPage })
                 }
             }
         }

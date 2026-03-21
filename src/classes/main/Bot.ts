@@ -1,7 +1,7 @@
 import { Telegraf } from 'telegraf'
 import { session } from 'telegraf/session'
 import Logging from '../../utils/Logging'
-import { CHAT_ID, DOMAIN, HOOK_PORT, MODE, SECRET_PATH, SOCKS_PROXY } from '../../utils/values/consts'
+import { CHAT_ID, DOMAIN, HOOK_PORT, KEEP_ALIVE_TIME, MODE, SECRET_PATH, SOCKS_PROXY } from '../../utils/values/consts'
 import FileUtils from '../../utils/FileUtils'
 import BaseHandler from './handlers/BaseHandler'
 import MessageUtils from '../../utils/MessageUtils'
@@ -19,7 +19,13 @@ export default class Bot {
             token,
             {
                 telegram: {
-                    agent: SOCKS_PROXY ? new SocksProxyAgent(SOCKS_PROXY) : undefined
+                    agent: SOCKS_PROXY ? new SocksProxyAgent(
+                        SOCKS_PROXY,
+                        {
+                            keepAlive: true,
+                            keepAliveMsecs: KEEP_ALIVE_TIME,
+                        }
+                    ) : undefined
                 }
             }
         )
@@ -93,16 +99,19 @@ export default class Bot {
             )
         })
 
+        const timeLogText = 'Launch time'
         const launchCallback = async () => {
             this._launchCallback()
             await callback()
+            console.timeEnd(timeLogText)
         }
 
+        console.time(timeLogText)
         if (isWebHook) {
-            this._startWebHook(launchCallback)
+            await this._startWebHook(launchCallback)
         }
         else {
-            this._startLongPolling(launchCallback)
+            await this._startLongPolling(launchCallback)
         }
     }
 }

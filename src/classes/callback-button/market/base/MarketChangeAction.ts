@@ -8,6 +8,7 @@ import { marketDataSchema } from '../../../../utils/values/schemas'
 import { ButtonScrollerEditMessageResult, ButtonScrollerFullOptions, ButtonScrollerOptions } from '../../../../utils/values/types/types'
 import MarketSlotService from '../../../db/services/market/MarketSlotService'
 import ButtonScrollerAction from '../../scrollers/button/ButtonScrollerAction'
+import JsonUtils from '../../../../utils/JsonUtils'
 
 type Data = MarketSlot
 type ButtonScrollerData = MarketData
@@ -50,7 +51,7 @@ export default abstract class extends ButtonScrollerAction<Data, ButtonScrollerD
             undefined
 
         const page = this._getNewPage(data)
-        const scrollerJson = JSON.stringify({
+        const scrollerJson = JsonUtils.stringify({
             c: 0,
             i: 0,
             id: userId
@@ -71,7 +72,7 @@ export default abstract class extends ButtonScrollerAction<Data, ButtonScrollerD
 
                         return {
                             text: `${name} x${count} | ${price}💰`,
-                            data: JSON.stringify({
+                            data: JsonUtils.stringify({
                                 slot: id,
                                 page,
                                 id: userId,
@@ -82,12 +83,12 @@ export default abstract class extends ButtonScrollerAction<Data, ButtonScrollerD
                 },
 
                 globals: {
-                    itemId: JSON.stringify({
+                    itemId: JsonUtils.stringify({
                         itemId: globalItemId,
                     }),
                     id: userId,
                     toInventory: globalItemId ?
-                        `invshow_${JSON.stringify({
+                        `invshow_${JsonUtils.stringify({
                             page: 0,
                             id: userId,
                             itemId: globalItemId

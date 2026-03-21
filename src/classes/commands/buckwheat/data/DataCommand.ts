@@ -1,4 +1,5 @@
 import ExportImportManager from '../../../../utils/ExportImportManager'
+import JsonUtils from '../../../../utils/JsonUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
@@ -28,7 +29,7 @@ export default abstract class extends BuckwheatCommand {
                                 }) => {
                                     return {
                                         text: title,
-                                        data: JSON.stringify({
+                                        data: JsonUtils.stringify({
                                             id,
                                             n: name
                                         })

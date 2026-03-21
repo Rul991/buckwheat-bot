@@ -11,6 +11,7 @@ import InventoryItemService from '../../../db/services/items/InventoryItemServic
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
 import { idSchema } from '../../../../utils/values/schemas'
+import JsonUtils from '../../../../utils/JsonUtils'
 
 type Data = {
     id: number
@@ -44,7 +45,7 @@ export default class extends CallbackButtonAction<Data> {
         const inlineKeyboard = await LegacyInlineKeyboardManager.get(
             'cards/unpack',
             {
-                id: JSON.stringify({ id: dataId })
+                id: JsonUtils.stringify({ id: dataId })
             }
         )
 

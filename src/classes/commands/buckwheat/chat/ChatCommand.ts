@@ -34,6 +34,7 @@ export default class ChatCommand extends BuckwheatCommand {
         const rulesLength = chat.rules?.length ?? 0
         const hasHello = Boolean(chat.hello)
         const name = chat.name ?? chat.id
+        const isPublic = chat.isPublic
 
         await MessageUtils.answerMessageFromResource(
             ctx,
@@ -44,7 +45,8 @@ export default class ChatCommand extends BuckwheatCommand {
                     hasHello,
                     untilDate: TimeUtils.formatMillisecondsToTime(untilDate),
                     rulesLength: StringUtils.toFormattedNumber(rulesLength),
-                    name
+                    name,
+                    isPublic
                 }
             }
         )

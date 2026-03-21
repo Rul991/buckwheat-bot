@@ -21,6 +21,36 @@ export default class ChatService {
         return await ChatRepository.findMany()
     }
 
+    static async getAllByPublic() {
+        return await ChatRepository.findMany({
+            isPublic: true
+        })
+    }
+
+    static async setPublic(chatId: number, isPublic: boolean) {
+        await ChatRepository.updateOne(
+            chatId,
+            {
+                isPublic
+            }
+        )
+        return isPublic
+    }
+
+    static async count() {
+        return await ChatRepository.getCount({
+            isPublic: true
+        })
+    }
+
+    static async togglePublic(chatId: number) {
+        const chat = await this.get(chatId)
+        const currentPublic = chat.isPublic
+        const newPublic = !currentPublic
+
+        return await this.setPublic(chatId, newPublic)
+    }
+
     static async getStats(): Promise<Stats> {
         const chats = await this.getAll()
         const total = chats.length
@@ -28,7 +58,7 @@ export default class ChatService {
         let premiums = 0
 
         for (const chat of chats) {
-            if(PremiumUtils.isPremium(chat)) {
+            if (PremiumUtils.isPremium(chat)) {
                 premiums++
             }
         }

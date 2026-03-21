@@ -6,6 +6,7 @@ import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManag
 import FileUtils from '../../../../utils/FileUtils'
 import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
 import { idSchema } from '../../../../utils/values/schemas'
+import JsonUtils from '../../../../utils/JsonUtils'
 
 type Data = {
     id: number
@@ -36,7 +37,7 @@ export default class extends CallbackButtonAction<Data> {
                     inline_keyboard: await LegacyInlineKeyboardManager.get(
                         'cards/shop',
                         {
-                            data: JSON.stringify({id, c: -1, i: 1})
+                            data: JsonUtils.stringify({id, c: -1, i: 1})
                         }
                     )
                 }

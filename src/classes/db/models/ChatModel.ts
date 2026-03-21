@@ -25,6 +25,10 @@ export default createModel<Chat>({
         name: {
             type: String,
             required: false
+        },
+        isPublic: {
+            type: Boolean,
+            required: false
         }
     }
 })

@@ -4,6 +4,7 @@ import { ButtonScrollerEditMessageResult, ButtonScrollerFullOptions, ButtonScrol
 import { ShowableItem } from '../../../utils/values/types/items'
 import InventoryItemService from '../../db/services/items/InventoryItemService'
 import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
+import JsonUtils from '../../../utils/JsonUtils'
 
 type Data = ShowableItem
 
@@ -44,7 +45,7 @@ export default class extends ButtonScrollerAction<Data> {
 
                             return {
                                 text: `${name} ${countText}`,
-                                data: JSON.stringify({
+                                data: JsonUtils.stringify({
                                     id,
                                     itemId,
                                     page

@@ -12,9 +12,9 @@ export default class extends EveryMessageAction {
     async execute({ ctx, chatId }: EveryMessageOptions): Promise<void | true> {
         if(MODE == 'prod') return
 
-        const isDeny = !ALLOWED_CHATS.some(v => v == chatId)
+        const isAllow = ALLOWED_CHATS.some(v => v == chatId)
 
-        if(isDeny) {
+        if(!isAllow) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/every-action/not-allowed-chat.pug'

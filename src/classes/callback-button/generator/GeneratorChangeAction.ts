@@ -3,6 +3,7 @@ import MoneyGenerator from '../../../interfaces/schemas/generator/MoneyGenerator
 import ContextUtils from '../../../utils/ContextUtils'
 import FileUtils from '../../../utils/FileUtils'
 import GeneratorUtils from '../../../utils/GeneratorUtils'
+import JsonUtils from '../../../utils/JsonUtils'
 import StringUtils from '../../../utils/StringUtils'
 import { GENERATOR_MAX_COUNT } from '../../../utils/values/consts'
 import { ButtonScrollerOptions, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult, Ids } from '../../../utils/values/types/types'
@@ -94,7 +95,7 @@ export default class extends ButtonScrollerAction<Data> {
                         ({ id: generatorId, level }) => {
                             return {
                                 text: `${generatorId + 1} ( ${level}ур. )`,
-                                data: JSON.stringify({
+                                data: JsonUtils.stringify({
                                     i: generatorId,
                                     id,
                                     p: page
@@ -104,7 +105,7 @@ export default class extends ButtonScrollerAction<Data> {
                     )
                 },
                 globals: {
-                    collect: JSON.stringify({
+                    collect: JsonUtils.stringify({
                         id,
                         p: page
                     })

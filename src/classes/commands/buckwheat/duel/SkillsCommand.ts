@@ -1,3 +1,4 @@
+import JsonUtils from '../../../../utils/JsonUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import UserClassService from '../../../db/services/user/UserClassService'
@@ -33,7 +34,7 @@ export default class SkillsCommand extends BuckwheatCommand {
             {
                 inlineKeyboard: await LegacyInlineKeyboardManager.get(
                     'skills/menu', 
-                    JSON.stringify({id})
+                    JsonUtils.stringify({id})
                 )
             }
         )

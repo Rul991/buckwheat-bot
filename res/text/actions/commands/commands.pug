@@ -18,6 +18,10 @@ each command in commands
     |
     - let lines = command.description.split('\n')
     - let aliasesText = command.aliases.join(', ')
+        |     ➖ ранг: 
+        b #{command.rank.value}+ (#{command.rank.emoji})
+        |
+        |
     if aliasesText.length
         |     ➖ также доступны как: 
         b #{aliasesText}

@@ -1,3 +1,4 @@
+import JsonUtils from '../../../../utils/JsonUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
@@ -27,7 +28,7 @@ export default class extends BuckwheatCommand {
                     'cards/start',
                     {
                         collection: id,
-                        json: JSON.stringify({ id })
+                        json: JsonUtils.stringify({ id })
                     }
                 )
             }

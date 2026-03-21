@@ -1,0 +1,38 @@
+{
+    "markup": [
+        "add",
+        "back"
+    ],
+    "definition": {
+        "add": {
+            "text": "➕ Добавить",
+            "name": "skilladd",
+            "data": {
+                "$vars": ["id", "skill"],
+                "$if": "canAdd"
+            }
+        },
+
+        "back": {
+            "text": "🔙 Обратно",
+            "name": "skillchange",
+            "data": {
+                "$additional": {
+                    "i": 0
+                },
+                "$vars": ["id", "page"]
+            }
+        }
+    },
+    "variables": {
+        "id": {
+            "id": "id"
+        },
+        "page": {
+            "c": "page"
+        },
+        "skill": {
+            "skill": "skill"
+        }
+    }
+}

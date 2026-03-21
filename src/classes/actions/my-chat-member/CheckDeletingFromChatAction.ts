@@ -1,3 +1,4 @@
+import JsonUtils from '../../../utils/JsonUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import { NOT_FOUND_INDEX } from '../../../utils/values/consts'
 import { MyChatMemberOptions } from '../../../utils/values/types/action-options'
@@ -31,7 +32,7 @@ export default class extends MyChatMemberAction {
             'text/other/check-deleting-from-chat.pug',
             {
                 changeValues: {
-                    data: JSON.stringify({
+                    data: JsonUtils.stringify({
                         ...options,
                         ctx: undefined
                     })

@@ -19,6 +19,7 @@ export default class RankUtils {
     ]
 
     static min = 0
+    static unknown = this.min - 1
     static max = this._rankEmoji.length - 1
 
     static admin = this.max - 1

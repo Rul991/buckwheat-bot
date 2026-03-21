@@ -8,6 +8,7 @@ import SettingUtils from '../../../utils/settings/SettingUtils'
 import SettingsService from '../../db/services/settings/SettingsService'
 import { DEFAULT_SETTINGS_TYPE } from '../../../utils/values/consts'
 import SettingShowUtils from '../../../utils/settings/SettingShowUtils'
+import JsonUtils from '../../../utils/JsonUtils'
 
 type Data = TinyCurrentIncreaseId & {
     t?: string
@@ -66,7 +67,7 @@ export default class extends ButtonScrollerAction<Object, Data> {
                     settings: slicedObjects.map(({ id: objId, title, default: defaultValue, type: settingType }) => {
                         const value = this._getShowValue(settingType, defaultValue)
                         return ({
-                            data: JSON.stringify({
+                            data: JsonUtils.stringify({
                                 n: objId,
                                 id,
                                 p: this._getNewPage(data) - 1,
@@ -77,7 +78,7 @@ export default class extends ButtonScrollerAction<Object, Data> {
                     })
                 },
                 globals: {
-                    type: JSON.stringify({
+                    type: JsonUtils.stringify({
                         t: type
                     })
                 }

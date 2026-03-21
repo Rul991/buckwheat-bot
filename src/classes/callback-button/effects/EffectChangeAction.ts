@@ -1,3 +1,4 @@
+import JsonUtils from '../../../utils/JsonUtils'
 import SkillUtils from '../../../utils/skills/SkillUtils'
 import { ButtonScrollerOptions, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult, CallbackButtonValue, TinyCurrentIncreaseId } from '../../../utils/values/types/types'
 import UserClassService from '../../db/services/user/UserClassService'
@@ -27,7 +28,7 @@ export default class extends ButtonScrollerAction<Data, ButtonScrollerData> {
 
             result.push({
                 text,
-                data: JSON.stringify({
+                data: JsonUtils.stringify({
                     name: skillId,
                     id
                 })
@@ -44,8 +45,8 @@ export default class extends ButtonScrollerAction<Data, ButtonScrollerData> {
         return {
             values: {
                 globals: {
-                    id: JSON.stringify(id),
-                    objId: JSON.stringify({ id }),
+                    id: JsonUtils.stringify(id),
+                    objId: JsonUtils.stringify({ id }),
                 },
                 values: {
                     class: slicedObjects

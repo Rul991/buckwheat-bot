@@ -5,6 +5,9 @@ import Skill from '../../../interfaces/duel/Skill'
 import ClassUtils from '../../../utils/ClassUtils'
 import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
 import SkillService from '../../db/services/chosen-skills/SkillService'
+import JsonUtils from '../../../utils/JsonUtils'
+import SkillUtils from '../../../utils/skills/SkillUtils'
+import LevelUtils from '../../../utils/level/LevelUtils'
 
 export default class extends ButtonScrollerAction<Skill, TinyCurrentIncreaseId> {
     protected _filename: string = 'skills/add'
@@ -19,8 +22,12 @@ export default class extends ButtonScrollerAction<Skill, TinyCurrentIncreaseId> 
         chatId,
         id
     }: ButtonScrollerOptions<TinyCurrentIncreaseId>): Promise<Skill[]> {
+        const className = await UserClassService.get(chatId, id)
         const currentSkills = await SkillService.get(chatId, id)
-        const availableSkills = (await SkillService.getAvailableSkills(chatId, id))
+        const availableSkills = SkillUtils.getAvailableSkills(
+            className,
+            LevelUtils.max
+        )
             .filter(skill => currentSkills.every(s => skill.id != s))
 
         return availableSkills
@@ -49,14 +56,14 @@ export default class extends ButtonScrollerAction<Skill, TinyCurrentIncreaseId> 
             ),
             values: {
                 globals: {
-                    id: JSON.stringify({ id })
+                    id: JsonUtils.stringify({ id })
                 },
                 values: {
                     add: slicedObjects.map(v =>
-                        ({
-                            text: v.info.title,
-                            data: JSON.stringify({ id, index: v.id, type: 'a', p: current + increase })
-                        })
+                    ({
+                        text: v.info.title,
+                        data: JsonUtils.stringify({ id, index: v.id, type: 'a', p: current + increase })
+                    })
                     )
                 }
             }

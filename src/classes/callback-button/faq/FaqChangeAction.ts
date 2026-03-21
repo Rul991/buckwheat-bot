@@ -1,6 +1,7 @@
 import ButtonScrollerData from '../../../interfaces/callback-button-data/ButtonScrollerData'
 import FaqUtils from '../../../utils/FaqUtils'
 import FileUtils from '../../../utils/FileUtils'
+import JsonUtils from '../../../utils/JsonUtils'
 import { ButtonScrollerOptions, ButtonScrollerFullOptions, ButtonScrollerEditMessageResult } from '../../../utils/values/types/types'
 import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
 
@@ -31,7 +32,7 @@ export default class extends ButtonScrollerAction<string, ButtonScrollerData> {
                 values: {
                     faq: slicedObjects.map(name => {
                         return {
-                            data: JSON.stringify({ n: name, p: this._getNewPage(data) - 1 }),
+                            data: JsonUtils.stringify({ n: name, p: this._getNewPage(data) - 1 }),
                             text: name
                         }
                     })

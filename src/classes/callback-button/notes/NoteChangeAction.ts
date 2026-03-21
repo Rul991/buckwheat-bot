@@ -8,6 +8,7 @@ import { ButtonScrollerOptions, ButtonScrollerFullOptions, ButtonScrollerEditMes
 import NoteService from '../../db/services/notes/NoteService'
 import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
 import { tinyCurrentIncreaseIdSchema } from '../../../utils/values/schemas'
+import JsonUtils from '../../../utils/JsonUtils'
 
 type Object = Note
 type Data = TinyCurrentIncreaseId & {
@@ -76,7 +77,7 @@ export default class extends ButtonScrollerAction<Object, Data> {
 
                         return {
                             text: `${publicShow} ${title}`,
-                            data: JSON.stringify({
+                            data: JsonUtils.stringify({
                                 note: noteId,
                                 id,
                                 page,
@@ -86,7 +87,7 @@ export default class extends ButtonScrollerAction<Object, Data> {
                     })
                 },
                 globals: {
-                    additional: JSON.stringify({
+                    additional: JsonUtils.stringify({
                         p: isPublic,
                         u: ownerId
                     })

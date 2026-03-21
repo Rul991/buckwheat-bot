@@ -7,6 +7,14 @@ import LevelService from '../level/LevelService'
 import UserClassService from '../user/UserClassService'
 import ChosenSkillsService from './ChosenSkillsService'
 
+type CanAddResult = {
+    can: false
+    userSkills?: undefined
+} | {
+    can: true
+    userSkills: string[]
+}
+
 export default class {
     static async getAvailableSkills(chatId: number, id: number) {
         const level = await LevelService.get(chatId, id)
@@ -36,20 +44,51 @@ export default class {
         return skills
     }
 
-    static async add(chatId: number, id: number, skillId: string): Promise<boolean> {
-        if (await DuelCheckService.onDuel(chatId, id)) return false
-        const userSkills = await this.get(chatId, id)
-        const chosenSkills = await ChosenSkillsService.get(chatId, id)
-        let isAdded = false
-
-        if (userSkills.some(v => v == skillId)) return false
-
-        if (chosenSkills.maxCount > userSkills.length) {
-            userSkills.push(skillId)
-            isAdded = true
+    static async canAdd(chatId: number, id: number, skillId: string): Promise<CanAddResult> {
+        if (await DuelCheckService.onDuel(chatId, id)) {
+            return {
+                can: false
+            }
         }
 
+        const userSkills = await this.get(chatId, id)
+        if (userSkills.some(v => v == skillId)) {
+            return {
+                can: false
+            }
+        }
+
+        const level = await LevelService.get(chatId, id)
+        const skill = SkillUtils.getSkillById(skillId)
+
+        if (level < skill.level) {
+            return {
+                can: false
+            }
+        }
+
+        const chosenSkills = await ChosenSkillsService.get(chatId, id)
+        if (chosenSkills.maxCount <= userSkills.length) {
+            return {
+                can: false
+            }
+        }
+
+        return {
+            can: true,
+            userSkills
+        }
+    }
+
+    static async add(chatId: number, id: number, skillId: string): Promise<boolean> {
+        const result = await this.canAdd(chatId, id, skillId)
+        const {
+            can: isAdded,
+            userSkills = []
+        } = result
+
         if (isAdded) {
+            userSkills.push(skillId)
             await ChosenSkillsRepository.updateOne(chatId, id, {
                 skills: userSkills
             })

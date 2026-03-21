@@ -12,6 +12,7 @@ import { idSchema } from '../../../utils/values/schemas'
 import ChosenSkillsService from '../../db/services/chosen-skills/ChosenSkillsService'
 import SkillUtils from '../../../utils/skills/SkillUtils'
 import SkillService from '../../db/services/chosen-skills/SkillService'
+import JsonUtils from '../../../utils/JsonUtils'
 
 type Data = {
     id: number
@@ -42,7 +43,7 @@ export default class extends CallbackButtonAction<Data> {
             userSkills.map(async (skill, i) => 
                 ({
                     text: SkillUtils.getSkillById(skill).info.title,
-                    data: JSON.stringify({index: i})
+                    data: JsonUtils.stringify({index: i})
                 })
             )
         )
@@ -64,7 +65,7 @@ export default class extends CallbackButtonAction<Data> {
                         'skills/menu', 
                         {
                             globals: {
-                                id: JSON.stringify({id})
+                                id: JsonUtils.stringify({id})
                             },
                             values: {
                                 skill: buttons

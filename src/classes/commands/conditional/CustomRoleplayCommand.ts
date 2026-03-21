@@ -54,7 +54,7 @@ export default class CustomRoleplayCommand extends ConditionalCommand {
 
         const dummyId = 0
         const reply = this._getReply(ctx, dummyId)
-        const hasReply = reply.id != dummyId && reply.id != ctx.botInfo.id
+        const hasReply = reply.id != dummyId
 
         const canUse = await CommandAccessService.canUse({
             chatId,

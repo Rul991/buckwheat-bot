@@ -10,6 +10,7 @@ import { CallbackButtonOptions } from '../../../utils/values/types/action-option
 import { idSchema } from '../../../utils/values/schemas'
 import SkillUtils from '../../../utils/skills/SkillUtils'
 import SkillService from '../../db/services/chosen-skills/SkillService'
+import JsonUtils from '../../../utils/JsonUtils'
 
 type Data = {
     skill: string,
@@ -50,7 +51,7 @@ export default class extends CallbackButtonAction<Data> {
                 reply_markup: {
                     inline_keyboard: await LegacyInlineKeyboardManager.get(
                         'skills/menu',
-                        JSON.stringify({ id })
+                        JsonUtils.stringify({ id })
                     )
                 }
             }

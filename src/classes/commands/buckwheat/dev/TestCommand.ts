@@ -11,6 +11,7 @@ import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManag
 import ArrayUtils from '../../../../utils/ArrayUtils'
 import MathUtils from '../../../../utils/MathUtils'
 import InlineKeyboardManager from '../../../main/InlineKeyboardManager'
+import JsonUtils from '../../../../utils/JsonUtils'
 
 type SecretFunctionOptions = {
     ctx: TextContext
@@ -73,7 +74,7 @@ export default class TestCommand extends BuckwheatCommand {
             return values.map(v => {
                 return {
                     text: `${other}:${v}`,
-                    data: JSON.stringify({
+                    data: JsonUtils.stringify({
                         type: other,
                         value: v
                     })

@@ -6,6 +6,7 @@ import FileUtils from '../../../../utils/FileUtils'
 import ContextUtils from '../../../../utils/ContextUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
+import JsonUtils from '../../../../utils/JsonUtils'
 
 type Data = {
     page: number
@@ -61,7 +62,7 @@ export default class extends CallbackButtonAction<Data> {
                     {
                         page,
                         id: owner,
-                        itemId: JSON.stringify({
+                        itemId: JsonUtils.stringify({
                             itemId
                         })
                     }

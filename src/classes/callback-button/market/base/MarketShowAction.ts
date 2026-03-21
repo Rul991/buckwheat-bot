@@ -10,10 +10,11 @@ import InventoryItemService from '../../../db/services/items/InventoryItemServic
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import ArrayUtils from '../../../../utils/ArrayUtils'
 import { FIRST_INDEX, MAX_COUNT_BUTTONS_LENGTH } from '../../../../utils/values/consts'
-import StringUtils from '../../../../utils/StringUtils'
 import CasinoGetService from '../../../db/services/casino/CasinoGetService'
 import InventoryItemsUtils from '../../../../utils/InventoryItemsUtils'
 import GunsUtils from '../../../../utils/GunsUtils'
+import JsonUtils from '../../../../utils/JsonUtils'
+import StringUtils from '../../../../utils/StringUtils'
 
 type Data = {
     slot: number
@@ -109,7 +110,7 @@ export default abstract class extends CallbackButtonAction<Data> {
                                 count: counts.map(count => {
                                     return {
                                         text: StringUtils.toFormattedNumber(count),
-                                        data: JSON.stringify({
+                                        data: JsonUtils.stringify({
                                             ...data,
                                             count
                                         })
@@ -119,7 +120,7 @@ export default abstract class extends CallbackButtonAction<Data> {
                             globals: {
                                 page,
                                 id,
-                                itemId: JSON.stringify({
+                                itemId: JsonUtils.stringify({
                                     itemId: hasItemId ? itemId : undefined
                                 }),
                                 count: needCount,

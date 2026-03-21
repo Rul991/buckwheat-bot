@@ -24,6 +24,7 @@ export type CommandDescription = {
     minimumRank: number
     type: string
     typeName: string
+    settingId: string
 }
 
 export type IdContextData = {

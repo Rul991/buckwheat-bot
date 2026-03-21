@@ -4,4 +4,5 @@ export default interface Chat {
     hello?: string
     premiumUntilDate?: number
     name?: string
+    isPublic?: boolean
 }

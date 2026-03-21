@@ -9,6 +9,7 @@ import SettingUtils from './SettingUtils'
 import StringUtils from '../StringUtils'
 import SettingsService from '../../classes/db/services/settings/SettingsService'
 import TimeUtils from '../TimeUtils'
+import JsonUtils from '../JsonUtils'
 
 type ValuesOptions<K extends SettingType> = {
     type: K,
@@ -47,11 +48,11 @@ export default class {
         if (type == 'boolean') {
             return [
                 {
-                    data: JSON.stringify({ ...constantValue, v: false }),
+                    data: JsonUtils.stringify({ ...constantValue, v: false }),
                     text: StringUtils.getShowValue(false)
                 },
                 {
-                    data: JSON.stringify({ ...constantValue, v: true }),
+                    data: JsonUtils.stringify({ ...constantValue, v: true }),
                     text: StringUtils.getShowValue(true)
                 }
             ]
@@ -61,14 +62,14 @@ export default class {
             if (properties && enumKey in properties) {
                 return properties[enumKey].map(v => ({
                     text: StringUtils.getShowValue(v),
-                    data: JSON.stringify({ ...constantValue, v })
+                    data: JsonUtils.stringify({ ...constantValue, v })
                 }))
             }
         }
         else if (type == 'number') {
             return [
                 {
-                    data: JSON.stringify({ ...constantValue, v: SET_NUMBER_PHRASE }),
+                    data: JsonUtils.stringify({ ...constantValue, v: SET_NUMBER_PHRASE }),
                     text: '🔢 Ввести число'
                 }
             ]
@@ -76,7 +77,7 @@ export default class {
         else if (type == 'string') {
             return [
                 {
-                    data: JSON.stringify({ ...constantValue, v: SET_STRING_PHRASE }),
+                    data: JsonUtils.stringify({ ...constantValue, v: SET_STRING_PHRASE }),
                     text: '✍️ Ввести текст'
                 }
             ]
@@ -84,7 +85,7 @@ export default class {
         else if (type == 'date') {
             return [
                 {
-                    data: JSON.stringify({ ...constantValue, v: SET_DATE_PHRASE }),
+                    data: JsonUtils.stringify({ ...constantValue, v: SET_DATE_PHRASE }),
                     text: '📅 Ввести дату'
                 }
             ]
@@ -181,7 +182,7 @@ export default class {
                             globals: {
                                 id,
                                 page,
-                                type: JSON.stringify(filename)
+                                type: JsonUtils.stringify(filename)
                             },
                             maxWidth: 4
                         }

@@ -56,7 +56,7 @@ export default abstract class BaseRepository<K, T extends typeof Model<K>> {
             data,
             {
                 upsert: true,
-                new: true
+                returnDocument: 'after'
             }
         ).exec()
     }
@@ -70,6 +70,10 @@ export default abstract class BaseRepository<K, T extends typeof Model<K>> {
         if(found) return found
 
         return this.create(values[1])
+    }
+
+    async getCount(filter?: QueryFilter<K>) {
+        return await this._Model.countDocuments(filter as any)
     }
 
     /**

@@ -14,6 +14,7 @@ import { scrollerWithIdDataSchema } from '../../../utils/values/schemas'
 import TimeUtils from '../../../utils/TimeUtils'
 import { DEV_ID, MODE } from '../../../utils/values/consts'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
+import JsonUtils from '../../../utils/JsonUtils'
 
 export default class IdeaChangeAction extends CallbackButtonAction<ScrollerWithIdData> {
     protected _schema: ZodType<ScrollerWithIdData> = scrollerWithIdDataSchema
@@ -54,7 +55,7 @@ export default class IdeaChangeAction extends CallbackButtonAction<ScrollerWithI
                 reply_markup: {
                     inline_keyboard: await LegacyInlineKeyboardManager.get(
                         'ideachange', 
-                        JSON.stringify({id, current: newPage})
+                        JsonUtils.stringify({id, current: newPage})
                     )
                 },
             }

@@ -5,6 +5,7 @@ import UserClassService from '../../../db/services/user/UserClassService'
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
 import DuelPrepareService from '../../../db/services/duel/DuelPrepareService'
+import JsonUtils from '../../../../utils/JsonUtils'
 
 export default class DuelCommand extends BuckwheatCommand {
     protected _settingId: string = 'duel'
@@ -70,7 +71,7 @@ export default class DuelCommand extends BuckwheatCommand {
                 },
                 inlineKeyboard: await LegacyInlineKeyboardManager.get(
                     'duels/offer',
-                    JSON.stringify({
+                    JsonUtils.stringify({
                         user: userId,
                         reply: replyId
                     })

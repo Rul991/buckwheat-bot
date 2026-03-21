@@ -25,7 +25,8 @@ export default abstract class extends RankedAction {
             isPremium: this._isPremium,
             minimumRank: this.minimumRank,
             type: this.descriptionType,
-            typeName: this.typeName
+            typeName: this.typeName,
+            settingId: this._settingId
         }
     }
 

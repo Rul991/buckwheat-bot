@@ -12,6 +12,7 @@ import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManag
 import StringUtils from '../../../../utils/StringUtils'
 import InventoryItemsUtils from '../../../../utils/InventoryItemsUtils'
 import GunsUtils from '../../../../utils/GunsUtils'
+import JsonUtils from '../../../../utils/JsonUtils'
 
 type Data = {
     id: number
@@ -93,7 +94,7 @@ export default class extends CallbackButtonAction<Data> {
                                     count => {
                                         return {
                                             text: StringUtils.toFormattedNumber(count),
-                                            data: JSON.stringify({
+                                            data: JsonUtils.stringify({
                                                 ...data,
                                                 count
                                             })
@@ -105,7 +106,7 @@ export default class extends CallbackButtonAction<Data> {
                             globals: {
                                 id,
                                 count: needCount,
-                                itemId: JSON.stringify({
+                                itemId: JsonUtils.stringify({
                                     itemId
                                 })
                             }

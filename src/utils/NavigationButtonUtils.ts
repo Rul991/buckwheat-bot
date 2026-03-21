@@ -1,3 +1,4 @@
+import JsonUtils from './JsonUtils'
 import { FIRST_INDEX, NOT_FOUND_INDEX } from './values/consts'
 import { CallbackButtonValue, CreateNavButtonsOptions, GetPageNavOptions } from './values/types/types'
 
@@ -16,7 +17,7 @@ export default class {
     }: CreateNavButtonsOptions<D>): CallbackButtonValue {
         return {
             text,
-            data: JSON.stringify({
+            data: JsonUtils.stringify({
                 [current]: currentValue,
                 [increase]: increaseValue,
                 ...(id ? {[id.name as string]: id.value} : {}),

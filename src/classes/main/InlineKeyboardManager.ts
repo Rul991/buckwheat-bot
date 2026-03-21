@@ -4,6 +4,7 @@ import { JsonButtonData, JsonButton, JsonKeyboard, Keyboard, ReplaceKeyboardData
 import { MAX_BUTTONS_IN_HORISONTAL } from '../../utils/values/consts'
 import ArrayUtils from '../../utils/ArrayUtils'
 import { InlineKeyboardButton } from 'telegraf/types'
+import JsonUtils from '../../utils/JsonUtils'
 
 type HandleVariablesOptions = {
     variables: JsonKeyboard['variables']
@@ -218,7 +219,7 @@ export default class {
 
                 return {
                     text: handledText,
-                    callback_data: `${name}_${JSON.stringify(newData)}`
+                    callback_data: `${name}_${JsonUtils.stringify(newData)}`
                 }
             })
 

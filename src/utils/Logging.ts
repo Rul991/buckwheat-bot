@@ -3,6 +3,7 @@ import FileUtils from './FileUtils'
 import { join } from 'path'
 import LoggingLevel from '../enums/LoggingLevel'
 import { MODE } from './values/consts'
+import JsonUtils from './JsonUtils'
 
 export default class Logging {
     private static _directoryPath = './logs'
@@ -20,7 +21,7 @@ export default class Logging {
 
         const now = new Date()
         const message = data.map(val => 
-            JSON.stringify(val ?? null)
+            JsonUtils.stringify(val ?? null)
         ).join(' ')
         
         await FileUtils.append(

@@ -14,6 +14,8 @@ import MessageUtils from '../../../utils/MessageUtils'
 import SkillAttack from '../../../enums/SkillAttack'
 import SkillTextUtils from '../../../utils/skills/SkillTextUtils'
 import DuelUtils from '../../../utils/duel/DuelUtils'
+import JsonUtils from '../../../utils/JsonUtils'
+import InlineKeyboardManager from '../../main/InlineKeyboardManager'
 
 type DataTypes = 'a' | 'v' | 'd'
 type IndexTypes = {
@@ -103,8 +105,8 @@ export default class extends CallbackButtonAction<Data> {
                     keyboard: await LegacyInlineKeyboardManager.get(
                         'duels/view',
                         {
-                            duel: JSON.stringify({ duel: duelId }),
-                            skill: JSON.stringify({ name: skill }),
+                            duel: JsonUtils.stringify({ duel: duelId }),
+                            skill: JsonUtils.stringify({ name: skill }),
                         }
                     ),
                     userId,
@@ -117,20 +119,34 @@ export default class extends CallbackButtonAction<Data> {
             callback: async options => {
                 const {
                     data,
+                    chatId
                 } = options
 
                 const {
                     id,
-                    index,
+                    index: skillId,
                     p: page
                 } = data
 
+                const {
+                    can: canAdd
+                } = await SkillService.canAdd(
+                    chatId,
+                    id,
+                    skillId as string
+                )
+                
                 return {
-                    keyboard: await LegacyInlineKeyboardManager.get('skills/add', {
-                        skillId: JSON.stringify({ skill: index }),
-                        id: JSON.stringify({ id }),
-                        page: page ?? 0
-                    }),
+                    keyboard: await InlineKeyboardManager.get(
+                        'skills/add',
+                        {
+                            globals: {
+                                id,
+                                page: page ?? 0,
+                                skill: skillId,
+                                canAdd
+                            }
+                        }),
                     userId: id,
                 }
             }
@@ -149,8 +165,8 @@ export default class extends CallbackButtonAction<Data> {
 
                 return {
                     keyboard: await LegacyInlineKeyboardManager.get('skills/view', {
-                        index: JSON.stringify({ index }),
-                        id: JSON.stringify({ id })
+                        index: JsonUtils.stringify({ index }),
+                        id: JsonUtils.stringify({ id })
                     }),
                     userId: id,
                 }

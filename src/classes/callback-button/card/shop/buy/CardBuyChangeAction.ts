@@ -7,6 +7,7 @@ import ShopCard from '../../../../../interfaces/schemas/card/ShopCard'
 import { UNKNOWN_CARD_TITLE } from '../../../../../utils/values/consts'
 import StringUtils from '../../../../../utils/StringUtils'
 import CardUtils from '../../../../../utils/CardUtils'
+import JsonUtils from '../../../../../utils/JsonUtils'
 
 type Data = TinyCurrentIncreaseId
 type Object = ShopCard
@@ -48,7 +49,7 @@ export default class extends ButtonScrollerAction<Object, Data> {
 
             return {
                 text,
-                data: JSON.stringify({ s: shopId, p: this._getNewPage(data), id })
+                data: JsonUtils.stringify({ s: shopId, p: this._getNewPage(data), id })
             }
         })
 

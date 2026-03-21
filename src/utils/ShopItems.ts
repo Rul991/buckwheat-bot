@@ -20,6 +20,7 @@ import ExperienceService from '../classes/db/services/level/ExperienceService'
 import ExperienceUtils from './level/ExperienceUtils'
 import DuelistService from '../classes/db/services/duelist/DuelistService'
 import InventoryItemsUtils from './InventoryItemsUtils'
+import JsonUtils from './JsonUtils'
 
 type ItemDescriptionKey = string
 
@@ -654,7 +655,7 @@ export default class ShopItems {
                                 [
                                     {
                                         text: '',
-                                        data: JSON.stringify({
+                                        data: JsonUtils.stringify({
                                             itemId
                                         })
                                     }

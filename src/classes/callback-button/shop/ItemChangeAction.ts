@@ -2,6 +2,7 @@ import ShopItems from '../../../utils/ShopItems'
 import { ShopItemWithLength, ButtonScrollerEditMessageResult, ButtonScrollerFullOptions, ShopItem, TinyCurrentIncreaseId, ButtonScrollerOptions, JsonShopItem } from '../../../utils/values/types/types'
 import ButtonScrollerAction from '../scrollers/button/ButtonScrollerAction'
 import FileUtils from '../../../utils/FileUtils'
+import JsonUtils from '../../../utils/JsonUtils'
 
 type Data = TinyCurrentIncreaseId
 
@@ -40,7 +41,7 @@ export default class ItemChangeAction extends ButtonScrollerAction<ShopItem, Dat
                         const page = this._getNewPage(data)
                         return {
                             text: `${name} ${emoji}`,
-                            data: JSON.stringify({
+                            data: JsonUtils.stringify({
                                 id,
                                 p: page,
                                 i: page * this._buttonsPerPage + i
@@ -49,7 +50,7 @@ export default class ItemChangeAction extends ButtonScrollerAction<ShopItem, Dat
                     })
                 },
                 globals: {
-                    id: JSON.stringify(id)
+                    id: JsonUtils.stringify(id)
                 }
             },
         }

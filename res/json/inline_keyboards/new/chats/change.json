@@ -1,0 +1,24 @@
+{
+    "markup": [
+        "chats",
+        ["arrow"],
+        ["pageNav"]
+    ],
+    "definition": {
+        "chats": {
+            "name": "chatlink",
+            "data": {
+                "$each": "chats"
+            },
+            "text": ["@"]
+        }
+    },
+    "definitionExtends": [
+        {
+            "path": "extends/scroller",
+            "button": {
+                "name": "chatschange"
+            }
+        }
+    ]
+}

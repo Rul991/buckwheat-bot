@@ -1,3 +1,4 @@
+import JsonUtils from '../../../../utils/JsonUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import IdeasService from '../../../db/services/ideas/IdeasService'
@@ -28,7 +29,7 @@ export default class IdeaCommand extends BuckwheatCommand {
                 {
                     inlineKeyboard: await LegacyInlineKeyboardManager.get(
                         'start_ideas',
-                        JSON.stringify({ id })
+                        JsonUtils.stringify({ id })
                     ),
                     changeValues: {
                         length: (await IdeasService.getIdeas()).length

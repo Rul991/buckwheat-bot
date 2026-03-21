@@ -7,6 +7,7 @@ import CasinoGetService from '../../../db/services/casino/CasinoGetService'
 import CubeLastMessageService from '../../../db/services/cube/CubeLastMessageService'
 import { MAX_DEBT } from '../../../../utils/values/consts'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
+import JsonUtils from '../../../../utils/JsonUtils'
 
 export default class CubeCommand extends BuckwheatCommand {
     protected _settingId: string = 'cube'
@@ -73,7 +74,7 @@ export default class CubeCommand extends BuckwheatCommand {
                     },
                     inlineKeyboard: await LegacyInlineKeyboardManager.get(
                         'cubes',
-                        JSON.stringify({
+                        JsonUtils.stringify({
                             r: secondId,
                             u: firstId,
                             m: needMoney

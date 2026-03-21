@@ -16,6 +16,7 @@ export const CHAT_ID = fromEnvToNumber('CHAT_ID')
 export const DEV_ID = fromEnvToNumber('DEV_ID')
 
 export const SOCKS_PROXY = env.SOCKS_PROXY
+export const KEEP_ALIVE_TIME = 10_000
 
 export const MODE: ModeTypes = env.MODE == 'dev' || env.MODE == 'prod' ? env.MODE : 'dev'
 export const ALLOWED_CHATS = [

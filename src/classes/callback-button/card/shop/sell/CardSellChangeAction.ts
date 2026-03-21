@@ -6,6 +6,7 @@ import CardService from '../../../../db/services/card/CardService'
 import { UNKNOWN_CARD_TITLE } from '../../../../../utils/values/consts'
 import FileUtils from '../../../../../utils/FileUtils'
 import CardUtils from '../../../../../utils/CardUtils'
+import JsonUtils from '../../../../../utils/JsonUtils'
 
 type Object = InventoryCard
 type Data = TinyCurrentIncreaseId
@@ -46,7 +47,7 @@ export default class extends ButtonScrollerAction<Object, Data> {
             .map(({ title, id }) => {
                 return {
                     text: title,
-                    data: JSON.stringify({ c: id, id: userId })
+                    data: JsonUtils.stringify({ c: id, id: userId })
                 }
             })
 

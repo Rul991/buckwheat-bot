@@ -7,6 +7,7 @@ import MessageUtils from '../../../utils/MessageUtils'
 import FileUtils from '../../../utils/FileUtils'
 import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 import { idSchema } from '../../../utils/values/schemas'
+import JsonUtils from '../../../utils/JsonUtils'
 
 type Data = {
     id: number
@@ -58,7 +59,7 @@ export default class extends CallbackButtonAction<Data> {
                         inline_keyboard: await LegacyInlineKeyboardManager.get(
                             'generator/update',
                             {
-                                id: JSON.stringify(id),
+                                id: JsonUtils.stringify(id),
                                 page
                             }
                         )

@@ -8,6 +8,7 @@ import LinkedChatService from '../../../db/services/linkedChat/LinkedChatService
 import UserClassService from '../../../db/services/user/UserClassService'
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
 import BuckwheatCommand from '../../base/BuckwheatCommand'
+import JsonUtils from '../../../../utils/JsonUtils'
 
 export default class ClassCommand extends BuckwheatCommand {
     protected _settingId: string = 'class'
@@ -39,7 +40,7 @@ export default class ClassCommand extends BuckwheatCommand {
             .map(([key, value]) => 
                 ({
                     text: `${ClassUtils.getEmoji(key as ClassTypes)} ${value}`, 
-                    data: JSON.stringify(
+                    data: JsonUtils.stringify(
                         {
                             classType: key, 
                             userId}

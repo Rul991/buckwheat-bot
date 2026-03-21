@@ -5,6 +5,7 @@ import BuckwheatCommand from '../../base/BuckwheatCommand'
 import { DEFAULT_SETTINGS_TYPE, DEFAULT_USER_SETTINGS_TYPE } from '../../../../utils/values/consts'
 import SettingsService from '../../../db/services/settings/SettingsService'
 import SettingUtils from '../../../../utils/settings/SettingUtils'
+import JsonUtils from '../../../../utils/JsonUtils'
 
 export default class extends BuckwheatCommand {
     protected _settingId: string = 'settings'
@@ -37,7 +38,7 @@ export default class extends BuckwheatCommand {
                 },
                 inlineKeyboard: await LegacyInlineKeyboardManager.get('settings/start', {
                     id,
-                    type: JSON.stringify(type)
+                    type: JsonUtils.stringify(type)
                 })
             }
         )

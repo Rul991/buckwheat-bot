@@ -9,6 +9,7 @@ import UserClassService from '../../db/services/user/UserClassService'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
 import { idSchema } from '../../../utils/values/schemas'
 import SkillService from '../../db/services/chosen-skills/SkillService'
+import JsonUtils from '../../../utils/JsonUtils'
 
 type Data = {
     index: number
@@ -47,7 +48,7 @@ export default class extends CallbackButtonAction<Data> {
                 reply_markup: {
                     inline_keyboard: await LegacyInlineKeyboardManager.get(
                         'skills/menu',
-                        JSON.stringify({ id })
+                        JsonUtils.stringify({ id })
                     )
                 }
             }

@@ -5,8 +5,15 @@ import ScrollerAction from '../new/ScrollerAction'
 import { object, string, ZodType } from 'zod'
 import { CallbackButtonOptions } from '../../../../utils/values/types/action-options'
 import { NewScrollerData, ScrollerEditMessageOptions, ScrollerEditMessageResult } from '../../../../utils/values/types/scrollers'
+import CommandAccessService from '../../../db/services/settings/access/CommandAccessService'
+import RankUtils from '../../../../utils/RankUtils'
 
-type T = CommandDescription
+type T = CommandDescription & {
+    rank: {
+        value: number
+        emoji: string
+    }
+}
 type A = {
     type: string
 }
@@ -23,19 +30,32 @@ export default class CommandsChangeAction extends ScrollerAction<T, A> {
         this._objectsPerPage = COMMANDS_PER_PAGE
     }
 
-    protected async _getRawObjects(options: CallbackButtonOptions<NewScrollerData<A>>): Promise<CommandDescription[]> {
+    protected async _getRawObjects(options: CallbackButtonOptions<NewScrollerData<A>>): Promise<T[]> {
         const {
-            data
+            data,
+            chatId
         } = options
 
         const {
             type
         } = data
 
-        return CommandDescriptionUtils.getVisibleByType(type)
+        const visible = CommandDescriptionUtils.getVisibleByType(type)
+        const ranks = await CommandAccessService.getObject(chatId)
+
+        return visible.map(command => {
+            const rank = ranks[command.settingId] ?? RankUtils.unknown
+            return {
+                ...command,
+                rank: {
+                    value: rank,
+                    emoji: RankUtils.getEmojiByRank(rank)
+                }
+            }
+        })
     }
 
-    protected async _editMessage(options: ScrollerEditMessageOptions<CommandDescription, A>): Promise<ScrollerEditMessageResult> {
+    protected async _editMessage(options: ScrollerEditMessageOptions<T, A>): Promise<ScrollerEditMessageResult> {
         const {
             slicedObjects,
             data
@@ -47,9 +67,7 @@ export default class CommandsChangeAction extends ScrollerAction<T, A> {
         const title = CommandDescriptionUtils.getTitleByType(type)
 
         return {
-            keyboard: {
-
-            },
+            keyboard: {},
             message: {
                 path: 'text/actions/commands/commands.pug',
                 changeValues: {

@@ -1,3 +1,4 @@
+import JsonUtils from '../../../../utils/JsonUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import InventoryItemService from '../../../db/services/items/InventoryItemService'
@@ -36,7 +37,7 @@ export default class ShopCommand extends BuckwheatCommand {
                 },
                 inlineKeyboard: await LegacyInlineKeyboardManager.get(
                     'start_shop', 
-                    JSON.stringify({
+                    JsonUtils.stringify({
                         id
                     })
                 )

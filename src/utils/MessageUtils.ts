@@ -11,6 +11,7 @@ import ObjectValidator from './ObjectValidator'
 import { invoiceSchema } from './values/schemas'
 import KeyboardService from '../classes/db/services/keyboard/KeyboardService'
 import RandomUtils from './RandomUtils'
+import JsonUtils from './JsonUtils'
 
 export default class MessageUtils {
     private static readonly _wrongMessageFilenames = [
@@ -77,7 +78,7 @@ export default class MessageUtils {
                 return row.map((btn, x) => {
                     return {
                         text: btn.text,
-                        callback_data: `${DATABASE_KEYBOARD_NAME}_${JSON.stringify({
+                        callback_data: `${DATABASE_KEYBOARD_NAME}_${JsonUtils.stringify({
                             ...ids,
                             pos: [x, y]
                         })
@@ -178,7 +179,11 @@ export default class MessageUtils {
         path: string,
         options: FileAnswerOptions = {}
     ): Promise<Message.TextMessage> {
-        const text = await FileUtils.readPugFromResource(path, options)
+        const startPathForFull = 'text/'
+        const usedPath = path.startsWith(startPathForFull) ?
+            path :
+            `${startPathForFull}${path}.pug`
+        const text = await FileUtils.readPugFromResource(usedPath, options)
 
         return await this.answer(
             ctx,

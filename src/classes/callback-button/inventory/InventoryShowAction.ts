@@ -9,6 +9,7 @@ import MessageUtils from '../../../utils/MessageUtils'
 import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 import InventoryItemsUtils from '../../../utils/InventoryItemsUtils'
 import GunsUtils from '../../../utils/GunsUtils'
+import JsonUtils from '../../../utils/JsonUtils'
 
 type Data = {
     id: number
@@ -71,7 +72,7 @@ export default class extends CallbackButtonAction<Data> {
                         {
                             id,
                             page,
-                            itemId: JSON.stringify(itemId)
+                            itemId: JsonUtils.stringify(itemId)
                         }
                     )
                 }

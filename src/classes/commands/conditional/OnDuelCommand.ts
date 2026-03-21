@@ -10,6 +10,7 @@ import ReplaceOptions from '../../../interfaces/options/ReplaceOptions'
 import DuelCheckService from '../../db/services/duel/DuelCheckService'
 import DuelStepUtils from '../../../utils/duel/DuelStepUtils'
 import DuelUtils from '../../../utils/duel/DuelUtils'
+import JsonUtils from '../../../utils/JsonUtils'
 
 type DuelHandlerOptions = NoDuelHandlerOptions & {
     duel: Duel
@@ -39,9 +40,9 @@ export default class extends ConditionalCommand {
                 inlineKeyboard: await LegacyInlineKeyboardManager.get(
                     `duels/away-${cantUse ? 'enemy' : 'you'}`,
                     {
-                        id: JSON.stringify({ id }),
-                        duel: JSON.stringify({ id: duelId }),
-                        deleteMessage: JSON.stringify({ userId: id })
+                        id: JsonUtils.stringify({ id }),
+                        duel: JsonUtils.stringify({ id: duelId }),
+                        deleteMessage: JsonUtils.stringify({ userId: id })
                     }
                 )
             }

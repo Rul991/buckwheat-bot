@@ -224,6 +224,11 @@ import ShieldUtils from '../utils/ShieldUtils'
 import { ZodType } from 'zod'
 import DeleteUserAction from '../classes/callback-button/delete-user/DeleteUserAction'
 import { inventoryItemDescriptionSchema } from '../utils/values/schemas'
+import JsonUtils from '../utils/JsonUtils'
+import ChatsCommand from '../classes/commands/buckwheat/chats/ChatsCommand'
+import ChatPublicCommand from '../classes/commands/buckwheat/chats/ChatPublicCommand'
+import ChatsChangeAction from '../classes/callback-button/chats/ChatsChangeAction'
+import ChatLinkAction from '../classes/callback-button/chats/ChatLinkAction'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -387,6 +392,8 @@ const launchBot = async (bot: Bot) => {
         new SelectGunAction(),
         new AwardRemoveAction(),
         new DeleteUserAction(),
+        new ChatsChangeAction(),
+        new ChatLinkAction(),
     )
 
     // dice 
@@ -475,6 +482,8 @@ const launchBot = async (bot: Bot) => {
         new SkillsCommand(),
         new EffectsCommand(),
         new ChatCommand(),
+        new ChatsCommand(),
+        new ChatPublicCommand(),
         new StatsCommand(),
         new AddAwardCommand(),
         new GetAwardCommand(),
@@ -572,9 +581,8 @@ const addSchema = async (
     basename: string,
     schema: ZodType<any>
 ) => {
-    const input = JSON.stringify(
+    const input = JsonUtils.stringify(
         schema.toJSONSchema(),
-        null,
         4
     )
 

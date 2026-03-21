@@ -354,7 +354,7 @@ export default class {
 
         return {
             value,
-            exported: JSON.stringify(exported)
+            exported: JsonUtils.stringify(exported)
         }
     }
 }

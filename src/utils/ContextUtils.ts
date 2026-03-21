@@ -1,4 +1,4 @@
-import { Context } from 'telegraf'
+import { Context, Types } from 'telegraf'
 import UserNameService from '../classes/db/services/user/UserNameService'
 import MessageUtils from './MessageUtils'
 import FileUtils from './FileUtils'
@@ -60,6 +60,19 @@ export default class ContextUtils {
         })
 
         return dice
+    }
+
+    static async createInviteLink(ctx: Context, chatId: number, extra?: Types.ExtraCreateChatInviteLink) {
+        try {
+            return await ctx.telegram.createChatInviteLink(
+                chatId,
+                extra
+            )
+        }
+        catch (e) {
+            Logging.error('ContextUtils.createInviteLink', e)
+            return undefined
+        }
     }
 
     static hasBotReply(ctx: TextContext) {
@@ -137,17 +150,17 @@ export default class ContextUtils {
             )
             return user
         }
-        catch(e) {
+        catch (e) {
             Logging.error(e)
             return null
         }
     }
 
-    static async getChat(ctx: Context) {
+    static async getChat(ctx: Context, chatId: number) {
         try {
-            return ctx.getChat()
+            return ctx.telegram.getChat(chatId)
         }
-        catch(e) {
+        catch (e) {
             Logging.error('ContextUtils.getChat', e)
             return undefined
         }
@@ -168,7 +181,7 @@ export default class ContextUtils {
     }
 
     static getTitle(ctx: Context) {
-        if(ctx.chat && ctx.chat?.type != 'private') {
+        if (ctx.chat && ctx.chat?.type != 'private') {
             return ctx.chat.title
         }
         else {

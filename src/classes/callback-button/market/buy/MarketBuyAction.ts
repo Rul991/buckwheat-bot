@@ -7,6 +7,7 @@ import MarketSlotService from '../../../db/services/market/MarketSlotService'
 import FileUtils from '../../../../utils/FileUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import LegacyInlineKeyboardManager from '../../../main/LegacyInlineKeyboardManager'
+import JsonUtils from '../../../../utils/JsonUtils'
 
 type Data = {
     count: number,
@@ -70,7 +71,7 @@ export default class extends CallbackButtonAction<Data> {
                                 id,
                                 page,
                                 slot,
-                                itemId: JSON.stringify({ itemId })
+                                itemId: JsonUtils.stringify({ itemId })
                             }
                         )
                     }

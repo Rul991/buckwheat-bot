@@ -1,4 +1,5 @@
 import ContextUtils from '../../../../utils/ContextUtils'
+import JsonUtils from '../../../../utils/JsonUtils'
 import MessageUtils from '../../../../utils/MessageUtils'
 import { BuckwheatCommandOptions } from '../../../../utils/values/types/action-options'
 import MarriageService from '../../../db/services/marriage/MarriageService'
@@ -8,7 +9,7 @@ import BuckwheatCommand from '../../base/BuckwheatCommand'
 export default class MarryCommand extends BuckwheatCommand {
     protected _settingId: string = 'marry'
 
-    constructor() {
+    constructor () {
         super()
         this._name = 'пожениться'
         this._aliases = [
@@ -21,8 +22,8 @@ export default class MarryCommand extends BuckwheatCommand {
 
     async execute({ ctx, id: userId, chatId, replyOrUserFrom }: BuckwheatCommandOptions): Promise<void> {
         const replyId = replyOrUserFrom.id
-        
-        if(await MarriageService.hasPartner(chatId, userId)) {
+
+        if (await MarriageService.hasPartner(chatId, userId)) {
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/commands/marriage/married/user.pug',
@@ -43,10 +44,13 @@ export default class MarryCommand extends BuckwheatCommand {
                     user: await ContextUtils.getUser(chatId, userId),
                     reply: await ContextUtils.getUser(chatId, replyId),
                 },
-                inlineKeyboard: await LegacyInlineKeyboardManager.get('marry', JSON.stringify({
-                    user: userId,
-                    reply: replyId
-                }))
+                inlineKeyboard: await LegacyInlineKeyboardManager.get(
+                    'marry',
+                    JsonUtils.stringify({
+                        user: userId,
+                        reply: replyId
+                    })
+                )
             }
         )
     }

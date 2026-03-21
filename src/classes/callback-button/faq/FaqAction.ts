@@ -5,6 +5,7 @@ import FileUtils from '../../../utils/FileUtils'
 import MessageUtils from '../../../utils/MessageUtils'
 import LegacyInlineKeyboardManager from '../../main/LegacyInlineKeyboardManager'
 import { CallbackButtonOptions } from '../../../utils/values/types/action-options'
+import JsonUtils from '../../../utils/JsonUtils'
 
 type Data = {
     n: string,
@@ -43,7 +44,7 @@ export default class extends CallbackButtonAction<Data> {
                     inline_keyboard: await LegacyInlineKeyboardManager.get(
                         'faq/back',
                         {
-                            page: JSON.stringify(page)
+                            page: JsonUtils.stringify(page)
                         }
                     )
                 }
