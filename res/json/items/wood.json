@@ -3,7 +3,7 @@
     "description": "Довольно важный и распространенный материал",
     "type": "consumable",
     "material": {
-        "rarity": 1
+        "rarity": 2
     },
-    "basePrice": 5
+    "basePrice": 5000
 }

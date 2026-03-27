@@ -1,13 +1,10 @@
 {
-    "name": "Пистолет",
-    "description": "Доступный, но слабый",
+    "name": "Древесина",
+    "description": "Довольно важный и распространенный материал",
     "type": "manyInfinity",
     "gun": {
-        "damage": [
-            5,
-            7
-        ],
+        "damage": [1000, 5000],
         "ammo": "pistolAmmo"
     },
-    "basePrice": 1000
+    "basePrice": 800
 }

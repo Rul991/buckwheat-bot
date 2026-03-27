@@ -1,9 +1,9 @@
 {
-    "name": "Неразрушимый щит",
-    "description": "Щит не пропустит ни один выстрел",
+    "name": "Древесина",
+    "description": "Довольно важный и распространенный материал",
     "type": "consumable",
     "shield": {
         "triggeringChance": 1
     },
-    "basePrice": 10000
+    "basePrice": 8000
 }

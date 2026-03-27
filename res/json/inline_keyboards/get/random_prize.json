@@ -1,7 +1,7 @@
 [
     [
         {
-            "text": "🎁 Получить",
+            "text": "🎁 Посмотреть",
             "callback_data": "randomprize_@"
         }
     ]

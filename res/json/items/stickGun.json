@@ -1,12 +1,15 @@
 {
-    "name": "Палка-пистолет",
-    "description": "Раз в год и палка стреляет!",
+    "name": "Древесина",
+    "description": "Довольно важный и распространенный материал",
     "type": "consumable",
     "material": {
         "rarity": 9
     },
     "gun": {
-        "damage": [1000, 5000]
+        "damage": [
+            5,
+            7
+        ]
     },
     "basePrice": 15000
 }

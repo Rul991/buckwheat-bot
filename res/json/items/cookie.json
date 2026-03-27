@@ -1,6 +1,6 @@
 {
-    "name": "Печеньки",
-    "description": "🍪🍪🍪",
+    "name": "Древесина",
+    "description": "Довольно важный и распространенный материал",
     "type": "consumable",
-    "basePrice": 13
+    "basePrice": 10
 }
