@@ -20,8 +20,8 @@ mixin line(user, value)
     +link(user)
     | - 
     i #{showableValue} 
-    if index == firstPlace && hasWinner
-        | (#{Math.floor(100 * +value / rawTotalCount) / 100}%)
+    if index == firstPlace && rawTotalCount != 0
+        | (#{Math.floor(100 * 100 * +value / rawTotalCount) / 100}%)
     |
     |
 
