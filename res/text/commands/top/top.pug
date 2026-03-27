@@ -1,7 +1,9 @@
+include utils/functions.pug
 include utils/mixins.pug
 
 - const medals = ['🥇', '🥈', '🥉']
 - const firstPlace = 1
+
 - let number = page * perPage
 - const fullTitle = rawTitle || `Топ самых ${property} игроков`
 
@@ -11,12 +13,15 @@ mixin line(user, value)
         const listNumber = index <= medals.length && hasWinner ?
             medals[index - 1] : 
             `${index}`.padStart(3, '0')
+        const showableValue = typeof value == 'string' ?
+            value :
+            formatNumber(value)
     | #{listNumber}. 
     +link(user)
     | - 
-    i #{value} 
-    if index == firstPlace
-        | (#{Math.floor(100 * value / rawTotalCount) / 100}%)
+    i #{showableValue} 
+    if index == firstPlace && hasWinner
+        | (#{Math.floor(100 * +value / rawTotalCount) / 100}%)
     |
     |
 

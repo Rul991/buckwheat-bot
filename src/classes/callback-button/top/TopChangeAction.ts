@@ -114,9 +114,7 @@ export default class extends ScrollerAction<Object, Additional> {
                         isLeft: false,
                         link: ContextUtils.getLinkUrl(isUsePlayerId ? id : botId)
                     },
-                    value: typeof value == 'string' ?
-                        value :
-                        StringUtils.toFormattedNumber(value)
+                    value
                 }
             })
         )).filter(user => user)
