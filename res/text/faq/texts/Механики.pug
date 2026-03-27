@@ -1,0 +1,26 @@
+include utils/mixins.pug
+
++faq('Все доступные механики:')
+    |
+    +tree(
+        [
+            {
+                text: '0',
+                elements: [
+                    {
+                        text: '1',
+                        elements: [
+                            {
+                                text: '2',
+                                elements: [
+                                    {
+                                        text: '3'
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                ]
+            }
+        ]
+    )

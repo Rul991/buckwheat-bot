@@ -35,3 +35,20 @@ mixin random(arr)
     - const value = Math.floor(Math.random() * length)
 
     | #{arr[value]}
+
+mixin command_description(command, description)
+    |
+    | ➖ 
+    code баквит #{command} 
+    |  - #{description}
+    |
+
+mixin tree(arr, symbols = ['📍', '✖️', '➖'], i = 0)
+    - const padding = ' '.repeat(6 * i)
+    - const index = Math.min(i, symbols.length - 1)
+    - const symbol = symbols[index]
+
+    each element in arr
+        |
+        | #{padding}#{symbol} #{element.text}
+        +tree(element.elements || [], symbols, i + 1)

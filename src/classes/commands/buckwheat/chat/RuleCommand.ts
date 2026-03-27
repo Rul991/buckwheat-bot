@@ -137,7 +137,7 @@ export default class RuleCommand extends BuckwheatCommandWithSub<RuleSubCommand>
         )
 
         this._name = 'правила'
-        this._description = 'показываю или редактирую правила'
+        this._description = 'показываю или редактирую правила\nподробнее о использование можно узнать в "баквит как > Правила"'
         this._aliases = [
             'правило',
         ]

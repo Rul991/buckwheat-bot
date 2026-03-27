@@ -1,16 +1,22 @@
 include utils/mixins.pug
 
 - const medals = ['🥇', '🥈', '🥉']
-
+- const firstPlace = 1
 - let number = page * perPage
 - const fullTitle = rawTitle || `Топ самых ${property} игроков`
 
 mixin line(user, value)
-    - const index = ++number
-    | #{user.isLeft ? '✖️' : index <= medals.length && hasWinner ? medals[index - 1] : `${index}`.padStart(3, '0')}. 
+    - 
+        const index = ++number
+        const listNumber = index <= medals.length && hasWinner ?
+            medals[index - 1] : 
+            `${index}`.padStart(3, '0')
+    | #{listNumber}. 
     +link(user)
     | - 
-    i #{value}
+    i #{value} 
+    if index == firstPlace
+        | (#{Math.floor(100 * value / rawTotalCount) / 100}%)
     |
     |
 
@@ -22,21 +28,8 @@ b  #{emoji} #{fullTitle}:
 each obj in sorted
     - let user = obj.user
     - let value = obj.value
-    - let isLeft = user.isLeft
 
-    if isLeft
-        s
-            +line(
-                {
-                    name: user.name, 
-                    link: 'https://t.me/buckwheat_channel',
-                    isLeft: true
-                }, 
-                value
-            )
-    else
-        +line(user, value)
-    |
+    +line(user, value)
 |
 |
 if isNumbers && rawTotalCount != 0

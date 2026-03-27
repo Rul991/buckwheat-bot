@@ -12,7 +12,7 @@ export default class IdeaCommand extends BuckwheatCommand {
         super()
 
         this._name = 'идеи'
-        this._description = 'добавляю твою идею в общий список'
+        this._description = 'добавляю твою идею в общий список\nесли не вводить текст после команды, показываю доступные идеи'
 
         this._needData = true
         this._argumentText = 'идея'

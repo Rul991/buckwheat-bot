@@ -17,7 +17,7 @@ export default class DuelCommand extends BuckwheatCommand {
             'вызов',
             'сразиться'
         ]
-        this._description = 'выступаю посредником в дуэле'
+        this._description = 'выступаю посредником в дуэле\nподробнее о использование можно узнать в "баквит как > Дуэли"'
         this._replySupport = true
         // this._isPremium = true
     }

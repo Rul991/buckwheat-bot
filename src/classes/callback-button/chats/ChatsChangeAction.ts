@@ -26,8 +26,10 @@ export default class extends ScrollerAction<Object, Additional> {
     protected async _editMessage(options: ScrollerEditMessageOptions<Object, Additional>): Promise<ScrollerEditMessageResult> {
         const {
             slicedObjects,
-            id
+            id,
+            objects
         } = options
+        const count = objects.length
 
         return {
             keyboard: {
@@ -41,6 +43,13 @@ export default class extends ScrollerAction<Object, Additional> {
                             }
                         }
                     })
+                }
+            },
+
+            message: {
+                path: 'text/commands/chats/chats.pug',
+                changeValues: {
+                    count
                 }
             }
         }

@@ -242,7 +242,7 @@ export default class RoleplayCommand extends BuckwheatCommandWithSub<SubCommand>
         )
 
         this._name = 'рп'
-        this._description = 'обновляю или показываю доступные кастомные рп команды\nвиды падежей: р, д, т'
+        this._description = 'обновляю или показываю доступные кастомные рп команды\nподробнее о использование можно узнать в "баквит как > РП-команды"'
     }
 
     protected async _checkAccess(options: BuckwheatCommandOptions, [sub]: [SubCommand, string]): Promise<boolean> {
