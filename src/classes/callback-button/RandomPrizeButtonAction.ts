@@ -30,6 +30,7 @@ export default class RandomPrizeButtonAction extends CallbackButtonAction<string
             id,
             MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE
         )
+        await MessageUtils.editMarkup(ctx)
         await MessageUtils.answerMessageFromResource(
             ctx,
             'text/actions/random-prize/win.pug',
