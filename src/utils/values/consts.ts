@@ -66,7 +66,7 @@ export const DICE_TIME = 3500
 export const DARTS_TIME = 3000
 export const RESTART_TIME = 5 * MILLISECONDS_IN_SECOND
 
-export const RANDOM_PRIZE_CHANCE = 0.35
+export const RANDOM_PRIZE_CHANCE = 0.035
 export const MIN_RANDOM_PRIZE = 0
 export const MAX_RANDOM_PRIZE = 50
 export const EXTRA_RANDOM_PRIZE = 100
