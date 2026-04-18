@@ -28,6 +28,7 @@
     "dependencies": {
         "bm2": "^1.0.33",
         "express": "^5.2.1",
+        "https-proxy-agent": "^9.0.0",
         "mongoose": "^9.3.0",
         "p-queue": "^9.1.0",
         "pug": "^3.0.4",

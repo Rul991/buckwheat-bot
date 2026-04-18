@@ -12,6 +12,7 @@
         "rootDir": "./src",
         "declaration": true,
         "lib": ["es2021", "es2022"],
+        "types": ["bun-types"]
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules", "dist", "logs/**"]
