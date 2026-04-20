@@ -5,9 +5,9 @@
     "scripts": {
         "dev": "bun run --watch .",
         "start": "bun run .",
-        "start:prod": "bunx bm2 start bm2.config.js --env prod",
-        "restart:prod": "bun install && bunx bm2 restart buckwheat-bot",
-        "stop:prod": "bunx bm2 stop bm2.config.js && bunx bm2 delete bm2.config.js"
+        "start:prod": "bunx pm2 start pm2.config.js --env prod",
+        "restart:prod": "bun install && bunx pm2 restart buckwheat-bot",
+        "stop:prod": "bunx pm2 stop pm2.config.js && bunx pm2 delete pm2.config.js"
     },
     "keywords": [
         "telegraf",
@@ -26,11 +26,10 @@
         "@types/pug": "^2.0.10"
     },
     "dependencies": {
-        "bm2": "^1.0.33",
         "express": "^5.2.1",
-        "https-proxy-agent": "^9.0.0",
         "mongoose": "^9.3.0",
         "p-queue": "^9.1.0",
+        "pm2": "^6.0.14",
         "pug": "^3.0.4",
         "socks-proxy-agent": "^8.0.5",
         "telegraf": "^4.16.3",

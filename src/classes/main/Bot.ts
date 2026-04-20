@@ -9,7 +9,6 @@ import express from 'express'
 import { MyTelegraf } from '../../utils/values/types/types'
 import QueueUtils from '../../utils/ratelimit/QueueUtils'
 import { SocksProxyAgent } from 'socks-proxy-agent'
-import { HttpsProxyAgent } from 'https-proxy-agent'
 
 export default class Bot {
     private _bot: MyTelegraf
@@ -20,7 +19,7 @@ export default class Bot {
             token,
             {
                 telegram: {
-                    agent: SOCKS_PROXY ? new HttpsProxyAgent(
+                    agent: SOCKS_PROXY ? new SocksProxyAgent(
                         SOCKS_PROXY,
                         {
                             keepAlive: true,
