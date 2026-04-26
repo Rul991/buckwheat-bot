@@ -1,0 +1,14 @@
+include utils/functions.pug
+include utils/mixins.pug
+
+| ✋ Игрок 
++link(user)
+| передает предмет 
+u #{itemName}
+| !
+| ❕ Ответьте на сообщение игрока, написав количество передаваемого предмета (от 
+code #{formatNumber(minCount)}
+|  до 
+code #{formatNumber(maxCount)}
+| )
+| ❕ Отправьте сообщение без ответа, если не хотите передавать предмет!

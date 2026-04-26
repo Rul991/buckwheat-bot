@@ -5,13 +5,16 @@ import { CallbackButtonOptions } from '../../../utils/values/types/action-option
 import { NewScrollerData, ScrollerEditMessageOptions, ScrollerEditMessageResult } from '../../../utils/values/types/scrollers'
 import ContextUtils from '../../../utils/ContextUtils'
 import StringUtils from '../../../utils/StringUtils'
-import ChatSettingsService from '../../db/services/settings/ChatSettingsService'
 import UserProfileService from '../../db/services/user/UserProfileService'
 import { object, string, ZodType } from 'zod'
+import { Link } from '../../../utils/values/types/types'
 
 type Object = {
-    id: number
+    user: Link & {
+        isLeft: boolean
+    }
     value: number | string
+    id: number
 }
 type Additional = {
     type: string
@@ -54,15 +57,41 @@ export default class extends ScrollerAction<Object, Additional> {
             await subCommand.handleSortedValues({ chatId, values: sorted })
             : sorted
 
-        return handledSorted
+        const ids = handledSorted.map(v => v.id)
+        const users = await UserProfileService.getManyByIds(
+            chatId,
+            ids
+        )
+
+        const namedSorted = (await Promise.all(
+            handledSorted.map(async ({ id: objId, value }) => {
+                const user = users.find(v => v.id == objId)
+                if (!user) return null
+
+                const {
+                    name,
+                    id
+                } = user
+
+                return {
+                    user: {
+                        name,
+                        isLeft: false,
+                        link: ContextUtils.getLinkUrl(id)
+                    },
+                    id,
+                    value
+                }
+            })
+        ))
+
+        const namedNotNullSorted = namedSorted
+            .filter(user => user !== null)
+
+        return namedNotNullSorted
     }
 
-    protected _getType(data: string) {
-        const [_increase, _current, type] = data.split('_')
-        return type
-    }
-
-    constructor () {
+    constructor() {
         super()
         this._name = 'topch'
         this._objectsPerPage = 20
@@ -73,12 +102,9 @@ export default class extends ScrollerAction<Object, Additional> {
             objects,
             slicedObjects,
             data,
-            ctx,
-            chatId,
             page: currentPage,
-            maxPage
+            id,
         } = options
-        const length = maxPage + 1
 
         const {
             type
@@ -93,41 +119,17 @@ export default class extends ScrollerAction<Object, Additional> {
             topOrRole = true
         } = TopUtils.getSubCommand(type)
 
-        const isPrivate = ctx.chat?.type == 'private'
-        const botId = ctx.botInfo.id
-        const isUsePlayerId = isPrivate ||
-            await ChatSettingsService.get<'boolean'>(chatId, 'link')
-
-        const sorted = (await Promise.all(
-            slicedObjects.map(async ({ id: objId, value }) => {
-                const user = await UserProfileService.get(chatId, objId)
-                if (!user) return null
-
-                const {
-                    name,
-                    id
-                } = user
-
-                return {
-                    user: {
-                        name,
-                        isLeft: false,
-                        link: ContextUtils.getLinkUrl(isUsePlayerId ? id : botId)
-                    },
-                    value
-                }
-            })
-        )).filter(user => user)
-
-        let isNumbers = true
         const totalCount = hasTotalCount ? objects.reduce((prev, { value }) => {
             if (typeof value == 'number') {
                 return prev + value
             }
 
-            isNumbers = false
             return prev
         }, 0) : 0
+
+        const playerPlace = objects.findIndex(
+            v => v.id == id
+        ) + 1
 
         return {
             message: {
@@ -135,15 +137,13 @@ export default class extends ScrollerAction<Object, Additional> {
                 changeValues: {
                     ...changeValues,
                     emoji,
-                    sorted,
+                    sorted: slicedObjects,
                     page: currentPage,
                     perPage: this._objectsPerPage,
-                    length,
-                    isNumbers,
-                    rawTotalCount: totalCount,
-                    totalCount: StringUtils.toFormattedNumber(totalCount),
+                    totalCount,
                     totalName: name,
-                    hasWinner
+                    hasWinner,
+                    playerPlace,
                 }
             },
             keyboard: {

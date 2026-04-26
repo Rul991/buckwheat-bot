@@ -16,4 +16,8 @@ export default class MathUtils {
         else 
             return value
     }
+
+    static isClamp(value: number, min: number, max: number): boolean {
+        return value >= min && value <= max
+    }
 }

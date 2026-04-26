@@ -52,6 +52,23 @@ export default class UserProfileService {
         return await UserRepository.findOne(chatId, id)
     }
 
+    static async getManyByIds(chatId: number, ids: number[]) {
+        return await UserRepository.findMany({
+            id: {
+                $in: ids
+            },
+            chatId
+        })
+    }
+
+    static getDummy(id: number = 0): User {
+        return {
+            id,
+            chatId: 0,
+            name: '???'
+        }
+    }
+
     static async findByName(chatId: number, name: string): Promise<User | null> {
         return (await UserRepository.findByFilter({ chatId, name }))
     }

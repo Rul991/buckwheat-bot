@@ -1,9 +1,4 @@
-import { Context } from 'telegraf'
-import { BaseScene } from 'telegraf/scenes'
-import { Update } from 'telegraf/types'
 import Card from '../../../interfaces/schemas/card/Card'
-import { TextContext } from '../../../utils/values/types/contexts'
-import { ContextData } from '../../../utils/values/types/contexts'
 import SceneAction from './SceneAction'
 import MessageUtils from '../../../utils/MessageUtils'
 import FileUtils from '../../../utils/FileUtils'
@@ -15,7 +10,7 @@ import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import MathUtils from '../../../utils/MathUtils'
 import { SceneOptions } from '../../../utils/values/types/action-options'
 
-export type Data = {
+type Data = {
     card: Card
 }
 
