@@ -1,0 +1,17 @@
+include /utils/mixins.pug
+
+| Игрок 
++link(user)
+| , у тебя нет столько монет!
+|
+if range(0, 100) == 1
+    tg-spoiler
+        +random([
+            'Ты нищий!',
+            'Нищета, нищета, нищета',
+            'Не знаю, попробуй кредит в банке взять',
+        ])
+else 
+    | Твой баланс - 
+    code #{formatNumber(money)}
+    | #{EMOJIES.MONEY}!

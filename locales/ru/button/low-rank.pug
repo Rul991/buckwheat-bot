@@ -1,0 +1,9 @@
+include /utils/mixins.pug
+
+| Для взаимодействия с кнопкой '#{name}' необходим ранг 
++rank_emoji(rank.need)
++rank(rank.need, false)
+| !
+| Ваш ранг - 
++rank_emoji(rank.user)
++rank(rank.user, false)

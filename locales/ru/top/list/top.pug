@@ -1,0 +1,51 @@
+include /utils/mixins.pug
+
+- 
+    const medals = [
+        EMOJIES.FIRST_PLACE,
+        EMOJIES.SECOND_PLACE,
+        EMOJIES.THIRD_PLACE,
+    ]
+- const withProcentsPlace = 5
+
+- let startIndex = page * perPage
+
+mixin line(user, value)
+    - 
+        const index = ++startIndex
+        const listNumber = index <= medals.length && hasWinner ?
+            medals[index - 1] : 
+            `${index}`.padStart(3, '0')
+        const showableValue = typeof value == 'string' ?
+            value :
+            formatNumber(value)
+    | #{listNumber}. 
+    +link(user)
+    |  - 
+    i #{showableValue} 
+    if index <= withProcentsPlace && hasTotalCount
+        | (#{Math.floor(100 * 100 * +value / totalCount) / 100}%)
+    |
+    |
+
+b  #{emoji} #{heading}:
+|
+|
+|
+each obj in objects
+    - let user = obj.user
+    - let value = obj.value
+
+    +line(user, value)
+|
+|
+if hasTotalCount
+    b #{EMOJIES.MEDAL} Суммарно#{totalName ? ` ${totalName}` : ''}: 
+    code #{formatNumber(totalCount)}
+    |
+    |
+if playerPlace
+    |
+    i #{EMOJIES.WIN} Ваше место - 
+        code #{formatNumber(playerPlace)}
+        | !

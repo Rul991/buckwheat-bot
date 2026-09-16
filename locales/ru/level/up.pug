@@ -1,0 +1,11 @@
+include /utils/functions.pug
+
+mixin num(value)
+    code #{formatNumber(value)}
+
+| #{EMOJIES.LEVEL} Ваш уровень - 
++num(currentLevel)
+| !
+| #{EMOJIES.MINUS} Вы получаете 
++num(totalPrize)
+| #{EMOJIES.MONEY}!

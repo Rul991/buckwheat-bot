@@ -1,0 +1,14 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.HELLO} #{DEV_ID == user.id ? 'Создатель' : 'Игрок'} 
++link(user)
+| , с возвращением в 
+u #{chat.title || '???'}
+| !
+|
+|
+if money < 0
+    | #{EMOJIES.MINUS} Ваш баланс показал невероятный отрицательный рост!
+    | #{EMOJIES.DEBT} Ваш долг - 
+    code #{formatNumber(Math.abs(money))}
+    | #{EMOJIES.MONEY}!

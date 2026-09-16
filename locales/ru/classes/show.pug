@@ -1,0 +1,10 @@
+include /utils/functions.pug
+
+| #{CLASS_EMOJIES[type]} Ваш класс - 
+u #{name}
+| !
+if changeCount > 1
+    |
+    | #{EMOJIES.NUMBER} Вы изменили класс 
+    code #{formatNumber(changeCount)}
+    |  раз!

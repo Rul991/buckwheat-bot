@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+enum SkillAttack {
+    Fail = 0;
+    Normal = 1;
+    Crit = 2;
+}

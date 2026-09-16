@@ -1,0 +1,34 @@
+include /utils/emojies.pug
+
+- 
+    const emojies = {
+        item: EMOJIES.ITEM,
+        card: EMOJIES.CARD,
+        string: '🧵',
+        wood: '🪵',
+        book: '📖',
+        metal: '🤘',
+        cookie: EMOJIES.COOKIE,
+        boost: '🚀',
+        free: '🆓',
+        fuel: '⛽️',
+        gun: EMOJIES.GUN,
+        glass: '🫙',
+        moneyfarm: '🤑',
+        casino: EMOJIES.CASINO,
+        level: EMOJIES.LEVEL,
+        newgame: '🆖',
+        ammo: '🏹',
+        shield: EMOJIES.SHIELD,
+        gift: EMOJIES.GIFT,
+        leaf: '🍁',
+        sword: '⚔️',
+        rock: '🪨',
+        heal: EMOJIES.HP,
+        admin: EMOJIES.ADMIN,
+        thanks: EMOJIES.THANKS,
+        class: EMOJIES.PLAYER,
+        time: EMOJIES.TIME
+    }
+
+| #{emojies[key]}

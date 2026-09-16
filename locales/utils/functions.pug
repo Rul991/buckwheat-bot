@@ -1,0 +1,53 @@
+include /utils/emojies.pug
+
+- 
+    const floor = (raw, afterDot = 0) => {
+        const afterDotValue = 10 ** afterDot
+        return Math.round(raw * afterDotValue) / afterDotValue
+    }
+
+    const formatNumber = (raw, step = 3, separator = ' ') => {
+        if(!isFinite(raw)) return EMOJIES.INFINITY
+        
+        const number = floor(raw, step)
+        if (number >= 1e+12) {
+            const zeroCount = Math.floor(Math.log10(number))
+            const afterDot = 2
+            const firstNumberPart = Math.floor(number / (10 ** (zeroCount - afterDot))) / (10 ** afterDot)
+
+            return `${firstNumberPart} * 10^${zeroCount}`
+        }
+        else {
+            let symbolsCount = 0
+            return [...number.toString()]
+                .reverse()
+                .reduce((prev, curr) => {
+                    if (curr != '.' && curr != '-') {
+                        symbolsCount++
+                    }
+                    else {
+                        symbolsCount = -1
+                    }
+
+                    if (symbolsCount > 0 && symbolsCount % 3 == 0) {
+                        return `${curr}${separator}${prev}`
+                    }
+
+                    return `${curr}${prev}`
+                })
+        }
+    }
+
+    const bool = value => value ? EMOJIES.APPROVE : EMOJIES.DECLINE
+    const range = (min, max, step = 0) => {
+        if(min >= max) return min
+
+        const mod = 10 ** step
+        return Math.floor(Math.random() * (max - min + 1) * mod) / mod + min
+    }
+
+    const choose = (arr, defaultValue = undefined) => {
+        if(!arr.length) return defaultValue
+        const index = range(0, arr.length - 1)
+        return arr[index]
+    }

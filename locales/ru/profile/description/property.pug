@@ -1,0 +1,11 @@
+include /utils/mixins.pug
+
+| Описание игрока 
++link(user)
+| :
+|
+if property.length && property != '...'
+    blockquote
+        | !{property}
+else
+    i его нет...

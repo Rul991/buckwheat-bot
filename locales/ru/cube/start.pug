@@ -1,0 +1,26 @@
+include /utils/mixins.pug
+
+b #{EMOJIES.CUBE} ВНИМАНИЕ!
+|
+| Игрок 
++link(first)
+|  предлагает сыграть в кубы на 
+code
+    if bet > 0
+        | #{formatNumber(bet)}#{EMOJIES.MONEY}
+    else
+        | интерес
+|  игроку 
++link(second)
+| !
+|
+|
++heading()
+    | Правила следующие:
+| #{EMOJIES.MINUS} Кому больше выпадает число, то и выиграл.
+| #{EMOJIES.MINUS} Если одному из игроков выпала единица, он выигрывает х2 сумму!
+|
+|
++heading()
+    | Важные упоминания:
+| #{EMOJIES.MINUS} Игроки, оставшиеся без монет, могут вылететь из чата!

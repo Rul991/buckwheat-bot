@@ -1,0 +1,30 @@
+include /utils/mixins.pug
+
+- 
+    const values = objects.reduce((prev, {user, value}) => {
+        if(!prev[value]) prev[value] = []
+
+        prev[value].push(user)
+        return prev
+    }, {})
+
+mixin line(user)
+    |
+    | #{EMOJIES.LIST} 
+    +link(user)
+    |
+
+b  #{emoji} #{heading}:
+|
+|
+- for(let key in values) {
+    - const objects = values[key]
+    |
+    |
+    b #{key}
+    |
+    each obj in objects
+        +line(obj)
+    |
+    |
+- }

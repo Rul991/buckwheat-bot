@@ -1,0 +1,11 @@
+include /utils/mixins.pug
+
++heading()
+    | Моя статистика:
+
++plain_bold_param(`${EMOJIES.CHAT} Кол-во чатов`, formatNumber(chats))
++plain_bold_param(`${EMOJIES.MONEY} Вся экономика`, `${formatNumber(money)}${EMOJIES.MONEY}`)
+|
+|
++plain_bold_param(`${EMOJIES.PLAYER} Кол-во игроков`, formatNumber(users))
++plain_bold_param(`${EMOJIES.UNIQUE} Кол-во уник. игроков`, formatNumber(uniqueUsers))

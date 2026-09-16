@@ -1,0 +1,11 @@
+include /utils/mixins.pug
+
+if phrases.length
+    | #{EMOJIES.CHOOSE} Выбранный элемент - 
+    b
+        +random(phrases)
+    | !
+else
+    | #{EMOJIES.CHOOSE} Я не знаю, что выбирать, поэтому пусть будет: 
+    b #{text}
+    | !

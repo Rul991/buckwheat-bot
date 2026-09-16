@@ -1,0 +1,40 @@
+syntax = "proto3";
+import "scroller.proto";
+
+enum GrammaticalCase {
+    Genitive = 0; // genitive case
+    Dative = 1; // dative case
+    Creative = 2; // instrumental case
+}
+
+message RoleplayScrollerButtonData {
+    optional ScrollerData data = 1; // scroller data
+}
+
+message RoleplayChangeCaseButtonData {
+    uint64 id = 1; // user's id
+    GrammaticalCase caseValue = 2; // grammatical case
+    bytes objectId = 3; // roleplay's objectId
+    uint32 page = 4; // back page index
+}
+
+message RoleplayEditTextButtonData {
+    uint64 id = 1; // user's id
+    bytes objectId = 2; // roleplay's objectId
+}
+
+message RoleplayAddButtonData {
+    uint64 id = 1; // user's id
+}
+
+message RoleplayShowButtonData {
+    uint64 id = 1; // user's id
+    bytes objectId = 2; // roleplay's objectId
+    uint32 page = 3; // back page index
+}
+
+message RoleplayDeleteButtonData {
+    uint64 id = 1; // user's id
+    bytes objectId = 2; // roleplay's objectId
+    uint32 page = 3; // back page index
+}

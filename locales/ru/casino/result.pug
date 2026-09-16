@@ -1,0 +1,37 @@
+include /utils/mixins.pug
+
+-
+    const comments = {
+        jackpot: [
+            'Джекпот!!',
+            '777',
+            'Три топора',
+            'Вот это другое дело',
+            'Нужен додеп'
+        ],
+        win: [
+            'Повезло, повезло',
+            'О, повезло',
+            'Удача',
+            'Победили',
+            'Нужен додеп'
+        ],
+        lose: [
+            'Какая досада',
+            'Эх, неудача',
+            'Неудача',
+            'Проиграли',
+            'Нужен додеп'
+        ]
+    }
+- const isLose = type == 'lose'
+
+b
+    +random(comments[type])
+    | !
+|
+| Игрок 
++link(user)
+|  #{isLose ? 'теряет' : 'получает'} 
+b #{isLose ? '' : '+'}#{formatNumber(Math.abs(prize))}
+| #{EMOJIES.MONEY}

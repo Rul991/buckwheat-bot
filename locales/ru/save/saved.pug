@@ -1,0 +1,13 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.SAVE} Игрок 
++link(user)
+|  сохранился
+if mustKicked
+    |  и 
+    if isKicked
+        i вышел
+    else
+        i попытался выйти
+        | , но врата были закрыты
+| !

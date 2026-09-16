@@ -1,0 +1,36 @@
+include /utils/mixins.pug
+
+- 
+    const titles = {
+        cube: 'Игры в кубы',
+        casino: 'Игры в казино'
+    }
+
+    const precentsEmoji = [
+        EMOJIES.THIRD_PLACE,
+        EMOJIES.SECOND_PLACE,
+        EMOJIES.FIRST_PLACE,
+        EMOJIES.WIN,
+        EMOJIES.WIN,
+    ]
+
++heading()
+    | Твой баланс:
+|
++plain_bold_param(`${EMOJIES.MONEY} Кол-во монет`, formatNumber(balance))
++plain_bold_param(`${EMOJIES.ITEM} Кол-во предметов`, formatNumber(items))
++plain_bold_param(`${EMOJIES.UNIQUE} Кол-во уникал. предметов`, formatNumber(uniqueItems))
+|
+|
+|
+for game in games
+    - const rawPrecents = game.wins / (game.loses + game.wins) * 100
+    - const index = Math.round(rawPrecents / 25)
+    +heading()
+        | #{titles[game.type] || `{{ ${game.type} }}`}:
+    +plain_bold_param(`${game.wins ? EMOJIES.WIN : EMOJIES.NEUTRAL_MAN} Кол-во побед`, formatNumber(game.wins))
+    +plain_bold_param(`${game.loses ? EMOJIES.LOSE : EMOJIES.COOL_MAN} Кол-во проигрышей`, formatNumber(game.loses))
+    +plain_bold_param(`${precentsEmoji[index]} Доля побед`, `${formatNumber(floor(rawPrecents, 2))}%`)
+    |
+    |
+    |

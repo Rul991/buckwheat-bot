@@ -1,0 +1,16 @@
+-
+    const rankNames = {
+        [ranks.moderator]: 'Модератор',
+        [ranks.admin]: 'Администратор',
+        [ranks.max]: 'Создатель',
+        [ranks.max + 1]: 'Рул',
+    }
+
+if id.current == id.dev
+    | Отец
+else if id.current == id.buckwheat
+    | Баквит
+else if ranks.current >= ranks.moderator
+    | #{rankNames[ranks.current]}
+else
+    | Игрок

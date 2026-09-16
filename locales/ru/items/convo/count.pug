@@ -1,0 +1,9 @@
+include /utils/mixins.pug
+
+| #{item.emoji || EMOJIES.ITEM} Игрок 
++link(vars.user)
+| , введите кол-во предметов от 
+code #{formatNumber(min)}
+|  до 
+code #{formatNumber(max)}
+| !

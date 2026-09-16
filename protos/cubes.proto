@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+message CubeStartButtonData {
+    uint64 first = 1;
+    uint64 second = 2;
+    bool isAgree = 3;
+    uint32 bet = 4;
+}

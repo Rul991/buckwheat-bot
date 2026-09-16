@@ -1,0 +1,80 @@
+include /utils/mixins.pug
+
+- 
+    const eggs = [
+        {
+            values: [0],
+            type: 'enum',
+            texts: ['А вы щедры!']
+        },
+
+        {
+            values: [-Infinity, 0],
+            type: 'range',
+            texts: ['Я заметил, что ты написал лишний минус, поэтому решил его убрать!']
+        },
+
+        {
+            values: [63],
+            type: 'enum',
+            texts: ['63!']
+        },
+
+        {
+            values: [26.02, 23.02, 6.08],
+            type: 'enum',
+            texts: ['Похоже на дату, когда началось что-то хорошее!']
+        },
+
+        {
+            values: [42],
+            type: 'enum',
+            texts: ['А также foo, bar и baz!']
+        },
+
+        {
+            values: [1225, 12.25],
+            type: 'enum',
+            texts: ['♐♓❍♋ ●□♒']
+        },
+
+        {
+            values: [1000000, Infinity],
+            type: 'range',
+            texts: ['Тебе с такими суммами надо банк открывать!']
+        },
+    ]
+
+    const egg = eggs.find(v => {
+        if(v.type == 'enum') {
+            return v.values.includes(raw)
+        }
+        else if(v.type == 'range') {
+            return raw >= v.values[0] && raw <= v.values[1]
+        }
+
+        return false
+    })
+
+| #{EMOJIES.APPROVE} Игрок 
++link(user)
+|  
++random([
+    'перевел',
+    'отправил деньги',
+    'отдал деньги',
+    'подал на пропитание'
+])
+| 
+code #{formatNumber(money)}
+| #{EMOJIES.MONEY} 
+if reply.id != user.id
+    | игроку 
+    +link(reply)
+else
+    | себе
+| !
+|
+if egg
+    tg-spoiler
+        +random(egg.texts)

@@ -1,0 +1,14 @@
+include /utils/mixins.pug
+
+b #{EMOJIES.WARN} Ошибка!
+|
+blockquote
+    b #{error.name}: 
+    | #{error.message}
+|
+|
++json({
+    chat,
+    message,
+    user
+})

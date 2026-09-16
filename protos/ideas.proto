@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+message IdeaVoteButtonData {
+    uint32 id = 1; // idea's id
+    bool isCool = 2; // like or dislike
+}
+
+message IdeaDeleteButtonData {
+    uint32 id = 1; // idea's id
+    optional uint32 page = 2;
+}

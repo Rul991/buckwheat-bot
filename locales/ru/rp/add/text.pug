@@ -1,0 +1,8 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.WRITE} Игрок 
++link(vars.user)
+| , введите текст команды 
+u #{command}
+| !
+| (до #{max || EMOJIES.INFINITY} символов, форматирование работает)

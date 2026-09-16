@@ -1,0 +1,17 @@
+include /utils/emojies.pug
+
+- let mePhrase = 'ко мне'
+- let usPhrase = 'к нам'
+- let themPhrase = 'к ним'
+- let hisPhrase = 'к игроку'
+
+| #{EMOJIES.SHOP} Добро пожаловать 
+if fullOwner
+    | #{hisPhrase}
+else if totalCount == 0
+    | #{mePhrase}
+else if totalCount == 100
+    | #{themPhrase}
+else
+    | #{mePhrase}
+|  в магазин, показать товары?

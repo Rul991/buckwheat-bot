@@ -1,0 +1,15 @@
+include /utils/mixins.pug
+
++rank_emoji(rank.need)
+| Игрок
+if user
+    |  
+    +link(user)
+| , для работы команды 
+u #{botName} #{command}
+|  нужен ранг 
++rank(rank.need)
+| !
+| Ваш ранг - 
++rank_emoji(rank.user)
++rank(rank.user)

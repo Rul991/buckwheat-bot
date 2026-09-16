@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+message ShopShowButtonData {
+    uint64 id = 1; // user's id
+    uint32 index = 2; // shopItems' index
+    uint32 page = 3; // back page
+    uint32 count = 4; // item's count
+}
+
+message ShopBuyButtonData {
+    uint64 id = 1; // user's id
+    uint32 index = 2; // shopItems' index
+    uint32 page = 3; // back page
+    uint32 count = 4; // item's count
+}
+
+message ShopCountButtonData {
+    uint64 id = 1; // user's id
+    uint32 index = 2; // shopItems' index
+    uint32 page = 3; // back page
+}

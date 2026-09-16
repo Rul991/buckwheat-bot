@@ -1,0 +1,23 @@
+syntax = "proto3";
+import "scroller.proto";
+
+message InventoryScrollerButtonData {
+    ScrollerData data = 1; // scroller's data
+}
+
+message InventoryShowButtonData {
+    uint64 id = 1; // user's id
+    uint32 itemId = 2; // item's id
+    uint32 page = 3; // back page index
+}
+
+message InventoryGiftButtonData {
+    uint64 id = 1; // user's id
+    uint32 itemId = 2; // item's id
+    uint32 page = 3; // back page index
+}
+
+message InventoryUseButtonData {
+    uint64 id = 1; // user's id
+    uint32 itemId = 2; // item's id
+}

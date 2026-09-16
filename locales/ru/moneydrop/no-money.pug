@@ -1,0 +1,9 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.DEBT} У тебя нет монетки :(
+|
+if range(0, 100) == 1
+    tg-spoiler
+        +random([
+            'Без динь-динь',
+        ])

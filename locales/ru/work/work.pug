@@ -1,0 +1,27 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.APPROVE} Побочный квест 
+b
+    u #{quest}
+|  выполнен!
+| #{EMOJIES.MINUS} Игрок 
++link(user)
+|  
++random([
+    'заработал',
+    'нагриндил',
+    'получил',
+    'забрал'
+])
+|  
+code #{formatNumber(money)}
+|  #{EMOJIES.MONEY} и 
+code #{formatNumber(experience)}
+|  опыта!
+|
+if item
+    | #{EMOJIES.NEUTRAL_WARN} Во время выполения квеста вы нашли 
+    b
+        u
+            +item(item)
+    | !

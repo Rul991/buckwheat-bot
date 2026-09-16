@@ -1,0 +1,8 @@
+include /utils/mixins.pug
+
+| #{bool(isUnmuted)} Игрок 
++link(user)
+| #{isUnmuted ? '' : ' не'} получает размут, использовав 
+u #{title}
+|  x#{formatNumber(count)}
+| !

@@ -1,0 +1,12 @@
+syntax = "proto3";
+import "scroller.proto";
+
+message TopScrollerButtonData {
+    ScrollerData data = 1;
+    uint32 type = 2;
+    optional uint32 page = 3;
+}
+
+message TopsScrollerButtonData {
+    ScrollerData data = 1;
+}

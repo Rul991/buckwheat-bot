@@ -1,0 +1,35 @@
+include /utils/mixins.pug
+
+mixin cube_result(options)
+    | #{EMOJIES.MINUS} Кубик игрока 
+    +link(options.user)
+    |  - 
+    code #{options.dice}
+    | !
+    |
+
+b #{EMOJIES.CUBE} Результаты:
+|
+|
++cube_result(first)
++cube_result(second)
+|
+| #{EMOJIES.NEUTRAL_WARN} 
+if boost == 0
+    | У вас ничья!
+else 
+    | Игрок 
+    +link(winner)
+    |
+    if boost == 1
+        |  побеждает
+    else if boost == 2
+        | , ну и ну, получает единицу и разгромно побеждает
+    |  игрока 
+    +link(loser)
+    | !
+    | #{EMOJIES.WIN} 
+    if prize > 0
+        | Победитель получает 
+        code #{formatNumber(prize)}
+        | #{EMOJIES.MONEY}!

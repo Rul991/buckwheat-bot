@@ -1,0 +1,10 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.COOKIE} Игрок 
++link(user)
+|  съел 
+if count > 1
+    | несколько печенек, а именно x#{formatNumber(count)}
+else
+    | печеньку
+| !

@@ -1,0 +1,20 @@
+syntax = "proto3";
+import "scroller.proto";
+
+message RuleScrollerButtonData {
+    ScrollerData data = 1; // scroller's data
+}
+
+message RuleDeleteButtonData {
+    uint64 id = 1; // user's id
+    uint32 ruleId = 2; // rule's id
+}
+
+message RuleEditTextButtonData {
+    uint64 id = 1; // user's id
+    uint32 ruleId = 2; // rule's id
+}
+
+message RuleAddButtonData {
+    uint64 id = 1; // user's id
+}

@@ -1,0 +1,144 @@
+include /utils/functions.pug
+
+mixin id_link(user)
+    i
+        a(href=`tg://user?id=${user.id}`) #{user.name}
+
+mixin username_link(user)
+    a(href=`t.me/${user.username}`) #{user.name}
+
+mixin link(user)
+    if user.username 
+        +username_link(user)
+    else 
+        +id_link(user)
+
+mixin lang(language, text)
+    pre
+        code(tg-language=language) #{text}
+
+mixin json(obj, space = 2)
+    +lang(
+        'json',
+        JSON.stringify(obj, null, space)
+    )
+
+mixin pin(text, options = {})
+    |
+    | #{options.emoji || EMOJIES.LIST} 
+    if options.tag
+        |
+        #{options.tag} #{text}
+    else
+        | #{text}
+    |
+
+mixin pins(arr, options)
+    |
+    for text in arr
+        |
+        +pin(text, options)
+    |
+    |
+
+mixin random(arr)
+    - const index = Math.floor(Math.random() * arr.length)
+    | #{arr[index]}
+
+mixin rank_emoji(rank)
+    | #{rank.emoji || RANK_EMOJIES[rank.value + 1]} 
+
+mixin rank(rank, withTags = true)
+    if withTags
+        b #{rank.name} [#{rank.value}]
+    else
+        | #{rank.name} [#{rank.value}]
+
+mixin full_rank(rank)
+    +rank_emoji(rank)
+    |  
+    +rank(rank)
+
+mixin heading(emoji)
+    |
+    b #{emoji || EMOJIES.HEADING} 
+        block
+    |
+    |
+
+mixin plain_bold_param(title, value)
+    |
+    | #{title}: 
+    b #{value}
+    |
+
+mixin plain_code_param(title, value)
+    |
+    | #{title}: 
+    code #{value}
+    |
+
+mixin progress(options = {})
+    -
+        const {
+            current = 1,
+            max = 1,
+            symbols: {
+                full,
+                half,
+                empty
+            } = HP_EMOJIES,
+            showNums = true
+        } = options 
+
+        const maxSymbolCount = 5
+        const rawSymbolCount = current / max * maxSymbolCount
+        const symbolsCount = (rawSymbolCount - (rawSymbolCount % 0.5))
+
+        const fullSymbolsCount = Math.floor(symbolsCount)
+        const hasHalf = Boolean(symbolsCount % 1)
+
+        const result = current > 0 ?
+            `${full.repeat(Math.min(fullSymbolsCount, maxSymbolCount - +hasHalf))}${hasHalf ? half : ''}` :
+            empty
+    
+    | #{result}
+    if showNums
+        code  (#{formatNumber(current)} / #{formatNumber(max)})
+
+mixin chars(options = {})
+    - 
+        const {
+            hpTitle = 'Health',
+            manaTitle = 'Mana',
+            currentChars,
+            maxChars,
+            showNums = true,
+            manaPadding = (hpTitle.length - manaTitle.length) * 2
+        } = options 
+    +plain_bold_param(`${EMOJIES.HP} ${hpTitle}`, '')
+    +progress({
+        current: currentChars.hp,
+        max: maxChars.hp,
+        showNums
+    })
+    |
+    +plain_bold_param(`${EMOJIES.MANA} ${manaTitle}`, ''.padEnd(manaPadding, ' '))
+    +progress({
+        current: currentChars.mana,
+        max: maxChars.mana,
+        symbols: MANA_EMOJIES,
+        showNums
+    })
+    |
+
+mixin shorten(text, length)
+    - const isNeedShorten = text.length > length
+
+    if isNeedShorten
+        | #{text.slice(0, length)}...
+    else
+        | #{text}
+
+mixin item(item)
+    | #{item.emoji} #{item.title}

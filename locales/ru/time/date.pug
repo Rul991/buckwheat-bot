@@ -1,0 +1,16 @@
+include /utils/functions.pug
+
+- 
+    const timeValues = {
+        year: 'г',
+        month: 'М',
+        day: 'д',
+        hour: 'ч',
+        minute: 'м',
+        second: 'с',
+    }
+
+if max.need && raw > max.value
+    | #{EMOJIES.INFINITY}
+else 
+    | #{formatNumber(value)}#{timeValues[type]}

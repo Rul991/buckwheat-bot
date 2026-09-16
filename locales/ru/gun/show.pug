@@ -1,0 +1,12 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.GUN} Ваше текущее оружие - 
+if item
+    u
+        +item(item)
+else
+    | #{EMOJIES.DECLINE}
+| !
+if shouldChoose
+    |
+    | Выберите оружие:

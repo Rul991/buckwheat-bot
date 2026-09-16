@@ -1,0 +1,12 @@
+include /utils/functions.pug
+
+mixin num(value)
+    code #{formatNumber(value, step)}
+
+| #{EMOJIES.CHOOSE} Из диапазона 
++num(min)
+|  - 
++num(max)
+|   я выбираю 
++num(result)
+| !

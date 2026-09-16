@@ -1,0 +1,13 @@
+include /utils/mixins.pug
+
+- const text = other || 'Призываю вас!'
+
+blockquote !{text}
+|
+|
+for user in users
+    +id_link({
+        ...user,
+        name: choose(emojies)
+    })
+    |     

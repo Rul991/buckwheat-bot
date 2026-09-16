@@ -1,0 +1,21 @@
+include /utils/mixins.pug
+
++heading()
+    | Характеристики игрока 
+    +link(user)
+    | :
+|
++plain_bold_param(`${EMOJIES.LEVEL} Уровень`, formatNumber(level))
++plain_bold_param(`${classVars.emoji} Класс`, classVars.name)
+|
+|
++plain_bold_param(`${EMOJIES.SHIELD} Защита`, formatNumber(currentChars.shield))
++plain_bold_param(`${EMOJIES.GUN} Оружие`, gun ? `${gun.emoji} ${gun.title}` : EMOJIES.DECLINE)
+|
+|
++chars({
+    hpTitle: 'Здоровье',
+    manaTitle: 'Мана',
+    currentChars,
+    maxChars
+})

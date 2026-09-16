@@ -1,0 +1,10 @@
+include /utils/emojies.pug
+
+- 
+    const typeNames = [
+        `Текст ${EMOJIES.TEXT}`,
+        `Фото ${EMOJIES.PHOTO}`,
+        `Дайсы ${EMOJIES.DICE}`,
+    ]
+
+| #{typeNames[type]}

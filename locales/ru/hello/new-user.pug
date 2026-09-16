@@ -1,0 +1,29 @@
+include /utils/mixins.pug
+
+mixin chat_link(chat)
+    a(href=`${chat.username ? `t.me/${chat.username}` : 'tg://chat'}`) #{chat.title || '???'}
+
+- const isCreator = user.id == DEV_ID
+
+| #{EMOJIES.HELLO} Игрок 
++link(user)
+| , добро пожаловать в 
++chat_link(chat)
+| ! 
+| #{EMOJIES.MINUS} Я ваш проводник - Баквит
+if isCreator
+    i , а вы мой создатель
+| !
+|
+if hasButton && !isCreator
+    u 
+        if text
+            | После прочтения, н
+        else
+            | Н
+        | ажмите кнопку 
+        i Вступить в чат
+        |  снизу!
+    |
+|
+| !{hello || ''}

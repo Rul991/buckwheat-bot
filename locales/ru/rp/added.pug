@@ -1,0 +1,7 @@
+include /utils/mixins.pug
+
+| #{isNew ? EMOJIES.APPROVE : EMOJIES.UPDATE} Игрок 
++link(vars.user)
+| , команда 
+u баквит #{command}
+|  #{isNew ? 'добавлена' : 'обновлена'}!

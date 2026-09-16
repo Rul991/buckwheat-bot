@@ -1,0 +1,12 @@
+include /utils/mixins.pug
+
+- const maxCount = 100
+
+| #{EMOJIES.THANKS} Игрок 
++link(user)
+| , огромное вам 
+b
+    i #{new Array(Math.min(maxCount, count)).fill('СПАСИБО').join(', ')}
+if count > maxCount
+    |  и т.д.
+| !!!

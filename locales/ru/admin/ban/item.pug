@@ -1,0 +1,16 @@
+include /utils/mixins.pug
+
+| #{bool(isBanned)} Игрок 
++link(user)
+|  
+if isBanned
+    | получил бан, использовав 
+else
+    | использует 
+
+u #{title}
+|  x#{formatNumber(count)}
+
+if !isBanned
+    | , но ничего не происходит
+| !

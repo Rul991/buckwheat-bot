@@ -1,0 +1,15 @@
+include /utils/mixins.pug
+
+mixin todo()
+    | #{EMOJIES.TODO} В разработке!
+
+mixin there_setting()
+    |
+    tg-spoiler (
+        +random([
+            'Таковы настройки',
+            'Так утверждено настройками',
+            'Во всем виноваты настройки чата'
+        ])
+        | !)
+    |

@@ -1,0 +1,24 @@
+include /utils/mixins.pug
+
+b
+    | #{EMOJIES.WIN} 
+    u
+        +random([
+            'Поздравляю, вы везунчик',
+            'А вы везунчик',
+            'Победа',
+            'Пуля решила остаться в револьере',
+            'Тебе повезло, сегодня живешь'
+        ])
+        | !
+|
+| Игрок 
++link(user)
+| , ваша новая серия побед - 
+code #{roulette && roulette.currentWinStreak || 0}
+| !
+|
+if prize > 0
+    | Вы получаете 
+    code #{formatNumber(prize)}
+    | #{EMOJIES.MONEY}!

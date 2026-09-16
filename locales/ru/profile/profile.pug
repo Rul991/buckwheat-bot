@@ -1,0 +1,57 @@
+include /utils/mixins.pug
+
+mixin status(condition)
+    if condition
+        |
+        |
+        b
+            block
+
+mixin withTitle(title)
+    |
+    | #{title}: 
+    b
+        block
+
+blockquote 
+    | #{user.emoji || EMOJIES.STAR} !{(user.description || '...')}
+|
+|
+| #{EMOJIES.PLAYER} Это - игрок 
++link(user)
+| . 
+
++withTitle(`${rank.emoji} Ранг`)
+    | #{rank.name} / #{rank.status} (#{rank.value})
+
+if user.linked || user.left
+    |
+    |
+
++status(user.linked)
+    | #{EMOJIES.LINKED} Привязан к данному чату
++status(user.left)
+    | #{EMOJIES.LEFT} Вышел из чата  
+|
+|
+
++withTitle(`${userClass.emoji} Класс`)
+    | #{userClass.name}
++withTitle(`${EMOJIES.LEVEL} Уровень`)
+    | #{level.current}/#{level.max} (#{formatNumber(floor(level.precents * 100))}%)
+|
++withTitle(`${EMOJIES.MESSAGES} Кол-во сообщений`)
+    | #{formatNumber(messages)}
+|
+|
++withTitle(`${EMOJIES.TIME} Появление в чате`)
+    | #{spawnDate} назад
++withTitle(`${EMOJIES.UPDATE_TIME} Обновление профиля`)
+    | #{updateDate} назад
++withTitle(`${EMOJIES.FAMILY} Семейное положение`)
+    if family
+        | в браке с 
+        +link(family.partner)
+        |  (#{family.date})
+    else
+        | холост

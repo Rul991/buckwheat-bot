@@ -1,0 +1,10 @@
+include /utils/functions.pug
+
+- 
+    const showableValue = typeof setting.value == 'number' ? 
+        formatNumber(setting.value) : 
+        typeof setting.value == 'boolean' ?
+            bool(setting.value) :
+            setting.value
+
+| #{setting.title} [#{showableValue}]

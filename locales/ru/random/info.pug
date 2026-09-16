@@ -1,0 +1,87 @@
+include /utils/mixins.pug
+
+- const precents = range(0, 100)
+- const rawText = (other || 'ничего').toLowerCase()
+- const text = rawText[0].toUpperCase() + rawText.slice(1)
+
+- 
+    const textsDescription = [
+        {
+                min: 0,
+                max: 9,
+                texts: ['Это не случится!']
+            },
+
+            {
+                min: 10,
+                max: 19,
+                texts: ['Шанс, что случится это, низок, но не равен нулю!']
+            },
+
+            {
+                min: 20,
+                max: 29,
+                texts: ['Вряд ли!']
+            },
+
+            {
+                min: 30,
+                max: 39,
+                texts: [
+                    'Кто знает...'
+                ]
+            },
+
+            {
+                min: 40,
+                max: 49,
+                texts: [
+                    'Скорее нет, чем да!'
+                ]
+            },
+
+            {
+                min: 50,
+                max: 59,
+                texts: ['Может да, а может нет, а может...']
+            },
+
+            {
+                min: 60,
+                max: 79,
+                texts: [
+                    'Скорее да, чем нет!'
+                ]
+            },
+
+            {
+                min: 80,
+                max: 89,
+                texts: [
+                    'Похоже на правду!'
+                ]
+            },
+
+            {
+                min: 90,
+                max: 99,
+                texts: ['Очень вероятно!']
+            },
+
+            {
+                min: 100,
+                max: 100,
+                texts: ['Случится, уверяю тебя!']
+            }
+    ]
+
+    const descriptions = textsDescription.find(v => precents >= v.min && precents <= v.max) || []
+
+blockquote #{text}
+|
+| Вероятность этого - 
+u #{precents}%
+| !
+|
+b
+    +random(descriptions.texts)

@@ -1,0 +1,14 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.COOKIE} Игрок 
++link(user)
+|  
+if isShare
+    | поделился печенькой
+else 
+    | попытался поделиться печенькой
+|  с игроком 
++link(reply)
+if !isShare
+    | , но у него ничего не получилось
+| !

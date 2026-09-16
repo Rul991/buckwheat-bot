@@ -1,0 +1,22 @@
+include /utils/mixins.pug
+
+mixin title()
+    | #{EMOJIES.IDEA} Идея №#{formatNumber(idea.id)} от 
+    +link(user)
+
+b
+    if vote.can
+        +title()
+    else 
+        s
+            +title()
+|
+|
+| !{text}
+|
+| #{EMOJIES.COOL} - #{formatNumber(vote.cool)}                               #{EMOJIES.BAD} - #{formatNumber(vote.bad)}
+|
+|
+b Создано: 
+u #{date}
+|  назад

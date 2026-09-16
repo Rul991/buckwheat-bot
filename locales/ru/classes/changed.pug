@@ -1,0 +1,9 @@
+include /utils/mixins.pug
+include ./names.pug
+
+| #{CLASS_EMOJIES[type]} Игрок 
++link(user) 
+| , вы теперь - 
+b
+    u #{CLASS_NAMES[type]}
+| !

@@ -1,0 +1,13 @@
+syntax = "proto3";
+import "scroller.proto";
+
+enum CommandType {
+    Text = 0;
+    Photo = 1;
+    Dice = 2;
+}
+
+message CommandsScrollerData {
+    ScrollerData data = 1;
+    CommandType type = 2;
+}

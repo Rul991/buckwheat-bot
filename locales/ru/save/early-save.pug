@@ -1,0 +1,14 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.NOT_SAVE} Игрок 
++link(user)
+if isKicked
+    |  не смог смириться с тем, что не может сохраниться и решил покинуть наш чат
+else
+    | , ты не можешь сохраниться
+    if mustKicked
+        | , выйти тоже
+    | !
+    | #{EMOJIES.TIME} До сохранения осталось 
+    b #{remainingTime}
+| !

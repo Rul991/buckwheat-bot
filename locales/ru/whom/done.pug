@@ -1,0 +1,19 @@
+include /utils/mixins.pug
+
+- const text = other || 'выбрать'
+- 
+    const playerNames = {
+        'кем': 'игроком',
+        'кому': 'игроку',
+        'кого': 'игрока'
+    }
+- const player = playerNames[command] || playerNames['кого']
+
+| #{EMOJIES.RANDOM} Предлагаю #{text} #{player}
+if user
+    |  
+    +id_link(user)
+    | !
+else
+    | ...
+    | Погодите, а где все?

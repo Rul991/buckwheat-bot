@@ -1,0 +1,7 @@
+include /utils/functions.pug
+- const ideaId = formatNumber(id)
+
+if isDelete
+    | #{EMOJIES.DELETE} Вы удалили идею ##{ideaId}!
+else
+    | #{EMOJIES.DECLINE} Вы не можете удалить идею ##{ideaId}!

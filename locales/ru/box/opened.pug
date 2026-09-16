@@ -1,0 +1,11 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.PRIZE} Игрок 
++link(user)
+|  открыл коробку и получил 
+if money == 0
+    i ничего
+else
+    code #{formatNumber(money)}
+    | #{EMOJIES.MONEY}
+| !

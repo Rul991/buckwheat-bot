@@ -1,0 +1,26 @@
+include /utils/mixins.pug
+include ../utils/consts.pug
+
+-
+    const caseSelfes = [
+        'себя',
+        'себе',
+        'собой'
+    ]
+
+| Игрок 
++link(user)
+|  !{roleplay.text} 
+if user.id != reply.id
+    | #{casePlayers[roleplay.case]} 
+    +link(reply)
+else
+    +link({
+        ...reply,
+        name: caseSelfes[roleplay.case]
+    })
+if other
+    |  со словами "
+    u #{other}
+    | "
+| !

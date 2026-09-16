@@ -1,0 +1,20 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.GUN} Игрок 
++link(user) 
+|  выстрелил из 
+u
+    +item(item)
+|  в игрока 
++link(reply)
+| !
+| Игрок 
++link(reply)
+|  #{shieldDestroyed ? 'получил' : 'мог получить'} 
+code #{formatNumber(damage)}
+|  урона
+if !shieldDestroyed
+    | , но его защитил щит
+else if isKicked
+    |  и вылетел из чата
+| !

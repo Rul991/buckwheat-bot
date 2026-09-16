@@ -1,0 +1,23 @@
+syntax = "proto3";
+import "scroller.proto";
+
+enum SettingValueTypes {
+    User = 0;
+    Chat = 1;
+    Command = 2;
+    Button = 3;
+    Ranks = 4;
+}
+
+message SettingsScrollerData {
+    ScrollerData data = 1;
+    int64 id = 2; // setting owner's id
+    SettingValueTypes type = 3;
+}
+
+message SettingShowData {
+    SettingValueTypes type = 1;
+    uint32 settingId = 2; // setting's id
+    int64 id = 3; // setting owner's id
+    uint64 userId = 4; // user's id
+}

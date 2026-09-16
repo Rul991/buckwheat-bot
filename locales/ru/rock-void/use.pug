@@ -1,0 +1,9 @@
+include /utils/mixins.pug
+
+- const isMany = count > 0
+
+| #{item.emoji || EMOJIES.ITEM} Игрок 
++link(user)
+|  решил #{isMany ? 'поджанглировать камнями' : 'поиграться с камнем'}, но кам#{isMany ? 'ни' : 'ень'} из пустоты упал#{isMany ? 'и' : ''} ему на голову, нанеся 
+code #{formatNumber(damage)} урона
+| !

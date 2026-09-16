@@ -1,0 +1,32 @@
+include /utils/mixins.pug
+
+- 
+    const titles = {
+        total: 'все время',
+        year: 'год',
+        month: 'месяц',
+        day: 'день',
+    }
+
+mixin message(messages, type)
+    - 
+        const title = titles[type]
+        const emoji = TIME_EMOJIES[type.toUpperCase()]
+        const message = messages.find(v => v.type == type)
+    |
+    +pin(`За ${title}:`, { emoji })
+    |  
+    code #{formatNumber(message ? message.count : 0)}
+    |
+
++heading()
+    | Сообщения игрока 
+    +link(user)
+    | :
++message(messages, 'day')
++message(messages, 'month')
++message(messages, 'year')
+|
+|
+b
+    +message(messages, 'total')

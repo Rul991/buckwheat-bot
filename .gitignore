@@ -1,0 +1,10 @@
+.*
+*.lock
+node_modules
+.vscode
+protols.toml
+/logs/
+*.sh
+!.gitignore
+*.fish
+/src/app/migrate-db.ts

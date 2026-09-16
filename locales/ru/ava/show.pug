@@ -1,0 +1,6 @@
+include /utils/mixins.pug
+
+b #{isCurrent ? EMOJIES.IMAGE : EMOJIES.NO} Аватарка №#{formatNumber(page + 1)} игрока 
++link(user)
+|
++plain_bold_param(`${EMOJIES.DATE} Использовано`, `${elapsedTime} назад`)

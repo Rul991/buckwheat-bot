@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message Dev {
+    uint32 id = 1; // user's id
+    optional string name = 2; // any string
+}

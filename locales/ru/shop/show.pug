@@ -1,0 +1,16 @@
+include /utils/mixins.pug
+
+| #{item.emoji} 
+code #{item.title}
+|
+|
+blockquote !{item.description}
+|
+|
++plain_code_param(`${EMOJIES.LIST} Осталось`, formatNumber(count.remaining))
++plain_code_param(`${EMOJIES.INVENTORY} Текущее кол-во`, formatNumber(count.current))
+|
+|
+- const totalPrice = price * count.choose
++plain_code_param(`${EMOJIES.DEBT} Цена`, `${formatNumber(price)} * ${formatNumber(count.choose)} = ${formatNumber(totalPrice)}${EMOJIES.MONEY}`)
++plain_code_param(`${EMOJIES.MONEY} Твой баланс`, `${formatNumber(balance)}${EMOJIES.MONEY}`)

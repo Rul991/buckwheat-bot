@@ -1,0 +1,8 @@
+include /utils/functions.pug
+
+if other && other.includes('уровн')
+    | До нового уровня осталось ровно 
+    code #{formatNumber(remainingExperience)}
+    |  очков!
+else
+    | Не мало!

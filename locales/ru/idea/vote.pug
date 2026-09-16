@@ -1,0 +1,5 @@
+include /utils/emojies.pug
+
+- const vote = isCool ? EMOJIES.COOL : EMOJIES.BAD
+
+| #{newVote === false ? EMOJIES.DECLINE : ''}#{vote}

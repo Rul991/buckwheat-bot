@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+message ScrollerData {
+    optional int64 id = 1; // user's id
+    oneof data {
+        uint32 page = 2; // new page
+        bool update = 3; // update cache
+    }
+}
+
+message BaseScrollerData {
+    ScrollerData data = 1; // user's id and page or update
+}

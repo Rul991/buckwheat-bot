@@ -1,0 +1,6 @@
+include /utils/emojies.pug
+
+if page.max > 1
+    | #{page.current + 1} / #{page.max}
+else 
+    | #{EMOJIES.UPDATE} Обновить

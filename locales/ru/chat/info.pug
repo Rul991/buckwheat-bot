@@ -1,0 +1,17 @@
+include /utils/mixins.pug
+
++heading()
+    | Чат 
+    u #{chat.title}
+    | :
++plain_bold_param(`${EMOJIES.HELLO} Есть приветствие`, bool(chat.hello))
++plain_bold_param(`${EMOJIES.RULE} Кол-во правил`, formatNumber(ruleCount))
+|
+|
++plain_bold_param(`${EMOJIES.PUBLIC} Публичен`, bool(chat.isPublic))
++plain_bold_param(`${EMOJIES.STICKER} Используемый стикер-пак`, '')
+b
+    if chat.stickerPack
+        a(href=`tg://addstickers?set=${chat.stickerPack}`) (показать)
+    else
+        | #{EMOJIES.DECLINE}

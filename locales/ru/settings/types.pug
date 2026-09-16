@@ -1,0 +1,12 @@
+include /utils/emojies.pug
+
+-
+    const settingNamesByTypes = [
+        `${EMOJIES.SETTING} Пользователь`,
+        `${EMOJIES.SETTING} Чат`,
+        `${EMOJIES.COMMANDS} Команды`,
+        `${EMOJIES.BUTTON} Кнопки`,
+        `${RANK_EMOJIES[6]} Имена рангов`
+    ]
+
+| #{settingNamesByTypes[type]}

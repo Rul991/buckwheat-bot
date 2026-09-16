@@ -1,0 +1,29 @@
+include /utils/emojies.pug
+
+- const lowerName = value.toLowerCase()
+-
+    const eggs = [
+        { names: ['бог'], output: 'Бог покинул нас...' },
+        { names: ['рул', 'rul'], output: 'Ушел за хлебом!' },
+        { names: ['хлеб', 'bread'], output: 'Ушел за Рулом!' },
+        { names: ['тайлер', 'рассказчик'], output: 'Тайлера здесь нет!' },
+        { names: ['aeterno', 'аетерно', 'æ', 'envellman'], output: 'Его тут нет, зато есть игра по Энвеллу - @envell_game' },
+        { names: ['в1', 'в2', 'минос', 'сизиф', 'гавриил', 'габриэль'], output: 'Мир выглядит красным...' },
+        { names: ['я'], output: 'Попробуй просто "баквит профиль"' },
+        { names: ['ты'], output: 'Я ваш проводник - Баквит!' },
+    ]
+
+    const prefix = {
+        name: 'именем',
+        id: 'номером',
+        username: 'именем пользователя'
+    }
+
+    const egg = eggs.find(e => e.names.some(name => lowerName.includes(name)))
+
+if egg
+    | #{EMOJIES.MINUS} #{egg.output}
+else
+    | #{EMOJIES.LEFT} Игрока с #{prefix[type]} 
+    u #{value}
+    |  нет!

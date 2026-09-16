@@ -1,0 +1,43 @@
+include /utils/emojies.pug
+
+mixin info
+    blockquote #{EMOJIES.LIST} 
+        block
+    |
+
+- let replySymbol = EMOJIES.REPLY
+- let premiumSymbol = EMOJIES.PREMIUM
+
+b #{EMOJIES.HEADING} По правилам я могу отвечать только на эти команды типа 
+    u #{title}
+| :
+|
+|
+each command in commands
+    | #{command.rank.emoji} 
+    code #{showBotName ? 'баквит ' : ''}#{command.name}#{command.needData ? ` [${command.argumentText || 'аргументы'}]` : ''}
+    |  #{command.isSupportReply ? replySymbol : ''} #{command.isPremium ? premiumSymbol : ''}
+    |
+    - let lines = command.description.split('\n')
+    - let aliasesText = command.aliases.join(', ')
+        |     #{EMOJIES.MINUS} ранг: 
+        b #{command.rank.name} (#{command.rank.value}+) 
+        |
+        |
+    if aliasesText.length
+        |     #{EMOJIES.MINUS} также доступны как баквит: 
+        b #{aliasesText}
+        |
+        |
+    each description in lines
+        |     #{EMOJIES.MINUS} !{description}
+        |
+    |
+    |
++info
+    | Примеры времени, используемого в командах: 
+    b 1г, 12М, 7д, 24ч, 60м, 30с
++info
+    | Символ #{replySymbol} означает, что команда поддерживает работы с ответами на сообщения
+//- +info
+//-     | Символ #{premiumSymbol} означает, что это премиум-команда

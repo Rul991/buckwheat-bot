@@ -1,0 +1,11 @@
+syntax = "proto3";
+import "scroller.proto";
+
+message ShortCommandDeleteButtonData {
+    uint64 id = 1; //user's id
+    bytes command = 2; // short command's objectId
+}
+
+message ShortCommandScrollerButtonData {
+    ScrollerData data = 1; // scroller's data
+}

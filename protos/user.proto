@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message ClassData {
+    uint64 id = 1; // user's id
+    string type = 2; // class' type
+}

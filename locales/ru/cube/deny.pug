@@ -1,0 +1,13 @@
+include /utils/mixins.pug
+
+- const isSelf = suggester.id == user.id
+
+| #{EMOJIES.DECLINE} Игрок 
++link(user)
+|  
+if !isSelf
+    | отказался от игры в кубы с игроком 
+    +link(suggester)
+else
+    | отменил игру в кубы
+| !
