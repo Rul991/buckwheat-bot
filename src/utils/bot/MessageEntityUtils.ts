@@ -18,8 +18,8 @@ export default class MessageEntityUtils {
         spoiler: (entityText) => {
             return {
                 text: entityText,
-                before: '<span class="tg-spoiler">',
-                after: '</span>'
+                before: '<tg-spoiler>',
+                after: '</tg-spoiler>'
             }
         },
         blockquote: (entityText) => {
@@ -48,6 +48,20 @@ export default class MessageEntityUtils {
                 text: entityText,
                 after: '',
                 before: ''
+            }
+        },
+        bold: (text) => {
+            return {
+                text,
+                before: '<b>',
+                after: '</b>'
+            }
+        },
+        strikethrough: (text) => {
+            return {
+                text,
+                before: '<s>',
+                after: '</s>'
             }
         }
     }
@@ -129,6 +143,6 @@ export default class MessageEntityUtils {
         const text = message.text ?? message.caption ?? ''
         const [other, otherEntities] = this.getOtherEntitiesAndText(text, entities, endIndex)
 
-        return this.entitiesToHtml(other, otherEntities)
+        return this.entitiesToHtml(StringUtils.sanitizeHTML(other), otherEntities)
     }
 }

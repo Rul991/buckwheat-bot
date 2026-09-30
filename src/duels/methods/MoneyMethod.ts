@@ -16,7 +16,7 @@ export default class MoneyMethod extends SkillMethod {
     protected async _getBalance(ctx: BotContext, id: number): Promise<number> {
         const chatId = ctx.vars.chatId!
         const balance = ctx.vars.id == id ?
-            ctx.vars.balance :
+            await ctx.vars.balance.get() :
             await BalanceService.getUserBalance(chatId, id)
 
         return balance?.total ?? 0

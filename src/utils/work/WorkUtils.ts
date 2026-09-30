@@ -1,6 +1,6 @@
 import { LEVEL_BOOST_MULTIPLIER } from "../../consts/number"
 import InventoryItem from "../../db/entities/items/InventoryItem"
-import { craftWorkUpItem, levelBoostItem, newGameItem, workBoostItem } from "../../resources/items/inventory"
+import { craftWorkUpItem, levelBoostItem, newGameItem, soapGunItem, workBoostItem } from "../../resources/items/inventory"
 import type { BotContext } from "../../types/bot"
 import type { ClassTypes } from "../../types/class"
 import ClassUtils from "../db/ClassUtils"
@@ -28,6 +28,10 @@ export default class WorkUtils {
         {
             item: craftWorkUpItem,
             multiplier: 0.15,
+        },
+        {
+            item: soapGunItem,
+            multiplier: Infinity
         }
     ]
 

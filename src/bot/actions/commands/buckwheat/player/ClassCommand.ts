@@ -19,7 +19,7 @@ export default class ClassCommand extends BuckwheatCommand {
             id
         } = options
         
-        const user = ctx.vars.user
+        const user = await ctx.vars.user.get()
         const changeCount = user?.classChangedCount ?? 0
         const type = user?.className ?? ClassUtils.defaultClassName
         const isPlayer = ClassUtils.isPlayer(type)

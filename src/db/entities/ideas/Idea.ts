@@ -7,7 +7,7 @@ import UserService from "../../services/user/UserService"
 import type { BotContext } from "../../../types/bot"
 import { DEV_ID } from "../../../consts/env"
 import { UNKNOWN_NAME } from "../../../consts/texts"
-import { autoIncrementPlugin } from "../../plugins/auto-increment"
+import { AutoIncrementID } from "@typegoose/auto-increment"
 
 type ShowOptions = {
     ctx: BotContext
@@ -22,7 +22,13 @@ type ShowOptions = {
         unique: true
     }
 )
-@plugin(autoIncrementPlugin)
+
+@plugin(
+    AutoIncrementID, 
+    {
+        field: 'id',
+    }
+)
 export default class Idea extends IdEntity {
     static dummy(): Idea {
         return new Idea({

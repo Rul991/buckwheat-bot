@@ -17,7 +17,7 @@ mixin condition(title, value)
 b #{itemVars.emoji} #{itemVars.title}
 |
 |
-blockquote !{itemVars.description}
+blockquote(expandable) !{itemVars.description}
 |
 |
 +plain_bold_param(`${EMOJIES.LIST} Тип`, type)

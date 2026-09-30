@@ -20,7 +20,7 @@ export default class BalanceCommand extends BuckwheatCommand {
             id
         } = options
 
-        const balance = ctx.vars.balance
+        const balance = await ctx.vars.balance.get()
         const money = balance?.total ?? 0
         const inventory = await InventoryItemService.getInventory(chatId, id)
 

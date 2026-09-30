@@ -1,0 +1,19 @@
+include /utils/functions.pug
+
+-
+    const inputValues = {
+        number: 'число',
+        date: 'дату',
+        string: 'текст'
+    }
+
+| #{EMOJIES.WRITE} Введите #{inputValues[setting.type]} 
+if setting.type == 'string'
+    | длиной 
+| от 
+code #{formatValue(min)}
+|  до 
+code #{formatValue(max)}
+|  для настройки 
+u #{setting.title}
+| !

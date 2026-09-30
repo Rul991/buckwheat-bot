@@ -1,6 +1,3 @@
-import { START_MONEY } from "../../consts/number"
-import { UNKNOWN_TEXT } from "../../consts/texts"
-import Chat from "../../db/entities/chat/Chat"
 import Balance from "../../db/entities/money/Balance"
 import ChatService from "../../db/services/chat/ChatService"
 import LinkedChatService from "../../db/services/chat/LinkedChatService"
@@ -10,66 +7,91 @@ import BalanceService from "../../db/services/money/BalanceService"
 import UserService from "../../db/services/user/UserService"
 import type { BotContext } from "../../types/bot"
 import ContextUtils from "../../utils/bot/ContextUtils"
+import LazyValue from "../../utils/cache/LazyValue"
 import RankUtils from "../../utils/db/RankUtils"
 import Logger from "../../utils/logs/Logger"
 
-export const updateDefaultOptions = async (ctx: BotContext) => {
+export const setContextVarsAndData = async (ctx: BotContext, next: () => Promise<void>) => {
     const id = ctx.from?.id
-    const [
-        chatId,
-        chatMember,
-    ] = await Promise.all([
-        LinkedChatService.getCurrent(ctx, id),
-        ContextUtils.getChatMember(ctx, id)
-    ])
-    const isOwner = Boolean(id && RankUtils.canUseWithoutRank(chatMember, id))
-    const [
-        user,
-        chat
-    ] = await Promise.all([
-        chatId && id && await UserService.get(chatId, id) || undefined,
-        chatId && await ChatService.create(
-            new Chat({
-                id: chatId,
-                title: ctx.chat?.title ?? UNKNOWN_TEXT
-            })
-        ) || undefined
-    ])
+    if (!id) return
+
+    const chatId = await LinkedChatService.getCurrent(
+        ctx,
+        id
+    )
 
     ctx.vars = {
-        ...ctx.vars,
+        commandStrings: ctx.vars.commandStrings,
+        chatId,
         id,
-        chatId,
-        isOwner,
-        user,
-        chat
+        chatMember: new LazyValue(
+            async () => {
+                return await ContextUtils.getChatMember(
+                    ctx,
+                    {
+                        chatId,
+                        id
+                    }
+                )
+            },
+            'chatMember'
+        ),
+        isOwner: new LazyValue(
+            async () => {
+                return RankUtils.canUseWithoutRank(
+                    await ctx.vars.chatMember.get(),
+                    id
+                )
+            },
+            'isOwner'
+        ),
+        shortCommand: undefined,
+        roleplay: undefined,
+        balance: new LazyValue(
+            async () => {
+                return chatId ? await BalanceService.create(
+                    Balance.default(
+                        chatId,
+                        id
+                    )
+                ) : undefined
+            },
+            'balance'
+        ),
+        user: new LazyValue(
+            async () => {
+                return chatId ? await UserService.get(
+                    chatId,
+                    id
+                ) : undefined
+            },
+            'user'
+        ),
+        level: new LazyValue(
+            async () => {
+                return chatId ? await LevelService.get(
+                    chatId,
+                    id
+                ) : undefined
+            }
+        ),
+        duelist: new LazyValue(
+            async () => {
+                return chatId ? await DuelistService.get(
+                    chatId,
+                    id
+                ) : undefined
+            }
+        ),
+        chat: new LazyValue(
+            async () => {
+                return chatId ? await ChatService.get(chatId) : undefined
+            }
+        )
     }
 
-    Logger.system('updateDefaultOptions', ctx.vars)
-}
+    ctx.actionData = {}
 
-export const updateDatabaseOptions = async (ctx: BotContext) => {
-    const chatId = ctx.vars.chatId
-    const id = ctx.vars.id
-
-    const [
-        balance,
-        level,
-        duelist
-    ] = await Promise.all([
-        chatId && id && BalanceService.create(
-            Balance.user(chatId, id, START_MONEY)
-        ) || undefined,
-        chatId && id && LevelService.get(chatId, id) || undefined,
-        chatId && id && DuelistService.get(chatId, id) || undefined
-    ])
-
-    ctx.vars = {
-        ...ctx.vars,
-        balance,
-        level,
-        duelist
-    }
-
-    Logger.system('updateDatabaseOptions', ctx.vars)
+    Logger.system('setContextVars', ctx.vars)
+    return next()
 }

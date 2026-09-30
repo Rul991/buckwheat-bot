@@ -24,7 +24,9 @@ export default class RankCommand extends BuckwheatCommand {
             chatId,
             other,
         } = options
-        const userRank = ctx.vars.user?.rank ?? RankUtils.min
+
+        const user = await ctx.vars.user.require()
+        const userRank = user.rank
 
         if(!other) {
             return {
@@ -46,12 +48,11 @@ export default class RankCommand extends BuckwheatCommand {
             }
         }
 
-        const isOwner = ctx.vars.isOwner
+        const isOwner = await ctx.vars.isOwner.get()
         const replyId = replyOrUserFrom.id
         const isSelf = replyId == id
 
-        const user = ctx.vars.user
-        const reply = isSelf ? ctx.vars.user : await UserService.get(chatId, replyId)
+        const reply = isSelf ? user : await UserService.get(chatId, replyId)
 
         const replyRank = isOwner || isSelf ?
             userRank :

@@ -85,7 +85,7 @@ export default class ShortenCommand extends BuckwheatCommand {
                     text,
                     isNew: shortCommand.new ?? false,
                     botName,
-                    user: ctx.vars.user
+                    user: await ctx.vars.user.get()
                 }
             }
         }

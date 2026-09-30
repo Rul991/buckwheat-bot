@@ -9,12 +9,13 @@ import i18n from "@grully/i18n"
 import i18nPug from "@grully/i18n-pug"
 import { autoRetry } from "@grammyjs/auto-retry"
 import { limit } from '@grammyjs/ratelimiter'
-import { START_MESSAGE } from "../../consts/texts"
+import { START_MESSAGE } from "../../consts/env"
 import { conversations } from "@grammyjs/conversations"
-import { updateDefaultOptions } from "../middlewares/middlewares"
+import { setContextVarsAndData } from "../middlewares/middlewares"
 import { MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from "../../consts/time"
 import CommandUtils from "../../utils/command/CommandUtils"
 import TotalService from "../../db/services/base/TotalService"
+import ChatService from "../../db/services/chat/ChatService"
 
 export default class TelegramBot {
     private _bot: MyBot
@@ -28,7 +29,7 @@ export default class TelegramBot {
                     apiRoot: BASE_URL
                 }
             }
-        )
+        ) as MyBot
         this._handlers = []
     }
 
@@ -43,14 +44,14 @@ export default class TelegramBot {
                     const commandStrings = ctx.msg?.text ?
                         CommandUtils.getCommandStrings(ctx.msg.text ?? '') :
                         undefined
-                        
+
                     ctx.vars = {
                         ...ctx.vars,
                         commandStrings
                     }
-                    
+
                     const notLimited = Boolean(!ctx.update.callback_query && !commandStrings)
-                    if(notLimited) {
+                    if (notLimited) {
                         return Math.random().toString(16)
                     }
 
@@ -61,22 +62,19 @@ export default class TelegramBot {
             })
         )
 
-        this._bot.use(
-            i18n({
-                folder: 'locales',
-                defaultLocale: 'ru',
-                isDebug: IS_DEV,
-                plugin: i18nPug({
-                    debug: false,
-                }),
-                needCache: IS_PROD,
-            })
-        )
-
-        this._bot.use(async (ctx, next) => {
-            await updateDefaultOptions(ctx)
-            return await next()
+        const i18nMiddleware = i18n({
+            folder: 'locales',
+            defaultLocale: 'ru',
+            isDebug: IS_DEV,
+            plugin: i18nPug({
+                debug: false,
+            }),
+            needCache: IS_PROD,
         })
+
+        this._bot.i18n = i18nMiddleware.i18n
+        this._bot.use(i18nMiddleware)
+        this._bot.use(setContextVarsAndData)
 
         this._bot.use(conversations({
             onEnter(id, ctx) {
@@ -88,17 +86,37 @@ export default class TelegramBot {
         }))
 
         this._bot.on(
-            [':migrate_from_chat_id'],
-            async (ctx, next) => {
+            ':migrate_from_chat_id',
+            async (ctx) => {
                 const oldChatId = ctx.msg.migrate_from_chat_id
                 const newChatId = ctx.msg.migrate_to_chat_id
-                if(!newChatId) return await next()
+                if (!newChatId) return
 
                 await TotalService.migrate(
                     oldChatId,
                     newChatId
                 )
-                return await next()
+            }
+        )
+
+        this._bot.on(
+            ':new_chat_title',
+            async ctx => {
+                if (ctx.chat.type == 'private') return
+
+                const chatId = ctx.vars.chatId
+                if (!chatId) return
+
+                const newChatTitle = ctx.msg.new_chat_title
+                const newChat = await ChatService.update(
+                    chatId,
+                    {
+                        title: newChatTitle
+                    }
+                )
+                if(newChat) {
+                    ctx.vars.chat.set(newChat)
+                }
             }
         )
     }
@@ -110,6 +128,17 @@ export default class TelegramBot {
             rethrowHttpErrors: true,
             rethrowInternalServerErrors: true
         }))
+
+        this._bot.api.config.use(
+            async (prev, method, payload, abort) => {
+                Logger.system('grammy', method, payload, abort)
+                return prev(
+                    method,
+                    payload,
+                    abort
+                )
+            }
+        )
     }
 
     private async _setupHandlers() {

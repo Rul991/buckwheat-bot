@@ -1,9 +1,9 @@
 import type { BotContext } from "../../types/bot"
-import type { CopyMessageOptions, EditMediaOptions, ReplyMediaOptions, ReplyOptions, ReplyTextAsDocumentOptions } from "../../types/options"
+import type { EditMediaOptions, InvoiceOptions, ReplyMediaOptions, ReplyOptions, ReplyTextAsDocumentOptions } from "../../types/options"
 import ExceptionUtils from "../exceptions/ExceptionUtils"
 import type { Dices } from "../../types/types"
 import Logger from "../logs/Logger"
-import type { Message, MessageId } from "grammy/types"
+import type { Message } from "grammy/types"
 import RandomUtils from "../math/RandomUtils"
 import ContextUtils from "./ContextUtils"
 import { InputFile, InputMediaBuilder } from "grammy"
@@ -27,22 +27,28 @@ type ReplyMessageResult = {
 }
 
 export default class MessageUtils {
+    private static _getReplyParameters(ctx: BotContext, chatId?: string | number | undefined) {
+        const messageId = ctx.msgId
+        return {
+            reply_parameters: !chatId && messageId ? {
+                message_id: messageId,
+                allow_sending_without_reply: true
+            } : undefined
+        } as const
+    }
+
     private static _getReplyOptions(ctx: BotContext, options: ReplyOptions) {
         const {
             keyboard,
             chatId,
             entities,
-            isDisableLinkPreview = true
+            isDisableLinkPreview = true,
         } = options
-        const messageId = ctx.msgId
 
         return {
+            ...this._getReplyParameters(ctx, chatId),
             parse_mode: 'HTML' as const,
             reply_markup: keyboard,
-            reply_parameters: !chatId && messageId ? {
-                message_id: messageId,
-                allow_sending_without_reply: true
-            } : undefined,
             entities,
             link_preview_options: {
                 is_disabled: isDisableLinkPreview
@@ -313,13 +319,41 @@ export default class MessageUtils {
         )
     }
 
-    static async copyMessage(ctx: BotContext, chatId: number, options: CopyMessageOptions = {}): Promise<MessageId | undefined> {
+    static async replyInvoice(
+        ctx: BotContext,
+        key: string,
+        options: InvoiceOptions
+    ) {
+        const {
+            price,
+            payload,
+            vars: otherVars
+        } = options
+
+        const vars = {
+            price,
+            ...otherVars
+        }
+
         return await ExceptionUtils.handleAsync(
             async () => {
-                const other = this._getReplyOptions(ctx, options)
-                return ctx.copyMessage(
-                    chatId,
-                    other
+                const text = ctx.t(`payment/invoice/${key}/text`, vars)
+                const description = ctx.t(`payment/invoice/${key}/description`, vars)
+
+                return await ctx.replyWithInvoice(
+                    text,
+                    description,
+                    payload,
+                    'XTR',
+                    [
+                        {
+                            amount: price,
+                            label: price.toString()
+                        }
+                    ],
+                    {
+                        ...this._getReplyParameters(ctx),
+                    }
                 )
             }
         )

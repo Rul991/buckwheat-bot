@@ -13,7 +13,7 @@ export default class ShieldUtils {
         } = options
 
         const durability = count * (item.shield?.durability ?? 0)
-        const user = ctx.vars.user
+        const user = await ctx.vars.user.get()
         
         await Promise.allSettled([
             MessageUtils.reply(

@@ -46,9 +46,9 @@ export default class SendMoneyCommand extends BuckwheatCommand {
             }
         }
 
-        const user = ctx.vars.user
+        const user = await ctx.vars.user.get()
 
-        const balance = ctx.vars.balance
+        const balance = await ctx.vars.balance.get()
         const userMoney = balance?.total ?? 0
 
         if (transferMoney > userMoney) {

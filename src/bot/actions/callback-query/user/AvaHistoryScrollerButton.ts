@@ -34,6 +34,7 @@ class AvaHistoryScrollerButton extends ScrollerButton<AvaHistory> {
 
         const date = ava?.createdAt ?? new Date()
         const elapsedTime = TimeUtils.getElapsed(+date)
+        const user = await ctx.vars.user.require()
 
         return {
             key: 'ava/show',
@@ -41,8 +42,8 @@ class AvaHistoryScrollerButton extends ScrollerButton<AvaHistory> {
                 ava,
                 elapsedTime: TimeUtils.formatMillisecondsToTime(ctx, elapsedTime),
                 page,
-                isCurrent: ava?.fileId == ctx.vars.user?.currentAva?.fileId,
-                user: ctx.vars.user
+                isCurrent: ava?.fileId == user.currentAva?.fileId,
+                user,
             },
             media: ava?.fileId ?
                 ava :

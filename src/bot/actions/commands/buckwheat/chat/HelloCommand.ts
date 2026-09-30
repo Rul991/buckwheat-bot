@@ -22,11 +22,12 @@ export default class HelloCommand extends BuckwheatCommand {
         } = options
 
         if(!other) {
+            const chat = await ctx.vars.chat.get()
             return {
                 key: 'hello/current-hello',
                 options: {
                     vars: {
-                        hello: ctx.vars.chat?.hello
+                        hello: chat?.hello
                     }
                 }
             }

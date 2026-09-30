@@ -1,18 +1,20 @@
+import { UNKNOWN_NAME } from "../../consts/texts"
 import InventoryItem from "../../db/entities/items/InventoryItem"
 import GameService from "../../db/services/game/GameService"
 import InventoryItemService from "../../db/services/items/InventoryItemService"
 import LevelService from "../../db/services/level/LevelService"
+import MarriageService from "../../db/services/marriage/MarriageService"
 import MessagesService from "../../db/services/message/MessagesService"
 import BalanceService from "../../db/services/money/BalanceService"
 import RouletteService from "../../db/services/roulette/RouletteService"
 import UserService from "../../db/services/user/UserService"
-import { ranksSettings } from "../../resources/settings/ranks"
 import type { ClassTypes } from "../../types/class"
 import type { TopValues } from "../../types/top"
 import ClassUtils from "../db/ClassUtils"
 import RankUtils from "../db/RankUtils"
 import ExperienceUtils from "../level/ExperienceUtils"
 import Logger from "../logs/Logger"
+import TimeUtils from "../time/TimeUtils"
 import TopSubCommand from "./TopSubCommand"
 
 export default class TopUtils {
@@ -31,12 +33,9 @@ export default class TopUtils {
                 })
             },
             handleSortedValuesCallback: async ({ ctx, values, chatId }) => {
-                const rankVars = await Promise.all(
-                    ranksSettings
-                        .map(async value => {
-                            const rank = value.id
-                            return await RankUtils.getVars(ctx, chatId, rank)
-                        })
+                const rankVars = await RankUtils.getVarsEvery(
+                    ctx,
+                    chatId,
                 )
 
                 Logger.debug(
@@ -48,14 +47,18 @@ export default class TopUtils {
                     .filter(v => +v.value > 0)
                     .map(v => {
                         const rank = +v.value
-                        const { emoji, name } = rankVars.find(v => v.value == rank)!
+                        Logger.debug(
+                            'TopUtils.handleSortedValuesCallback | staff',
+                            rank
+                        )
+                        const rankVar = rankVars.get(rank) ?? RankUtils.getDefaultVars(ctx, rank)
                         return {
                             id: v.id,
                             value: ctx.t(
                                 'rank/top-value',
                                 {
-                                    emoji,
-                                    name,
+                                    emoji: rankVar.emoji,
+                                    name: rankVar.name,
                                     rank
                                 }
                             )
@@ -222,6 +225,54 @@ export default class TopUtils {
                     })
             }
         }),
+
+        new TopSubCommand({
+            key: 'marriages',
+            type: 'role',
+            getUnsortedValuesCallback: async (ctx, chatId) => {
+                const marriages = await MarriageService.getAllByChatId(chatId)
+                const ids = marriages.reduce(
+                    (total, marriage) => {
+                        total.add(marriage.firstPartner)
+                        total.add(marriage.secondPartner)
+                        return total
+                    },
+                    new Set<number>()
+                ).values().toArray()
+
+                const users = await UserService.getAllByIds(
+                    chatId,
+                    ids
+                )
+
+                return marriages
+                    .reduce(
+                        (total, marriage) => {
+                            const firstName = users.get(marriage.firstPartner)?.name ?? UNKNOWN_NAME
+                            const secondName = users.get(marriage.secondPartner)?.name ?? UNKNOWN_NAME
+                            const time = TimeUtils.formatMillisecondsToTime(
+                                ctx,
+                                TimeUtils.getElapsed(+marriage.createdAt)
+                            )
+                            const value = `${firstName} - ${secondName} (${time})`
+
+                            total.push({
+                                id: marriage.firstPartner,
+                                value
+                            })
+                            total.push({
+                                id: marriage.secondPartner,
+                                value
+                            })
+
+                            return total
+                        },
+                        [] as TopValues[]
+                    )
+            },
+            hasTotalCount: false,
+            hasWinner: true
+        })
     ]
 
     static keys = Object.keys(this._subCommands).map(v => +v)

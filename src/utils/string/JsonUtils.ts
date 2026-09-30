@@ -18,4 +18,12 @@ export default class JsonUtils {
             '{"error":\"exception\"}'
         )
     }
+
+    static parse<T>(value: string): T | undefined {
+        return ExceptionUtils.handle(
+            () => {
+                return JSON.parse(value)
+            }
+        )
+    }
 }

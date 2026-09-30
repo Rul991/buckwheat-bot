@@ -1,11 +1,13 @@
 import type { ChatMember } from "grammy/types"
-import { DEV_ID } from "../../consts/env"
+import { DEV_ID, MOMMY_ID } from "../../consts/env"
 import type { BotContext } from "../../types/bot"
 import type { RankVars } from "../../types/types"
 import Logger from "../logs/Logger"
 import SettingValueService from "../../db/services/settings/SettingValueService"
 import { ranksSettings } from "../../resources/settings/ranks"
 import MathUtils from "../math/MathUtils"
+import SettingValue from "../../db/entities/settings/SettingValue"
+import { SettingValueTypes } from "../../protos/settings_pb"
 
 export default class RankUtils {
     static min = 0
@@ -35,7 +37,8 @@ export default class RankUtils {
                 id: {
                     current: id,
                     dev: DEV_ID,
-                    buckwheat: ctx.me.id
+                    buckwheat: ctx.me.id,
+                    mommy: MOMMY_ID
                 },
                 ranks: {
                     current: rank,
@@ -48,18 +51,69 @@ export default class RankUtils {
         )
     }
 
+    private static _getRankNameBySettingValue(ctx: BotContext, settingValue: SettingValue<'string', SettingValueTypes.Ranks>): string {
+        const rank = settingValue.settingId - 1
+        const name = settingValue.value
+        Logger.debug(
+            'RankUtils._getRankNameBySettingValue',
+            {
+                settingValue,
+                rank,
+                name
+            }
+        )
+        return this.getDefaultRankName(ctx, rank, name)
+    }
+
     static async getRankName(ctx: BotContext, chatId: number, rank: number) {
-        const rankSettingValue = await SettingValueService.get({
-            setting: ranksSettings[rank] || ranksSettings[1]!,
-            id: chatId
-        })
-        return ctx.t(
+        const zeroRankIndex = -2
+        const index = ranksSettings.length + zeroRankIndex - rank
+
+        const rankSetting = ranksSettings[index]
+
+        const rankSettingValue = rankSetting ?
+            await SettingValueService.get({
+                setting: rankSetting,
+                id: chatId
+            }) :
+            undefined
+        return this._getRankNameBySettingValue(
+            ctx,
+            rankSettingValue ?? {
+                id: chatId,
+                settingId: rank + 1,
+                value: '',
+                valueType: SettingValueTypes.Ranks
+            }
+        )
+    }
+
+    static getDefaultRankName(ctx: BotContext, rank: number, name?: string): string {
+        const result = ctx.t(
             'rank/name',
             {
-                name: rankSettingValue.value,
+                name: name ?? '',
                 rank
             }
         )
+
+        Logger.debug(
+            'RankUtils.getDefaultRankName',
+            {
+                result,
+                rank,
+                name
+            }
+        )
+        return result
+    }
+
+    static getDefaultVars(ctx: BotContext, rank: number): RankVars {
+        return {
+            value: rank,
+            name: this.getDefaultRankName(ctx, rank),
+            emoji: this.getEmojiByRank(ctx, rank)
+        }
     }
 
     static async getVars(ctx: BotContext, chatId: number, rank: number): Promise<RankVars> {
@@ -68,6 +122,31 @@ export default class RankUtils {
             name: await this.getRankName(ctx, chatId, rank),
             emoji: this.getEmojiByRank(ctx, rank)
         }
+    }
+
+    static async getVarsEvery(
+        ctx: BotContext,
+        chatId: number,
+    ): Promise<Map<number, RankVars>> {
+        const settings = ranksSettings
+        const settingValues = await SettingValueService.getBySettings(chatId, settings)
+
+        const result = new Map<number, RankVars>()
+        for (const [settingId, settingValue] of settingValues) {
+            const rank = settingId - 1
+            result.set(
+                rank,
+                {
+                    value: rank,
+                    name: this._getRankNameBySettingValue(
+                        ctx,
+                        settingValue
+                    ),
+                    emoji: this.getEmojiByRank(ctx, rank)
+                }
+            )
+        }
+        return result
     }
 
     static has(userRank: number, needRank: number) {

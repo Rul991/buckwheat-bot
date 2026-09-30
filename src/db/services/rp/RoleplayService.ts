@@ -1,4 +1,5 @@
 import type { GrammaticalCase } from "../../../protos/rp_pb"
+import Logger from "../../../utils/logs/Logger"
 import Roleplay from "../../entities/rp/Roleplay"
 import BaseService from "../base/BaseService"
 
@@ -61,6 +62,13 @@ class RoleplayService extends BaseService<typeof Roleplay> {
     }
 
     async editText(objectId: Uint8Array, text: string): Promise<Roleplay | undefined> {
+        Logger.debug(
+            'RoleplayService.editText',
+            {
+                objectId,
+                text
+            }
+        )
         return await this._repo.updateOne(
             {
                 _id: this._getObjectIdFromBytes(objectId)

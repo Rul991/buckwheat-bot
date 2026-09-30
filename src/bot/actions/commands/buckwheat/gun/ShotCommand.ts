@@ -13,11 +13,12 @@ import { gunsKeyboard } from "../../../../keyboards/inventory"
 import BuckwheatCommand from "../../../base/BuckwheatCommand"
 
 export default class ShotCommand extends BuckwheatCommand {
-    override aliases: string[] = ['выстрел', 'выстрелить']
+    override aliases: string[] = ['выстрел', 'выстрелить', 'оружие', 'орудие']
     override filename: string = 'shot'
     override minimumRank: number = RankUtils.min
     override settingId: number = 90
     override name: string = 'расстрелять'
+    override isSupportReply: boolean = true
 
     override async execute(options: BuckwheatCommandOptions): Promise<BuckwheatCommandExecuteResult> {
         const {
@@ -60,8 +61,8 @@ export default class ShotCommand extends BuckwheatCommand {
         const replyId = replyFrom.id != ctx.me.id ? replyFrom.id : id
         const isSelf = replyId == id
 
-        const user = ctx.vars.user
-        const reply = isSelf ? ctx.vars.user : await UserService.get(chatId, replyFrom.id)
+        const user = await ctx.vars.user.get()
+        const reply = isSelf ? user : await UserService.get(chatId, replyFrom.id)
 
         const hasGun = await InventoryItemService.hasByUser({
             chatId,
@@ -76,7 +77,9 @@ export default class ShotCommand extends BuckwheatCommand {
                     vars: {
                         user,
                         reply,
-                        item,
+                        item: {
+                            ...item,
+                        },
                         itemVars: item.getVars(ctx),
                     }
                 }

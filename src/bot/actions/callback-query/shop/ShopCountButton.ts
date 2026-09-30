@@ -9,7 +9,7 @@ class ShopCountButton extends CallbackQueryAction<ShopCountButtonData> {
     override schema: GenMessage<ShopCountButtonData> = ShopCountButtonDataSchema
     override defaultTextKey: string = 'shop/button/buy'
     override minimumRank: number = RankUtils.min
-    override settingId: number = 89
+    override settingId: number = 100
     override name: string = 'shopcnt'
     
     protected override async _execute(options: CallbackQueryActionOptions<ShopCountButtonData>): Promise<CallbackQueryExecuteResult> {

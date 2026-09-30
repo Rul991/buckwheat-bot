@@ -19,7 +19,7 @@ export default class CreatorCommand extends BuckwheatCommand {
             ctx
         } = options
         const rank = DEV_ID == id ? RankUtils.owner : RankUtils.max
-        const user = ctx.vars.user
+        const user = await ctx.vars.user.require()
 
         await UserRankService.set(
             chatId,

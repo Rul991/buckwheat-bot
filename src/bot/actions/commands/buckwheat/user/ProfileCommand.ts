@@ -1,8 +1,12 @@
 import { MAX_NAME_LENGTH } from "../../../../../consts/lengths"
+import type Chat from "../../../../../db/entities/chat/Chat"
+import Marriage from "../../../../../db/entities/marriage/Marriage"
 import AvaHistory from "../../../../../db/entities/user/AvaHistory"
 import User from "../../../../../db/entities/user/User"
+import ChatService from "../../../../../db/services/chat/ChatService"
 import LinkedChatService from "../../../../../db/services/chat/LinkedChatService"
 import LevelService from "../../../../../db/services/level/LevelService"
+import MarriageService from "../../../../../db/services/marriage/MarriageService"
 import MessagesService from "../../../../../db/services/message/MessagesService"
 import SettingValueService from "../../../../../db/services/settings/SettingValueService"
 import UserAvaService from "../../../../../db/services/user/UserAvaService"
@@ -84,7 +88,7 @@ export default class ProfileCommand extends BuckwheatCommand {
 
         if (!replyFrom) {
             return {
-                user: ctx.vars.user,
+                user: await ctx.vars.user.get(),
                 type: 'id',
                 value: myId
             }
@@ -135,8 +139,9 @@ export default class ProfileCommand extends BuckwheatCommand {
             chatId,
         } = options
 
-        const level = user.id == ctx.vars.user?.id
-            ? ctx.vars.level :
+        const selfUser = await ctx.vars.user.get()
+        const level = user.id == selfUser?.id
+            ? await ctx.vars.level.get() :
             await LevelService.get(chatId, user.id)
 
         const currentExperience = level?.currentExperience ?? ExperienceUtils.min
@@ -188,6 +193,14 @@ export default class ProfileCommand extends BuckwheatCommand {
         }
     }
 
+    private async _getLinkedChat(id: number): Promise<Chat | undefined> {
+        const linkedChat = await LinkedChatService.get(id)
+        const chatId = linkedChat?.linkedChat
+        if (!chatId) return undefined
+
+        return await ChatService.get(chatId)
+    }
+
     override async execute(options: BuckwheatCommandOptions): Promise<BuckwheatCommandExecuteResult> {
         const {
             ctx,
@@ -225,22 +238,28 @@ export default class ProfileCommand extends BuckwheatCommand {
         const isLeft = await ContextUtils.hasStatus(
             ctx,
             ['kicked', 'left'],
-            user.id,
+            {
+                id: user.id,
+                chatId: user.chatId
+            }
         ) ?? true
-        const isLinked = await LinkedChatService.isLinked(
-            user.id,
-            chatId
-        )
+        const linkedChat = await this._getLinkedChat(user.id)
         const summonEmojiSettingValue = await SettingValueService.get({
             setting: summonEmojiSetting,
             id: user.id
         })
         const summonEmoji = summonEmojiSettingValue.value
-        
+
         const messages = await MessagesService.get(
             chatId,
             id,
         )
+
+        const marriage = await MarriageService.get(chatId, user.id)
+        const partnerId = marriage ?
+            Marriage.getPartner(marriage, user.id) :
+            undefined
+        const partner = partnerId ? await UserService.get(chatId, partnerId) : undefined
 
         const key = 'profile/profile'
         const messageOptions: ReplyOptions = {
@@ -255,11 +274,15 @@ export default class ProfileCommand extends BuckwheatCommand {
                 level: await this._getLevelVars(options, user),
                 user: {
                     ...user,
-                    linked: isLinked,
                     left: isLeft,
                     emoji: summonEmoji,
                 },
-                userClass: ClassUtils.getVars(ctx, className)
+                userClass: ClassUtils.getVars(ctx, className),
+                linkedChat,
+                family: partner ? {
+                    partner,
+                    date: TimeUtils.formatMillisecondsToTime(ctx, TimeUtils.getElapsed(+marriage!.createdAt))
+                } : undefined
             },
             keyboard: await profileKeyboard(
                 ctx,

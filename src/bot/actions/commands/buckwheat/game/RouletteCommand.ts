@@ -15,22 +15,23 @@ export default class RouletteCommand extends BuckwheatCommand {
     override settingId: number = 47
     override name: string = 'рулетка'
     override filename: string = 'roulette'
-    
+
     override async execute(options: BuckwheatCommandOptions): Promise<BuckwheatCommandExecuteResult> {
         const {
             chatId,
             id,
             ctx,
         } = options
-        const user = ctx.vars.user
+        const user = await ctx.vars.user.get()
+        const duelist = await ctx.vars.duelist.get()
 
-        if(ctx.chat.type == 'private') {
+        if (ctx.chat.type == 'private') {
             return {
                 key: 'roulette/private'
             }
         }
 
-        if((ctx.vars.duelist?.hp ?? DEAD_HEALTH) <= DEAD_HEALTH) {
+        if ((duelist?.hp ?? DEAD_HEALTH) <= DEAD_HEALTH) {
             return {
                 key: 'roulette/dead',
                 options: {
@@ -47,14 +48,14 @@ export default class RouletteCommand extends BuckwheatCommand {
         } = await RouletteService.game(chatId, id)
         const prize = Roulette.getPrize(roulette)
 
-        if(prize > 0) {
+        if (prize > 0) {
             await BalanceService.add({
                 chatId,
                 id,
                 money: prize
             })
         }
-        else if(!isWin) {
+        else if (!isWin) {
             await DuelistService.dead(chatId, id)
 
             const isKicked = await AdminUtils.gameKick({

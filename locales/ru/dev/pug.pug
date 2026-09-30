@@ -1,0 +1,47 @@
+include /utils/mixins.pug
+
+-
+    const emojiToKey = new Map()
+    for (const [key, emoji] of Object.entries(EMOJIES)) {
+        if (!emojiToKey.has(emoji)) emojiToKey.set(emoji, key)
+    }
+
+    const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+    const EMOJI_ALT = [...emojiToKey.keys()]
+        .sort((a, b) => b.length - a.length)
+        .map(escapeRegex)
+        .join('|')
+
+    const EMOJI_RE = new RegExp(EMOJI_ALT, 'g')
+
+    function replaceEmojisInPug(src) {
+        src = src.replace(
+            /(['"])((?:\\.|(?!\1).)*?)\1/g,
+            (whole, _quote, body) => {
+                EMOJI_RE.lastIndex = 0
+                if (!EMOJI_RE.test(body)) {
+                    EMOJI_RE.lastIndex = 0
+                    return whole
+                }
+                EMOJI_RE.lastIndex = 0
+                const converted = body.replace(
+                    EMOJI_RE,
+                    (m) => '${EMOJIES.' + emojiToKey.get(m) + '}'
+                )
+                return '`' + converted + '`'
+            }
+        )
+
+        EMOJI_RE.lastIndex = 0
+        src = src.replace(EMOJI_RE, (m) => '#{EMOJIES.' + emojiToKey.get(m) + '}')
+
+        return src
+    }
+
++heading()
+    | Pug
++lang(
+    'pug',
+    replaceEmojisInPug(pugText) || '| goyda'
+)

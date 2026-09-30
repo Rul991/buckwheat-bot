@@ -38,7 +38,8 @@ class ItemUseConversation extends ConversationAction<[InventoryItem]> {
                         item: {
                             title: item.getTitle(ctx)
                         }
-                    }
+                    },
+                    lazyKeys: ['user']
                 })
             )
             return
@@ -54,7 +55,8 @@ class ItemUseConversation extends ConversationAction<[InventoryItem]> {
                     item: {
                         emoji: item.getEmoji(ctx)
                     }
-                }
+                },
+                lazyKeys: ['user']
             })
         )
         const rawCountCtx = await convo.waitFor('msg:text')

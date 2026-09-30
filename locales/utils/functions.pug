@@ -7,7 +7,13 @@ include /utils/emojies.pug
     }
 
     const formatNumber = (raw, step = 3, separator = ' ') => {
-        if(!isFinite(raw)) return EMOJIES.INFINITY
+        if(!isFinite(raw)) {
+            if(raw < 0) {
+                return `-${EMOJIES.INFINITY}`
+            }
+
+            return EMOJIES.INFINITY
+        }
         
         const number = floor(raw, step)
         if (number >= 1e+12) {
@@ -50,4 +56,15 @@ include /utils/emojies.pug
         if(!arr.length) return defaultValue
         const index = range(0, arr.length - 1)
         return arr[index]
+    }
+
+    const formatValue = (value) => {
+        if(typeof value == 'number') {
+            return formatNumber(value)
+        }
+        else if(typeof value == 'boolean') {
+            return bool(value)
+        }
+
+        return value
     }

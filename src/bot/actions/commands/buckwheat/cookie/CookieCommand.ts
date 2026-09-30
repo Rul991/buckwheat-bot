@@ -61,12 +61,14 @@ export default class CookieCommand extends BuckwheatCommand {
             isShare = ok
         }
 
+        const user = await ctx.vars.user.get()
+
         return {
             key: 'cookie/share',
             options: {
                 vars: {
-                    user: ctx.vars.user,
-                    reply: isSelf ? ctx.vars.user : await UserService.get(chatId, replyId),
+                    user,
+                    reply: isSelf ? user : await UserService.get(chatId, replyId),
                     isShare
                 }
             }

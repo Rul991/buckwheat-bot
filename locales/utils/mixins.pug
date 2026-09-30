@@ -15,7 +15,7 @@ mixin link(user)
 
 mixin lang(language, text)
     pre
-        code(tg-language=language) #{text}
+        code(class=`language-${language}`) #{text}
 
 mixin json(obj, space = 2)
     +lang(
@@ -59,12 +59,14 @@ mixin full_rank(rank)
     |  
     +rank(rank)
 
-mixin heading(emoji)
+mixin heading(emoji, hasBottomPadding = true)
     |
     b #{emoji || EMOJIES.HEADING} 
         block
     |
-    |
+    if hasBottomPadding
+        |
+        |
 
 mixin plain_bold_param(title, value)
     |

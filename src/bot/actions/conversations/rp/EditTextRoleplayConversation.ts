@@ -25,7 +25,7 @@ class EditTextRoleplayConversation extends ConversationAction<[Roleplay]> {
         const newRoleplay = await conversation.external(
             async _ => {
                 return await RoleplayService.editText(
-                    roleplay._id!.id,
+                    Uint8Array.fromHex(roleplay._id!.toString('hex')),
                     text
                 )
             }

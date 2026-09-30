@@ -1,0 +1,29 @@
+include /utils/mixins.pug
+
++heading(EMOJIES.SETTING)
+    | #{setting.title.toUpperCase()}
+
+blockquote !{setting.description}
+|
+|
+|
++heading(EMOJIES.PROPERTY, false)
+    | СВОЙСТВА:
++plain_code_param(`${EMOJIES.LIST} Текущее значение`, formatValue(setting.value))
+if setting.properties.min !== undefined
+    -
+        const text = (() => {
+            if(setting.type == 'string') {
+                return 'Длина строки'
+            }
+            else if(setting.type == 'date') {
+                return 'Диапазон времени'
+            }
+            else if(setting.type == 'number') {
+                return 'Диапазон чисел'
+            }
+
+            return 'Диапазон значений'
+        })()
+
+    +plain_code_param(`${EMOJIES.RANGE} ${text}`, `${min} - ${max}`)

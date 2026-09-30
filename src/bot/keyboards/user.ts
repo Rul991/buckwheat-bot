@@ -13,7 +13,8 @@ export const classesKeyboard = KeyboardCreator.create<number>(
         data: id
     }) => {
         const classTypes = ClassUtils.getChangeableClassNames()
-        const classChangedCount = ctx.vars.user?.classChangedCount ?? 0
+        const user = await ctx.vars.user.get()
+        const classChangedCount = user?.classChangedCount ?? 0
         if (classChangedCount >= NEED_BOSS_CLASS_CHANGES && RandomUtils.chance(BOSS_CHANGE_CHANCE)) {
             classTypes.push('boss')
         }

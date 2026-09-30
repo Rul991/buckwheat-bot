@@ -1,6 +1,7 @@
 import LinkedChatService from "../../../../../db/services/chat/LinkedChatService"
 import type { BuckwheatCommandOptions } from "../../../../../types/action-options"
 import type { BuckwheatCommandExecuteResult } from "../../../../../types/results"
+import { startLinkKeyboard } from "../../../../keyboards/links"
 import BuckwheatCommand from "../../../base/BuckwheatCommand"
 
 export default class LinkCommand extends BuckwheatCommand {
@@ -19,13 +20,20 @@ export default class LinkCommand extends BuckwheatCommand {
         const isPrivate = ctx.chat.type == 'private'
         if(isPrivate) {
             return {
-                key: 'link/private'
+                key: 'link/private',
+                options: {
+                    keyboard: await startLinkKeyboard(
+                        ctx,
+                        {
+                            id
+                        }
+                    )
+                }
             }
         }
+        
         const chat = ctx.chat.title
-
         const isSet = await LinkedChatService.set(id, ctx.chatId)
-
         return {
             key: 'link/set',
             options: {

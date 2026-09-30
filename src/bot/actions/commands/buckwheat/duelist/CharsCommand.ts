@@ -29,7 +29,9 @@ export default class CharsCommand extends BuckwheatCommand {
         const replyId = replyOrUserFrom.id
         const isSelf = replyId == id
 
-        const user = isSelf ? ctx.vars.user : await UserService.get(chatId, replyId)
+        const user = isSelf ? await ctx.vars.user.get() : await UserService.get(chatId, replyId)
+        const level = await ctx.vars.level.get()
+
         const className = user?.className ?? ClassUtils.defaultClassName
         const isPlayer = ClassUtils.isPlayer(className)
 
@@ -44,11 +46,11 @@ export default class CharsCommand extends BuckwheatCommand {
             }
         }
         
-        const duelist = isSelf ? ctx.vars.duelist : await DuelistService.get(chatId, replyId)
+        const duelist = isSelf ? await ctx.vars.duelist.get() : await DuelistService.get(chatId, replyId)
         const character = characters[className]
         
-        const level = ExperienceUtils.getLevelFromObject(ctx.vars.level)
-        const maxChars = character.getMaxCharacteristics(level)
+        const levelNumber = ExperienceUtils.getLevelFromObject(level)
+        const maxChars = character.getMaxCharacteristics(levelNumber)
 
         const selectedGun = await SelectedGunService.get(
             chatId,
@@ -66,7 +68,7 @@ export default class CharsCommand extends BuckwheatCommand {
                     currentChars: duelist,
                     maxChars,
                     classVars: ClassUtils.getVars(ctx, className),
-                    level,
+                    level: levelNumber,
                     gun: gun?.getVars(ctx)
                 }
             }

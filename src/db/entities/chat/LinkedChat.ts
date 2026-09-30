@@ -22,6 +22,6 @@ export default class LinkedChat extends IdEntity {
         super(id)
 
         this.linkedChat = linkedChat
-        this.linkedChats = []
+        this.linkedChats = linkedChat ? [linkedChat] : []
     }
 }

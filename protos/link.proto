@@ -1,0 +1,11 @@
+syntax = "proto3";
+import "scroller.proto";
+
+message LinkScrollerButtonData {
+    ScrollerData data = 1; // scroller's data
+}
+
+message LinkButtonData {
+    uint64 id = 1; // user's id
+    uint32 index = 2; // linkedChats' index
+}

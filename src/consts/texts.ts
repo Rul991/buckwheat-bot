@@ -1,8 +1,3 @@
-import { IS_PROD } from "./env"
-
-export const START_MESSAGE = IS_PROD ?
-    'Доброе утро, я проснулся!' :
-    ''
 export const AUTO_ALLOW_JOIN_REQUEST_SYMBOL = '✅'
 export const SEND_MESSAGE_JOIN_REQUEST_SYMBOL = '✉️'
 export const DO_NOTHING_JOIN_REQUEST_SYMBOL = '🙈'

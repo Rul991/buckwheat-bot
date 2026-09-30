@@ -1,0 +1,16 @@
+include /utils/mixins.pug
+
++heading(EMOJIES.FAMILY)
+    | Брак:
+| #{partner ? EMOJIES.YES : EMOJIES.NO} Игрок 
++link(user)
+|  
+if partner
+    | состоит в браке с игроком 
+    +link(partner)
+    | !
+    +plain_code_param(`${EMOJIES.TIME} Время в браке`, time)
+else
+    | - 
+    i холост
+    | !

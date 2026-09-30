@@ -18,7 +18,7 @@ export default class MoneyDropCommand extends BuckwheatCommand {
         const {
             ctx
         } = options
-        const money = ctx.vars.balance?.total ?? 0
+        const money = (await ctx.vars.balance.get())?.total ?? 0
 
         if(money <= 0) {
             return {

@@ -6,6 +6,7 @@ import MessageUtils from "../../../utils/bot/MessageUtils"
 import DiceAction from "../base/DiceAction"
 import BalanceService from "../../../db/services/money/BalanceService"
 import GameService from "../../../db/services/game/GameService"
+import GrindUtils from "../../../utils/grind/GrindUtils"
 
 type JackpotValues = {
     values: number[]
@@ -53,7 +54,8 @@ export default class CasinoDiceAction extends DiceAction {
         } = options
 
         const gameType = 'casino'
-        const balance = ctx.vars.balance?.total ?? 0
+        const selfBalance = await ctx.vars.balance.get()
+        const balance = selfBalance?.total ?? 0
         const jackpotValue = this._getJackpotValue(value)
         const {
             prize,
@@ -82,13 +84,17 @@ export default class CasinoDiceAction extends DiceAction {
                 id,
                 money: prize
             })
+
+            const isSendMessage = await GrindUtils.isSendMessage(ctx, id)
+            if(!isSendMessage) return
+            
             await MessageUtils.reply(
                 ctx,
                 'casino/result',
                 {
                     vars: {
                         prize,
-                        user: ctx.vars.user,
+                        user: await ctx.vars.user.get(),
                         type
                     }
                 }

@@ -11,6 +11,7 @@ import SettingUtils from "../../../../utils/settings/SettingUtils"
 import SettingValueService from "../../../../db/services/settings/SettingValueService"
 import SettingShowButton from "./SettingShowButton"
 import Logger from "../../../../utils/logs/Logger"
+import SettingBackButton from "./SettingBackButton"
 
 type Object = DefaultSetting
 
@@ -37,13 +38,11 @@ class SettingScrollerButton extends ScrollerButton<Object, SettingsScrollerData>
     protected override async _getControlsButtonData(options: ScrollerButtonEditMessageOptions<DefaultSetting, SettingsScrollerData>): Promise<Omit<SettingsScrollerData, "data" | "$typeName" | "$unknown">> {
         const {
             data: {
-                id,
                 type
             }
         } = options
 
         return {
-            id,
             type
         }
     }
@@ -53,11 +52,12 @@ class SettingScrollerButton extends ScrollerButton<Object, SettingsScrollerData>
             slicedObjects,
             data: {
                 type,
-                id: rawSettingOwnerId
             },
             ctx,
             id,
-            objects
+            objects,
+            page,
+            chatId
         } = options
 
         Logger.debug(
@@ -70,11 +70,28 @@ class SettingScrollerButton extends ScrollerButton<Object, SettingsScrollerData>
 
         const keyboard = new InlineKeyboard()
         const userId = BigInt(id)
-        const settingOwnerId = Number(rawSettingOwnerId)
+        const isChat = SettingUtils.isChat(type)
+        const settingOwnerId = Number(isChat ? chatId : id)
 
         const settingValues = await SettingValueService.getBySettings(
             settingOwnerId,
             slicedObjects
+        )
+
+        Logger.debug(
+            'SettingScrollerButton._getKeyboard',
+            {
+                settingValues
+            }
+        )
+
+        keyboard.add(
+            SettingBackButton.button({
+                ctx,
+                data: {
+                    id: userId
+                },
+            })
         )
 
         for (const setting of slicedObjects) {
@@ -82,34 +99,25 @@ class SettingScrollerButton extends ScrollerButton<Object, SettingsScrollerData>
                 setting.id
             )
             const value = settingValue?.value ?? setting.default
-            const id = BigInt(setting.id)
 
             keyboard.row()
             keyboard.add(
                 SettingShowButton.button({
                     ctx,
                     data: {
-                        id,
                         settingId: setting.id,
                         type: setting.valueType,
-                        userId
+                        userId,
+                        page
                     },
-                    key: 'setting/show-button',
+                    key: 'setting/show/button',
                     vars: {
                         setting: {
                             ...setting,
-                            title: ctx.t(
-                                setting.titleKey,
-                                {
-                                    setting: {
-                                        ...setting,
-                                        value,
-                                    }
-                                }
-                            ),
-                            value
+                            ...setting.getVars(ctx),
+                            value: setting.getShowableValue(ctx, value)
                         }
-                    }
+                    },
                 })
             )
         }

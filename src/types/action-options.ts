@@ -1,9 +1,8 @@
-import type { CallbackQueryContext } from "grammy"
 import type { BotContext } from "./bot"
-import type { DiceContext, MessageContext, MessagePhotoContext, MessageTextContext, NewChatMemberContext, PreCheckoutQueryContext, ShippingQueryContext } from "./contexts"
+import type { CallbackQueryContext, DiceContext, MessageContext, MessagePhotoContext, MessageTextContext, NewChatMemberContext, PreCheckoutQueryContext, SuccessfulPaymentMessageContext } from "./contexts"
 import type { MaybeString } from "./types"
 import type { CommandStrings } from "./command"
-import type { PhotoSize, User } from "grammy/types"
+import type { PhotoSize, PreCheckoutQuery, SuccessfulPayment, User } from "grammy/types"
 import type { CommandType } from "../protos/commands_pb"
 
 export type BaseActionOptions = {
@@ -14,7 +13,7 @@ export type BaseActionOptions = {
 export type CallbackQueryActionOptions<T> =
     & BaseActionOptions
     & {
-        ctx: CallbackQueryContext<BotContext>
+        ctx: CallbackQueryContext<T>
         data: T
     }
 
@@ -66,17 +65,19 @@ export type ConversationActionOptions = {
 }
 
 export type PreCheckoutQueryOptions<T> = 
-    & BaseActionOptions
     & {
+        id: number
         ctx: PreCheckoutQueryContext
         data: T
+        query: PreCheckoutQuery
     }
 
-export type ShippingQueryOptions<T> = 
+export type SuccesfulPaymentOptions<T> = 
     & BaseActionOptions
     & {
-        ctx: ShippingQueryContext
+        ctx: SuccessfulPaymentMessageContext
         data: T
+        payment: SuccessfulPayment
     }
 
 export type NewChatMemberActionOptions =

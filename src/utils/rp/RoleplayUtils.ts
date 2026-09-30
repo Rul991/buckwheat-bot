@@ -33,7 +33,8 @@ export default class RoleplayUtils {
             key: 'rp/add/text',
             vars: {
                 command
-            }
+            },
+            lazyKeys: ['user']
         })
     }
 
@@ -44,7 +45,8 @@ export default class RoleplayUtils {
             {
                 vars: {
                     max: MAX_ROLEPLAY_NAME_LENGTH,
-                }
+                },
+                lazyKeys: ['user']
             }
         )
 

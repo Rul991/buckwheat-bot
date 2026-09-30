@@ -22,8 +22,10 @@ export default class SetDescriptionCommand extends SetProfilePropertyCommand {
             replyOrUserFrom
         } = options
 
-        if(replyOrUserFrom.id == ctx.vars.user?.id) {
-            return ctx.vars.user.description
+        const user = await ctx.vars.user.get()
+
+        if(replyOrUserFrom.id == user?.id) {
+            return user.description
         }
         else {
             return await UserDescriptionService.get(chatId, replyOrUserFrom.id) ?? UNKNOWN_DESCRIPTION

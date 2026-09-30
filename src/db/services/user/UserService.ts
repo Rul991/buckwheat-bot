@@ -117,17 +117,13 @@ class UserService extends BaseService<typeof User> {
 
     async getAllByIds(chatId: number, ids: number[]): Promise<Map<number, User>> {
         const result = new Map<number, User>()
-        const users = await this._repo.model.find(
+        const users = await this._repo.find(
             {
                 id: {
                     $in: ids
                 },
                 chatId,
             },
-            undefined,
-            {
-                lean: true
-            }
         )
 
         for (const user of users) {

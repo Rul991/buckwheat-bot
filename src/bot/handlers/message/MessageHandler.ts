@@ -10,7 +10,6 @@ export default class MessageHandler extends BaseHandler<MessageAction> {
             async (ctx, next) => {
                 Logger.system('message', ctx.msg)
                 const id = ctx.vars.id
-                if(!id) return
                 const chatId = ctx.vars.chatId
 
                 const isPrivate = ctx.chat.type == 'private'

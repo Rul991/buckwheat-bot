@@ -10,7 +10,7 @@ export const MAX_USER_TEXT_LENGTH = 2048
 export const MIN_ROLEPLAY_NAME_LENGTH = 1
 export const MIN_ROLEPLAY_TEXT_LENGTH = 1
 // roleplay maxs
-export const MAX_ROLEPLAY_NAME_LENGTH = 12
+export const MAX_ROLEPLAY_NAME_LENGTH = 32
 export const MAX_ROLEPLAY_TEXT_LENGTH = 512
 // short command
 export const MAX_SHORT_COMMAND_LENGTH = 32

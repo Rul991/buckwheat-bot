@@ -1,8 +1,13 @@
 import { plugin, prop } from "@typegoose/typegoose"
 import ChatIdEntity from "../base/ChatIdEntity"
-import { autoIncrementPlugin } from "../../plugins/auto-increment"
+import { AutoIncrementID } from "@typegoose/auto-increment"
 
-@plugin(autoIncrementPlugin)
+@plugin(
+    AutoIncrementID, 
+    {
+        field: 'id',
+    }
+)
 export default class Rule extends ChatIdEntity {
     @prop()
     text: string

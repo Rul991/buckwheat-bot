@@ -3,7 +3,7 @@ import { chatSettings } from "../../resources/settings/chat"
 import { ranksSettings } from "../../resources/settings/ranks"
 import { userSettings } from "../../resources/settings/user"
 import type { DefaultSetting, SettingTypes } from "../../types/settings"
-import type Setting from "./Setting"
+import Setting from "./Setting"
 
 type Settings = DefaultSetting[]
 
@@ -14,6 +14,14 @@ export default class SettingUtils {
         [SettingValueTypes.Command]: [],
         [SettingValueTypes.Button]: [],
         [SettingValueTypes.Ranks]: ranksSettings,
+    }
+
+    private static _isChatSettingType: Record<SettingValueTypes, boolean> = {
+        [SettingValueTypes.User]: false,
+        [SettingValueTypes.Chat]: true,
+        [SettingValueTypes.Command]: true,
+        [SettingValueTypes.Button]: true,
+        [SettingValueTypes.Ranks]: true
     }
 
     static types = Object.keys(this._settings).map(v => +v) as SettingValueTypes[]
@@ -31,5 +39,13 @@ export default class SettingUtils {
     static get<V extends SettingValueTypes>(type: V, id: number): Setting<SettingTypes, V> {
         return this.getAll(type)
             .find(v => v.id == id) as Setting<SettingTypes, V>
+    }
+
+    static isChat(setting: Setting<SettingTypes, SettingValueTypes> | SettingValueTypes): boolean {
+        const valueType = setting instanceof Setting ?
+            setting.valueType :
+            setting
+
+        return this._isChatSettingType[valueType]
     }
 }

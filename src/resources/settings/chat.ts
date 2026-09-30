@@ -113,7 +113,7 @@ export const showRankInTopSetting = new Setting({
     textKey: 'command/top',
     type: 'boolean',
     properties: {},
-    default: true,
+    default: false,
     valueType: SettingValueTypes.Chat,
 })
 

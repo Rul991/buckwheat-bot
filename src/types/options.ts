@@ -18,6 +18,12 @@ export type ReplyOptions = {
     isDisableLinkPreview?: boolean
 }
 
+export type ReplyInConversationOptions =
+    & ReplyOptions
+    & {
+        lazyKeys?: (keyof BotContext["vars"])[]
+    }
+
 export type ReplyMediaOptions =
     & ReplyOptions
     & {
@@ -30,7 +36,7 @@ export type ReplyTextAsDocumentOptions =
         filename?: string
     }
 
-export type EditMediaOptions = 
+export type EditMediaOptions =
     & ReplyMediaOptions
     & {
         type?: AvaHistoryType
@@ -68,5 +74,20 @@ export type AdminExecuteOptions = {
     id: number
 }
 
-export type CopyMessageOptions = 
-    & Omit<ReplyOptions, 'chatId'>
+export type InvoiceOptions = {
+    price: number
+    payload: string
+    vars?: ReplyOptions['vars']
+}
+
+export type AnswerPreCheckoutQueryOptions =
+    | {
+        ok: true
+        key?: string
+        vars?: GrullyI18nVars
+    }
+    | {
+        ok: false
+        key: string
+        vars?: GrullyI18nVars
+    }

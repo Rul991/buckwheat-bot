@@ -14,6 +14,7 @@ export default class ReactCommand extends BuckwheatCommand {
     override settingId: number = 72
     override name: string = 'реакция'
     override needData: boolean = true
+    override isSupportReply: boolean = true
     
     override async execute(options: BuckwheatCommandOptions): Promise<BuckwheatCommandExecuteResult> {
         const {

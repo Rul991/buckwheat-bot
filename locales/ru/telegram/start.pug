@@ -1,0 +1,12 @@
+include /utils/emojies.pug
+
+| #{EMOJIES.HELLO} Добро пожаловать
+if chat.title
+    |  в 
+    u
+        b #{chat.title}
+| !
+| #{EMOJIES.COOL_MAN} Я ваш проводник - 
+b Баквит
+| !
+| #{EMOJIES.MINUS} Введите /commands, чтобы узнать, что я умею!

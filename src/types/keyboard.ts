@@ -1,7 +1,7 @@
 import type { InlineKeyboard } from "grammy"
 import type { BotContext } from "./bot"
 
-export type KeyboardCallback<T, C extends BotContext = BotContext> = (options: KeyboardDataOptions<T, C>) => Promise<void>
+export type KeyboardCallback<T, C extends BotContext = BotContext> = (options: KeyboardDataOptions<T, C>) => Promise<void | InlineKeyboard>
 
 export type KeyboardDataOptions<T, C extends BotContext = BotContext> = {
     ctx: C

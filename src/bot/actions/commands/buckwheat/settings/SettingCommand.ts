@@ -6,6 +6,7 @@ import BuckwheatCommand from "../../../base/BuckwheatCommand"
 
 export default class SettingCommand extends BuckwheatCommand {
     override aliases: string[] = ['дк', 'дб', 'конфиг', 'настройка']
+    protected override _rankCanBeChange: boolean = false
     override minimumRank: number = RankUtils.min
     override settingId: number = 38
     override name: string = 'настройки'

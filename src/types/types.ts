@@ -1,6 +1,7 @@
 import type { AnyParamConstructor } from "@typegoose/typegoose/lib/types"
 import type BaseEntity from "../db/entities/base/BaseEntity"
 import type { ReactionTypeEmoji } from "grammy/types"
+import type LazyValue from "../utils/cache/LazyValue"
 
 export type RepoExtends = BaseEntity & AnyParamConstructor<any>
 export type DevMode = 'prod' | 'dev'
@@ -29,4 +30,8 @@ export type AvaHistoryType = 'image' | 'video' | 'animation'
 export type StartUp<T = number> = {
     start: T
     up: T
+}
+
+export type LazyCacheRecord<O extends Record<string, any>> = {
+    [K in keyof O]: LazyValue<O[K]>
 }

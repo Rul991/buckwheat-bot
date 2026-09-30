@@ -5,20 +5,24 @@ import MessageAction from "../base/MessageAction"
 
 export default class CreateProfileAction extends MessageAction {
     override chatTypes: ChatTypes[] = ['chat']
-    
+
     override async execute(options: MessageActionOptions): Promise<boolean | void> {
         const {
             chatId,
             id,
             ctx
         } = options
-        if(ctx.vars.user) return
-        if(!chatId) return
+        const user = await ctx.vars.user.get()
 
-        ctx.vars.user = await UserService.defaultCreate(
-            chatId,
-            id,
-            ctx.from
+        if (user) return
+        if (!chatId) return
+
+        ctx.vars.user.set(
+            await UserService.defaultCreate(
+                chatId,
+                id,
+                ctx.from
+            )
         )
     }
 }

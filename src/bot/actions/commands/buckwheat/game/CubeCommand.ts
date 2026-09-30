@@ -38,7 +38,8 @@ export default class CubeCommand extends BuckwheatCommand {
         }
 
         const rawBet = StringUtils.getNumberFromString(other, 0)
-        const firstUserMoney = ctx.vars.balance?.total ?? 0
+        const balance = await ctx.vars.balance.get()
+        const firstUserMoney = balance?.total ?? 0
 
         const bet = CubeUtils.getBet(rawBet, firstUserMoney)
         const canPlay = CubeUtils.checkBalance(rawBet, firstUserMoney)

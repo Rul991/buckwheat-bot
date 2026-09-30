@@ -9,7 +9,7 @@ class InventoryGiftButton extends CallbackQueryAction<InventoryGiftButtonData> {
     override defaultTextKey: string = 'inventory/button/gift'
     override schema: GenMessage<InventoryGiftButtonData> = InventoryGiftButtonDataSchema
     override minimumRank: number = RankUtils.min
-    override settingId: number = 70
+    override settingId: number = 101
     override name: string = 'invgft'
     
     protected override async _execute(options: CallbackQueryActionOptions<InventoryGiftButtonData>): Promise<CallbackQueryExecuteResult> {

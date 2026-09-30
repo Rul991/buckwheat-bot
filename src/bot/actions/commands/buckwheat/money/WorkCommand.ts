@@ -5,6 +5,7 @@ import WorkService from "../../../../../db/services/work/WorkService"
 import type { BuckwheatCommandOptions } from "../../../../../types/action-options"
 import type { BuckwheatCommandExecuteResult } from "../../../../../types/results"
 import RankUtils from "../../../../../utils/db/RankUtils"
+import GrindUtils from "../../../../../utils/grind/GrindUtils"
 import ExperienceUtils from "../../../../../utils/level/ExperienceUtils"
 import TimeUtils from "../../../../../utils/time/TimeUtils"
 import WorkUtils from "../../../../../utils/work/WorkUtils"
@@ -44,13 +45,14 @@ export default class WorkCommand extends BuckwheatCommand {
             }
         }
 
-        const user = ctx.vars.user
-        const level = ExperienceUtils.getLevelFromObject(ctx.vars.level)
+        const user = await ctx.vars.user.get()
+        const level = await ctx.vars.level.get()
+        const levelNumber = ExperienceUtils.getLevelFromObject(level)
         const inventory = await InventoryItemService.getInventory(chatId, id)
 
         const money = WorkUtils.getMoney(inventory)
         const experience = WorkUtils.getExperience(
-            level,
+            levelNumber,
             inventory
         )
 
@@ -62,6 +64,7 @@ export default class WorkCommand extends BuckwheatCommand {
             LevelService.add(chatId, id, experience),
             WorkService.updateTime(chatId, id),
         ])
+        ctx.vars.level.update()
 
         if (item) {
             await InventoryItemService.add({
@@ -70,6 +73,9 @@ export default class WorkCommand extends BuckwheatCommand {
                 item
             })
         }
+
+        const isSendMessage = await GrindUtils.isSendMessage(ctx, id)
+        if(!isSendMessage) return
 
         return {
             key: 'work/work',

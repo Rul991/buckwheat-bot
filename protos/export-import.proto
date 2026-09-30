@@ -1,0 +1,22 @@
+syntax = "proto3";
+import "scroller.proto";
+
+message ExportImportScrollerButtonData {
+    ScrollerData data = 1; // scroller's data
+}
+
+message ExportButtonData {
+    uint64 id = 1; // user's id
+    uint32 definitionId = 2; // export import definition's id
+}
+
+message ImportButtonData {
+    uint64 id = 1; // user's id
+    uint32 definitionId = 2; // export import definition's id
+}
+
+message ExportImportShowButtonData {
+    uint64 id = 1; // user's id
+    uint32 definitionId = 2; // export import definition's id
+    uint32 page = 3; // back page's index
+}

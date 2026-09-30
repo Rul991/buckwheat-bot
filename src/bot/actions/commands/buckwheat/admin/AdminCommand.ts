@@ -44,12 +44,12 @@ export default abstract class AdminCommand extends BuckwheatCommand {
             }
         }
 
-        const user = ctx.vars.user
+        const user = await ctx.vars.user.get()
         const userRank = user?.rank ?? RankUtils.min
 
         const replyUser = !isSelf ?
             await UserService.get(chatId, replyId) :
-            ctx.vars.user
+            user
         const replyRank = replyUser?.rank ?? RankUtils.min
 
         if (!isSelf && !RankUtils.has(userRank, replyRank + 1)) {

@@ -7,7 +7,7 @@ const createRanksSetting = (id: number): Setting<'string', SettingValueTypes.Ran
         default: '',
         id,
         properties: {
-            min: 1,
+            min: 0,
             max: 32
         },
         textKey: 'ranks/name',

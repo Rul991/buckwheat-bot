@@ -10,6 +10,11 @@ type TimeValues = {
     type: string
 }
 
+type FormatTimeOptions = {
+    isClamp?: boolean
+    showHHMMSS?: boolean
+}
+
 export default class TimeUtils {
     private static readonly _parseTimeRegex: RegExp = /(\d+(?:[.,]\d+)?)(\p{L}+)/gu
     private static _timeValues: TimeValues[] = [
@@ -80,12 +85,17 @@ export default class TimeUtils {
         return result
     }
 
-    static formatMillisecondsToTime(ctx: BotContext, ms: number, isClamp = false): string {
+    static formatMillisecondsToTime(ctx: BotContext, ms: number, options: FormatTimeOptions = {}): string {
+        const {
+            isClamp = false,
+            showHHMMSS = true
+        } = options
+
         if (ms <= this.defaultTime) {
             return ctx.t('time/infinity')
         }
 
-        if (ms < MILLISECONDS_IN_DAY) {
+        if (showHHMMSS && ms < MILLISECONDS_IN_DAY) {
             return this.toHHMMSS(ctx, ms)
         }
 

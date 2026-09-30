@@ -25,7 +25,7 @@ type GetArrowButtonScrollerDataOptions = {
 }
 
 export default abstract class ScrollerButton<O, M extends Omit<BaseScrollerData, '$typeName' | '$unknown'> & Message<any> = BaseScrollerData> extends CallbackQueryAction<M> {
-    private static _minPage = 0
+    private static readonly _minPage = 0
 
     protected _objectsPerPage = 5
     protected _isNeedCache = true
@@ -55,13 +55,15 @@ export default abstract class ScrollerButton<O, M extends Omit<BaseScrollerData,
         if (cachedObjects) return cachedObjects.objects
 
         const rawObjects = await this._getRawObjects(options)
-        await ScrollerCacheService.create(
-            new ScrollerCache({
-                chatId,
-                msgId,
-                objects: rawObjects
-            })
-        )
+        if (this._isNeedCache) {
+            await ScrollerCacheService.create(
+                new ScrollerCache({
+                    chatId,
+                    msgId,
+                    objects: rawObjects
+                })
+            )
+        }
         return rawObjects
     }
 
@@ -167,6 +169,14 @@ export default abstract class ScrollerButton<O, M extends Omit<BaseScrollerData,
             result.unshift(
                 this.button(await createArrowOptions(-1))
             )
+
+            if (page > ScrollerButton._minPage) {
+                result.unshift(this.button(await createArrowOptions(-page)))
+            }
+
+            if (page + 1 < maxPage) {
+                result.push(this.button(await createArrowOptions(maxPage - page - 1)))
+            }
         }
 
         return result

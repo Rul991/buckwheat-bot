@@ -6,12 +6,12 @@ export default class KeyboardCreator {
     static create<T, C extends BotContext = BotContext>(callback: KeyboardCallback<T, C>): KeyboardBuilder<T, C> {
         return async (ctx, data) => {
             const keyboard = new InlineKeyboard()
-            await callback({
+            const keyboardAfterCallback = await callback({
                 ctx,
                 data: data as T,
                 keyboard
             })
-            return keyboard
+            return keyboardAfterCallback ?? keyboard
         }
     }
 }

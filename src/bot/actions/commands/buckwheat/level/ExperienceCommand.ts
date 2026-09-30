@@ -18,7 +18,7 @@ export default class ExperienceCommand extends BuckwheatCommand {
             other
         } = options
 
-        const level = ctx.vars.level
+        const level = await ctx.vars.level.get()
         const experience = level?.currentExperience ?? ExperienceUtils.min
         const remainingExperience = ExperienceUtils.clamp(ExperienceUtils.getRemainingExperienceToLevelUp(experience))
 

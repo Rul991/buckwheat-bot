@@ -17,7 +17,7 @@ class ShortCommandScrollerButton extends ScrollerButton<ShortCommand, ShortComma
     override settingId: number = 84
     override name: string = 'scscr'
     protected override _objectsPerPage: number = 1
-    
+
     protected override async _getRawObjects(options: CallbackQueryActionOptions<ShortCommandScrollerButtonData>): Promise<ShortCommand[]> {
         const {
             id
@@ -28,13 +28,25 @@ class ShortCommandScrollerButton extends ScrollerButton<ShortCommand, ShortComma
 
     protected override async _getKeyboard(options: ScrollerButtonEditMessageOptions<ShortCommand, ShortCommandScrollerButtonData>): Promise<InlineKeyboard> {
         const keyboard = new InlineKeyboard()
-        
+
         const {
             slicedObjects: [shortCommand],
             ctx,
             id
         } = options
-        if(!shortCommand) return keyboard
+        if (!shortCommand) return keyboard
+
+        keyboard
+            .copyText(
+                ctx.t('shorten/copy/text'),
+                ctx.t(
+                    'shorten/copy/value',
+                    {
+                        shortCommand
+                    }
+                )
+            )
+            .style('primary')
 
         keyboard.add(ShortCommandDeleteButton.button({
             ctx,
@@ -45,7 +57,7 @@ class ShortCommandScrollerButton extends ScrollerButton<ShortCommand, ShortComma
             style: 'danger'
         }))
 
-        return keyboard
+        return keyboard.toFlowed(1)
     }
 
     protected override async _editMessage(options: ScrollerButtonEditMessageOptions<ShortCommand, ShortCommandScrollerButtonData>): Promise<ScrollerButtonEditMessageResult> {
@@ -53,7 +65,7 @@ class ShortCommandScrollerButton extends ScrollerButton<ShortCommand, ShortComma
             slicedObjects: [shortCommand]
         } = options
 
-        if(!shortCommand) return {
+        if (!shortCommand) return {
             key: 'shorten/not-exist'
         }
 

@@ -1,6 +1,5 @@
 import type { BalanceType } from "../../../types/db"
 import Balance from "../../entities/money/Balance"
-import CoOwner from "../../entities/money/CoOwners"
 import BaseService from "../base/BaseService"
 
 type AddOptions = {
@@ -37,17 +36,67 @@ class BalanceService extends BaseService<typeof Balance> {
         } = options
         if (money == 0) return undefined
 
-        const balance = await this.create(Balance.default(chatId, id, type))
+        await this.create(Balance.default(chatId, id, type))
         return await this._repo.updateOne(
             {
                 chatId,
                 id,
                 type,
             },
-            Balance.add(
-                balance,
-                new CoOwner(owner, money)
-            )
+            [
+                {
+                    $set: {
+                        total: { $add: ['$total', money] },
+                        owners: {
+                            $let: {
+                                vars: {
+                                    existing: { $ifNull: ['$owners', []] }
+                                },
+                                in: {
+                                    $cond: [
+                                        {
+                                            $in: [
+                                                owner,
+                                                {
+                                                    $map: {
+                                                        input: '$$existing',
+                                                        as: 'o',
+                                                        in: '$$o.id'
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            $map: {
+                                                input: '$$existing',
+                                                as: 'o',
+                                                in: {
+                                                    $cond: [
+                                                        { $eq: ['$$o.id', owner] },
+                                                        {
+                                                            $mergeObjects: [
+                                                                '$$o',
+                                                                { stake: { $add: ['$$o.stake', money] } }
+                                                            ]
+                                                        },
+                                                        '$$o'
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            $concatArrays: [
+                                                '$$existing',
+                                                [{ id: owner, stake: money }]
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
         )
     }
 

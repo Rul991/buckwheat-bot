@@ -11,13 +11,23 @@ enum SettingValueTypes {
 
 message SettingsScrollerData {
     ScrollerData data = 1;
-    int64 id = 2; // setting owner's id
-    SettingValueTypes type = 3;
+    SettingValueTypes type = 2; // valueType
 }
 
 message SettingShowData {
-    SettingValueTypes type = 1;
+    SettingValueTypes type = 1; // valueType
     uint32 settingId = 2; // setting's id
-    int64 id = 3; // setting owner's id
-    uint64 userId = 4; // user's id
+    uint64 userId = 3; // user's id
+    uint32 page = 4; // back page index
+}
+
+message SettingBackButtonData {
+    uint64 id = 1; // user's id
+}
+
+message SettingSetButtonData {
+    uint64 id = 1; // user's id
+    uint32 settingId = 2; // setting's id
+    SettingValueTypes type = 3; // setting's valueType
+    uint32 value = 4; // new setting's value index
 }

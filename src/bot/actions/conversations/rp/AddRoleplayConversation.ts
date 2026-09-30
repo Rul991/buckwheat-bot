@@ -49,7 +49,8 @@ class AddRoleplayConversation extends ConversationAction {
                 vars: {
                     isNew: roleplay.new,
                     command: name
-                }
+                },
+                lazyKeys: ['user']
             }
         )
     }

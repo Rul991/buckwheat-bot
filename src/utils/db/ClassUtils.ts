@@ -52,4 +52,8 @@ export default class ClassUtils {
         if(!type) return false
         return ClassUtils.playerClassNames.some(v => v == type)
     }
+
+    static canCraft(type: ClassTypes): boolean {
+        return type == 'engineer' || type == 'boss'
+    }
 }

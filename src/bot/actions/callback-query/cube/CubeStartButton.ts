@@ -142,7 +142,7 @@ class CubeStartButton extends CallbackQueryAction<CubeStartButtonData> {
     }: CheckBalanceOptions): Promise<boolean> {
         const chatId = ctx.vars.chatId!
         const balance = ctx.vars.id == id ?
-            ctx.vars.balance :
+            await ctx.vars.balance.get() :
             await BalanceService.getUserBalance(chatId, id)
 
         const money = balance?.total ?? 0
@@ -178,7 +178,7 @@ class CubeStartButton extends CallbackQueryAction<CubeStartButtonData> {
         needId
     }: GetUserOptions): Promise<User | undefined> {
         const chatId = ctx.vars.chatId!
-        return id == needId ? ctx.vars.user : await UserService.get(chatId, needId)
+        return id == needId ? await ctx.vars.user.get() : await UserService.get(chatId, needId)
     }
 
     protected async _replyDice(ctx: BotContext): Promise<number> {
@@ -338,7 +338,7 @@ class CubeStartButton extends CallbackQueryAction<CubeStartButtonData> {
         const firstUserId = Number(rawFirst)
         const secondUserId = Number(rawSecond)
 
-        const clickedUser = ctx.vars.user
+        const clickedUser = await ctx.vars.user.get()
         const firstUser = await this._getUser({ ctx, id, needId: firstUserId })
         const secondUser = await this._getUser({ ctx, id, needId: secondUserId })
 

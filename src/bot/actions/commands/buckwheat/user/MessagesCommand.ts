@@ -23,7 +23,7 @@ export default class MessagesCommand extends BuckwheatCommand {
 
         const messages = await MessagesService.getAllByUser(chatId, replyOrUserFrom.id)
         const user = id == replyOrUserFrom.id ?
-            ctx.vars.user : 
+            await ctx.vars.user.get() : 
             await UserService.get(chatId, replyOrUserFrom.id)
 
         return {

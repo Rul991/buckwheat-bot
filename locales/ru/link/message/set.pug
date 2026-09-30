@@ -1,0 +1,6 @@
+include /utils/emojies.pug
+
+if isSet
+    | #{EMOJIES.APPROVE} Вы привязались к чату #{chat.title}!
+else
+    | #{EMOJIES.DECLINE} Вы уже привязаны к чату #{chat.title}!

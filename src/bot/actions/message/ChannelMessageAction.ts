@@ -10,6 +10,7 @@ export default class ChannelMessageAction extends MessageAction {
         
         const replyFrom = ctx.msg.reply_to_message?.from
         const replyId = replyFrom?.id
-        if(replyId == CHANNEL_ID) return false
+        
+        return replyId != CHANNEL_ID
     }
 }

@@ -10,6 +10,7 @@ import WorkService from "../../db/services/work/WorkService"
 import AdminUtils from "../../utils/bot/AdminUtils"
 import MessageUtils from "../../utils/bot/MessageUtils"
 import ClassUtils from "../../utils/db/ClassUtils"
+import GrindUtils from "../../utils/grind/GrindUtils"
 import Item from "../../utils/items/Item"
 import Logger from "../../utils/logs/Logger"
 import RandomUtils from "../../utils/math/RandomUtils"
@@ -36,9 +37,10 @@ export const cookieItem = new Item({
             id,
             count
         }) => {
-            const user = ctx.vars.user
+            const user = await ctx.vars.user.get()
+            const isSendMessage = await GrindUtils.isSendMessage(ctx, id)
             await Promise.allSettled([
-                MessageUtils.reply(
+                isSendMessage && MessageUtils.reply(
                     ctx,
                     'cookie/eat',
                     {
@@ -144,14 +146,14 @@ export const greedBoxItem = new Item({
                 id
             )
 
-            const user = ctx.vars.user
+            const user = await ctx.vars.user.get()
             const used = box.used
             const chance = GREED_BOX_LEAVE_CHANCE * used
             const money = Math.min(GREED_BOX_PRIZE ** used, MAX_GREED_BOX_PRIZE)
 
             if (RandomUtils.chance(chance)) {
                 const leaveVars = await Promise.all([
-                    GreedBoxService.wipe(chatId, id),
+                    GreedBoxService.zero(chatId, id),
                     InventoryItemService.remove({
                         chatId,
                         id,
@@ -173,22 +175,22 @@ export const greedBoxItem = new Item({
             }
 
             await Promise.all([
-                    BalanceService.add({
-                        chatId,
-                        id,
-                        money,
-                    }),
-                    MessageUtils.reply(
-                        ctx,
-                        'greed-box/use',
-                        {
-                            vars: {
-                                user,
-                                money
-                            }
+                BalanceService.add({
+                    chatId,
+                    id,
+                    money,
+                }),
+                MessageUtils.reply(
+                    ctx,
+                    'greed-box/use',
+                    {
+                        vars: {
+                            user,
+                            money
                         }
-                    )
-                ])
+                    }
+                )
+            ])
         }
     }
 })
@@ -268,7 +270,7 @@ export const oneTimeGunItem = new Item({
 export const pistolAmmoItem = new Item({
     id: 18,
     key: 'ammo/pistol',
-    isConsumable: false,
+    isConsumable: true,
     basePrice: 10,
     emoji: 'ammo',
 })
@@ -313,7 +315,7 @@ export const rockVoidItem = new Item({
                     'rock-void/use',
                     {
                         vars: {
-                            user: ctx.vars.user,
+                            user: await ctx.vars.user.get(),
                             item: item.getVars(ctx),
                             damage,
                             count
@@ -490,7 +492,7 @@ export const unmuteItem = new Item({
                 {
                     vars: {
                         title: item.getTitle(ctx),
-                        user: ctx.vars.user,
+                        user: await ctx.vars.user.get(),
                         count,
                         isUnmuted
                     }
@@ -523,7 +525,7 @@ export const banItem = new Item({
                 {
                     vars: {
                         title: item.getTitle(ctx),
-                        user: ctx.vars.user,
+                        user: await ctx.vars.user.get(),
                         count,
                         isBanned
                     }
@@ -551,7 +553,7 @@ export const thanksItem = new Item({
                 'thanks/item',
                 {
                     vars: {
-                        user: ctx.vars.user,
+                        user: await ctx.vars.user.get(),
                         count
                     }
                 }
@@ -583,7 +585,7 @@ export const resetClassItem = new Item({
                 'reset/class',
                 {
                     vars: {
-                        user: ctx.vars.user
+                        user: await ctx.vars.user.get()
                     }
                 }
             )
@@ -610,11 +612,45 @@ export const resetSaveCooldownItem = new Item({
                 'reset/save',
                 {
                     vars: {
-                        user: ctx.vars.user
+                        user: await ctx.vars.user.get()
                     }
                 }
             )
         }
+    }
+})
+
+export const orbitalGunItem = new Item({
+    id: 39,
+    key: 'gun/orbital',
+    isConsumable: true,
+    basePrice: 1_500_000,
+    emoji: 'gun',
+    gun: {
+        damage: [1_000_000_000_000, 1_000_000_000_000]
+    }
+})
+
+export const glockGunItem = new Item({
+    id: 40,
+    key: 'gun/glock',
+    isConsumable: true,
+    basePrice: 873,
+    emoji: 'gun',
+    gun: {
+        damage: [-873, 873]
+    },
+    rarity: 13
+})
+
+export const soapGunItem = new Item({
+    id: 41,
+    key: 'gun/soap',
+    isConsumable: false,
+    basePrice: Infinity,
+    emoji: 'soap',
+    gun: {
+        damage: [Infinity, Infinity]
     }
 })
 
@@ -657,5 +693,8 @@ export const inventoryItems: Item<any>[] = [
     banItem,
     thanksItem,
     resetClassItem,
-    resetSaveCooldownItem
+    resetSaveCooldownItem,
+    orbitalGunItem,
+    glockGunItem,
+    soapGunItem
 ]

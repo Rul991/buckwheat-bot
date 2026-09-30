@@ -210,7 +210,7 @@ class DuelistService extends BaseService<typeof Duelist> {
             }
         }
 
-        const isUsed = await InventoryItemService.use({
+        const itemUseResult = await InventoryItemService.use({
             chatId,
             id: owner,
             item: item.gun.ammo,
@@ -218,7 +218,7 @@ class DuelistService extends BaseService<typeof Duelist> {
             isUseCallback: false
         })
 
-        if (!isUsed) {
+        if (!itemUseResult.ok) {
             return {
                 ok: false,
                 reason: 'no-ammo'

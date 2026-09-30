@@ -5,7 +5,7 @@ import type { CallbackQueryActionOptions } from "../../../types/action-options"
 import type { InlineKeyboardButton } from "grammy/types"
 import { InlineKeyboard } from "grammy"
 import type { CallbackQueryActionGetOptions } from "../../../types/options"
-import KeyboardConverter from "../../../utils/keyboard/KeyboardConverter"
+import PayloadConverter from "../../../utils/payload/PayloadConverter"
 import RankedAction from "./RankedAction"
 import Logger from "../../../utils/logs/Logger"
 import { SettingValueTypes } from "../../../protos/settings_pb"
@@ -15,7 +15,7 @@ import type { CommandStrings } from "../../../types/command"
 import AlertUtils from "../../../utils/bot/AlertUtils"
 import RankUtils from "../../../utils/db/RankUtils"
 
-export default abstract class CallbackQueryAction<T> extends RankedAction {
+export default abstract class CallbackQueryAction<T extends Record<string, any>> extends RankedAction {
     protected override _lowRankKey: string = 'button/low-rank'
     abstract schema: GenMessage<T & Message<any>>
     abstract defaultTextKey: string
@@ -27,13 +27,19 @@ export default abstract class CallbackQueryAction<T> extends RankedAction {
         const result = super.rankSettings
         const firstSetting = result[0]!
         firstSetting.textKey = `action/button/${this.name}`
+        firstSetting.descriptionKey = 'action/button'
 
         return result
     }
 
-    override async sendLowRankMessage(ctx: BotContext, []: CommandStrings, needRank: number): Promise<void> {
+    protected override async _getRankSetting(ctx: BotContext<T>): Promise<Setting<"enum", SettingValueTypes> | undefined> {
+        return super._getRankSetting(ctx)
+    }
+
+    override async sendLowRankMessage(ctx: BotContext<T>, []: CommandStrings, needRank: number): Promise<void> {
         const chatId = ctx.vars.chatId!
-        const userRank = ctx.vars.user?.rank ?? RankUtils.min
+        const user = await ctx.vars.user.get()
+        const userRank = user?.rank ?? RankUtils.min
         const titleKey = this.rankSettings[0]?.titleKey
 
         await AlertUtils.alert(
@@ -59,11 +65,12 @@ export default abstract class CallbackQueryAction<T> extends RankedAction {
         } = options
 
         const getIdResult = await this._getId(options)
-        const needIds = typeof getIdResult == 'number' 
+        const needIds = typeof getIdResult == 'number'
             ? [getIdResult]
             : typeof getIdResult == 'undefined'
                 ? []
                 : getIdResult
+
         const hasNeedId = needIds.length && needIds.every(v => v != id)
         Logger.system('CallbackQueryAction._getId', { needIds, id, hasNeedId })
 
@@ -89,7 +96,7 @@ export default abstract class CallbackQueryAction<T> extends RankedAction {
                 text: ctx.t(key, { ...data, ...vars }),
                 style
             },
-            KeyboardConverter.encode({
+            PayloadConverter.encode({
                 name: this.name,
                 schema: this.schema,
                 data

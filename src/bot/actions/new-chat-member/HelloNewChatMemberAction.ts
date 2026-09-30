@@ -44,7 +44,7 @@ export default class HelloNewChatMemberAction extends NewChatMemberAction {
         chat
     }: HelloOldOptions): Promise<void> {
         const balance = id == from.id ?
-            ctx.vars.balance :
+            await ctx.vars.balance.get() :
             (await BalanceService.getUserBalance(chatId, from.id))
         const money = balance?.total ?? 0
 
@@ -116,13 +116,14 @@ export default class HelloNewChatMemberAction extends NewChatMemberAction {
         } = options
 
         const chat = ctx.chat
-        const hello = ctx.vars.chat?.hello
+        const varsChat = await ctx.vars.chat.get()
+        const hello = varsChat?.hello
         const hasButton = await this._hasHelloButton(chatId)
 
         for (const from of users) {
             const user = (
                 id == from.id ?
-                    ctx.vars.user :
+                    await ctx.vars.user.get() :
                     await UserService.get(chatId, from.id)
             ) ?? await UserService.defaultCreate(
                 chatId,

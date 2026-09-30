@@ -1,7 +1,14 @@
 - const newPage = Math.min(Math.max(1, page.current + page.increase + 1, page.max))
-- const isBack = page.increase < 0
+- const isBack = page.increase <= 0
+- const isBig = Math.abs(page.increase) > 1
 
-if isBack
-    | <<
+if isBig
+    if isBack
+        | <<
+    else
+        | >>
 else
-    | >>
+    if isBack
+        | <
+    else
+        | >

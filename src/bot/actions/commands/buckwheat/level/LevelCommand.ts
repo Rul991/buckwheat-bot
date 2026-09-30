@@ -26,11 +26,11 @@ export default class LevelCommand extends BuckwheatCommand {
         const isSelf = replyOrUserFrom.id == id
         const replyId = replyOrUserFrom.id
 
-        const level = isSelf ? ctx.vars.level : await LevelService.get(chatId, replyId)
+        const level = isSelf ? await ctx.vars.level.get() : await LevelService.get(chatId, replyId)
         const currentLevel = LevelUtils.get(level?.currentExperience ?? ExperienceUtils.min)
 
         const reply = isSelf ?
-            ctx.vars.user :
+            await ctx.vars.user.get() :
             await UserService.get(chatId, replyId)
 
         return {

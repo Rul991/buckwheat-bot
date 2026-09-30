@@ -18,6 +18,7 @@ import WorkService from "../work/WorkService"
 
 type Service<T extends Record<string, any>> = {
     migrate(filter: T, value: T): Promise<any>
+    wipe(filter: T): Promise<any>
 }
 
 type ChatIdService = Service<{ chatId?: number }>
@@ -43,6 +44,11 @@ export default class TotalService {
         ChatService,
         RoleplayService,
         IdeaService
+    ]
+
+    static wipeServices: ChatIdService[] = [
+        BalanceService,
+
     ]
 
     static async migrate(oldChatId: number, newChatId: number) {
@@ -91,5 +97,9 @@ export default class TotalService {
             ),
             
         ])
+    }
+
+    static async wipe(chatId: number) {
+        
     }
 }

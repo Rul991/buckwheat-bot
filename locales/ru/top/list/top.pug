@@ -24,7 +24,7 @@ mixin line(user, value)
     |  - 
     i #{showableValue} 
     if index <= withProcentsPlace && hasTotalCount
-        | (#{Math.floor(100 * 100 * +value / totalCount) / 100}%)
+        | (#{formatNumber(Math.floor(100 * 100 * +value / totalCount) / 100)}%)
     |
     |
 

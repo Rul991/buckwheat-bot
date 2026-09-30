@@ -10,26 +10,37 @@ import type Roleplay from "../db/entities/rp/Roleplay"
 import type Duelist from "../db/entities/duel/Duelist"
 import type ShortCommand from "../db/entities/short/ShortCommand"
 import type { CommandStrings } from "./command"
+import type { LazyCacheRecord } from "./types"
 
-export type BotContext =
+export type BotContext<T = Record<string, any>> =
     & Context
     & GrullyI18nFlavor
     & ConversationFlavor<Context>
     & {
-        vars: {
+        vars:
+        & {
             chatId?: number
-            id?: number
-            user?: User
-            isOwner: boolean
-            chatMember?: ChatMember
-            balance?: Balance
-            level?: Level
-            chat?: Chat
-            roleplay?: Roleplay
-            duelist?: Duelist
-            shortCommand?: ShortCommand
-            commandStrings?: CommandStrings
+            id: number
+            commandStrings: CommandStrings | undefined
+            roleplay: Roleplay | undefined
+            shortCommand: ShortCommand | undefined
         }
+        & LazyCacheRecord<{
+            isOwner: boolean
+            chatMember: ChatMember | undefined
+            user: User | undefined
+            balance: Balance | undefined
+            level: Level | undefined
+            chat: Chat | undefined
+            duelist: Duelist | undefined
+        }>
+    }
+    & {
+        actionData: T
     }
 
-export type MyBot = Bot<BotContext>
+export type MyBot =
+    & Bot<BotContext>
+    & {
+        i18n: Omit<GrullyI18nFlavor["i18n"], "languageCode">
+    }

@@ -1,8 +1,13 @@
 import { plugin, prop } from "@typegoose/typegoose"
 import IdEntity from "../base/IdEntity"
-import { autoIncrementPlugin } from "../../plugins/auto-increment"
+import { AutoIncrementID } from '@typegoose/auto-increment'
 
-@plugin(autoIncrementPlugin)
+@plugin(
+    AutoIncrementID, 
+    {
+        field: 'id',
+    }
+)
 export default class Note extends IdEntity {
     @prop({ unique: true })
     declare id: number
@@ -13,13 +18,17 @@ export default class Note extends IdEntity {
     @prop()
     text: string
 
+    @prop()
+    folder: string  
+
     constructor({
         owner,
         text,
-        id
-    }: Omit<Note, '_id' | 'id'> & { id?: number }) {
-        super(id)
+        folder
+    }: Omit<Note, '_id' | 'id'>) {
+        super()
         this.owner = owner
         this.text = text
+        this.folder = folder
     }
 }

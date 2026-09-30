@@ -24,12 +24,13 @@ blockquote
 +withTitle(`${rank.emoji} Ранг`)
     | #{rank.name} / #{rank.status} (#{rank.value})
 
-if user.linked || user.left
+if linkedChat || user.left
     |
     |
 
-+status(user.linked)
-    | #{EMOJIES.LINKED} Привязан к данному чату
++status(linkedChat)
+    | #{EMOJIES.LINKED} Привязан к чату 
+    u #{linkedChat ? linkedChat.title : '???'}
 +status(user.left)
     | #{EMOJIES.LEFT} Вышел из чата  
 |

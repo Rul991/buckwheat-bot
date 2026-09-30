@@ -25,7 +25,7 @@ class GreedBoxService extends BaseService<typeof GreedBox> {
         ))!
     }
 
-    async wipe(chatId: number, id: number): Promise<GreedBox | undefined> {
+    async zero(chatId: number, id: number): Promise<GreedBox | undefined> {
         return await this._repo.updateOne(
             {
                 chatId,

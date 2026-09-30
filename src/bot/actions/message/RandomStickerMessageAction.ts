@@ -14,7 +14,8 @@ export default class RandomStickerMessageAction extends MessageAction {
         } = options
         if(!chatId) return
 
-        const stickerPackName = ctx.vars.chat?.stickerPack
+        const chat = await ctx.vars.chat.get()
+        const stickerPackName = chat?.stickerPack
         if(!stickerPackName) return
 
         const chanceSettingValue = await SettingValueService.get({

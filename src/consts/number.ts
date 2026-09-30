@@ -18,3 +18,6 @@ export const DEAD_HEALTH = 0
 export const MIN_SHIELD = 0
 export const MAX_BUSINESS_STAKES = 10_000
 export const MAX_CUBE_BET = 4_000_000_000
+
+export const MIN_STARS = 1
+export const MAX_STARS = 100_000

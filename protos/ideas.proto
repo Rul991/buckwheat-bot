@@ -7,5 +7,4 @@ message IdeaVoteButtonData {
 
 message IdeaDeleteButtonData {
     uint32 id = 1; // idea's id
-    optional uint32 page = 2;
 }

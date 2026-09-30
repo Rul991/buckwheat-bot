@@ -1,5 +1,5 @@
 import type { GrullyI18nVars } from "@grully/i18n"
-import type { ReplyMediaOptions, ReplyOptions } from "./options"
+import type { AnswerPreCheckoutQueryOptions, ReplyMediaOptions, ReplyOptions } from "./options"
 import type AvaHistory from "../db/entities/user/AvaHistory"
 
 export type CallbackQueryExecuteResult =
@@ -40,16 +40,6 @@ export type PhotoActionExecuteResult =
     }
     | void
 
-export type PreCheckoutResult =
-    | {
-        ok?: true
-        key: string
-        options?: ReplyOptions
-    }
-    | {
-        ok: false
-    }
+export type PreCheckoutResult = AnswerPreCheckoutQueryOptions
 
-export type ShippingQueryResult = {
-
-}
+export type SuccessfulPaymentResult = BuckwheatCommandExecuteResult

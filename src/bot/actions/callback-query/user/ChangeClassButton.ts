@@ -24,7 +24,9 @@ class ChangeClassButton extends CallbackQueryAction<ClassData> {
             chatId,
             id
         } = options
-        const level = ExperienceUtils.getLevelFromObject(ctx.vars.level)
+
+        const level = await ctx.vars.level.get()
+        const levelNumber = ExperienceUtils.getLevelFromObject(level)
 
         const {
             type
@@ -41,7 +43,7 @@ class ChangeClassButton extends CallbackQueryAction<ClassData> {
                 chatId,
                 id,
                 className,
-                level
+                level: levelNumber
             }),
             MessageUtils.reply(
                 ctx,
@@ -49,7 +51,7 @@ class ChangeClassButton extends CallbackQueryAction<ClassData> {
                 {
                     vars: {
                         type,
-                        user: ctx.vars.user
+                        user: await ctx.vars.user.require()
                     }
                 }
             ),

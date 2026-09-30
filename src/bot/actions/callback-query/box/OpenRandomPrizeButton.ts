@@ -46,9 +46,10 @@ class OpenRandomPrizeButton extends CallbackQueryAction<EmptyButtonData> {
         const botBalance = await BalanceService.getUserBalance(chatId, botId)
         const botMoney = botBalance?.total ?? 0
 
-        const user = ctx.vars.user
+        const user = await ctx.vars.user.get()
         const gift = this._getMoney(botMoney)
 
+        await MessageUtils.deleteMessages(ctx)
         await Promise.all([
             BalanceService.add({
                 chatId,
@@ -71,7 +72,6 @@ class OpenRandomPrizeButton extends CallbackQueryAction<EmptyButtonData> {
                 }
             )
         ])
-        await MessageUtils.deleteMessages(ctx)
     }
 }
 

@@ -1,0 +1,11 @@
+syntax = "proto3";
+import "scroller.proto";
+
+message FaqScrollerButtonData {
+    ScrollerData data = 1;
+}
+
+message FaqButtonData {
+    uint32 index = 2; // faq's index
+    uint32 page = 3; // back page index
+}

@@ -12,37 +12,40 @@ export default class EchoCommand extends BuckwheatCommand {
     override name: string = 'эхо'
     override filename: string = 'echo'
     override needData: boolean = true
-    
+
     override async execute(options: BuckwheatCommandOptions): Promise<BuckwheatCommandExecuteResult> {
         const {
             ctx,
             chatId,
             other
         } = options
+
+        const user = await ctx.vars.user.get()
         const isPrivate = ctx.chat.type == 'private'
 
-        if(!other) {
+        if (!other) {
             return {
                 key: 'echo/no-text',
                 options: {
                     vars: {
-                        user: ctx.vars.user
+                        user
                     },
                     chatId
                 }
             }
         }
 
-        if(!isPrivate) {
+        if (!isPrivate) {
             await MessageUtils.deleteMessages(ctx)
         }
 
+        const text = MessageEntityUtils.messageToHtml(ctx.msg)
         return {
             key: 'echo/done',
             options: {
                 chatId,
                 vars: {
-                    text: MessageEntityUtils.messageToHtml(ctx.msg)
+                    text
                 }
             }
         }

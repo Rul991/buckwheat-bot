@@ -25,11 +25,12 @@ export default class SaveCommand extends BuckwheatCommand {
             other
         } = options
 
-        const user = ctx.vars.user
+        const user = await ctx.vars.user.get()
         const className = user?.className ?? ClassUtils.defaultClassName
-        const duelist = ctx.vars.duelist
+        const duelist = await ctx.vars.duelist.get()
+        const level = await ctx.vars.level.get()
 
-        const level = ExperienceUtils.getLevelFromObject(ctx.vars.level)
+        const levelNumber = ExperienceUtils.getLevelFromObject(level)
         const isPlayer = ClassUtils.isPlayer(className)
 
         const mustKicked = other == ctx.t('save/kick-command')
@@ -78,7 +79,7 @@ export default class SaveCommand extends BuckwheatCommand {
             chatId,
             id,
             className,
-            level
+            level: levelNumber
         })
 
         return {

@@ -31,7 +31,7 @@ export default class RoleplayConditionalCommand extends ConditionalCommand {
             chatId
         } = options
 
-        const user = ctx.vars.user!
+        const user = await ctx.vars.user.get()
         const roleplay = ctx.vars.roleplay!
 
         const replyId = (ctx.msg.reply_to_message?.from ?? ctx.from).id

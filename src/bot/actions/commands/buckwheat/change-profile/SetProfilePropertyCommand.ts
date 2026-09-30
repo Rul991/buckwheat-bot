@@ -56,7 +56,7 @@ export default abstract class SetProfilePropertyCommand extends BuckwheatCommand
         }
 
         const text = this._getText(options)
-        const user = ctx.vars.user
+        const user = await ctx.vars.user.get()
         const needRank = RankUtils.admin
 
         if (replyFrom?.is_bot && !RankUtils.has(user?.rank ?? RankUtils.min, needRank)) {

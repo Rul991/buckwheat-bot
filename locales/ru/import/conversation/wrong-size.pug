@@ -1,0 +1,15 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.DECLINE} Игрок 
++link(vars.user)
+| , файл имеет слишком 
+if size.current < size.min
+    | маленький
+else
+    | большой
+|  размер!
+| #{EMOJIES.NEUTRAL_WARN} Размер может быть от 
+code 2Б
+|  до 
+code 20МБ
+| !

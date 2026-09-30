@@ -4,6 +4,7 @@ include /utils/mixins.pug
     | Чат 
     u #{chat.title}
     | :
++plain_code_param(`${EMOJIES.ID} ID`, chat.id)
 +plain_bold_param(`${EMOJIES.HELLO} Есть приветствие`, bool(chat.hello))
 +plain_bold_param(`${EMOJIES.RULE} Кол-во правил`, formatNumber(ruleCount))
 |

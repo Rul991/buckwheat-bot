@@ -31,7 +31,7 @@ class ChatService extends BaseService<typeof Chat> {
     }
 
     async togglePublic(chatId: number): Promise<Chat | undefined> {
-        return await this._repo.model.findOneAndUpdate(
+        return await this._repo.updateOne(
             {
                 id: chatId
             },
@@ -43,17 +43,44 @@ class ChatService extends BaseService<typeof Chat> {
                         }
                     }
                 }
-            ],
+            ]
+        )
+    }
+
+    async toggleCanSummon(chatId: number): Promise<Chat | undefined> {
+        return await this._repo.updateOne(
             {
-                lean: true,
-                returnDocument: 'after',
-                updatePipeline: true
-            }
-        ) ?? undefined
+                id: chatId
+            },
+            [
+                {
+                    $set: {
+                        canUseSummonNow: {
+                            $not: '$canUseSummonNow'
+                        }
+                    }
+                }
+            ]
+        )
     }
 
     async count(): Promise<number> {
         return await this._repo.count()
+    }
+
+    async getByIds(ids: number[]): Promise<Map<number, Chat>> {
+        const map = new Map<number, Chat>()
+        const chats = await this._repo.find({
+            id: {
+                $in: ids
+            }
+        })
+
+        for (const chat of chats) {
+            map.set(chat.id, chat)
+        }
+
+        return map
     }
 }
 

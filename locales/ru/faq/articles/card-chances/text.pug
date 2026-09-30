@@ -1,0 +1,26 @@
+include /utils/emojies.pug
+
+mixin chance(emoji, title, chance)
+    | #{emoji} 
+    code #{title}
+    |   -    ~
+    u #{chance}
+    | %
+    |
+
+mixin chances(arr)
+    - const maxTitleLength = Math.max(...arr.map(v => v[1].length))
+    each obj in arr
+        if obj.length >= 3
+            +chance(obj[0], obj[1].padEnd(maxTitleLength, ' '), obj[2])
+            |
+
+|
++chances([
+    [CARD_RARITY_EMOJIES[0], 'Базовый', 60],
+    [CARD_RARITY_EMOJIES[1], 'Необычный', 24],
+    [CARD_RARITY_EMOJIES[2], 'Редкий', 9.5],
+    [CARD_RARITY_EMOJIES[3], 'Эпический', 3.8],
+    [CARD_RARITY_EMOJIES[4], 'Легендарный', 1.5],
+    [CARD_RARITY_EMOJIES[5], 'Уникальный', 1],
+])

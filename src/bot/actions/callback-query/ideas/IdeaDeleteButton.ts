@@ -6,7 +6,6 @@ import CallbackQueryAction from "../../base/CallbackQueryAction"
 import RankUtils from "../../../../utils/db/RankUtils"
 import IdeaService from "../../../../db/services/ideas/IdeaService"
 import MessageUtils from "../../../../utils/bot/MessageUtils"
-import { startIdeaKeyboard } from "../../../keyboards/idea"
 
 class IdeaDeleteButton extends CallbackQueryAction<IdeaDeleteButtonData> {
     protected override _rankCanBeChange: boolean = false
@@ -21,7 +20,6 @@ class IdeaDeleteButton extends CallbackQueryAction<IdeaDeleteButtonData> {
             id,
             data: {
                 id: ideaId,
-                page
             },
             ctx,
         } = options
@@ -35,15 +33,6 @@ class IdeaDeleteButton extends CallbackQueryAction<IdeaDeleteButtonData> {
             const ideasCount = await IdeaService.count()
             if (ideasCount <= 0) {
                 await MessageUtils.deleteMessages(ctx)
-            }
-            else {
-                await MessageUtils.editText(
-                    ctx,
-                    'idea/start',
-                    {
-                        keyboard: await startIdeaKeyboard(ctx, { id, page })
-                    }
-                )
             }
         }
 

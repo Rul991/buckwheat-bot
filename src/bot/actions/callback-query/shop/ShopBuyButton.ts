@@ -55,8 +55,8 @@ class ShopBuyButton extends CallbackQueryAction<ShopBuyButtonData> {
         }
 
         const totalPrice = shopItem.basePrice * count
-        const balance = ctx.vars.balance ?? await BalanceService.getUserBalance(chatId, id)
-        const money = balance?.total ?? 0
+        const balance = await ctx.vars.balance.require()
+        const money = balance.total
 
         if (money < totalPrice) {
             return {

@@ -30,4 +30,10 @@ export default class BaseService<T extends RepoExtends> {
             value
         )
     }
+
+    async wipe(
+        filter: Partial<InstanceType<T>>
+    ) {
+        return await this._repo.model.deleteMany(filter)
+    }
 }

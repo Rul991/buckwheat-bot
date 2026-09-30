@@ -111,7 +111,7 @@ class InventoryItemService extends BaseService<typeof InventoryItem> {
         chatId: number,
         id: number
     ): Promise<InventoryItem[]> {
-        return await this._repo.model.find({
+        return await this._repo.find({
             chatId,
             id,
             count: {
@@ -196,7 +196,7 @@ class InventoryItemService extends BaseService<typeof InventoryItem> {
         }) : undefined
 
         if (item.isConsumable && count != 0) {
-            await this._repo.model.updateOne(
+            await this._repo.updateOne(
                 {
                     chatId,
                     id,

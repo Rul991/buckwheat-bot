@@ -5,6 +5,7 @@ import type { ExportImportDefinitionVars } from "../../types/types"
 type ExportOptions = {
     chatId: number
     id: number
+    ctx: BotContext
 }
 
 type ImportOptions<T> = 
@@ -13,11 +14,16 @@ type ImportOptions<T> =
         data: T
     }
 
+type ContructorOptions<T> = 
+    & Omit<ExportImportDefinition<T>, 'getVars' | 'forChat'>
+    & Partial<Pick<ExportImportDefinition<T>, 'forChat'>>
+
 export default class ExportImportDefinition<T> {
     id: number
     key: string
+    forChat: boolean
     schema: ZodType<T>
-    importCallback: (options: ImportOptions<T>) => Promise<void>
+    importCallback: (options: ImportOptions<T>) => Promise<boolean>
     exportCallback: (options: ExportOptions) => Promise<T>
 
     constructor({
@@ -25,13 +31,15 @@ export default class ExportImportDefinition<T> {
         key,
         schema,
         importCallback,
-        exportCallback
-    }: ExportImportDefinition<T>) {
+        exportCallback,
+        forChat = true
+    }: ContructorOptions<T>) {
         this.id = id
         this.key = key
         this.schema = schema
         this.importCallback = importCallback
         this.exportCallback = exportCallback
+        this.forChat = forChat
     }
 
     getVars(ctx: BotContext): ExportImportDefinitionVars {

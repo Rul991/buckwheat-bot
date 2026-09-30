@@ -24,7 +24,7 @@ export default class IdeaCommand extends BuckwheatCommand {
         } = options
         const message = ctx.msg
         const text = MessageEntityUtils.messageToHtml(message)
-
+        
         await IdeaService.create(new Idea({
             author: [chatId, id],
             text

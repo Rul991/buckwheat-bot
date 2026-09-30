@@ -1,9 +1,8 @@
 import type { MyBot } from "../../../types/bot"
 import AlertUtils from "../../../utils/bot/AlertUtils"
-import KeyboardConverter from "../../../utils/keyboard/KeyboardConverter"
+import PayloadConverter from "../../../utils/payload/PayloadConverter"
 import Logger from "../../../utils/logs/Logger"
 import type CallbackQueryAction from "../../actions/base/CallbackQueryAction"
-import { updateDatabaseOptions } from "../../middlewares/middlewares"
 import RankedHandler from "../base/RankedHandler"
 
 export default class CallbackQueryHandler extends RankedHandler<CallbackQueryAction<any>> {
@@ -16,7 +15,7 @@ export default class CallbackQueryHandler extends RankedHandler<CallbackQueryAct
             'callback_query:data',
             async (ctx, next) => {
                 const rawData = ctx.callbackQuery.data
-                const splittedRawData = KeyboardConverter.splitEncoded(rawData)
+                const splittedRawData = PayloadConverter.splitEncoded(rawData)
                 if(!splittedRawData) {
                     return await AlertUtils.alert(
                         ctx,
@@ -37,10 +36,11 @@ export default class CallbackQueryHandler extends RankedHandler<CallbackQueryAct
                 }
 
                 const schema = action.schema
-                const decodedData = KeyboardConverter.decode({
+                const decodedData = PayloadConverter.decode({
                     schema,
                     data
                 })
+                ctx.actionData = decodedData ?? {}
                 if(!decodedData) {
                     return await AlertUtils.alert(
                         ctx,
@@ -53,8 +53,8 @@ export default class CallbackQueryHandler extends RankedHandler<CallbackQueryAct
 
                 const id = ctx.vars.id
                 const chatId = ctx.vars.chatId
+                
                 if(!id || !chatId) return
-
                 if (!await this._checkRank({ ctx, action })) return
 
                 Logger.system(
@@ -65,7 +65,7 @@ export default class CallbackQueryHandler extends RankedHandler<CallbackQueryAct
                         data,
                     }
                 )
-                await updateDatabaseOptions(ctx)
+
                 const result = await action.execute({
                     ctx: ctx as any,
                     data: decodedData,

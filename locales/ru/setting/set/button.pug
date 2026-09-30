@@ -1,0 +1,14 @@
+include /utils/functions.pug
+
+if setting.type == 'number'
+    | #{EMOJIES.NUMBER} Введите число
+else if setting.type == 'date'
+    | #{EMOJIES.DATE} Введите время
+else if setting.type == 'string'
+    | #{EMOJIES.TEXT} Введите текст
+else if setting.type == 'boolean'
+    | #{bool(value)}
+else if setting.type == 'enum'
+    | #{formatValue(setting.properties.values[value])}
+else 
+    | #{formatValue(value)}

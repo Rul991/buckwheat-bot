@@ -34,7 +34,6 @@ import ChangeUsernameMessageAction from "../bot/actions/message/ChangeUsernameMe
 import EchoCommand from "../bot/actions/commands/buckwheat/say/EchoCommand"
 import RandomCommand from "../bot/actions/commands/buckwheat/random/RandomCommand"
 import ConversationHandler from "../bot/handlers/conversations/ConversationHandler"
-import SetSettingConversation from "../bot/actions/conversations/setting/SetSettingConversation"
 import SetNameCommand from "../bot/actions/commands/buckwheat/change-profile/SetNameCommand"
 import SetDescriptionCommand from "../bot/actions/commands/buckwheat/change-profile/SetDescriptionCommand"
 import ChooseCommand from "../bot/actions/commands/buckwheat/random/ChooseCommand"
@@ -55,7 +54,6 @@ import MoneyDropCommand from "../bot/actions/commands/buckwheat/random/MoneyDrop
 import PingCommand from "../bot/actions/commands/buckwheat/ping/PingCommand"
 import SummonCommand from "../bot/actions/commands/buckwheat/ping/SummonCommand"
 import NewMessageAction from "../bot/actions/message/NewMessageAction"
-import UpdateDatabaseConditionalCommand from "../bot/actions/commands/conditional/UpdateDatabaseConditionalCommand"
 import IdeaCommand from "../bot/actions/commands/buckwheat/ideas/IdeaCommand"
 import IdeaScrollerButton from "../bot/actions/callback-query/ideas/IdeaScrollerButton"
 import IdeaVoteButton from "../bot/actions/callback-query/ideas/IdeaVoteButton"
@@ -116,6 +114,38 @@ import StatsCommand from "../bot/actions/commands/buckwheat/info/StatsCommand"
 import GunSetButton from "../bot/actions/callback-query/gun/GunSetButton"
 import ShotCommand from "../bot/actions/commands/buckwheat/gun/ShotCommand"
 import ShopBuyButton from "../bot/actions/callback-query/shop/ShopBuyButton"
+import SayCommand from "../bot/actions/commands/buckwheat/say/SayCommand"
+import SettingBackButton from "../bot/actions/callback-query/settings/SettingBackButton"
+import TelegramCommandHandler from "../bot/handlers/message/TelegramCommandHandler"
+import StartTelegramCommand from "../bot/actions/commands/telegram/StartTelegramCommand"
+import CommandsTelegramCommand from "../bot/actions/commands/telegram/CommandsTelegramCommand"
+import SettingsTelegramCommand from "../bot/actions/commands/telegram/SettingsTelegramCommand"
+import PaySupportTelegramCommand from "../bot/actions/commands/telegram/PaySupportTelegramCommand"
+import MarriageCommand from "../bot/actions/commands/buckwheat/marriage/MarriageCommand"
+import HelpTelegramCommand from "../bot/actions/commands/telegram/HelpTelegramCommand"
+import MarryCommand from "../bot/actions/commands/buckwheat/marriage/MarryCommand"
+import MarryButton from "../bot/actions/callback-query/marriage/MarryButton"
+import DivorceCommand from "../bot/actions/commands/buckwheat/marriage/DivorceCommand"
+import ExportImportCommand from "../bot/actions/commands/export-import/ExportImportCommand"
+import ExportImportScrollerButton from "../bot/actions/callback-query/export-import/ExportImportScrollerButton"
+import ExportImportShowButton from "../bot/actions/callback-query/export-import/ExportImportShowButton"
+import ExportButton from "../bot/actions/callback-query/export-import/ExportButton"
+import ImportButton from "../bot/actions/callback-query/export-import/ImportButton"
+import ImportConversation from "../bot/actions/conversations/import/ImportConversation"
+import SettingSetButton from "../bot/actions/callback-query/settings/SettingSetButton"
+import SetNumberSettingConversation from "../bot/actions/conversations/setting/SetNumberSettingConversation"
+import SetStringSettingConversation from "../bot/actions/conversations/setting/SetStringSettingConversation"
+import SetDateSettingConversation from "../bot/actions/conversations/setting/SetDateSettingConversation"
+import AutoLinkNewChatMemberAction from "../bot/actions/new-chat-member/AutoLinkNewChatMemberAction"
+import LinkScrollerButton from "../bot/actions/callback-query/link/LinkScrollerButton"
+import LinkButton from "../bot/actions/callback-query/link/LinkButton"
+import PaymentHandler from "../bot/handlers/payment/PaymentHandler"
+import DonatePaymentAction from "../bot/actions/payment/DonatePaymentAction"
+import DonateCommand from "../bot/actions/commands/buckwheat/payment/DonateCommand"
+import FaqButton from "../bot/actions/callback-query/faq/FaqButton"
+import FaqScrollerButton from "../bot/actions/callback-query/faq/FaqScrollerButton"
+import FaqCommand from "../bot/actions/commands/buckwheat/info/FaqCommand"
+import UpdateCommand from "../bot/actions/commands/buckwheat/dev/UpdateCommand"
 
 export const runBot = async () => {
     const bot = new TelegramBot()
@@ -140,16 +170,20 @@ export const runBot = async () => {
         { key: 'simple/what', name: 'что', aliases: ['че', 'чё', 'чего'] },
         { key: 'simple/working', name: 'работай', aliases: [] },
         { key: 'simple/gundon', name: 'гандон', aliases: [] },
+        { key: 'simple/chaochao', name: 'хаохао', aliases: ['хао-хао'] },
     )
 
     bot.add(
         new ConversationHandler()
             .add(
-                SetSettingConversation,
                 AddRoleplayConversation,
                 EditTextRoleplayConversation,
                 AddRuleConversation,
-                ItemUseConversation
+                ItemUseConversation,
+                ImportConversation,
+                SetNumberSettingConversation,
+                SetStringSettingConversation,
+                SetDateSettingConversation
             ),
 
         new CallbackQueryHandler()
@@ -185,7 +219,18 @@ export const runBot = async () => {
                 ShopScrollerButton,
                 ShopShowButton,
                 GunSetButton,
-                ShopBuyButton
+                ShopBuyButton,
+                SettingBackButton,
+                MarryButton,
+                ExportImportScrollerButton,
+                ExportImportShowButton,
+                ExportButton,
+                ImportButton,
+                SettingSetButton,
+                LinkScrollerButton,
+                LinkButton,
+                FaqButton,
+                FaqScrollerButton,
             ),
 
         new MessageHandler()
@@ -202,15 +247,24 @@ export const runBot = async () => {
 
         new NewChatMemberHandler()
             .add(
-                new HelloNewChatMemberAction()
+                new HelloNewChatMemberAction(),
+                new AutoLinkNewChatMemberAction(),
             ),
 
         new ConditionalCommandHandler()
             .add(
                 new ShortCommandConditionalCommand(),
-                new UpdateDatabaseConditionalCommand(),
                 new CapsConditionalCommand(),
                 new RoleplayConditionalCommand(),
+            ),
+
+        new TelegramCommandHandler()
+            .add(
+                new StartTelegramCommand(),
+                new CommandsTelegramCommand(),
+                new SettingsTelegramCommand(),
+                new PaySupportTelegramCommand(),
+                new HelpTelegramCommand(),
             ),
 
         new BuckwheatCommandHandler()
@@ -268,6 +322,14 @@ export const runBot = async () => {
                 new ShopCommand(),
                 new StatsCommand(),
                 new ShotCommand(),
+                new SayCommand(),
+                new MarriageCommand(),
+                new MarryCommand(),
+                new DivorceCommand(),
+                new ExportImportCommand(),
+                new DonateCommand(),
+                new FaqCommand(),
+                new UpdateCommand(),
             ),
 
         new PhotoActionHandler()
@@ -279,6 +341,11 @@ export const runBot = async () => {
             .add(
                 new CubeDiceAction(),
                 new CasinoDiceAction()
+            ),
+
+        new PaymentHandler()
+            .add(
+                DonatePaymentAction,
             ),
 
         new BotUseHandler()

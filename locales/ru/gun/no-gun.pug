@@ -1,6 +1,6 @@
 include /utils/mixins.pug
 
-- const canHasAmmo = item.id != item.ammo.id
+- const canHasAmmo = item.ammo && item.id != item.ammo.id
 
 | #{EMOJIES.DECLINE} Игрок 
 +link(user)
@@ -12,4 +12,6 @@ if canHasAmmo
     | зарядил патроны, 
 | направил дуло пистолета на игрока 
 +link(reply)
-|  но понял, что держит пустоту в руках!
+| , но понял, что держит 
+i пустоту
+|  в руках!

@@ -29,5 +29,8 @@ export type SettingValueOptions<T extends SettingTypes, V extends SettingValueTy
     id: number,
     value?: SettingValue<T>['value']
 }
+export type SettingSetValueOptions<T extends SettingTypes, V extends SettingValueTypes> = Required<
+    SettingValueOptions<T, V>
+>
 
 export type DefaultSetting = Setting<SettingTypes, SettingValueTypes>

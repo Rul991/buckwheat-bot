@@ -2,8 +2,9 @@ import { getModelForClass, mongoose, type ReturnModelType } from "@typegoose/typ
 import type { AnyParamConstructor } from "@typegoose/typegoose/lib/types"
 import type { RepoExtends } from "../../../types/types"
 import type { ObjOrCallback } from "../../../types/callbacks"
+import type { QueryFilter } from "mongoose"
 
-type Filter<T extends AnyParamConstructor<any>> = Partial<InstanceType<T>>
+type Filter<T extends AnyParamConstructor<any>> = QueryFilter<InstanceType<T>>
 type Result<T extends AnyParamConstructor<any>> = InstanceType<T> & { _id: mongoose.ObjectId }
 
 export default class BaseRepository<T extends RepoExtends> {
@@ -19,7 +20,7 @@ export default class BaseRepository<T extends RepoExtends> {
             value,
             {
                 returnDocument: 'after',
-                upsert: true
+                updatePipeline: value instanceof Array
             }
         ).lean().exec()) as Result<T> | undefined
     }

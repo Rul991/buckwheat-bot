@@ -11,6 +11,7 @@ import BuckwheatCommand from "../../../base/BuckwheatCommand"
 import { SUMMON_DELAY } from "../../../../../consts/time"
 import type { MaybeString } from "../../../../../types/types"
 import MessageEntityUtils from "../../../../../utils/bot/MessageEntityUtils"
+import ChatService from "../../../../../db/services/chat/ChatService"
 
 type SummonOptions = {
     ctx: BotContext
@@ -32,7 +33,10 @@ export default class SummonCommand extends BuckwheatCommand {
         users,
         other
     }: SummonOptions): Promise<void> {
+        const chatId = ctx.vars.chatId!
         const maxLength = Math.ceil(users.length / this._usersPerMessage)
+
+        await ChatService.toggleCanSummon(chatId)
 
         for (let i = 0; i < maxLength; i++) {
             const start = i * this._usersPerMessage
@@ -53,6 +57,7 @@ export default class SummonCommand extends BuckwheatCommand {
             await setTimeout(SUMMON_DELAY)
         }
 
+        await ChatService.toggleCanSummon(chatId)
         await MessageUtils.reply(
             ctx,
             'summon/end'
@@ -64,6 +69,21 @@ export default class SummonCommand extends BuckwheatCommand {
             chatId,
             ctx,
         } = options
+
+        if(ctx.chat.type == 'private') {
+            return {
+                key: 'summon/private'
+            }
+        }
+
+        const chat = await ctx.vars.chat.get()
+        const canUseSummonNow = chat?.canUseSummonNow ?? true
+
+        if(!canUseSummonNow) {
+            return {
+                key: 'summon/already-use'
+            }
+        }
 
         const users = await UserService.getAllByChatId(chatId)
         const message = ctx.msg

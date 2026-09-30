@@ -16,7 +16,8 @@ class AddRuleConversation extends ConversationAction {
             conversation,
             needId,
             max: MAX_USER_TEXT_LENGTH,
-            key: 'rule/add'
+            key: 'rule/add',
+            lazyKeys: ['user']
         })
 
         await conversation.external(
@@ -33,7 +34,10 @@ class AddRuleConversation extends ConversationAction {
 
         await ConversationUtils.replyInConversation(
             conversation,
-            'rule/added'
+            'rule/added',
+            {
+                lazyKeys: ['user']
+            }
         )
     }
 }

@@ -1,0 +1,9 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.DECLINE} Игрок 
++link(vars.user)
+| , данный файл содержит неправильные данные!
+| #{EMOJIES.NEUTRAL_WARN} Возможно вы перепутали файлы!
+if error && error.length > 0
+    |
+    +json(error)

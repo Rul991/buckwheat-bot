@@ -5,14 +5,15 @@ import type { CallbackQueryExecuteResult } from "../../../../types/results"
 import { SettingShowDataSchema, type SettingShowData } from "../../../../protos/settings_pb"
 import RankUtils from "../../../../utils/db/RankUtils"
 import MessageUtils from "../../../../utils/bot/MessageUtils"
-import { settingShowKeyboard } from "../../../keyboards/settings"
 import SettingUtils from "../../../../utils/settings/SettingUtils"
+import SettingValueService from "../../../../db/services/settings/SettingValueService"
+import SettingPresenter from "../../../../utils/settings/SettingPresenter"
 
 type T = SettingShowData
 
 class SettingShowButton extends CallbackQueryAction<T> {
     override schema: GenMessage<T> = SettingShowDataSchema
-    override defaultTextKey: string = 'setting/show-button'
+    override defaultTextKey: string = 'setting/show/button'
     override minimumRank: number = RankUtils.min
     override settingId: number = 37
     override name: string = 'stshw'
@@ -31,35 +32,40 @@ class SettingShowButton extends CallbackQueryAction<T> {
         const {
             ctx,
             data,
+            chatId,
+            id: userId
         } = options
 
         const {
-            id: rawSettingOwnerId,
             settingId,
             type,
-            userId: rawUserId
+            page
         } = data
 
-        const settingOwnerId = Number(rawSettingOwnerId)
-        const userId = Number(rawUserId)
+        const isChat = SettingUtils.isChat(type)
+        const settingOwnerId = Number(isChat ? chatId : userId)
+
         const setting = SettingUtils.get(type, settingId)
+        const settingValue = await SettingValueService.get({
+            id: settingOwnerId,
+            setting
+        })
+
+        const {
+            key,
+            options: messageOptions
+        } = await SettingPresenter.show({
+            ctx,
+            setting,
+            settingValue,
+            page,
+            userId
+        })
 
         await MessageUtils.editText(
             ctx,
-            'setting/show-message',
-            {
-                vars: {
-
-                },
-                keyboard: await settingShowKeyboard(
-                    ctx,
-                    {
-                        setting,
-                        settingOwnerId,
-                        userId
-                    }
-                )
-            }
+            key,
+            messageOptions
         )
     }
 }

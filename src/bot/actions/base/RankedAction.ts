@@ -38,8 +38,12 @@ export default abstract class RankedAction extends BaseAction {
         ]
     }
 
+    protected async _getRankSetting(_ctx: BotContext): Promise<Setting<'enum', SettingValueTypes> | undefined> {
+        return this.rankSettings[0]
+    }
+
     protected async _getNeedRank(ctx: BotContext): Promise<number> {
-        const setting = this.rankSettings[0]
+        const setting = await this._getRankSetting(ctx)
         if (!setting) return this.minimumRank
 
         const id = ctx.vars.chatId!
@@ -56,9 +60,11 @@ export default abstract class RankedAction extends BaseAction {
     }
 
     async checkRank(ctx: BotContext): Promise<[boolean, number]> {
-        if (ctx.vars.isOwner) return [true, this.minimumRank]
+        const isOwner = await ctx.vars.isOwner.get()
+        if (isOwner) return [true, this.minimumRank]
 
-        const userRank = ctx.vars.user?.rank ?? RankUtils.min
+        const user = await ctx.vars.user.get()
+        const userRank = user?.rank ?? RankUtils.min
         const needRank = await this._getNeedRank(ctx)
 
         return [
@@ -73,7 +79,8 @@ export default abstract class RankedAction extends BaseAction {
     async sendLowRankMessage(ctx: BotContext, [botName, command]: CommandStrings, needRank: number): Promise<void> {
         const key = this._lowRankKey
         const chatId = ctx.vars.chatId!
-        const userRank = ctx.vars.user?.rank ?? RankUtils.min
+        const user = await ctx.vars.user.get()
+        const userRank = user?.rank ?? RankUtils.min
 
         await MessageUtils.reply(
             ctx,
@@ -86,7 +93,7 @@ export default abstract class RankedAction extends BaseAction {
                     },
                     botName,
                     command,
-                    user: ctx.vars.user
+                    user,
                 }
             }
         )

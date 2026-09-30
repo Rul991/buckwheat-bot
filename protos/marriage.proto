@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message MarryButtonData {
+    uint64 suggester = 1; // first partner id
+    uint64 target = 2; // second partner id
+    bool isAccept = 3; // is accept 
+}

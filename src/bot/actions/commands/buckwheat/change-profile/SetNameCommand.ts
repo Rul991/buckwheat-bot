@@ -20,8 +20,9 @@ export default class SetNameCommand extends SetProfilePropertyCommand {
             replyOrUserFrom
         } = options
 
-        if(replyOrUserFrom.id == ctx.vars.user?.id) {
-            return ctx.vars.user.name
+        const user = await ctx.vars.user.get()
+        if(replyOrUserFrom.id == user?.id) {
+            return user.name
         }
         else {
             return await UserNameService.get(chatId, replyOrUserFrom.id) ?? UNKNOWN_NAME
