@@ -1,4 +1,4 @@
-<p style="text-align: center;">
+<p align="center">
     <img src="images/logo.png" />
     <br />
     <b>Добро пожаловать в Чаты Энвелла, я ваш проводник - Баквит!</b>
