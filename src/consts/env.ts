@@ -1,5 +1,5 @@
 import { env } from "bun"
-import type { DevMode } from "../types/types"
+import type { DevMode } from "../types/unions"
 import { coerce, literal, object, string, url } from 'zod'
 
 const envSchema = object({

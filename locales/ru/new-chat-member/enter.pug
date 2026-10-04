@@ -1,0 +1,20 @@
+include /utils/mixins.pug
+
+mixin step(description, command)
+    | #{EMOJIES.MINUS} #{description} ( 
+    code баквит #{command}
+    |  )
+    |
+
+| #{EMOJIES.HELLO} Игрок 
++link(user)
+| , добро пожаловать в чат 
+u #{chat.title}
+| !
+|
+| #{EMOJIES.NEUTRAL_WARN} Советую выполнить следующие шаги:
+|
++step('Прочесть правила', 'правила')
++step('Выбрать класс', 'класс')
++step('Ознакомиться с командами Баквита', 'команды')
++step('Ознакомиться с некоторыми механиками', 'как')

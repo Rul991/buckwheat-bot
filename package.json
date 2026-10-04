@@ -10,7 +10,6 @@
     "restart:prod": "bun install --production && bunx pm2 restart buckwheat-bot",
     "stop:prod": "bunx pm2 stop pm2.config.js && bunx pm2 delete pm2.config.js",
     "generate": "bunx protoc --es_out src/protos --es_opt target=ts --proto_path protos protos/*.proto",
-    "migrate": "bun run src/app/migrate-db.ts",
     "check": "bunx tsc -b"
   },
   "keywords": [

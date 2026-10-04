@@ -70,7 +70,7 @@ export default class TopUtils {
         new TopSubCommand({
             key: 'money',
             getUnsortedValuesCallback: async (_ctx, chatId) => {
-                const balances = await BalanceService.getAllByChatIdType(
+                const balances = await BalanceService.getAllByChatId(
                     chatId,
                 )
 
@@ -211,7 +211,7 @@ export default class TopUtils {
         new TopSubCommand({
             key: 'net-worth',
             getUnsortedValuesCallback: async (_ctx, chatId) => {
-                const balances = await BalanceService.getAllByChatIdType(chatId, 'user')
+                const balances = await BalanceService.getAllByChatId(chatId, 'user')
                 const inventories = await InventoryItemService.getInventoriesByChatId(chatId)
 
                 return balances

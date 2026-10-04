@@ -55,36 +55,16 @@ class ShopBuyButton extends CallbackQueryAction<ShopBuyButtonData> {
         }
 
         const totalPrice = shopItem.basePrice * count
-        const balance = await ctx.vars.balance.require()
-        const money = balance.total
+        const spent = await BalanceService.trySpend({ chatId, id, money: totalPrice })
 
-        if (money < totalPrice) {
-            return {
-                key: 'shop/not-enough-money',
-                vars: {
-                    totalPrice,
-                    money
-                }
-            }
+        if (!spent) {
+            const current = await ctx.vars.balance.require()
+            return { key: 'shop/not-enough-money', vars: { totalPrice, money: current.total } }
         }
 
         await Promise.all([
-            BalanceService.add({
-                chatId,
-                id,
-                money: -totalPrice,
-            }),
-            InventoryItemService.add({
-                chatId,
-                id,
-                item: shopItem,
-                count
-            }),
-            BalanceService.add({
-                chatId,
-                id: botId,
-                money: totalPrice
-            })
+            InventoryItemService.add({ chatId, id, item: shopItem, count }),
+            BalanceService.add({ chatId, id: botId, money: totalPrice })
         ])
 
         const {

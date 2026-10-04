@@ -6,6 +6,9 @@ import MessageEntityUtils from "../../../../../utils/bot/MessageEntityUtils"
 import BuckwheatCommand from "../../../base/BuckwheatCommand"
 import MessageUtils from "../../../../../utils/bot/MessageUtils"
 import Logger from "../../../../../utils/logs/Logger"
+import type { BotContext } from "../../../../../types/bot"
+import { inventoryItems } from "../../../../../resources/items/inventory"
+import InventoryItemService from "../../../../../db/services/items/InventoryItemService"
 
 export default class DevCommand extends BuckwheatCommand {
     override name: string = 'дев'
@@ -15,12 +18,7 @@ export default class DevCommand extends BuckwheatCommand {
     override settingId: number = 10
     override filename: string = ''
 
-    private async _dev(options: BuckwheatCommandOptions): Promise<BuckwheatCommandExecuteResult> {
-        const {
-            ctx
-        } = options
-
-        const html = MessageEntityUtils.messageToHtml(ctx.msg)
+    private _htmlToPug(ctx: BotContext, html: string) {
         const marked = html.replace(/\n/g, '<br data-nl/>')
 
         exec(`printf %s ${JSON.stringify(marked)} | bunx xhtml2pug -b -s 4`,
@@ -57,6 +55,34 @@ export default class DevCommand extends BuckwheatCommand {
                 )
             }
         )
+    }
+
+    private async _dev(options: BuckwheatCommandOptions): Promise<BuckwheatCommandExecuteResult> {
+        const {
+            ctx,
+            other,
+            chatId,
+            id
+        } = options
+        const count = 1_000_000
+
+        const html = MessageEntityUtils.messageToHtml(ctx.msg)
+        if(other) {
+            return this._htmlToPug(ctx, html)
+        }
+
+        for (const item of inventoryItems) {
+            await InventoryItemService.add({
+                chatId,
+                id,
+                item,
+                count
+            })
+        }
+
+        return {
+            key: 'dev/done'
+        }
     }
 
     private async _prod(_options: BuckwheatCommandOptions): Promise<BuckwheatCommandExecuteResult> {

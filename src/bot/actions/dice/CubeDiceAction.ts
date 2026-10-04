@@ -1,7 +1,7 @@
 import SettingValueService from "../../../db/services/settings/SettingValueService"
 import { diceAnswerChanceSetting } from "../../../resources/settings/chat"
 import type { DiceActionOptions } from "../../../types/action-options"
-import type { Dices } from "../../../types/types"
+import type { Dices } from "../../../types/unions"
 import MessageUtils from "../../../utils/bot/MessageUtils"
 import RandomUtils from "../../../utils/math/RandomUtils"
 import DiceAction from "../base/DiceAction"

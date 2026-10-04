@@ -25,8 +25,8 @@ blockquote(expandable) !{itemVars.description}
 +plain_bold_param(`${EMOJIES.COUNT} Кол-во`, `x${formatNumber(inventoryItem.count)} ${item.isConsumable ? '' : `(${EMOJIES.INFINITY})`}`)
 |
 |
-if precents > 0
-    +plain_bold_param(`${EMOJIES.PRECENTS} Шанс выпадения`, `${precents}%`)
+if percents > 0
+    +plain_bold_param(`${EMOJIES.PERCENTS} Шанс выпадения`, `${percents}%`)
 +condition(`${EMOJIES.SHIELD} Щит`, item.shield)
     +plain_code_param(`     ${EMOJIES.MINUS} Прочность`, formatNumber(item.shield.durability))
 +condition(`${EMOJIES.GUN} Оружие`, item.gun)

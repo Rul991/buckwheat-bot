@@ -1,5 +1,5 @@
 import type { MessageActionOptions } from "../../../types/action-options"
-import type { ChatTypes } from "../../../types/types"
+import type { ChatTypes } from "../../../types/unions"
 import BaseAction from "./BaseAction"
 
 export default abstract class MessageAction extends BaseAction {

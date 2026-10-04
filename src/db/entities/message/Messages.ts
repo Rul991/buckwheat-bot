@@ -1,6 +1,6 @@
 import { index, modelOptions, prop } from "@typegoose/typegoose"
 import ChatIdEntity from "../base/ChatIdEntity"
-import type { MessagesType } from "../../../types/types"
+import type { MessagesType } from "../../../types/unions"
 import DateUtils from "../../../utils/time/DateUtils"
 
 @index(

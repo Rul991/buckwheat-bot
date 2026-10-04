@@ -146,6 +146,10 @@ import FaqButton from "../bot/actions/callback-query/faq/FaqButton"
 import FaqScrollerButton from "../bot/actions/callback-query/faq/FaqScrollerButton"
 import FaqCommand from "../bot/actions/commands/buckwheat/info/FaqCommand"
 import UpdateCommand from "../bot/actions/commands/buckwheat/dev/UpdateCommand"
+import InventoryGiftButton from "../bot/actions/callback-query/inventory/InventoryGiftButton"
+import StopForwardMessageAction from "../bot/actions/message/StopForwardMessageAction"
+import ItemGiftConversation from "../bot/actions/conversations/item/ItemGiftConversation"
+import JoinChatButton from "../bot/actions/callback-query/new-chat-member/JoinChatButton"
 
 export const runBot = async () => {
     const bot = new TelegramBot()
@@ -183,7 +187,8 @@ export const runBot = async () => {
                 ImportConversation,
                 SetNumberSettingConversation,
                 SetStringSettingConversation,
-                SetDateSettingConversation
+                SetDateSettingConversation,
+                ItemGiftConversation
             ),
 
         new CallbackQueryHandler()
@@ -231,6 +236,8 @@ export const runBot = async () => {
                 LinkButton,
                 FaqButton,
                 FaqScrollerButton,
+                InventoryGiftButton,
+                JoinChatButton
             ),
 
         new MessageHandler()
@@ -243,6 +250,7 @@ export const runBot = async () => {
                 new ReactionMessageAction(),
                 new RandomPrizeMessageAction(),
                 new RandomStickerMessageAction(),
+                new StopForwardMessageAction(),
             ),
 
         new NewChatMemberHandler()

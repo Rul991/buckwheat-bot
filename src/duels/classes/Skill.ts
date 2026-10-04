@@ -3,8 +3,7 @@ import type { BotContext } from "../../types/bot"
 import type SkillMethod from "../methods/SkillMethod"
 
 type SkillConstructorOptions =
-    & Pick<Skill, 'id' | 'level' | 'execute' | 'key'>
-    & Partial<Pick<Skill, 'alwaysUsable'>>
+    & Pick<Skill, 'id' | 'level' | 'methods' | 'key'>
 
 type SkillTextVars = {
     title: string
@@ -12,31 +11,28 @@ type SkillTextVars = {
 }
 
 export default class Skill {
-    private static _getPath(subFolder: string, key: string): string {
-        return join('skills', subFolder, key)
+    private static _getPath(type: string, key: string): string {
+        return join('skills/texts/', key, type)
     }
 
     id: number
     level: number
-    alwaysUsable: boolean
     key: string
-    execute: {
-        sender: SkillMethod[]
+    methods: {
+        caster: SkillMethod[]
         target: SkillMethod[]
     }
 
     constructor({
         id,
         level,
-        alwaysUsable,
         key,
-        execute
+        methods
     }: SkillConstructorOptions) {
         this.id = id
         this.level = level
-        this.alwaysUsable = alwaysUsable ?? false
         this.key = key
-        this.execute = execute
+        this.methods = methods
     }
 
     getVars(ctx: BotContext): SkillTextVars {

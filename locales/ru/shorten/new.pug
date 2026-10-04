@@ -3,8 +3,8 @@ include /utils/mixins.pug
 | #{EMOJIES.APPROVE} Игрок 
 +link(user)
 | , команда 
-b
-    u #{botName} #{text}
+u #{botName} #{text}
 |  #{!isNew ? 'изменена на' : 'сокращена до'} 
-u #{botName} #{command}
+b
+    u #{botName} #{command}
 | !

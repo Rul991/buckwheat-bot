@@ -12,7 +12,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file inventory.proto.
  */
 export const file_inventory: GenFile = /*@__PURE__*/
-  fileDesc("Cg9pbnZlbnRvcnkucHJvdG8iOgobSW52ZW50b3J5U2Nyb2xsZXJCdXR0b25EYXRhEhsKBGRhdGEYASABKAsyDS5TY3JvbGxlckRhdGEiQwoXSW52ZW50b3J5U2hvd0J1dHRvbkRhdGESCgoCaWQYASABKAQSDgoGaXRlbUlkGAIgASgNEgwKBHBhZ2UYAyABKA0iQwoXSW52ZW50b3J5R2lmdEJ1dHRvbkRhdGESCgoCaWQYASABKAQSDgoGaXRlbUlkGAIgASgNEgwKBHBhZ2UYAyABKA0iNAoWSW52ZW50b3J5VXNlQnV0dG9uRGF0YRIKCgJpZBgBIAEoBBIOCgZpdGVtSWQYAiABKA1iBnByb3RvMw", [file_scroller]);
+  fileDesc("Cg9pbnZlbnRvcnkucHJvdG8iOgobSW52ZW50b3J5U2Nyb2xsZXJCdXR0b25EYXRhEhsKBGRhdGEYASABKAsyDS5TY3JvbGxlckRhdGEiQwoXSW52ZW50b3J5U2hvd0J1dHRvbkRhdGESCgoCaWQYASABKAQSDgoGaXRlbUlkGAIgASgNEgwKBHBhZ2UYAyABKA0iNQoXSW52ZW50b3J5R2lmdEJ1dHRvbkRhdGESCgoCaWQYASABKAQSDgoGaXRlbUlkGAIgASgNIjQKFkludmVudG9yeVVzZUJ1dHRvbkRhdGESCgoCaWQYASABKAQSDgoGaXRlbUlkGAIgASgNYgZwcm90bzM", [file_scroller]);
 
 /**
  * @generated from message InventoryScrollerButtonData
@@ -83,13 +83,6 @@ export type InventoryGiftButtonData = Message<"InventoryGiftButtonData"> & {
    * @generated from field: uint32 itemId = 2;
    */
   itemId: number;
-
-  /**
-   * back page index
-   *
-   * @generated from field: uint32 page = 3;
-   */
-  page: number;
 };
 
 /**

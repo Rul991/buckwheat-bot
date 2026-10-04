@@ -1,0 +1,10 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.GIFT} Игрок 
++link(vars.user)
+|  передал предмет 
+u
+    +item(item)
+|  x#{formatNumber(count)} игроку 
++link(reply)
+| !

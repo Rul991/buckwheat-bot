@@ -1,6 +1,6 @@
 import { prop } from "@typegoose/typegoose"
 import BaseEntity from "../base/BaseEntity"
-import type { AvaHistoryType } from "../../../types/types"
+import type { AvaHistoryType } from "../../../types/unions"
 
 export default class AvaHistory extends BaseEntity {
     @prop()

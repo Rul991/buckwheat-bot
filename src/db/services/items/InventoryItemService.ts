@@ -10,6 +10,12 @@ type GetOptions<T = any> = {
     item: Item<T>
 }
 
+type GetRemainingCountOptions<T = any> =
+    & GetOptions<T>
+    & {
+        transferCount?: number
+    }
+
 type AddOptions<T = any> =
     & GetOptions<T>
     & {
@@ -223,6 +229,13 @@ class InventoryItemService extends BaseService<typeof InventoryItem> {
         item,
         count = 1
     }: GiftOptions): Promise<GiftResult> {
+        if(owner == target) {
+            return {
+                ok: true,
+                reason: 'owner-equal-target'
+            }
+        }
+
         const options = {
             chatId,
             item,
@@ -238,7 +251,8 @@ class InventoryItemService extends BaseService<typeof InventoryItem> {
 
         const targetRemainingCount = await this.getRemainingCount({
             ...options,
-            id: target
+            id: target,
+            transferCount: count
         })
         if (targetRemainingCount < count) {
             return {
@@ -247,7 +261,7 @@ class InventoryItemService extends BaseService<typeof InventoryItem> {
             }
         }
 
-        await Promise.allSettled([
+        await Promise.all([
             this.remove({
                 ...options,
                 id: owner
@@ -282,10 +296,11 @@ class InventoryItemService extends BaseService<typeof InventoryItem> {
         return await this.getCountByUser(options) > 0
     }
 
-    async getRemainingCount(options: GetOptions): Promise<number> {
+    async getRemainingCount(options: GetRemainingCountOptions): Promise<number> {
         const {
             chatId,
-            item
+            item,
+            transferCount = 0
         } = options
 
         const {
@@ -297,7 +312,7 @@ class InventoryItemService extends BaseService<typeof InventoryItem> {
         const userCount = await this.getCountByUser(options)
 
         return Math.min(
-            chatMaxCount - chatCount,
+            chatMaxCount - chatCount + transferCount,
             userMaxCount - userCount
         )
     }

@@ -1,6 +1,6 @@
 include /utils/mixins.pug
 
-- const precents = range(0, 100)
+- const percents = range(0, 100)
 - const rawText = (other || 'ничего').toLowerCase()
 - const text = rawText[0].toUpperCase() + rawText.slice(1)
 
@@ -75,12 +75,12 @@ include /utils/mixins.pug
             }
     ]
 
-    const descriptions = textsDescription.find(v => precents >= v.min && precents <= v.max) || []
+    const descriptions = textsDescription.find(v => percents >= v.min && percents <= v.max) || []
 
 blockquote #{text}
 |
 | Вероятность этого - 
-u #{precents}%
+u #{percents}%
 | !
 |
 b

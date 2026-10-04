@@ -162,6 +162,24 @@ export const stickerChanceSetting = new Setting({
     valueType: SettingValueTypes.Chat,
 })
 
+export const privateCasinoSetting = new Setting({
+    id: 19,
+    textKey: 'private/casino',
+    type: 'boolean',
+    properties: {},
+    default: true,
+    valueType: SettingValueTypes.Chat
+})
+
+export const privateWorkSetting = new Setting({
+    id: 20,
+    textKey: 'private/work',
+    type: 'boolean',
+    properties: {},
+    default: false,
+    valueType: SettingValueTypes.Chat
+})
+
 export const chatSettings = [
     reactChanceSetting,
     diceAnswerChanceSetting,
@@ -178,4 +196,6 @@ export const chatSettings = [
     kickPvpSetting,
     autoJoinSetting,
     stickerChanceSetting,
+    privateCasinoSetting,
+    privateWorkSetting,
 ]

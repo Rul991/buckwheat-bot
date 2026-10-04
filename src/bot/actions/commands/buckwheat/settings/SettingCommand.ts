@@ -5,7 +5,7 @@ import { settingStartKeyboard } from "../../../../keyboards/settings"
 import BuckwheatCommand from "../../../base/BuckwheatCommand"
 
 export default class SettingCommand extends BuckwheatCommand {
-    override aliases: string[] = ['дк', 'дб', 'конфиг', 'настройка']
+    override aliases: string[] = ['дк', 'дб', 'конфиг', 'настройка', 'ранги']
     protected override _rankCanBeChange: boolean = false
     override minimumRank: number = RankUtils.min
     override settingId: number = 38

@@ -1,0 +1,12 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.GIFT} Игрок 
++link(vars.user)
+|  передает предмет 
+u #{item.title}
+| !
+| #{EMOJIES.NEUTRAL_WARN} Ответьте на сообщение игрока, написав количество передаваемого предмета (от 
+code #{formatNumber(minCount)}
+|  до 
+code #{formatNumber(maxCount)}
+| )

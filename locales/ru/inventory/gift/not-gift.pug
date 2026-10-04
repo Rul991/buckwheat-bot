@@ -1,0 +1,14 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.DECLINE} Игрок 
++link(vars.user)
+|  не смог передать предмет 
+u
+    +item(item)
+|  x#{formatNumber(count)} игроку 
++link(reply)
+| !
+|
+blockquote
+    b Причина: 
+    | #{reason.toLowerCase()}

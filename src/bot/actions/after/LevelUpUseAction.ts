@@ -2,6 +2,7 @@ import DuelistService from "../../../db/services/duel/DuelistService"
 import BalanceService from "../../../db/services/money/BalanceService"
 import type { BotUseActionOptions } from "../../../types/action-options"
 import MessageUtils from "../../../utils/bot/MessageUtils"
+import ClassUtils from "../../../utils/db/ClassUtils"
 import LevelUtils from "../../../utils/level/LevelUtils"
 import UseAction from "../base/UseAction"
 
@@ -21,11 +22,11 @@ export default class LevelUpUseAction extends UseAction {
             id
         } = options
 
-        const user = await ctx.vars.user.require()
-        const level = await ctx.vars.level.require()
+        const user = await ctx.vars.user.get()
+        const level = await ctx.vars.level.get()
 
-        const [levelUps, currentLevel] = LevelUtils.getLevelUps(level)
-        const className = user.className
+        const [levelUps, currentLevel] = level ? LevelUtils.getLevelUps(level) : [0, LevelUtils.min]
+        const className = user?.className ?? ClassUtils.defaultClassName
 
         if (levelUps > 0) {
             const totalPrize = this._getPrize(currentLevel, levelUps)
@@ -35,7 +36,6 @@ export default class LevelUpUseAction extends UseAction {
                     chatId,
                     id,
                     money: totalPrize,
-                    type: 'user'
                 }),
                 DuelistService.save({
                     chatId,

@@ -1,4 +1,4 @@
-import { MAX_PRECENTS } from "../../consts/number"
+import { MAX_PERCENTS } from "../../consts/number"
 import MathUtils from "../math/MathUtils"
 import RandomUtils from "../math/RandomUtils"
 import Item from "./Item"
@@ -44,14 +44,14 @@ export default class ItemUtils {
         )
     }
 
-    static getDropPrecents(item: Item<any>): number {
+    static getDropPercents(item: Item<any>): number {
         const rarity = item.rarity
         if (rarity == Item.notDroppableRarity) return 0
 
         const length = this._itemsByRarity.getOrInsert(rarity, []).length
         if (!length) return 0
 
-        return MathUtils.floor((this._rarityChance ** rarity) / length * MAX_PRECENTS, 3)
+        return MathUtils.floor((this._rarityChance ** rarity) / length * MAX_PERCENTS, 3)
     }
 
     static get(id: number): Item<any> | undefined {

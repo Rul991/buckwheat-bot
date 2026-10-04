@@ -1,15 +1,19 @@
 import Skill from "../../../duels/classes/Skill"
 
-export const testSkills = new Skill({
+export const testSkill = new Skill({
     id: 0,
     level: 50,
     key: 'test',
-    execute: {
+    methods: {
         target: [
 
         ],
-        sender: [
+        caster: [
             
         ]
     }
 })
+
+export const skills: Skill[] = [
+    testSkill
+]

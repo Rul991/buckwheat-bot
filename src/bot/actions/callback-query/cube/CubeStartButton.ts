@@ -143,7 +143,7 @@ class CubeStartButton extends CallbackQueryAction<CubeStartButtonData> {
         const chatId = ctx.vars.chatId!
         const balance = ctx.vars.id == id ?
             await ctx.vars.balance.get() :
-            await BalanceService.getUserBalance(chatId, id)
+            await BalanceService.get(chatId, id)
 
         const money = balance?.total ?? 0
         const result = CubeUtils.checkBalance(bet, money)
@@ -257,15 +257,11 @@ class CubeStartButton extends CallbackQueryAction<CubeStartButtonData> {
         const prize = bet * boost
 
         if (boost != WinBoost.Draw) {
-            await BalanceService.add({
+            await BalanceService.transfer({
                 chatId,
-                id: winner,
+                owner: loser,
+                target: winner,
                 money: prize
-            })
-            await BalanceService.add({
-                chatId,
-                id: loser,
-                money: -prize
             })
         }
 

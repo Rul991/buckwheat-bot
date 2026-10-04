@@ -1,5 +1,7 @@
+import { shopItems } from "../../resources/items/shop"
 import KeyboardCreator from "../../utils/keyboard/KeyboardCreator"
 import ArrayUtils from "../../utils/math/ArrayUtils"
+import InventoryShowButton from "../actions/callback-query/inventory/InventoryShowButton"
 import ShopBuyButton from "../actions/callback-query/shop/ShopBuyButton"
 import ShopScrollerButton from "../actions/callback-query/shop/ShopScrollerButton"
 import ShopShowButton from "../actions/callback-query/shop/ShopShowButton"
@@ -57,6 +59,7 @@ export const showShopKeyboard = KeyboardCreator.create<{
         const maxValue = 1_000_000
         const maxLength = 20
         const gridWidth = 5
+        const item = shopItems[index]
 
         if (remainingCount > 0) {
             const sequence = ArrayUtils.generateMultipliedSequence({
@@ -91,6 +94,9 @@ export const showShopKeyboard = KeyboardCreator.create<{
                 keyboard.row()
             }
 
+        }
+
+        if (item) {
             keyboard
                 .add(ShopBuyButton.button({
                     ctx,
@@ -101,8 +107,16 @@ export const showShopKeyboard = KeyboardCreator.create<{
                         page
                     }
                 }))
+                .add(InventoryShowButton.button({
+                    ctx,
+                    data: {
+                        itemId: item.id,
+                        id: bigId,
+                        page: 0
+                    },
+                    key: 'inventory/button/to-inventory'
+                }))
                 .row()
-
         }
 
         keyboard

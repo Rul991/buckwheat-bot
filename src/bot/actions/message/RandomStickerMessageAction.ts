@@ -1,12 +1,14 @@
-import { MAX_PRECENTS } from "../../../consts/number"
+import { MAX_PERCENTS } from "../../../consts/number"
 import SettingValueService from "../../../db/services/settings/SettingValueService"
 import { stickerChanceSetting } from "../../../resources/settings/chat"
 import type { MessageActionOptions } from "../../../types/action-options"
+import type { ChatTypes } from "../../../types/unions"
 import MessageUtils from "../../../utils/bot/MessageUtils"
 import RandomUtils from "../../../utils/math/RandomUtils"
 import MessageAction from "../base/MessageAction"
 
 export default class RandomStickerMessageAction extends MessageAction {
+    override chatTypes: ChatTypes[] = ['chat']
     override async execute(options: MessageActionOptions): Promise<boolean | void> {
         const {
             chatId,
@@ -23,7 +25,7 @@ export default class RandomStickerMessageAction extends MessageAction {
             setting: stickerChanceSetting
         })
 
-        const chance = chanceSettingValue.value / MAX_PRECENTS
+        const chance = chanceSettingValue.value / MAX_PERCENTS
         const isReply = RandomUtils.chance(chance)
         if(!isReply) return
 

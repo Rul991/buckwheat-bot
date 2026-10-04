@@ -8,6 +8,6 @@ blockquote !{text}
 for user in users
     +id_link({
         ...user,
-        name: choose(emojies)
+        name: user.emoji || choose(emojies)
     })
     |     

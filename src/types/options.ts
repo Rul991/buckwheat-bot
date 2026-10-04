@@ -8,7 +8,7 @@ import type { CallbackQueryContext } from "grammy"
 import type { CommandType } from "../protos/commands_pb"
 import type { BaseScrollerData } from "../protos/scroller_pb"
 import type { Message } from "@bufbuild/protobuf"
-import type { AvaHistoryType } from "./types"
+import type { AvaHistoryType } from "./unions"
 
 export type ReplyOptions = {
     keyboard?: InlineKeyboardMarkup

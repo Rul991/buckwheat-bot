@@ -1,5 +1,5 @@
 import type { TopValues } from "../../../types/top"
-import type { MessagesType } from "../../../types/types"
+import type { MessagesType } from "../../../types/unions"
 import Messages from "../../entities/message/Messages"
 import BaseService from "../base/BaseService"
 

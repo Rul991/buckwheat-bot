@@ -1,7 +1,9 @@
 import InventoryItemService from "../../../../../db/services/items/InventoryItemService"
 import LevelService from "../../../../../db/services/level/LevelService"
 import BalanceService from "../../../../../db/services/money/BalanceService"
+import SettingValueService from "../../../../../db/services/settings/SettingValueService"
 import WorkService from "../../../../../db/services/work/WorkService"
+import { privateWorkSetting } from "../../../../../resources/settings/chat"
 import type { BuckwheatCommandOptions } from "../../../../../types/action-options"
 import type { BuckwheatCommandExecuteResult } from "../../../../../types/results"
 import RankUtils from "../../../../../utils/db/RankUtils"
@@ -24,6 +26,19 @@ export default class WorkCommand extends BuckwheatCommand {
             chatId,
             id,
         } = options
+        const isPrivate = ctx.hasChatType('private')
+        if(!isPrivate) {
+            const privateWorkSettingValue = await SettingValueService.get({
+                setting: privateWorkSetting,
+                id: chatId
+            })
+
+            if(privateWorkSettingValue.value) {
+                return {
+                    key: 'work/not-private'
+                }
+            }
+        }
 
         const canWorkResult = await WorkService.canWork(chatId, id)
         const {

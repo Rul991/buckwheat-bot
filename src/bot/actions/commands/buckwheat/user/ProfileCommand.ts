@@ -148,12 +148,12 @@ export default class ProfileCommand extends BuckwheatCommand {
         const currentLevel = LevelUtils.get(currentExperience)
 
         const max = LevelUtils.max
-        const precents = ExperienceUtils.precents(currentExperience)
+        const percents = ExperienceUtils.percents(currentExperience)
 
         return {
             current: currentLevel,
             max,
-            precents,
+            percents,
         }
     }
 

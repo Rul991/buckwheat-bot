@@ -3,7 +3,7 @@ import BalanceService from "../../../db/services/money/BalanceService"
 import SettingValueService from "../../../db/services/settings/SettingValueService"
 import { spawnBoxSetting } from "../../../resources/settings/chat"
 import type { MessageActionOptions } from "../../../types/action-options"
-import type { ChatTypes } from "../../../types/types"
+import type { ChatTypes } from "../../../types/unions"
 import MessageUtils from "../../../utils/bot/MessageUtils"
 import RandomUtils from "../../../utils/math/RandomUtils"
 import { boxKeyboard } from "../../keyboards/keyboard"
@@ -30,7 +30,7 @@ export default class RandomPrizeMessageAction extends MessageAction {
         if(!canSpawnBox) return
 
         const botId = ctx.me.id
-        const balance = await BalanceService.getUserBalance(
+        const balance = await BalanceService.get(
             chatId,
             botId
         )

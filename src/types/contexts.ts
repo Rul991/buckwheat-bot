@@ -13,6 +13,7 @@ export type SuccessfulPaymentMessageContext = Filter<BotContext, "msg:successful
 
 export type CallbackQueryContext<T> = GrammyCallbackQueryContext<BotContext<T>>
 export type NewChatMemberContext = Filter<BotContext, "msg:new_chat_members">
+export type ChatJoinRequestContext = Filter<BotContext, 'chat_join_request'>
 
 export type Contexts = {
     [CommandType.Text]: MessageTextContext

@@ -3,7 +3,7 @@ import IdEntity from "../base/IdEntity"
 import BusinessStake from "./BusinessStake"
 import { MAX_BUSINESS_STAKES } from "../../../consts/number"
 import type { BotContext } from "../../../types/bot"
-import type { BusinessType } from "../../../types/db"
+import type { BusinessType } from "../../../types/unions"
 
 type ConstructorOptions =
     & Pick<Business, 'chatId' | 'type' | 'title'>

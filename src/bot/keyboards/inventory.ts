@@ -1,9 +1,11 @@
+import { shopItems } from "../../resources/items/shop"
 import type Item from "../../utils/items/Item"
 import KeyboardCreator from "../../utils/keyboard/KeyboardCreator"
 import GunSetButton from "../actions/callback-query/gun/GunSetButton"
 import InventoryGiftButton from "../actions/callback-query/inventory/InventoryGiftButton"
 import InventoryScrollerButton from "../actions/callback-query/inventory/InventoryScrollerButton"
 import InventoryUseButton from "../actions/callback-query/inventory/InventoryUseButton"
+import ShopShowButton from "../actions/callback-query/shop/ShopShowButton"
 
 export const startInventoryKeyboard = KeyboardCreator.create<{
     id: number
@@ -64,6 +66,23 @@ export const showItemKeyboard = KeyboardCreator.create<{
                         itemId
                     }
                 }))
+        }
+
+        const shopIndex = shopItems.indexOf(item)
+        if(shopIndex != -1) {
+            keyboard
+                .add(
+                    ShopShowButton.button({
+                        ctx,
+                        data: {
+                            id: bigId,
+                            index: shopIndex,
+                            page: 0,
+                            count: 1
+                        },
+                        key: 'inventory/button/buy'
+                    })
+                )
                 .row()
         }
 
@@ -76,17 +95,16 @@ export const showItemKeyboard = KeyboardCreator.create<{
                         itemId: itemId
                     }
                 }))
-                .row()
         }
 
         keyboard
+            .row()
             .add(
                 InventoryGiftButton.button({
                     ctx,
                     data: {
                         id: bigId,
                         itemId,
-                        page
                     }
                 })
             )
@@ -107,7 +125,6 @@ export const showItemKeyboard = KeyboardCreator.create<{
                     key: 'button/back'
                 })
             )
-            .row()
     }
 )
 

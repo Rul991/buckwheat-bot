@@ -14,7 +14,6 @@ message InventoryShowButtonData {
 message InventoryGiftButtonData {
     uint64 id = 1; // user's id
     uint32 itemId = 2; // item's id
-    uint32 page = 3; // back page index
 }
 
 message InventoryUseButtonData {

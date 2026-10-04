@@ -1,12 +1,14 @@
 import { setTimeout } from "node:timers/promises"
 import { MAX_DEBT_VALUE } from "../../../consts/number"
 import type { DiceActionOptions } from "../../../types/action-options"
-import type { Dices } from "../../../types/types"
+import type { Dices } from "../../../types/unions"
 import MessageUtils from "../../../utils/bot/MessageUtils"
 import DiceAction from "../base/DiceAction"
 import BalanceService from "../../../db/services/money/BalanceService"
 import GameService from "../../../db/services/game/GameService"
 import GrindUtils from "../../../utils/grind/GrindUtils"
+import SettingValueService from "../../../db/services/settings/SettingValueService"
+import { privateCasinoSetting } from "../../../resources/settings/chat"
 
 type JackpotValues = {
     values: number[]
@@ -52,6 +54,22 @@ export default class CasinoDiceAction extends DiceAction {
             id,
             value
         } = options
+        const isPrivate = ctx.hasChatType('private')
+
+        if(!isPrivate) {
+            const privateCasinoSettingValue = await SettingValueService.get({
+                id: chatId,
+                setting: privateCasinoSetting
+            })
+            
+            if(privateCasinoSettingValue.value) {
+                await MessageUtils.reply(
+                    ctx,
+                    'casino/not-private'
+                )
+                return
+            }
+        }
 
         const gameType = 'casino'
         const selfBalance = await ctx.vars.balance.get()

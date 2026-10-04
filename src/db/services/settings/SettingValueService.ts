@@ -76,6 +76,26 @@ class SettingValueService extends BaseService<typeof SettingValue> {
 
         return result
     }
+
+    async getByIds<T extends SettingTypes, V extends SettingValueTypes>(
+        ids: number[],
+        setting: Setting<T, V>
+    ): Promise<Map<number, SettingValue<T, V>>> {
+        const result = new Map<number, SettingValue<T, V>>()
+        if (!ids.length) return result
+
+        const settingValues = await this._repo.find({
+            id: { $in: ids },
+            settingId: setting.id,
+            valueType: setting.valueType,
+        }) as unknown as SettingValue<T, V>[]
+
+        for (const value of settingValues) {
+            result.set(value.id, value)
+        }
+
+        return result
+    }
 }
 
 export default new SettingValueService()

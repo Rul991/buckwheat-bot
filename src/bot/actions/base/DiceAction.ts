@@ -1,7 +1,7 @@
 import { CommandType } from "../../../protos/commands_pb"
 import type { SettingValueTypes } from "../../../protos/settings_pb"
 import type { DiceActionOptions } from "../../../types/action-options"
-import type { Dices } from "../../../types/types"
+import type { Dices } from "../../../types/unions"
 import RankUtils from "../../../utils/db/RankUtils"
 import type Setting from "../../../utils/settings/Setting"
 import ShowableAction from "./ShowableAction"

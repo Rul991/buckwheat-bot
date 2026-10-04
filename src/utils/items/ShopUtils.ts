@@ -1,6 +1,5 @@
 import { showShopKeyboard } from "../../bot/keyboards/shop"
 import InventoryItemService from "../../db/services/items/InventoryItemService"
-import BalanceService from "../../db/services/money/BalanceService"
 import type { BotContext } from "../../types/bot"
 import type Item from "./Item"
 
@@ -25,7 +24,7 @@ export default class ShopUtils {
         const chatId = ctx.vars.chatId!
         const id = ctx.vars.id!
 
-        const balance = await BalanceService.getUserBalance(chatId, id)
+        const balance = await ctx.vars.balance.get()
         const money = balance?.total ?? 0
 
         const inventoryItem = await InventoryItemService.get({

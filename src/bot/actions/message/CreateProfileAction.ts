@@ -1,6 +1,6 @@
 import UserService from "../../../db/services/user/UserService"
 import type { MessageActionOptions } from "../../../types/action-options"
-import type { ChatTypes } from "../../../types/types"
+import type { ChatTypes } from "../../../types/unions"
 import MessageAction from "../base/MessageAction"
 
 export default class CreateProfileAction extends MessageAction {

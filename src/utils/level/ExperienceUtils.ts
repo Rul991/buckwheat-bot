@@ -27,15 +27,15 @@ export default class ExperienceUtils {
         return LevelUtils.get(level?.currentExperience ?? this.min)
     }
 
-    static precents(currentExperience: number): number {
+    static percents(currentExperience: number): number {
         const currentLevel = LevelUtils.get(currentExperience)
         const currentLevelExperience = ExperienceUtils.get(currentLevel)
         const nextLevelExperience = ExperienceUtils.get(currentLevel + 1)
 
         const experienceDiff = nextLevelExperience - currentLevelExperience
         const progress = currentExperience - currentLevelExperience
-        const precents = progress / experienceDiff
+        const percents = progress / experienceDiff
 
-        return isFinite(precents) ? precents : 0
+        return isFinite(percents) ? percents : 0
     }
 }

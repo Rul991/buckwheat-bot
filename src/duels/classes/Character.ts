@@ -23,8 +23,8 @@ export default class Character {
 
         this.skills = skills
         this._totalSkills = [
+            this.skills.main,
             ...this.skills.showable,
-            this.skills.main
         ]
     }
 
@@ -53,8 +53,12 @@ export default class Character {
         }
     }
 
-    canUse(skill: Skill): boolean {
-        if (skill.alwaysUsable) return true
-        return this._totalSkills.some(v => v.id == skill.id)
+    canAdd(skill: Skill, level: number): boolean {
+        if(skill == this.skills.main) return true
+        return this._totalSkills.some(v => v.id == skill.id && v.level <= level)
+    }
+
+    getSkills(): Skill[] {
+        return this._totalSkills
     }
 }

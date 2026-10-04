@@ -1,7 +1,7 @@
 import type { BotContext } from "../../types/bot"
 import type { EditMediaOptions, InvoiceOptions, ReplyMediaOptions, ReplyOptions, ReplyTextAsDocumentOptions } from "../../types/options"
 import ExceptionUtils from "../exceptions/ExceptionUtils"
-import type { Dices } from "../../types/types"
+import type { Dices } from "../../types/unions"
 import Logger from "../logs/Logger"
 import type { Message } from "grammy/types"
 import RandomUtils from "../math/RandomUtils"

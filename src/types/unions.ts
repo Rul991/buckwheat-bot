@@ -1,0 +1,6 @@
+export type BusinessType = 'shop' | 'casino' | 'bank'
+export type MessagesType = 'total' | 'day' | 'month' | 'year'
+export type AvaHistoryType = 'image' | 'video' | 'animation'
+export type ChatTypes = 'private' | 'chat'
+export type Dices = '🎲' | '🎯' | '🏀' | '⚽' | '🎳' | '🎰'
+export type DevMode = 'prod' | 'dev'

@@ -199,7 +199,7 @@ export const infinityCasinoItem = new Item({
     id: 10,
     key: 'casino/infinity',
     isConsumable: false,
-    basePrice: 75_000,
+    basePrice: 50_000,
     emoji: 'casino'
 })
 
@@ -333,15 +333,15 @@ export const rockVoidItem = new Item({
     }
 })
 
-export const shopPrecentItem = new Item({
+export const shopPercentItem = new Item({
     id: 21,
-    key: 'shop/precent',
+    key: 'shop/percent',
     isConsumable: true,
     maxCount: {
         chat: 100,
         user: 99
     },
-    basePrice: 10_000,
+    basePrice: 7_500,
     emoji: 'moneyfarm'
 })
 
@@ -454,7 +454,7 @@ export const cardBoxItem = new Item({
     id: 32,
     key: 'other/card-box',
     isConsumable: true,
-    basePrice: 200,
+    basePrice: 180,
     rarity: 2,
     emoji: 'card'
 })
@@ -676,7 +676,7 @@ export const inventoryItems: Item<any>[] = [
     pistolAmmoItem,
     defaultGunItem,
     rockVoidItem,
-    shopPrecentItem,
+    shopPercentItem,
     simpleShieldItem,
     stickGunItem,
     stringsItem,
@@ -696,5 +696,5 @@ export const inventoryItems: Item<any>[] = [
     resetSaveCooldownItem,
     orbitalGunItem,
     glockGunItem,
-    soapGunItem
+    soapGunItem,
 ]

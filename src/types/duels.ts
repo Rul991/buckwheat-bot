@@ -7,12 +7,15 @@ export type Characteristics = {
     mana: number
 }
 
+export type MethodParticipant = {
+    id: number
+}
+
 export type MethodGetDataOptions = {
     ctx: BotContext
     chatId: number
-    id: number
-    userId: number
-    enemyId: number
+    receiver: MethodParticipant
+    caster: MethodParticipant
     duel: Duel
     attack: SkillAttack
     boost: number

@@ -43,7 +43,7 @@ class OpenRandomPrizeButton extends CallbackQueryAction<EmptyButtonData> {
         } = options
 
         const botId = ctx.me.id
-        const botBalance = await BalanceService.getUserBalance(chatId, botId)
+        const botBalance = await BalanceService.get(chatId, botId)
         const botMoney = botBalance?.total ?? 0
 
         const user = await ctx.vars.user.get()

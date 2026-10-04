@@ -10,7 +10,7 @@ import Logger from "../../../../../utils/logs/Logger"
 export default class UpdateCommand extends BuckwheatCommand {
     override aliases: string[] = []
     override filename: string = ''
-    override minimumRank: number = RankUtils.max + 1
+    override minimumRank: number = RankUtils.min
     override settingId: number = 116
     override name: string = 'обновить'
     override isShow: boolean = false

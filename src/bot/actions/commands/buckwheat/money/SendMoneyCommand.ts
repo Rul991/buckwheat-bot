@@ -24,14 +24,14 @@ export default class SendMoneyCommand extends BuckwheatCommand {
             replyFrom,
             other
         } = options
-
-
+        
+        
         if (!other || !other.length) {
             return {
                 key: 'transfer/no-other'
             }
         }
-
+        
         const rawTranferMoney = StringUtils.getNumberFromString(other, 0)
         const transferMoney = MathUtils.floor(Math.abs(rawTranferMoney))
 
@@ -45,13 +45,21 @@ export default class SendMoneyCommand extends BuckwheatCommand {
                 }
             }
         }
-
+        
+        const replyId = replyFrom.id
         const user = await ctx.vars.user.get()
+        const reply = await UserService.get(chatId, replyId)
 
         const balance = await ctx.vars.balance.get()
         const userMoney = balance?.total ?? 0
 
-        if (transferMoney > userMoney) {
+        const isTransfered = await BalanceService.transfer({
+            chatId,
+            owner: id,
+            target: replyId,
+            money: transferMoney
+        })
+        if (!isTransfered) {
             return {
                 key: 'transfer/no-money',
                 options: {
@@ -61,22 +69,6 @@ export default class SendMoneyCommand extends BuckwheatCommand {
                     }
                 }
             }
-        }
-        
-        const reply = await UserService.get(chatId, replyFrom.id)
-
-        if (replyFrom.id != id) {
-            await BalanceService.add({
-                chatId,
-                id,
-                money: -transferMoney
-            })
-
-            await BalanceService.add({
-                chatId,
-                id: replyFrom.id,
-                money: transferMoney
-            })
         }
 
         return {

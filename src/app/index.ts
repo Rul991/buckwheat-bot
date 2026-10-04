@@ -5,6 +5,8 @@ import Logger from "../utils/logs/Logger"
 import ItemUtils from "../utils/items/ItemUtils"
 import { inventoryItems } from "../resources/items/inventory"
 import FaqUtils from "../utils/faq/FaqUtils"
+import SkillRegisty from "../utils/duel/skill/SkillRegisty"
+import { skills } from "../resources/duels/skills/skills"
 
 const connectDatabase = async () => {
     await mongoose.connect(DB_URL)
@@ -19,7 +21,10 @@ const connectDatabase = async () => {
 const setup = async () => {
     return await Promise.all([
         ItemUtils.setup(inventoryItems),
-        FaqUtils.setup()
+        FaqUtils.setup(),
+        SkillRegisty.setup(
+            ...skills
+        )
     ])
 }
 

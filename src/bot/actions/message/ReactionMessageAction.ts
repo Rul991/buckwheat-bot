@@ -1,9 +1,9 @@
-import { MAX_PRECENTS } from "../../../consts/number"
+import { MAX_PERCENTS } from "../../../consts/number"
 import { REACT_EMOJIES } from "../../../consts/texts"
 import SettingValueService from "../../../db/services/settings/SettingValueService"
 import { reactChanceSetting } from "../../../resources/settings/chat"
 import type { MessageActionOptions } from "../../../types/action-options"
-import type { ChatTypes } from "../../../types/types"
+import type { ChatTypes } from "../../../types/unions"
 import ContextUtils from "../../../utils/bot/ContextUtils"
 import RandomUtils from "../../../utils/math/RandomUtils"
 import MessageAction from "../base/MessageAction"
@@ -17,7 +17,7 @@ export default class ReactionMessageAction extends MessageAction {
             id: chatId
         })
 
-        return settingValue.value / MAX_PRECENTS
+        return settingValue.value / MAX_PERCENTS
     }
 
     override async execute(options: MessageActionOptions): Promise<boolean | void> {

@@ -12,6 +12,8 @@ import TimeUtils from "../../../utils/time/TimeUtils"
 import NewChatMemberAction from "../base/NewChatMemberAction"
 import type User from "../../../db/entities/user/User"
 import Logger from "../../../utils/logs/Logger"
+import AdminUtils from "../../../utils/bot/AdminUtils"
+import { helloNewChatMemberKeyboard } from "../../keyboards/new-chat-member"
 
 type BaseHelloOptions = {
     ctx: BotContext
@@ -30,6 +32,7 @@ type HelloOldOptions =
 type HelloNewOptions =
     & BaseHelloOptions
     & {
+        id: number
         hello: string | undefined
         hasButton: boolean
     }
@@ -45,7 +48,7 @@ export default class HelloNewChatMemberAction extends NewChatMemberAction {
     }: HelloOldOptions): Promise<void> {
         const balance = id == from.id ?
             await ctx.vars.balance.get() :
-            (await BalanceService.getUserBalance(chatId, from.id))
+            (await BalanceService.get(chatId, from.id))
         const money = balance?.total ?? 0
 
         await MessageUtils.reply(
@@ -68,13 +71,19 @@ export default class HelloNewChatMemberAction extends NewChatMemberAction {
             hello,
             user,
             chat,
-            hasButton
+            hasButton,
+            id
         } = options
 
         Logger.debug(
             'HelloNewChatMemberAction._helloNew',
             options
         )
+
+        if (hasButton) {
+            await AdminUtils.mute(ctx, id, 0)
+        }
+
         await MessageUtils.reply(
             ctx,
             'hello/new-user',
@@ -85,7 +94,8 @@ export default class HelloNewChatMemberAction extends NewChatMemberAction {
                     chat,
                     DEV_ID,
                     hasButton,
-                }
+                },
+                keyboard: hasButton ? await helloNewChatMemberKeyboard(ctx, { id }) : undefined
             }
         )
     }
@@ -111,7 +121,6 @@ export default class HelloNewChatMemberAction extends NewChatMemberAction {
         const {
             ctx,
             chatId,
-            id,
             users
         } = options
 
@@ -121,13 +130,14 @@ export default class HelloNewChatMemberAction extends NewChatMemberAction {
         const hasButton = await this._hasHelloButton(chatId)
 
         for (const from of users) {
+            const id = from.id
             const user = (
-                id == from.id ?
+                id == ctx.vars.id ?
                     await ctx.vars.user.get() :
-                    await UserService.get(chatId, from.id)
+                    await UserService.get(chatId, id)
             ) ?? await UserService.defaultCreate(
                 chatId,
-                from.id,
+                id,
                 from
             )
 
@@ -149,7 +159,8 @@ export default class HelloNewChatMemberAction extends NewChatMemberAction {
                     user,
                     chat,
                     hello,
-                    hasButton
+                    hasButton,
+                    id
                 })
             }
         }

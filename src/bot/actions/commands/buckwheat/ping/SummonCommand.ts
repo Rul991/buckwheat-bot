@@ -12,11 +12,16 @@ import { SUMMON_DELAY } from "../../../../../consts/time"
 import type { MaybeString } from "../../../../../types/types"
 import MessageEntityUtils from "../../../../../utils/bot/MessageEntityUtils"
 import ChatService from "../../../../../db/services/chat/ChatService"
+import SettingValueService from "../../../../../db/services/settings/SettingValueService"
+import { summonEmojiSetting } from "../../../../../resources/settings/user"
+import type SettingValue from "../../../../../db/entities/settings/SettingValue"
+import type { SettingValueTypes } from "../../../../../protos/settings_pb"
 
 type SummonOptions = {
     ctx: BotContext
     users: User[]
     other: MaybeString
+    emojies: Map<number, SettingValue<"enum", SettingValueTypes.User>>
 }
 
 export default class SummonCommand extends BuckwheatCommand {
@@ -31,7 +36,8 @@ export default class SummonCommand extends BuckwheatCommand {
     private async _summon({
         ctx,
         users,
-        other
+        other,
+        emojies
     }: SummonOptions): Promise<void> {
         const chatId = ctx.vars.chatId!
         const maxLength = Math.ceil(users.length / this._usersPerMessage)
@@ -41,7 +47,14 @@ export default class SummonCommand extends BuckwheatCommand {
         for (let i = 0; i < maxLength; i++) {
             const start = i * this._usersPerMessage
             const end = start + this._usersPerMessage
-            const messageUsers = users.slice(start, end)
+            const messageUsers = users
+                .slice(start, end)
+                .map(user => {
+                    return {
+                        ...user,
+                        emoji: emojies.get(user.id)?.value
+                    }
+                })
 
             await MessageUtils.reply(
                 ctx,
@@ -70,7 +83,7 @@ export default class SummonCommand extends BuckwheatCommand {
             ctx,
         } = options
 
-        if(ctx.chat.type == 'private') {
+        if (ctx.chat.type == 'private') {
             return {
                 key: 'summon/private'
             }
@@ -79,18 +92,23 @@ export default class SummonCommand extends BuckwheatCommand {
         const chat = await ctx.vars.chat.get()
         const canUseSummonNow = chat?.canUseSummonNow ?? true
 
-        if(!canUseSummonNow) {
+        if (!canUseSummonNow) {
             return {
                 key: 'summon/already-use'
             }
         }
 
         const users = await UserService.getAllByChatId(chatId)
+        const emojies = await SettingValueService.getByIds(
+            users.map(v => v.id),
+            summonEmojiSetting
+        )
         const message = ctx.msg
         this._summon({
             ctx,
             users,
             other: MessageEntityUtils.messageToHtml(message),
+            emojies
         })
     }
 }
