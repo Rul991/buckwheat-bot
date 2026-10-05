@@ -12,7 +12,7 @@ import type { ClassTypes } from "../../types/class"
 import type { TopValues } from "../../types/top"
 import ClassUtils from "../db/ClassUtils"
 import RankUtils from "../db/RankUtils"
-import ExperienceUtils from "../level/ExperienceUtils"
+import LevelUtils from "../level/LevelUtils"
 import Logger from "../logs/Logger"
 import TimeUtils from "../time/TimeUtils"
 import TopSubCommand from "./TopSubCommand"
@@ -96,10 +96,18 @@ export default class TopUtils {
                     .map(v => {
                         return {
                             id: v.id,
-                            value: ExperienceUtils.getLevelFromObject(v)
+                            value: v.currentExperience
                         }
                     })
-            }
+            },
+            async handleSortedValuesCallback({ values }) {
+                return values.map(v => {
+                    return {
+                        id: v.id,
+                        value: LevelUtils.get(+v.value)
+                    } as const
+                })
+            },
         }),
 
         new TopSubCommand({
@@ -211,7 +219,7 @@ export default class TopUtils {
         new TopSubCommand({
             key: 'net-worth',
             getUnsortedValuesCallback: async (_ctx, chatId) => {
-                const balances = await BalanceService.getAllByChatId(chatId, 'user')
+                const balances = await BalanceService.getAllByChatId(chatId)
                 const inventories = await InventoryItemService.getInventoriesByChatId(chatId)
 
                 return balances

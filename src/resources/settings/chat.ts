@@ -1,3 +1,4 @@
+import { NO_ANTISPAM_MESSAGE_COUNT } from "../../consts/number"
 import { AUTO_ALLOW_JOIN_REQUEST_SYMBOL, SEND_MESSAGE_JOIN_REQUEST_SYMBOL, DO_NOTHING_JOIN_REQUEST_SYMBOL } from "../../consts/texts"
 import { MILLISECONDS_IN_SECOND, MILLISECONDS_IN_YEAR } from "../../consts/time"
 import { SettingValueTypes } from "../../protos/settings_pb"
@@ -27,7 +28,7 @@ export const diceAnswerChanceSetting = new Setting({
     valueType: SettingValueTypes.Chat,
 })
 
-export const messagePerTimeSetting = new Setting({
+export const antispamMessageSetting = new Setting({
     id: 2,
     textKey: 'antispam/message',
     type: 'number',
@@ -35,11 +36,11 @@ export const messagePerTimeSetting = new Setting({
         min: 1,
         max: 1000
     },
-    default: 7,
+    default: NO_ANTISPAM_MESSAGE_COUNT,
     valueType: SettingValueTypes.Chat,
 })
 
-export const notSpamTimeSetting = new Setting({
+export const antispamPeriodSetting = new Setting({
     id: 3,
     textKey: 'antispam/time',
     type: 'date',
@@ -51,7 +52,7 @@ export const notSpamTimeSetting = new Setting({
     valueType: SettingValueTypes.Chat,
 })
 
-export const antiSpamMuteSetting = new Setting({
+export const antispamMuteSetting = new Setting({
     id: 4,
     textKey: 'antispam/mute',
     type: 'date',
@@ -183,9 +184,9 @@ export const privateWorkSetting = new Setting({
 export const chatSettings = [
     reactChanceSetting,
     diceAnswerChanceSetting,
-    messagePerTimeSetting,
-    notSpamTimeSetting,
-    antiSpamMuteSetting,
+    antispamMessageSetting,
+    antispamPeriodSetting,
+    antispamMuteSetting,
     spawnBoxSetting,
     hasHelloButtonSetting,
     canBuyUnmuteSetting,

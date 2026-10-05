@@ -48,9 +48,9 @@ export default class AdminUtils {
             setting,
             id: chatId
         })
-        
+
         const canKick = canKickSettingValue.value
-        if(!canKick) return false
+        if (!canKick) return false
 
         return await this.kick(ctx, id)
     }
@@ -115,6 +115,27 @@ export default class AdminUtils {
                 return await ctx.promoteChatMember(
                     id,
                 )
+            },
+            false
+        )
+    }
+
+    static async setAdminTag(ctx: BotContext, id: number, tag: string): Promise<boolean> {
+        return await ExceptionUtils.handleAsync(
+            async () => {
+                const isPromote = await ctx.promoteChatMember(
+                    id,
+                    {
+                        can_manage_chat: !!tag.length
+                    }
+                )
+                
+                const isSetTag = await ctx.setChatMemberTag(
+                    id,
+                    tag
+                )
+
+                return isSetTag && isPromote
             },
             false
         )

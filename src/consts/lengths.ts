@@ -14,3 +14,5 @@ export const MAX_ROLEPLAY_NAME_LENGTH = 32
 export const MAX_ROLEPLAY_TEXT_LENGTH = 512
 // short command
 export const MAX_SHORT_COMMAND_LENGTH = 32
+// tag
+export const MAX_TAG_LENGTH = 16

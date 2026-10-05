@@ -150,6 +150,9 @@ import InventoryGiftButton from "../bot/actions/callback-query/inventory/Invento
 import StopForwardMessageAction from "../bot/actions/message/StopForwardMessageAction"
 import ItemGiftConversation from "../bot/actions/conversations/item/ItemGiftConversation"
 import JoinChatButton from "../bot/actions/callback-query/new-chat-member/JoinChatButton"
+import AntispamMessageAction from "../bot/actions/message/AntispamMessageAction"
+import SetTagCommand from "../bot/actions/commands/buckwheat/admin/SetTagCommand"
+import SetTagNewChatMemberAction from "../bot/actions/new-chat-member/SetTagNewChatMemberAction"
 
 export const runBot = async () => {
     const bot = new TelegramBot()
@@ -245,6 +248,7 @@ export const runBot = async () => {
                 new ChannelMessageAction(),
                 new PrivateMessageAction(),
                 new CreateProfileAction(),
+                new AntispamMessageAction(),
                 new NewMessageAction(),
                 new ChangeUsernameMessageAction(),
                 new ReactionMessageAction(),
@@ -257,6 +261,7 @@ export const runBot = async () => {
             .add(
                 new HelloNewChatMemberAction(),
                 new AutoLinkNewChatMemberAction(),
+                new SetTagNewChatMemberAction()
             ),
 
         new ConditionalCommandHandler()
@@ -338,6 +343,7 @@ export const runBot = async () => {
                 new DonateCommand(),
                 new FaqCommand(),
                 new UpdateCommand(),
+                new SetTagCommand(),
             ),
 
         new PhotoActionHandler()

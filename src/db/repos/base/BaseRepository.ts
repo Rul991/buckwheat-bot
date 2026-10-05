@@ -14,13 +14,14 @@ export default class BaseRepository<T extends RepoExtends> {
         this.model = getModelForClass(obj)
     }
 
-    async updateOne(filter: Filter<T>, value: Filter<T>): Promise<Result<T> | undefined> {
+    async updateOne(filter: Filter<T>, value: Filter<T>, upsert: boolean = false): Promise<Result<T> | undefined> {
         return (await this.model.findOneAndUpdate(
             filter,
             value,
             {
                 returnDocument: 'after',
-                updatePipeline: value instanceof Array
+                updatePipeline: value instanceof Array,
+                upsert
             }
         ).lean().exec()) as Result<T> | undefined
     }

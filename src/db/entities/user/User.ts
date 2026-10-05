@@ -40,7 +40,7 @@ export default class User extends ChatIdEntity {
     avaHistory: AvaHistory[]
 
     @prop()
-    adminTitle?: string
+    tag?: string
 
     @prop()
     username?: string

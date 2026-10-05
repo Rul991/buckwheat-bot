@@ -16,7 +16,7 @@ class TopsButtonScrollerButton extends ScrollerButton<number> {
     override name: string = 'tops'
 
     protected override _isNeedCache: boolean = false
-    protected override _objectsPerPage: number = 4
+    protected override _objectsPerPage: number = 8
 
     protected override async _getKeyboard(options: ScrollerButtonEditMessageOptions<number, BaseScrollerData>): Promise<InlineKeyboard> {
         const {

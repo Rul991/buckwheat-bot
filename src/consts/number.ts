@@ -21,3 +21,5 @@ export const MAX_CUBE_BET = 4_000_000_000
 
 export const MIN_STARS = 1
 export const MAX_STARS = 100_000
+
+export const NO_ANTISPAM_MESSAGE_COUNT = 1

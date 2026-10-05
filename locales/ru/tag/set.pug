@@ -1,0 +1,13 @@
+include /utils/mixins.pug
+
+| #{bool(isChanged)} Игрок 
++link(reply)
+|  
+if !isChanged
+    i не 
+if tag.length
+    | получает приписку 
+    b #{tag}
+else
+    | теряет приписку
+| !
