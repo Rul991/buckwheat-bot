@@ -1,0 +1,24 @@
+include /utils/mixins.pug
+
+- let i = 0
+-
+    const emojies = [
+        EMOJIES.FIRST_PLACE,
+        EMOJIES.SECOND_PLACE,
+        EMOJIES.THIRD_PLACE,
+        EMOJIES.MINUS
+    ]
+
+    const totalSpaces = Math.max(...chances.map(v => v.text.length))
+
++heading(EMOJIES.CHOOSE)
+    | Я считаю, что вероятности следующие:
+|
+|
+for chance in chances
+    - const emoji = emojies[i >= emojies.length ? emojies.length - 1 : i]
+    | #{emoji} 
+    code #{toDefaultCase(chance.text)}#{''.padEnd(totalSpaces - chance.text.length, ' ')}
+    |  - #{formatNumber(floor(chance.chance))}%
+    |
+    - i++

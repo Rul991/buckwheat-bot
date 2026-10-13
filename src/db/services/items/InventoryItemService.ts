@@ -1,8 +1,11 @@
 import type { BotContext } from "../../../types/bot"
 import Item from "../../../utils/items/Item"
 import ItemUtils from "../../../utils/items/ItemUtils"
+import Logger from "../../../utils/logs/Logger"
+import type Recipe from "../../../utils/recipes/Recipe"
 import InventoryItem from "../../entities/items/InventoryItem"
 import BaseService from "../base/BaseService"
+import LevelService from "../level/LevelService"
 
 type GetOptions<T = any> = {
     chatId: number
@@ -59,6 +62,16 @@ type GiftResult = {
     ok: boolean
     reason: string
 }
+
+type CraftOptions = {
+    chatId: number,
+    id: number,
+    recipe: Recipe,
+    count: number,
+}
+
+type CraftResult =
+    & GiftResult
 
 class InventoryItemService extends BaseService<typeof InventoryItem> {
     constructor() {
@@ -229,7 +242,7 @@ class InventoryItemService extends BaseService<typeof InventoryItem> {
         item,
         count = 1
     }: GiftOptions): Promise<GiftResult> {
-        if(owner == target) {
+        if (owner == target) {
             return {
                 ok: true,
                 reason: 'owner-equal-target'
@@ -357,6 +370,117 @@ class InventoryItemService extends BaseService<typeof InventoryItem> {
         }
 
         return undefined
+    }
+
+    async getItems(chatId: number, id: number, items: Item[]): Promise<Map<number, InventoryItem>> {
+        const result = new Map()
+        const inventoryItems = await this._repo.find({
+            chatId,
+            id,
+            itemId: {
+                $in: items.map(v => v.id)
+            }
+        })
+
+        for (const inventoryItem of inventoryItems) {
+            result.set(
+                inventoryItem.itemId,
+                inventoryItem
+            )
+        }
+
+        return result
+    }
+
+    async craft({
+        chatId,
+        id,
+        recipe,
+        count,
+    }: CraftOptions): Promise<CraftResult> {
+        if (count <= 0) {
+            return {
+                ok: false,
+                reason: 'invalid-count'
+            }
+        }
+
+        const resultItem = recipe.result.item
+        const resultTotalCount = count * recipe.result.count
+
+        const resultRemainingCount = await this.getRemainingCount({
+            chatId,
+            id,
+            item: resultItem
+        })
+
+        if (resultTotalCount > resultRemainingCount) {
+            return {
+                ok: false,
+                reason: 'too-many-items'
+            }
+        }
+
+        const inventory = await this.getInventory(chatId, id)
+        const experience = recipe.getExperience(inventory, count)
+
+        for (const material of recipe.materials) {
+            const inventoryItem = inventory.find(v => material.item.id == v.itemId)
+            const availableCount = inventoryItem?.count ?? 0
+            const requiredCount = material.count * count
+
+            Logger.debug(
+                'InventoryItemService.craft',
+                {
+                    material,
+                    inventoryItem,
+                    availableCount,
+                    requiredCount
+                }
+            )
+
+            if (availableCount < requiredCount) {
+                return {
+                    ok: false,
+                    reason: 'low-materials'
+                }
+            }
+        }
+
+        for (const material of recipe.materials) {
+            const removed = await this.remove({
+                chatId,
+                id,
+                item: material.item,
+                count: material.count * count
+            })
+
+            if (!removed.ok) {
+                return {
+                    ok: false,
+                    reason: 'low-materials'
+                }
+            }
+        }
+
+        await Promise.all([
+            this.add({
+                chatId,
+                id,
+                item: resultItem,
+                count: resultTotalCount
+            }),
+            LevelService.add(
+                chatId,
+                id,
+                experience
+            )
+        ])
+
+        return {
+            ok: true,
+            reason: 'done'
+        }
     }
 }
 

@@ -9,6 +9,8 @@ import type { ClassTypes } from "../../../../types/class"
 import MessageUtils from "../../../../utils/bot/MessageUtils"
 import ExperienceUtils from "../../../../utils/level/ExperienceUtils"
 import DuelistService from "../../../../db/services/duel/DuelistService"
+import ClassUtils from "../../../../utils/db/ClassUtils"
+import { IS_PROD } from "../../../../consts/env"
 
 class ChangeClassButton extends CallbackQueryAction<ClassData> {
     override settingId: number = 24
@@ -27,6 +29,13 @@ class ChangeClassButton extends CallbackQueryAction<ClassData> {
 
         const level = await ctx.vars.level.get()
         const levelNumber = ExperienceUtils.getLevelFromObject(level)
+        const user = await ctx.vars.user.require()
+
+        if(IS_PROD && ClassUtils.isPlayer(user.className)) {
+            return {
+                key: 'classes/cant-changed'
+            }
+        }
 
         const {
             type
@@ -51,7 +60,7 @@ class ChangeClassButton extends CallbackQueryAction<ClassData> {
                 {
                     vars: {
                         type,
-                        user: await ctx.vars.user.require()
+                        user
                     }
                 }
             ),

@@ -151,4 +151,28 @@ export default class ContextUtils {
             }
         )
     }
+    
+    static async approveChatJoinRequest(
+        ctx: BotContext,
+        id: number
+    ): Promise<boolean> {
+        return await ExceptionUtils.handleAsync(
+            async () => {
+                return await ctx.approveChatJoinRequest(id)
+            },
+            false
+        )
+    }
+
+    static async declineChatJoinRequest(
+        ctx: BotContext,
+        id: number
+    ): Promise<boolean> {
+        return await ExceptionUtils.handleAsync(
+            async () => {
+                return await ctx.declineChatJoinRequest(id)
+            },
+            false
+        )
+    }
 }

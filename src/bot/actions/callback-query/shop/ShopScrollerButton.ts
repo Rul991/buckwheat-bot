@@ -38,7 +38,10 @@ class ShopScrollerButton extends ScrollerButton<Item> {
                     return ShopShowButton.button({
                         ctx,
                         vars: {
-                            item: item.getVars(ctx)
+                            item: {
+                                ...item,
+                                ...item.getVars(ctx)
+                            }
                         },
                         data: {
                             id: bigId,

@@ -1,11 +1,14 @@
+import { LEVEL_BOOST_MULTIPLIER } from '../../consts/number'
+import InventoryItem from '../../db/entities/items/InventoryItem'
 import type Level from '../../db/entities/level/Level'
+import { levelBoostItem } from '../../resources/items/inventory'
 import MathUtils from '../math/MathUtils'
 import LevelUtils from './LevelUtils'
 
 export default class ExperienceUtils {
     static min = this.get(LevelUtils.min)
     static max = Infinity
-    
+
     static clamp(exp: number): number {
         return MathUtils.clamp(exp, this.min, this.max)
     }
@@ -25,6 +28,16 @@ export default class ExperienceUtils {
 
     static getLevelFromObject(level: Level | undefined): number {
         return LevelUtils.get(level?.currentExperience ?? this.min)
+    }
+
+    static getBoost(inventory: InventoryItem[]): number {
+        const boostCount = InventoryItem.countById(
+            levelBoostItem,
+            inventory
+        )
+
+        const boost = 1 + boostCount * LEVEL_BOOST_MULTIPLIER
+        return boost
     }
 
     static percents(currentExperience: number): number {

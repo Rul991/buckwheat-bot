@@ -29,6 +29,7 @@ export default class BuckwheatCommandHandler extends ShowableActionHandler<Buckw
         const replyFrom = ctx.msg.reply_to_message?.from
         const userFrom = ctx.from!
         const replyOrUserFrom = replyFrom ?? userFrom
+        const isSelf = replyOrUserFrom.id == id
 
         return {
             other,
@@ -37,7 +38,8 @@ export default class BuckwheatCommandHandler extends ShowableActionHandler<Buckw
             id,
             chatId,
             replyOrUserFrom,
-            replyFrom
+            replyFrom,
+            isSelf
         }
     }
     protected override async _executeAction(action: BuckwheatCommand, options: BuckwheatCommandOptions): Promise<void> {

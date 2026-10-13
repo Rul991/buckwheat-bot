@@ -153,6 +153,19 @@ import JoinChatButton from "../bot/actions/callback-query/new-chat-member/JoinCh
 import AntispamMessageAction from "../bot/actions/message/AntispamMessageAction"
 import SetTagCommand from "../bot/actions/commands/buckwheat/admin/SetTagCommand"
 import SetTagNewChatMemberAction from "../bot/actions/new-chat-member/SetTagNewChatMemberAction"
+import ChatJoinRequestButton from "../bot/actions/callback-query/chat-join-request/ChatJoinRequestButton"
+import CraftCommand from "../bot/actions/commands/buckwheat/craft/CraftCommand"
+import RecipeScrollerButton from "../bot/actions/callback-query/craft/RecipeScrollerButton"
+import RecipeShowButton from "../bot/actions/callback-query/craft/RecipeShowButton"
+import CraftButton from "../bot/actions/callback-query/craft/CraftButton"
+import ProbabilityCommand from "../bot/actions/commands/buckwheat/random/ProbabilityCommand"
+import ShortCommandShowButton from "../bot/actions/callback-query/short-command/ShortCommandShowButton"
+import GiveAwardConversation from "../bot/actions/conversations/award/GiveAwardConversation"
+import GiveAwardCommand from "../bot/actions/commands/buckwheat/award/GiveAwardCommand"
+import AwardsCommand from "../bot/actions/commands/buckwheat/award/AwardsCommand"
+import AwardDeleteButton from "../bot/actions/callback-query/award/AwardDeleteButton"
+import AwardShowButton from "../bot/actions/callback-query/award/AwardShowButton"
+import AwardScrollerButton from "../bot/actions/callback-query/award/AwardScrollerButton"
 
 export const runBot = async () => {
     const bot = new TelegramBot()
@@ -178,6 +191,7 @@ export const runBot = async () => {
         { key: 'simple/working', name: 'работай', aliases: [] },
         { key: 'simple/gundon', name: 'гандон', aliases: [] },
         { key: 'simple/chaochao', name: 'хаохао', aliases: ['хао-хао'] },
+        { key: 'simple/two', name: 'два', aliases: ['2'] },
     )
 
     bot.add(
@@ -191,7 +205,8 @@ export const runBot = async () => {
                 SetNumberSettingConversation,
                 SetStringSettingConversation,
                 SetDateSettingConversation,
-                ItemGiftConversation
+                ItemGiftConversation,
+                GiveAwardConversation,
             ),
 
         new CallbackQueryHandler()
@@ -240,7 +255,15 @@ export const runBot = async () => {
                 FaqButton,
                 FaqScrollerButton,
                 InventoryGiftButton,
-                JoinChatButton
+                JoinChatButton,
+                ChatJoinRequestButton,
+                RecipeScrollerButton,
+                RecipeShowButton,
+                CraftButton,
+                ShortCommandShowButton,
+                AwardDeleteButton,
+                AwardShowButton,
+                AwardScrollerButton,
             ),
 
         new MessageHandler()
@@ -344,6 +367,10 @@ export const runBot = async () => {
                 new FaqCommand(),
                 new UpdateCommand(),
                 new SetTagCommand(),
+                new CraftCommand(),
+                new ProbabilityCommand(),
+                new GiveAwardCommand(),
+                new AwardsCommand(),
             ),
 
         new PhotoActionHandler()

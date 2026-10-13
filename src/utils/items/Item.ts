@@ -1,6 +1,7 @@
+import { NON_DROPPABLE_ITEM_RARITY } from "../../consts/number"
 import type { BotContext } from "../../types/bot"
 import type { ItemCallback } from "../../types/callbacks"
-import type { Gun, ItemMaxCount, PartialGun, Shield } from "../../types/items"
+import type { Gun, ContructorItemDrop, ItemMaxCount, PartialGun, Shield, ItemDrop } from "../../types/items"
 import type { ItemCallbackOptions } from "../../types/items"
 
 type ItemCallbacks<T> = {
@@ -15,19 +16,22 @@ type ItemVars = {
 }
 
 type ItemConstructorOptions<T> =
-    & Pick<Item<T>, 'id' | 'key' | 'shield' | 'isConsumable' | 'basePrice'>
-    & Partial<Pick<Item<T>, 'emoji' | 'rarity'>>
+    & Pick<
+        Item<T>,
+        'id' | 'key' | 'shield' | 'isConsumable' | 'basePrice' | 'emoji'
+    >
     & {
         gun?: PartialGun
         callbacks?: Partial<ItemCallbacks<T>>
         maxCount?: ItemMaxCount
+        drop?: ContructorItemDrop
     }
 
 type ItemCallbackExecuteOptions = Omit<ItemCallbackOptions, 'item'>
 
 export default class Item<T = any> {
     static readonly defaultEmoji = 'item'
-    static readonly notDroppableRarity = -1
+    static readonly notDroppableRarity = NON_DROPPABLE_ITEM_RARITY
 
     static dummy(): Item {
         return new Item({
@@ -35,6 +39,7 @@ export default class Item<T = any> {
             key: '',
             basePrice: 0,
             isConsumable: false,
+            emoji: this.defaultEmoji,
         })
     }
 
@@ -43,13 +48,12 @@ export default class Item<T = any> {
     emoji: string
 
     isConsumable: boolean
-    rarity: number
-
     basePrice: number
     maxCount: Required<ItemMaxCount>
 
     shield?: Shield
     gun?: Gun
+    drop: ItemDrop
 
     callbacks: ItemCallbacks<T>
     canUse: boolean
@@ -59,19 +63,30 @@ export default class Item<T = any> {
         key,
         callbacks,
         emoji,
-        rarity,
         shield,
         gun,
         maxCount,
         isConsumable,
         basePrice,
+        drop
     }: ItemConstructorOptions<T>) {
+        const rarity = drop?.rarity ?? Item.notDroppableRarity
+
         this.id = id
         this.key = key
         this.emoji = emoji ?? Item.defaultEmoji
 
         this.isConsumable = isConsumable
-        this.rarity = rarity ?? Item.notDroppableRarity
+        this.drop = {
+            canDropFromLootBox: drop?.canDropFromLootBox ?? true,
+            canDropFromWork: drop?.canDropFromWork ?? false,
+            rarity,
+            lootBoxCount: drop?.canDropFromLootBox ?
+                typeof drop.lootBoxCount == 'number' ?
+                    [drop.lootBoxCount, drop.lootBoxCount] :
+                    drop.lootBoxCount
+                : [0, 0]
+        }
 
         this.basePrice = basePrice
         this.maxCount = {
@@ -140,5 +155,9 @@ export default class Item<T = any> {
             options,
             this.callbacks.use,
         ))!
+    }
+
+    get rarity(): number {
+        return this.drop.rarity
     }
 }

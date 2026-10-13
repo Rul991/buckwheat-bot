@@ -27,6 +27,10 @@ blockquote(expandable) !{itemVars.description}
 |
 if percents > 0
     +plain_bold_param(`${EMOJIES.PERCENTS} Шанс выпадения`, `${percents}%`)
+    +plain_bold_param(`${EMOJIES.WORK} Выпадает с работы`, bool(item.drop.canDropFromWork))
+    +plain_bold_param(`${EMOJIES.LOOTBOX} Выпадает с чудо-ящика`, bool(item.drop.canDropFromLootBox))
+    |
+    |
 +condition(`${EMOJIES.SHIELD} Щит`, item.shield)
     +plain_code_param(`     ${EMOJIES.MINUS} Прочность`, formatNumber(item.shield.durability))
 +condition(`${EMOJIES.GUN} Оружие`, item.gun)

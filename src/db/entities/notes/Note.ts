@@ -1,13 +1,8 @@
 import { plugin, prop } from "@typegoose/typegoose"
 import IdEntity from "../base/IdEntity"
-import { AutoIncrementID } from '@typegoose/auto-increment'
+import { autoIncrementPlugin } from "../../plugins/auto-increment"
 
-@plugin(
-    AutoIncrementID, 
-    {
-        field: 'id',
-    }
-)
+@plugin(autoIncrementPlugin)
 export default class Note extends IdEntity {
     @prop({ unique: true })
     declare id: number

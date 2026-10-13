@@ -83,7 +83,7 @@ class RoleplayService extends BaseService<typeof Roleplay> {
         const result = await this._repo.deleteOne({
             _id: this._getObjectIdFromBytes(objectId)
         })
-        return result.acknowledged
+        return result.deletedCount > 0
     }
 }
 

@@ -12,8 +12,9 @@ export default class SetTagCommand extends BuckwheatCommand {
     override minimumRank: number = RankUtils.max
     override settingId: number = 118
     override name: string = 'приписка'
+    
     override needData: boolean = true
-
+    override isSupportReply: boolean = true
     
     override async execute(options: BuckwheatCommandOptions): Promise<BuckwheatCommandExecuteResult> {
         const {

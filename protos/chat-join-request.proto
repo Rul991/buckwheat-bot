@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message ChatJoinRequestButtonData {
+    uint64 id = 1; // user's id, who want to join chat
+    bool isAccept = 2;
+}

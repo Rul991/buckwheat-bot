@@ -1,0 +1,10 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.AWARD} Поздравляю с наградой 
+code #{formatNumber(award.rank)}
+|  ранга игрока 
++link(owner)
+| !
+| #{EMOJIES.GIFT} Она была выдана игроком 
++link(giver)
+| !

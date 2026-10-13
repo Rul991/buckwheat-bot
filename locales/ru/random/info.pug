@@ -2,7 +2,7 @@ include /utils/mixins.pug
 
 - const percents = range(0, 100)
 - const rawText = (other || 'ничего').toLowerCase()
-- const text = rawText[0].toUpperCase() + rawText.slice(1)
+- const text = toDefaultCase(other)
 
 - 
     const textsDescription = [

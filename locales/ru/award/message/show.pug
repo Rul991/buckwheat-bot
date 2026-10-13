@@ -1,0 +1,14 @@
+include /utils/mixins.pug
+
+- const { rank, text } = award
+
++heading(AWARD_EMOJIES[rank - 1])
+    | Награда игрока 
+    +link(owner)
+    |  [#{formatNumber(rank)}]:
+blockquote !{text}
+|
+| #{EMOJIES.GIFT} Выдал 
+b #{award.date} назад
+| : 
++link(giver)

@@ -10,13 +10,13 @@ import SettingValue from "../../db/entities/settings/SettingValue"
 import { SettingValueTypes } from "../../protos/settings_pb"
 
 export default class RankUtils {
-    static min = 0
-    static unknown = this.min - 1
-    static max = 5
-    static owner = this.max + 1
+    static readonly min = 0
+    static readonly unknown = this.min - 1
+    static readonly max = 5
+    static readonly owner = this.max + 1
 
-    static admin = this.max - 1
-    static moderator = this.max - 2
+    static readonly admin = this.max - 1
+    static readonly moderator = this.max - 2
 
     static isClamp(rank: number): boolean {
         return MathUtils.isClamp(rank, this.unknown, this.max)

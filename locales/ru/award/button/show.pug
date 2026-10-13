@@ -1,0 +1,4 @@
+include /utils/mixins.pug
+
+| #{AWARD_EMOJIES[award.rank - 1]} 
++shorten(noHtml(award.text), 27)

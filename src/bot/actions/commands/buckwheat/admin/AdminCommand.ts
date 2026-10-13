@@ -22,16 +22,14 @@ export default abstract class AdminCommand extends BuckwheatCommand {
         const {
             ctx,
             chatId,
-            id,
             replyOrUserFrom,
-            other = ''
+            other = '',
+            isSelf
         } = options
         const replyId = replyOrUserFrom.id
 
         const infinitive = ctx.t(`admin/${this.filename}/infinitive`)
         const passive = ctx.t(`admin/${this.filename}/passive`)
-
-        const isSelf = id == replyId
 
         if (!this._canUseOnSelf && isSelf) {
             return {
@@ -100,7 +98,7 @@ export default abstract class AdminCommand extends BuckwheatCommand {
                     user,
                     reason,
                     showTime: this._showTime,
-                    time: TimeUtils.formatMillisecondsToTime(ctx, time, true)
+                    time: TimeUtils.formatMillisecondsToTime(ctx, time, {})
                 }
             }
         }

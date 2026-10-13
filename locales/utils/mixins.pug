@@ -59,6 +59,16 @@ mixin full_rank(rank)
     |  
     +rank(rank)
 
+mixin reverse_heading(emoji, hasBottomPadding = true)
+    |
+    blockquote
+        b #{emoji || EMOJIES.HEADING} 
+            block
+    |
+    if hasBottomPadding
+        |
+        |
+
 mixin heading(emoji, hasBottomPadding = true)
     |
     b #{emoji || EMOJIES.HEADING} 

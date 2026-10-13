@@ -1,8 +1,9 @@
 include /utils/mixins.pug
 
 mixin title()
-    | #{EMOJIES.IDEA} Идея №#{formatNumber(idea.id)} от 
-    +link(user)
+    +heading(EMOJIES.IDEA)
+        | Идея №#{formatNumber(idea.id)} от 
+        +link(user)
 
 b
     if vote.can

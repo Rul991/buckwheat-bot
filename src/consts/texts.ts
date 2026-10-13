@@ -12,7 +12,7 @@ export const REACT_EMOJIES = [
     '🤷', '🤷‍♀', '😡'
 ] as const
 export const DEFAULT_REACT_EMOJI = REACT_EMOJIES[29]
-export const SEPARATOR = ';'
+export const SEPARATOR = '\n'
 
 export const UNKNOWN_TEXT = '???'
 export const UNKNOWN_NAME = UNKNOWN_TEXT

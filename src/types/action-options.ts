@@ -32,6 +32,7 @@ export type BuckwheatCommandOptions =
         commandStrings: CommandStrings
         replyOrUserFrom: User
         replyFrom?: User
+        isSelf: boolean
     }
 
 export type ConditionalCommandOptions = 

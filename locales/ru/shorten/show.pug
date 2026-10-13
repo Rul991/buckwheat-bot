@@ -3,7 +3,7 @@ include /utils/mixins.pug
 - const botName = choose(botNames || []) || 'баквит'
 
 +heading(EMOJIES.SHORTEN)
-    | #{botName} #{command}
+    | #{botName} #{shortCommand.command}
 |
 | #{EMOJIES.MINUS} Команда, которая будет выполнена:
-blockquote #{botName} #{text}
+blockquote #{botName} #{shortCommand.text}

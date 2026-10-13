@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+message RecipeShowButtonData {
+    uint64 id = 1; // user's id
+    uint32 recipeId = 2; // recipe's id
+    uint32 count = 3;
+    uint32 page = 4;
+}
+
+message CraftButtonData {
+    uint64 id = 1; // user's id
+    uint32 recipeId = 2; // recipe's id
+    uint32 count = 3;
+    uint32 page = 4;
+}

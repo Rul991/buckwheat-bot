@@ -1,6 +1,6 @@
+import { MAX_ITEM_COUNT } from "../../consts/number"
 import { shopItems } from "../../resources/items/shop"
 import KeyboardCreator from "../../utils/keyboard/KeyboardCreator"
-import ArrayUtils from "../../utils/math/ArrayUtils"
 import InventoryShowButton from "../actions/callback-query/inventory/InventoryShowButton"
 import ShopBuyButton from "../actions/callback-query/shop/ShopBuyButton"
 import ShopScrollerButton from "../actions/callback-query/shop/ShopScrollerButton"
@@ -56,44 +56,40 @@ export const showShopKeyboard = KeyboardCreator.create<{
         }
     }) => {
         const bigId = BigInt(id)
-        const maxValue = 1_000_000
-        const maxLength = 20
-        const gridWidth = 5
         const item = shopItems[index]
 
         if (remainingCount > 0) {
-            const sequence = ArrayUtils.generateMultipliedSequence({
-                maxValue: Math.min(remainingCount, maxValue),
-                maxLength,
-                avoidNumber: count,
-            })
+            const balance = await ctx.vars.balance.require()
+            const money = balance.total
+            const maxValue = Math.min(
+                item ? Math.floor(money / item.basePrice) : remainingCount,
+                remainingCount,
+                MAX_ITEM_COUNT
+            )
 
-            const grid = ArrayUtils.objectsGrid({
-                width: gridWidth,
-                objects: sequence
-            })
-
-            for (const row of grid) {
-                for (const count of row) {
-                    keyboard.add(
-                        ShopShowButton.button({
-                            ctx,
-                            data: {
-                                count,
-                                id: bigId,
-                                index,
-                                page,
-                            },
-                            key: 'button/number',
-                            vars: {
-                                value: count
-                            }
-                        })
-                    )
-                }
-                keyboard.row()
-            }
-
+            keyboard.append(
+                await KeyboardCreator.count({
+                    maxValue,
+                    avoidNumber: count,
+                    callback: async ({ keyboard, index: count }) => {
+                        keyboard.add(
+                            ShopShowButton.button({
+                                ctx,
+                                data: {
+                                    count,
+                                    id: bigId,
+                                    index,
+                                    page,
+                                },
+                                key: 'button/number',
+                                vars: {
+                                    value: count
+                                }
+                            })
+                        )
+                    }
+                })
+            )
         }
 
         if (item) {

@@ -99,7 +99,6 @@ export const showRoleplayKeyboard = KeyboardCreator.create<{
                     data: {
                         id,
                         objectId,
-                        page
                     },
                     style: 'danger'
                 })
@@ -134,43 +133,5 @@ export const showRoleplayKeyboard = KeyboardCreator.create<{
                 }
             }
         }))
-    }
-)
-
-export const backRoleplayKeyboard = KeyboardCreator.create<{
-    id: number,
-    page?: number
-}>(
-    async ({
-        ctx,
-        data: {
-            id,
-            page
-        },
-        keyboard
-    }) => {
-        const bigId = BigInt(id)
-        keyboard
-            .add(
-                RoleplayScrollerButton.button({
-                    ctx,
-                    data: {
-                        data: {
-                            $typeName: 'ScrollerData',
-                            id: bigId,
-                            data: page === undefined ?
-                                {
-                                    case: 'update',
-                                    value: false
-                                } :
-                                {
-                                    case: 'page',
-                                    value: page
-                                },
-                        }
-                    },
-                    key: 'rp/button/start'
-                })
-            )
     }
 )

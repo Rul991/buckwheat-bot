@@ -1,4 +1,10 @@
 include /utils/functions.pug
 
-| #{EMOJIES.RULE} Правила: 
-code #{formatNumber(count)}
+| #{EMOJIES.RULE} 
+if page > 0
+    | Правило 
+    code №#{formatNumber(page + 1)}
+    | :
+else
+    | Правила: 
+    code #{formatNumber(count)}

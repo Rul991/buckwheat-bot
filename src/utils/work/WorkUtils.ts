@@ -1,10 +1,10 @@
-import { LEVEL_BOOST_MULTIPLIER } from "../../consts/number"
 import InventoryItem from "../../db/entities/items/InventoryItem"
-import { craftWorkUpItem, levelBoostItem, newGameItem, soapGunItem, workBoostItem } from "../../resources/items/inventory"
+import { craftWorkUpItem, newGameItem, soapGunItem, workBoostItem } from "../../resources/items/inventory"
 import type { BotContext } from "../../types/bot"
 import type { ClassTypes } from "../../types/class"
 import ClassUtils from "../db/ClassUtils"
 import type Item from "../items/Item"
+import ExperienceUtils from "../level/ExperienceUtils"
 import Logger from "../logs/Logger"
 import RandomUtils from "../math/RandomUtils"
 
@@ -97,13 +97,7 @@ export default class WorkUtils {
                 this.experienceConsts.multiplier * (level + this.experienceConsts.currentLevelUp)
             )
         )
-
-        const boostCount = InventoryItem.countById(
-            levelBoostItem,
-            inventory
-        )
-
-        const boost = 1 + boostCount * LEVEL_BOOST_MULTIPLIER
+        const boost = ExperienceUtils.getBoost(inventory)
         return Math.ceil(rawExperience * boost)
     }
 }

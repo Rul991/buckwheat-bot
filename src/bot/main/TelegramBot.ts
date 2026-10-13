@@ -16,6 +16,11 @@ import { MILLISECONDS_IN_SECOND, SECONDS_IN_MINUTE } from "../../consts/time"
 import CommandUtils from "../../utils/command/CommandUtils"
 import TotalService from "../../db/services/base/TotalService"
 import ChatService from "../../db/services/chat/ChatService"
+import SettingValueService from "../../db/services/settings/SettingValueService"
+import { autoJoinSetting } from "../../resources/settings/chat"
+import { AUTO_ALLOW_JOIN_REQUEST_SYMBOL, DO_NOTHING_JOIN_REQUEST_SYMBOL } from "../../consts/texts"
+import ContextUtils from "../../utils/bot/ContextUtils"
+import { startJoinRequestKeyboard } from "../keyboards/chat-join-request"
 
 export default class TelegramBot {
     private _bot: MyBot
@@ -84,7 +89,9 @@ export default class TelegramBot {
                 Logger.system('conversations.onExit', id, ctx.chat, ctx.from, ctx.message)
             },
         }))
+    }
 
+    private async _setupOnMiddlewares() {
         this._bot.on(
             ':migrate_from_chat_id',
             async (ctx) => {
@@ -114,9 +121,45 @@ export default class TelegramBot {
                         title: newChatTitle
                     }
                 )
-                if(newChat) {
+                if (newChat) {
                     ctx.vars.chat.set(newChat)
                 }
+            }
+        )
+
+        this._bot.on(
+            'chat_join_request',
+            async ctx => {
+                const id = ctx.vars.id
+                const chatId = ctx.vars.chatId
+                if (!chatId) return
+
+                const settingValue = await SettingValueService.get({
+                    id: chatId,
+                    setting: autoJoinSetting
+                })
+
+                const autoJoinValue = settingValue.value
+                if (autoJoinValue == DO_NOTHING_JOIN_REQUEST_SYMBOL) return
+                else if (autoJoinValue == AUTO_ALLOW_JOIN_REQUEST_SYMBOL) {
+                    await ContextUtils.approveChatJoinRequest(ctx, id)
+                    return
+                }
+
+                await MessageUtils.reply(
+                    ctx,
+                    'chat-join-request/message',
+                    {
+                        vars: {
+                            user: {
+                                id,
+                                name: ctx.from.first_name,
+                                username: ctx.from.username
+                            }
+                        },
+                        keyboard: await startJoinRequestKeyboard(ctx, { id })
+                    }
+                )
             }
         )
     }
@@ -149,6 +192,7 @@ export default class TelegramBot {
 
     private async _setup() {
         await this._setupMiddlewares()
+        await this._setupOnMiddlewares()
         await this._setupHandlers()
         await this._setupTransformers()
         await this._catch()

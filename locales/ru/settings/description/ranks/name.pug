@@ -1,3 +1,8 @@
 include /utils/emojies.pug
+include ../../../utils/consts.pug
 
-| #{RANK_EMOJIES[setting.id]} Ранг #{setting.id - 1}
+| Определяет название для 
+b #{RANK_EMOJIES[setting.id]} Ранга #{setting.id - 1}
+|
+| Название по умолчанию: 
+u #{rankNames[setting.id]}

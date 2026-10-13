@@ -1,0 +1,26 @@
+include /utils/mixins.pug
+
+- const totalCount = recipe.result.count * count
+
++heading(resultItem.emoji)
+    | Рецепт предмета 
+    u #{resultItem.title}
+    |  x#{formatNumber(recipe.result.count)}
++plain_code_param(`${EMOJIES.COUNT} Получишь`, formatNumber(totalCount))
++plain_code_param(`${EMOJIES.INVENTORY} В инвентаре`, formatNumber(inventoryItem.count))
+|
+|
++plain_code_param(`${EMOJIES.LEVEL} Нужный уровень`, formatNumber(level))
++plain_code_param(`${EMOJIES.EXPERIENCE} Получаемый опыт`, formatNumber(experience))
+|
+|
+|
++heading(EMOJIES.MINUS)
+    | Материалы:
+|
+for material in materials
+    - const {currentCount, needCount, item} = material
+    | #{bool(currentCount >= needCount)} 
+    +item(item)
+    |  - #{formatNumber(currentCount)} / #{formatNumber(needCount)}
+    |

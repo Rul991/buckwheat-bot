@@ -9,6 +9,23 @@ import Logger from "../../../../../utils/logs/Logger"
 import type { BotContext } from "../../../../../types/bot"
 import { inventoryItems } from "../../../../../resources/items/inventory"
 import InventoryItemService from "../../../../../db/services/items/InventoryItemService"
+import AwardService from "../../../../../db/services/award/AwardService"
+import UserService from "../../../../../db/services/user/UserService"
+import type User from "../../../../../db/entities/user/User"
+
+type ShowAwardOptions = {
+    ctx: BotContext,
+    chatId: number
+    id: number
+}
+
+type GetUserOptions = {
+    chatId: number
+    id: number
+    needId: number
+    ctx: BotContext
+}
+
 
 export default class DevCommand extends BuckwheatCommand {
     override name: string = 'дев'
@@ -57,20 +74,8 @@ export default class DevCommand extends BuckwheatCommand {
         )
     }
 
-    private async _dev(options: BuckwheatCommandOptions): Promise<BuckwheatCommandExecuteResult> {
-        const {
-            ctx,
-            other,
-            chatId,
-            id
-        } = options
+    private async _giveItems(chatId: number, id: number) {
         const count = 1_000_000
-
-        const html = MessageEntityUtils.messageToHtml(ctx.msg)
-        if(other) {
-            return this._htmlToPug(ctx, html)
-        }
-
         for (const item of inventoryItems) {
             await InventoryItemService.add({
                 chatId,
@@ -79,6 +84,73 @@ export default class DevCommand extends BuckwheatCommand {
                 count
             })
         }
+    }
+
+    protected async _getUser({ chatId, id, needId, ctx }: GetUserOptions): Promise<User | undefined> {
+        return needId == id ?
+            await ctx.vars.user.get() :
+            await UserService.get(chatId, needId)
+    }
+
+    private async _showAward({
+        ctx,
+        chatId,
+        id
+    }: ShowAwardOptions) {
+        const award = await AwardService.get(4)
+        if (!award) {
+            return {
+                key: 'award/message/not-exist'
+            }
+        }
+
+        const giver = await this._getUser({
+            ctx,
+            chatId,
+            id,
+            needId: award.giverId
+        })
+
+        const owner = await this._getUser({
+            ctx,
+            chatId,
+            id,
+            needId: award.id
+        })
+
+        await MessageUtils.reply(
+            ctx,
+            'award/message/show',
+            {
+                vars: {
+                    award,
+                    giver,
+                    owner
+                }
+            }
+        )
+    }
+
+    private async _dev(options: BuckwheatCommandOptions): Promise<BuckwheatCommandExecuteResult> {
+        const {
+            ctx,
+            other,
+            chatId,
+            id
+        } = options
+
+
+        const html = MessageEntityUtils.messageToHtml(ctx.msg)
+        if (other) {
+            return this._htmlToPug(ctx, html)
+        }
+
+        // await this._giveItems(chatId, id)
+        await this._showAward({
+            ctx,
+            chatId,
+            id
+        })
 
         return {
             key: 'dev/done'

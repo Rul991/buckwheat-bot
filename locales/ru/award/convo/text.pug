@@ -1,0 +1,10 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.APPROVE} Игрок 
++link(vars.user)
+| , выбран 
+code #{formatNumber(rank)}
+|  ранг!
+| #{EMOJIES.WRITE} Теперь введите текст до 
+code #{formatNumber(max)}
+|  символов, форматирование работает!

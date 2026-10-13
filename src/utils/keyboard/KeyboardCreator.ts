@@ -1,6 +1,7 @@
 import { InlineKeyboard } from "grammy"
 import type { BotContext } from "../../types/bot"
-import type { KeyboardBuilder, KeyboardCallback } from "../../types/keyboard"
+import type { KeyboardBuilder, KeyboardCallback, KeyboardCountOptions } from "../../types/keyboard"
+import ArrayUtils from "../math/ArrayUtils"
 
 export default class KeyboardCreator {
     static create<T, C extends BotContext = BotContext>(callback: KeyboardCallback<T, C>): KeyboardBuilder<T, C> {
@@ -13,5 +14,31 @@ export default class KeyboardCreator {
             })
             return keyboardAfterCallback ?? keyboard
         }
+    }
+
+    static async count(options: KeyboardCountOptions): Promise<InlineKeyboard> {
+        const {
+            callback,
+            gridWidth = 5
+        } = options
+        let keyboard = new InlineKeyboard()
+
+        const indexes = ArrayUtils.generateMultipliedSequence(options)
+        const grid = ArrayUtils.objectsGrid({
+            objects: indexes,
+            width: gridWidth
+        })
+
+        for (const row of grid) {
+            for (const index of row) {
+                keyboard = await callback({
+                    keyboard,
+                    index
+                }) ?? keyboard
+            }
+            keyboard.row()
+        }
+
+        return keyboard
     }
 }

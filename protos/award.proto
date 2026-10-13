@@ -1,0 +1,18 @@
+syntax = "proto3";
+import "scroller.proto";
+
+message AwardScrollerButtonData {
+    ScrollerData data = 1;
+    uint64 ownerId = 2; // award owner's id
+}
+
+message AwardShowButtonData {
+    uint64 id = 1; // user's id
+    uint32 awardId = 3; // award's id
+    uint32 page = 4; // back page's index
+}
+
+message AwardDeleteButtonData {
+    uint64 id = 1; // user's id
+    uint32 awardId = 3; // award's id
+}

@@ -1,25 +1,4 @@
-type Grid = {
-    width: number
-}
-
-type NumberGrid = Grid & {
-    min: number,
-    max: number,
-    step?: number
-}
-
-type ObjectsGrid<T> = Grid & {
-    objects: T[]
-}
-
-type GenerateMultipliedSequenceOptions = {
-    startValue?: number
-    maxValue: number
-    maxLength: number
-    values?: number[]
-    avoidNumber?: number
-    isAddLastValue?: boolean
-}
+import type { NumberGrid, ObjectsGrid, GenerateMultipliedSequenceOptions } from "../../types/array"
 
 export default class ArrayUtils {
     static range(min: number, max: number, step: number = 1) {
@@ -60,7 +39,7 @@ export default class ArrayUtils {
     private static _generateMultipliedSequenceWithoutAvoiding({
         startValue = 1,
         maxValue,
-        maxLength,
+        maxLength = 20,
         values = [2, 5, 10],
         isAddLastValue = true
     }: GenerateMultipliedSequenceOptions): number[] {
@@ -105,13 +84,13 @@ export default class ArrayUtils {
             avoidNumber
         } = options
 
-        const rawNumber = this._generateMultipliedSequenceWithoutAvoiding(options)
+        const rawNumbers = this._generateMultipliedSequenceWithoutAvoiding(options)
 
         if (avoidNumber === undefined) {
-            return rawNumber
+            return rawNumbers
         }
         else {
-            return rawNumber.filter(v => v != avoidNumber)
+            return rawNumbers.filter(v => v != avoidNumber)
         }
     }
 }

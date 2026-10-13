@@ -1,6 +1,5 @@
-include /utils/emojies.pug
+include /utils/mixins.pug
 
-b #{EMOJIES.HEADING} Текущее приветствие:
-|
-|
++heading()
+    | Текущее приветствие:
 blockquote(expandable) !{hello || '<i>(...тут пусто)</i>'}

@@ -28,3 +28,25 @@ export type ItemCallbackOptions = {
     id: number
     count: number
 }
+
+export type ContructorItemDrop = 
+    & {
+        canDropFromWork?: boolean
+        rarity: number
+    }
+    & (
+        | {
+            canDropFromLootBox?: true
+            lootBoxCount: [number, number] | number
+        }
+        | {
+            canDropFromLootBox?: false
+        }
+    )
+
+export type ItemDrop = {
+    canDropFromWork: boolean
+    rarity: number
+    canDropFromLootBox: boolean
+    lootBoxCount: [number, number]
+}

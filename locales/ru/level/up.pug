@@ -1,9 +1,11 @@
-include /utils/functions.pug
+include /utils/mixins.pug
 
 mixin num(value)
     code #{formatNumber(value)}
 
-| #{EMOJIES.LEVEL} Ваш уровень - 
+| #{EMOJIES.LEVEL} Игрок 
++link(user)
+| , ваш уровень - 
 +num(currentLevel)
 | !
 | #{EMOJIES.MINUS} Вы получаете 

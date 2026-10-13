@@ -33,7 +33,7 @@ export default class Chat extends IdEntity {
 
         this.title = title
         this.hello = ''
-        this.isPublic = false
+        this.isPublic = true
         this.canUseSummonNow = true
     }
 }

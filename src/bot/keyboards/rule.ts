@@ -4,11 +4,13 @@ import RuleScrollerButton from "../actions/callback-query/rule/RuleScrollerButto
 
 export const startRuleKeyboard = KeyboardCreator.create<{
     id: number
+    page: number
 }>(
     async ({
         ctx,
         data: {
-            id
+            id,
+            page
         },
         keyboard
     }) => {
@@ -20,8 +22,8 @@ export const startRuleKeyboard = KeyboardCreator.create<{
                     data: {
                         $typeName: 'ScrollerData',
                         data: {
-                            case: 'update',
-                            value: false
+                            case: 'page',
+                            value: page
                         },
                     }
                 },

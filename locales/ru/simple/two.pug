@@ -1,0 +1,12 @@
+include /utils/mixins.pug
+
+if other
+    +random([
+        'Это не я!',
+        'Не я!',
+    ])
+else
+    +random([
+        'Это я!',
+        'Я!',
+    ])

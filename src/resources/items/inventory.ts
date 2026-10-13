@@ -4,6 +4,7 @@ import { COOKIE_TIME } from "../../consts/time"
 import DuelistService from "../../db/services/duel/DuelistService"
 import GreedBoxService from "../../db/services/greed-box/GreedBoxService"
 import InventoryItemService from "../../db/services/items/InventoryItemService"
+import LevelService from "../../db/services/level/LevelService"
 import BalanceService from "../../db/services/money/BalanceService"
 import UserClassService from "../../db/services/user/UserClassService"
 import WorkService from "../../db/services/work/WorkService"
@@ -16,12 +17,18 @@ import Logger from "../../utils/logs/Logger"
 import RandomUtils from "../../utils/math/RandomUtils"
 import ShieldUtils from "../../utils/shield/ShieldUtils"
 
+// TODO: add drop for everyone
+
 export const businessPaperItem = new Item({
     id: 0,
     key: 'business/paper',
     basePrice: 100_000,
     isConsumable: true,
-    emoji: 'book'
+    emoji: 'book',
+    drop: {
+        rarity: 12,
+        lootBoxCount: [1, 2]
+    }
 })
 
 export const cookieItem = new Item({
@@ -39,7 +46,7 @@ export const cookieItem = new Item({
         }) => {
             const user = await ctx.vars.user.get()
             const isSendMessage = await GrindUtils.isSendMessage(ctx, id)
-            await Promise.allSettled([
+            await Promise.all([
                 isSendMessage && MessageUtils.reply(
                     ctx,
                     'cookie/eat',
@@ -57,6 +64,10 @@ export const cookieItem = new Item({
                 )
             ])
         }
+    },
+    drop: {
+        rarity: 1,
+        lootBoxCount: [3, 40]
     }
 })
 
@@ -65,7 +76,11 @@ export const corporationItem = new Item({
     key: 'business/corporation',
     isConsumable: true,
     basePrice: 500_000,
-    emoji: 'book'
+    emoji: 'book',
+    drop: {
+        rarity: 13,
+        lootBoxCount: 1
+    }
 })
 
 export const craftWorkUpItem = new Item({
@@ -88,47 +103,62 @@ export const freeBuyItem = new Item({
     id: 5,
     key: 'other/free-buy',
     isConsumable: true,
-    rarity: 10,
     basePrice: 50_000,
-    emoji: 'free'
+    emoji: 'free',
+    drop: {
+        rarity: 10,
+        lootBoxCount: [1, 3],
+        canDropFromWork: true
+    }
 })
 
 export const fuelOreItem = new Item({
     id: 6,
     key: 'fuel/ore',
     isConsumable: true,
-    rarity: 5,
     basePrice: 100,
-    emoji: 'fuel'
+    emoji: 'fuel',
+    drop: {
+        rarity: 5,
+        lootBoxCount: [2, 15],
+        canDropFromWork: true
+    }
 })
 
 export const fuelGunItem = new Item({
     id: 7,
     key: 'fuel/gun',
     isConsumable: false,
-    rarity: 8,
     gun: {
         damage: [50, 100],
         ammo: fuelOreItem
     },
     basePrice: 8000,
-    emoji: 'fuel'
+    emoji: 'fuel',
+    drop: {
+        rarity: 8,
+        lootBoxCount: [1, 2],
+        canDropFromWork: true
+    }
 })
 
 export const glassItem = new Item({
     id: 8,
     key: 'raw/glass',
     isConsumable: true,
-    rarity: 4,
     basePrice: 40,
-    emoji: 'glass'
+    emoji: 'glass',
+    drop: {
+        rarity: 4,
+        lootBoxCount: [3, 30],
+        canDropFromWork: true
+    }
 })
 
 export const greedBoxItem = new Item({
     id: 9,
     key: 'other/greed-box',
     isConsumable: false,
-    rarity: 15,
     maxCount: {
         chat: 1
     },
@@ -192,6 +222,11 @@ export const greedBoxItem = new Item({
                 )
             ])
         }
+    },
+    drop: {
+        rarity: 15,
+        canDropFromLootBox: false,
+        canDropFromWork: true
     }
 })
 
@@ -223,9 +258,13 @@ export const metalItem = new Item({
     id: 13,
     key: 'raw/metal',
     isConsumable: true,
-    rarity: 3,
     basePrice: 50,
-    emoji: 'metal'
+    emoji: 'metal',
+    drop: {
+        rarity: 3,
+        lootBoxCount: [1, 15],
+        canDropFromWork: true
+    }
 })
 
 export const moneyGeneratorItem = new Item({
@@ -259,12 +298,16 @@ export const oneTimeGunItem = new Item({
     id: 17,
     key: 'gun/one-time',
     isConsumable: true,
-    rarity: 7,
     gun: {
         damage: [50, 200]
     },
     basePrice: 3200,
     emoji: 'gun',
+    drop: {
+        rarity: 7,
+        lootBoxCount: 1,
+        canDropFromWork: true
+    }
 })
 
 export const pistolAmmoItem = new Item({
@@ -294,7 +337,6 @@ export const rockVoidItem = new Item({
     id: 20,
     key: 'gun/rock-void',
     isConsumable: false,
-    rarity: 15,
     gun: {
         damage: [1, 1]
     },
@@ -309,7 +351,7 @@ export const rockVoidItem = new Item({
             count
         }) => {
             const damage = count
-            await Promise.allSettled([
+            await Promise.all([
                 MessageUtils.reply(
                     ctx,
                     'rock-void/use',
@@ -330,6 +372,11 @@ export const rockVoidItem = new Item({
                 })
             ])
         }
+    },
+    drop: {
+        rarity: 15,
+        canDropFromWork: true,
+        canDropFromLootBox: false
     }
 })
 
@@ -363,7 +410,6 @@ export const stickGunItem = new Item({
     id: 23,
     key: 'gun/stick',
     isConsumable: true,
-    rarity: 9,
     gun: {
         damage: [
             1000,
@@ -371,16 +417,25 @@ export const stickGunItem = new Item({
         ]
     },
     basePrice: 25_000,
-    emoji: 'wood'
+    emoji: 'wood',
+    drop: {
+        rarity: 9,
+        lootBoxCount: [1, 3],
+        canDropFromWork: true
+    }
 })
 
 export const stringsItem = new Item({
     id: 24,
     key: 'raw/strings',
     isConsumable: true,
-    rarity: 2,
     basePrice: 35,
     emoji: 'string',
+    drop: {
+        rarity: 2,
+        lootBoxCount: [1, 15],
+        canDropFromWork: true
+    }
 })
 
 export const coolShieldItem = new Item({
@@ -409,18 +464,26 @@ export const valLeafItem = new Item({
     id: 27,
     key: 'raw/leaf',
     isConsumable: true,
-    rarity: 9,
     basePrice: 500,
-    emoji: 'leaf'
+    emoji: 'leaf',
+    drop: {
+        rarity: 9,
+        canDropFromWork: true,
+        canDropFromLootBox: false
+    }
 })
 
 export const woodItem = new Item({
     id: 28,
     key: 'raw/wood',
     isConsumable: true,
-    rarity: 1,
     basePrice: 5,
-    emoji: 'wood'
+    emoji: 'wood',
+    drop: {
+        rarity: 1,
+        lootBoxCount: [1, 150],
+        canDropFromWork: true
+    }
 })
 
 export const woodSwordItem = new Item({
@@ -455,8 +518,12 @@ export const cardBoxItem = new Item({
     key: 'other/card-box',
     isConsumable: true,
     basePrice: 180,
-    rarity: 2,
-    emoji: 'card'
+    emoji: 'card',
+    drop: {
+        rarity: 2,
+        lootBoxCount: [5, 25],
+        canDropFromWork: true
+    }
 })
 
 export const healGunItem = new Item({
@@ -465,9 +532,13 @@ export const healGunItem = new Item({
     isConsumable: true,
     basePrice: 20_000,
     emoji: 'heal',
-    rarity: 8,
     gun: {
         damage: [-200, -10]
+    },
+    drop: {
+        rarity: 8,
+        lootBoxCount: [1, 2],
+        canDropFromWork: true
     }
 })
 
@@ -574,11 +645,14 @@ export const resetClassItem = new Item({
             id,
             ctx
         }) => {
-            await UserClassService.set(
-                chatId,
-                id,
-                ClassUtils.defaultClassName
-            )
+            await Promise.all([
+                UserClassService.set(
+                    chatId,
+                    id,
+                    ClassUtils.defaultClassName
+                ),
+                LevelService.reset(chatId, id)
+            ])
 
             await MessageUtils.reply(
                 ctx,
@@ -640,7 +714,11 @@ export const glockGunItem = new Item({
     gun: {
         damage: [-873, 873]
     },
-    rarity: 13
+    drop: {
+        rarity: 13,
+        lootBoxCount: [2, 0],
+        canDropFromWork: true
+    }
 })
 
 export const soapGunItem = new Item({
@@ -652,6 +730,22 @@ export const soapGunItem = new Item({
     gun: {
         damage: [Infinity, Infinity]
     }
+})
+
+export const lootboxItem = new Item({
+    id: 42,
+    key: 'lootbox/lootbox',
+    isConsumable: true,
+    basePrice: 35_000,
+    emoji: 'lootbox'
+})
+
+export const lootboxMaterialItem = new Item({
+    id: 43,
+    key: 'lootbox/material',
+    isConsumable: true,
+    basePrice: 500,
+    emoji: 'lootbox'
 })
 
 export const inventoryItems: Item<any>[] = [
@@ -697,4 +791,6 @@ export const inventoryItems: Item<any>[] = [
     orbitalGunItem,
     glockGunItem,
     soapGunItem,
+    lootboxItem,
+    lootboxMaterialItem
 ]

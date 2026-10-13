@@ -63,7 +63,14 @@ export default class MessageEntityUtils {
                 before: '<s>',
                 after: '</s>'
             }
-        }
+        },
+        code: (text) => {
+            return {
+                text,
+                before: '<code>',
+                after: '</code>'
+            }
+        },
     }
 
     static getOtherEntitiesAndText(text: string, entities: MessageEntity[], endIndex = 1): [string, MessageEntity[]] {

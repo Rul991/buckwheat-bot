@@ -18,8 +18,11 @@ export default abstract class SetProfilePropertyCommand extends BuckwheatCommand
             other,
             ctx
         } = options
-        if(!this._isHtml) return other!.slice(0, this._length)
-        
+        if (!this._isHtml) return other!
+            .replaceAll('\n', ' ')
+            .slice(0, this._length)
+            .trim()
+
         const message = ctx.msg
         return MessageEntityUtils
             .messageToHtml({

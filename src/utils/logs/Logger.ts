@@ -19,7 +19,7 @@ export default class Logger {
         message,
     }: LogOptions): Promise<void> {
         const values = message
-            .map(v => Bun.inspect(v, { compact: true, colors: false, depth: 10 }).replaceAll('\n', ' '))
+            .map(v => Bun.inspect(v, { compact: true, colors: false, depth: 5 }).replaceAll('\n', ' '))
             .join(' ')
 
         const line = `${new Date().toUTCString()} | ${values}\n`

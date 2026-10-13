@@ -7,7 +7,7 @@ import UserService from "../../services/user/UserService"
 import type { BotContext } from "../../../types/bot"
 import { DEV_ID } from "../../../consts/env"
 import { UNKNOWN_NAME } from "../../../consts/texts"
-import { AutoIncrementID } from "@typegoose/auto-increment"
+import { autoIncrementPlugin } from "../../plugins/auto-increment"
 
 type ShowOptions = {
     ctx: BotContext
@@ -24,7 +24,7 @@ type ShowOptions = {
 )
 
 @plugin(
-    AutoIncrementID, 
+    autoIncrementPlugin, 
     {
         field: 'id',
     }

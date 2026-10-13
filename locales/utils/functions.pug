@@ -68,3 +68,28 @@ include /utils/emojies.pug
 
         return value
     }
+
+    const toDefaultCase = (text) => {
+        if(!text) return ''
+
+        const firstLetter = text[0].toUpperCase()
+        const otherText = text.slice(1)
+
+        return `${firstLetter}${otherText}`
+    }
+
+    const noHtml = (html) => {
+        return html
+            .replace(/<!--[\s\S]*?-->/g, '')
+            .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+            .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '')
+            .replace(/<\/?[^>]+(>|$)/g, '')
+            .replace(/&nbsp;/g, ' ')
+            .replace(/&amp;/g, '&')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&quot;/g, '"')
+            .replace(/&#39;/g, "'")
+            .replace(/\s+/g, ' ')
+            .trim()
+    }

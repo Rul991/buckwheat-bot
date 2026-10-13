@@ -26,24 +26,23 @@
   "type": "module",
   "private": true,
   "devDependencies": {
-    "@types/bun": "^1.4.2",
-    "@types/node": "^25.9.8",
+    "@types/bun": "^1.4.3",
+    "@types/node": "^25.9.9",
     "@types/pug": "^2.0.10"
   },
   "dependencies": {
-    "@bufbuild/protobuf": "^2.15.0",
-    "@bufbuild/protoc-gen-es": "^2.15.0",
+    "@bufbuild/protobuf": "^2.16.0",
+    "@bufbuild/protoc-gen-es": "^2.16.0",
     "@grammyjs/auto-retry": "^2.0.2",
     "@grammyjs/conversations": "^2.1.1",
     "@grammyjs/ratelimiter": "^1.2.1",
     "@grully/i18n": "^1.0.3",
     "@grully/i18n-pug": "^1.0.2",
-    "@typegoose/auto-increment": "^5.0.1",
-    "@typegoose/typegoose": "^13.4.0",
+    "@typegoose/typegoose": "^13.5.0",
     "grammy": "^1.46.0",
-    "isomorphic-dompurify": "^4.3.0",
-    "mongoose": "^9.10.1",
+    "isomorphic-dompurify": "^4.5.0",
+    "mongoose": "^9.11.2",
     "telegram-transformer": "^1.4.0",
-    "zod": "^4.6.5"
+    "zod": "^4.6.7"
   }
 }

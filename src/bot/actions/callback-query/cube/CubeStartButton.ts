@@ -266,7 +266,7 @@ class CubeStartButton extends CallbackQueryAction<CubeStartButtonData> {
         }
 
         const type = 'cube'
-        await Promise.allSettled([
+        await Promise.all([
             GameService.win({
                 type,
                 chatId,

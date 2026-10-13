@@ -36,5 +36,4 @@ message RoleplayShowButtonData {
 message RoleplayDeleteButtonData {
     uint64 id = 1; // user's id
     bytes objectId = 2; // roleplay's objectId
-    uint32 page = 3; // back page index
 }

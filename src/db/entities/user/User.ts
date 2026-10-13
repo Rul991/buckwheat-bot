@@ -5,6 +5,7 @@ import ClassUtils from "../../../utils/db/ClassUtils"
 import RankUtils from "../../../utils/db/RankUtils"
 import AvaHistory from "./AvaHistory"
 import { MAX_DESCRIPTION_LENGTH, MAX_NAME_LENGTH, MIN_DESCRIPTION_LENGTH, MIN_NAME_LENGTH } from "../../../consts/lengths"
+import { UNKNOWN_NAME } from "../../../consts/texts"
 
 @index(
     {
@@ -16,6 +17,14 @@ import { MAX_DESCRIPTION_LENGTH, MAX_NAME_LENGTH, MIN_DESCRIPTION_LENGTH, MIN_NA
     }
 )
 export default class User extends ChatIdEntity {
+    static dummy(): User {
+        return new User({
+            chatId: 0,
+            id: 0,
+            name: UNKNOWN_NAME
+        })
+    }
+
     @prop({ index: true, minlength: MIN_NAME_LENGTH, maxlength: MAX_NAME_LENGTH })
     name: string
 

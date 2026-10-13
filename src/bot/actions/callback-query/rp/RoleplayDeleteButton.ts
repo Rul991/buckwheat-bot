@@ -5,8 +5,6 @@ import type { CallbackQueryExecuteResult } from "../../../../types/results"
 import CallbackQueryAction from "../../base/CallbackQueryAction"
 import RankUtils from "../../../../utils/db/RankUtils"
 import RoleplayService from "../../../../db/services/rp/RoleplayService"
-import MessageUtils from "../../../../utils/bot/MessageUtils"
-import { backRoleplayKeyboard } from "../../../keyboards/rp"
 
 class RoleplayDeleteButton extends CallbackQueryAction<RoleplayDeleteButtonData> {
     override schema: GenMessage<RoleplayDeleteButtonData> = RoleplayDeleteButtonDataSchema
@@ -22,37 +20,24 @@ class RoleplayDeleteButton extends CallbackQueryAction<RoleplayDeleteButtonData>
     protected override async _execute(options: CallbackQueryActionOptions<RoleplayDeleteButtonData>): Promise<CallbackQueryExecuteResult> {
         const {
             data,
-            ctx,
-            id
         } = options
 
         const {
-            page,
             objectId
         } = data
 
-        const roleplay = await RoleplayService.delete(
+        const isDeleted = await RoleplayService.delete(
             objectId
         )
-        if (!roleplay) {
+        if (!isDeleted) {
             return {
                 key: 'rp/not-exist'
             }
         }
 
-        await MessageUtils.editText(
-            ctx,
-            'rp/deleted',
-            {
-                keyboard: await backRoleplayKeyboard(
-                    ctx,
-                    {
-                        id,
-                        page
-                    }
-                )
-            }
-        )
+        return {
+            key: 'rp/deleted'
+        }
     }
 }
 

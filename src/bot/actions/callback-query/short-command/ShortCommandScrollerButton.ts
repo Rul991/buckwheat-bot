@@ -8,15 +8,14 @@ import ScrollerButton from "../scroller/ScrollerButton"
 import RankUtils from "../../../../utils/db/RankUtils"
 import ShortCommandService from "../../../../db/services/short/ShortCommandService"
 import { InlineKeyboard } from "grammy"
-import ShortCommandDeleteButton from "./ShortCommandDeleteButton"
-import CommandUtils from "../../../../utils/command/CommandUtils"
+import ShortCommandShowButton from "./ShortCommandShowButton"
 
 class ShortCommandScrollerButton extends ScrollerButton<ShortCommand, ShortCommandScrollerButtonData> {
     override schema: GenMessage<ShortCommandScrollerButtonData> = ShortCommandScrollerButtonDataSchema
     override minimumRank: number = RankUtils.min
     override settingId: number = 84
     override name: string = 'scscr'
-    protected override _objectsPerPage: number = 1
+    protected override _objectsPerPage: number = 6
 
     protected override async _getRawObjects(options: CallbackQueryActionOptions<ShortCommandScrollerButtonData>): Promise<ShortCommand[]> {
         const {
@@ -30,57 +29,34 @@ class ShortCommandScrollerButton extends ScrollerButton<ShortCommand, ShortComma
         const keyboard = new InlineKeyboard()
 
         const {
-            slicedObjects: [shortCommand],
+            slicedObjects: shortCommands,
             ctx,
-            id
+            page
         } = options
-        if (!shortCommand) return keyboard
+        const id = BigInt(options.id)
 
-        keyboard
-            .copyText(
-                ctx.t('shorten/copy/text'),
-                ctx.t(
-                    'shorten/copy/value',
-                    {
+        for (const shortCommand of shortCommands) {
+            keyboard.add(
+                ShortCommandShowButton.button({
+                    ctx,
+                    data: {
+                        page,
+                        id,
+                        command: shortCommand._id!.id
+                    },
+                    vars: {
                         shortCommand
                     }
-                )
+                })
             )
-            .style('primary')
-
-        keyboard.add(ShortCommandDeleteButton.button({
-            ctx,
-            data: {
-                command: shortCommand._id!.id,
-                id: BigInt(id)
-            },
-            style: 'danger'
-        }))
+        }
 
         return keyboard.toFlowed(1)
     }
 
-    protected override async _editMessage(options: ScrollerButtonEditMessageOptions<ShortCommand, ShortCommandScrollerButtonData>): Promise<ScrollerButtonEditMessageResult> {
-        const {
-            slicedObjects: [shortCommand]
-        } = options
-
-        if (!shortCommand) return {
-            key: 'shorten/not-exist'
-        }
-
-        const {
-            command,
-            text
-        } = shortCommand
-
+    protected override async _editMessage(_options: ScrollerButtonEditMessageOptions<ShortCommand, ShortCommandScrollerButtonData>): Promise<ScrollerButtonEditMessageResult> {
         return {
-            key: 'shorten/show',
-            vars: {
-                command,
-                text,
-                botNames: CommandUtils.botNames
-            }
+            key: 'shorten/list',
         }
     }
 }
