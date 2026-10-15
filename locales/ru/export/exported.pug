@@ -1,7 +1,10 @@
 include /utils/mixins.pug
 
-| Игрок 
+| #{EMOJIES.EXPORT} Игрок 
 +link(user)
-| , это экспортированные данные по 
+| , экспортированные данные 
 u #{definition.emoji} #{definition.title}
-| !
+|  доступны по ключу в течение 
+u #{time}
+| : 
++lang('hex', hash)

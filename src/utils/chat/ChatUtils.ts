@@ -13,7 +13,7 @@ export default class ChatUtils {
                     ruleCount: await RuleService.count(chat.id)
                 },
                 keyboard: await chatKeyboard(ctx, {})
-            }
+            },
         } as const
     }
 }

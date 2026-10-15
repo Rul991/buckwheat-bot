@@ -1,0 +1,12 @@
+include /utils/mixins.pug
+
++heading(EMOJIES.GENERATOR)
+    | Информация о генераторах игрока 
+    +link(user)
+    | :
++plain_bold_param(`${EMOJIES.COUNT2}  Количество`, `${formatNumber(generator.generatorCount)} / ${formatNumber(maxGeneratorsCount)}`)
++plain_bold_param(`${EMOJIES.LEVEL}  Уровень`, `      ${formatNumber(generator.levels)} / ${formatNumber(maxLevel)}`)
+|
+|
++plain_bold_param(`${EMOJIES.TIME}  Доход в час`, `${formatNumber(income.perHour)}${EMOJIES.MONEY}`)
++plain_bold_param(`${EMOJIES.INCOME}  Прибыль`, `     ${formatNumber(income.total)}${EMOJIES.MONEY}`)

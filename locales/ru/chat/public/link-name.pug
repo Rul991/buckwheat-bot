@@ -1,0 +1,7 @@
+include /utils/mixins.pug
+
+- const maxLength = 11
+
++shorten(chat.title, maxLength)
+|  | 
++shorten(user.username ? `@${user.username}` : user.name, maxLength)

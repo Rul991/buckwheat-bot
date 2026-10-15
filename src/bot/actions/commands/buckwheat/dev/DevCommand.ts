@@ -145,12 +145,7 @@ export default class DevCommand extends BuckwheatCommand {
             return this._htmlToPug(ctx, html)
         }
 
-        // await this._giveItems(chatId, id)
-        await this._showAward({
-            ctx,
-            chatId,
-            id
-        })
+        await this._giveItems(chatId, id)
 
         return {
             key: 'dev/done'

@@ -30,12 +30,6 @@ export type ReplyMediaOptions =
         key?: string
     }
 
-export type ReplyTextAsDocumentOptions =
-    & ReplyMediaOptions
-    & {
-        filename?: string
-    }
-
 export type EditMediaOptions =
     & ReplyMediaOptions
     & {

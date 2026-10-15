@@ -70,6 +70,10 @@ class BalanceService extends BaseService<typeof Balance> {
         return await this.create(Balance.default(chatId, id))
     }
 
+    async getMoney(chatId: number, id: number): Promise<number> {
+        return (await this.get(chatId, id))?.total ?? 0
+    }
+
     async getAllByChatId(chatId: number): Promise<Balance[]> {
         return await this._repo.find({
             chatId,

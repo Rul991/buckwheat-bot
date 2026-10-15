@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+message GeneratorCollectButtonData {
+    uint64 id = 1; // user's id
+}
+
+message GeneratorAddButtonData {
+    uint64 id = 1; // user's id
+}
+
+message GeneratorUpgradeButtonData {
+    uint64 id = 1; // user's id
+}

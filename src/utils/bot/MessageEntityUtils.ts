@@ -71,6 +71,13 @@ export default class MessageEntityUtils {
                 after: '</code>'
             }
         },
+        custom_emoji: (text, entity) => {
+            return {
+                text,
+                before: `<tg-emoji emoji-id="${entity.custom_emoji_id}">`,
+                after: '</tg-emoji>'
+            }
+        }
     }
 
     static getOtherEntitiesAndText(text: string, entities: MessageEntity[], endIndex = 1): [string, MessageEntity[]] {

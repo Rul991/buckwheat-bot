@@ -5,11 +5,14 @@ import type { CallbackQueryExecuteResult } from "../../../../types/results"
 import RankUtils from "../../../../utils/db/RankUtils"
 import CallbackQueryAction from "../../base/CallbackQueryAction"
 import ExportImportManager from "../../../../utils/data/ExportImportManager"
-import JsonUtils from "../../../../utils/string/JsonUtils"
 import MessageUtils from "../../../../utils/bot/MessageUtils"
 import { SettingValueTypes } from "../../../../protos/settings_pb"
 import type { BotContext } from "../../../../types/bot"
 import Setting from "../../../../utils/settings/Setting"
+import ExportImportDataService from "../../../../db/services/export-import/ExportImportDataService"
+import ExportImportData from "../../../../db/entities/export-import/ExportImportData"
+import TimeUtils from "../../../../utils/time/TimeUtils"
+import { EXPORT_IMPORT_DATA_TTL, MILLISECONDS_IN_SECOND } from "../../../../consts/time"
 
 class ExportButton extends CallbackQueryAction<ExportButtonData> {
     override schema: GenMessage<ExportButtonData> = ExportButtonDataSchema
@@ -62,23 +65,35 @@ class ExportButton extends CallbackQueryAction<ExportButtonData> {
             }
         }
 
+        const key = definition.key
         const value = await definition.exportCallback({
             chatId,
             id,
             ctx
         })
-        const jsonValue = JsonUtils.stringify(value)
-        const user = await ctx.vars.user.get()
 
-        await MessageUtils.replyTextAsDocument(
+        const exportImportData = await ExportImportDataService.create(
+            new ExportImportData(
+                key,
+                value
+            )
+        )
+
+        const user = await ctx.vars.user.get()
+        const time = TimeUtils.formatMillisecondsToTime(
             ctx,
-            jsonValue,
+            EXPORT_IMPORT_DATA_TTL * MILLISECONDS_IN_SECOND
+        )
+
+        await MessageUtils.reply(
+            ctx,
+            'export/exported',
             {
-                filename: `${definition.key}.json`,
-                key: 'export/exported',
                 vars: {
                     definition: definition.getVars(ctx),
-                    user
+                    user,
+                    hash: exportImportData.hash,
+                    time
                 }
             }
         )

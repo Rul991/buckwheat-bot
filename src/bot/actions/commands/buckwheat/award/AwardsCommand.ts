@@ -12,6 +12,7 @@ export default class AwardsCommand extends BuckwheatCommand {
     override minimumRank: number = RankUtils.min
     override settingId: number = 127
     override name: string = 'награды'
+    override isSupportReply: boolean = true
     
     override async execute(options: BuckwheatCommandOptions): Promise<BuckwheatCommandExecuteResult> {
         const {

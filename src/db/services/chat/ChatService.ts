@@ -82,6 +82,10 @@ class ChatService extends BaseService<typeof Chat> {
 
         return map
     }
+
+    async getPublicChats(): Promise<Chat[]> {
+        return await this._repo.find({ isPublic: true })
+    }
 }
 
 export default new ChatService()

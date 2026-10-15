@@ -17,6 +17,7 @@ export default class ChatCommand extends BuckwheatCommand {
         } = options
 
         const chat = await ctx.vars.chat.require()
-        return await ChatUtils.message(ctx, chat)
+        const result = await ChatUtils.message(ctx, chat)
+        return result
     }
 }

@@ -1,12 +1,12 @@
 import type { BotContext } from "../../types/bot"
-import type { EditMediaOptions, InvoiceOptions, ReplyMediaOptions, ReplyOptions, ReplyTextAsDocumentOptions } from "../../types/options"
+import type { EditMediaOptions, InvoiceOptions, ReplyMediaOptions, ReplyOptions } from "../../types/options"
 import ExceptionUtils from "../exceptions/ExceptionUtils"
 import type { Dices } from "../../types/unions"
 import Logger from "../logs/Logger"
 import type { Message } from "grammy/types"
 import RandomUtils from "../math/RandomUtils"
 import ContextUtils from "./ContextUtils"
-import { InputFile, InputMediaBuilder } from "grammy"
+import { InputMediaBuilder } from "grammy"
 
 type ReplyMediaType = keyof ReplyMessageResult
 
@@ -125,35 +125,6 @@ export default class MessageUtils {
 
                 Logger.system('MessageUtils.reply', result)
                 return result
-            }
-        )
-    }
-
-    static async replyTextAsDocument(ctx: BotContext, text: string, options: ReplyTextAsDocumentOptions = {}): Promise<Message.DocumentMessage | undefined> {
-        const {
-            chatId
-        } = options
-
-        return await ExceptionUtils.handleAsync(
-            async () => {
-                const other = this._getReplyMediaOptions(ctx, options)
-                const file = new InputFile(
-                    Buffer.from(text, 'utf-8'),
-                    options.filename
-                )
-
-                if (chatId) {
-                    return await ctx.api.sendDocument(
-                        chatId,
-                        file,
-                        other
-                    )
-                }
-
-                return await ctx.replyWithDocument(
-                    file,
-                    other
-                )
             }
         )
     }

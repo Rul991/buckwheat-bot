@@ -1,15 +1,22 @@
-import type { ChatMember, StickerSet } from "grammy/types"
+import type { ChatFullInfo, ChatMember, StickerSet } from "grammy/types"
 import type { BotContext } from "../../types/bot"
 import ExceptionUtils from "../exceptions/ExceptionUtils"
 import type { Reactions } from "../../types/types"
 import Logger from "../logs/Logger"
-import { CHAT_MEMBER_CACHE_TIME } from "../../consts/time"
+import { CHAT_LINK_EXPIRE_DATE, CHAT_MEMBER_CACHE_TIME } from "../../consts/time"
 import TtlCache from "../cache/TtlCache"
 import type { AnswerPreCheckoutQueryOptions } from "../../types/options"
+import TimeUtils from "../time/TimeUtils"
+import type { GrullyI18nVars } from "@grully/i18n"
 
 type GetChatMemberOptions = {
     id?: number
     chatId?: number
+}
+
+type CreateInviteLinkOptions = {
+    key?: string
+    vars?: GrullyI18nVars
 }
 
 export default class ContextUtils {
@@ -118,6 +125,20 @@ export default class ContextUtils {
         )
     }
 
+    static async getChat(ctx: BotContext, chatId?: number): Promise<ChatFullInfo | undefined> {
+        return await ExceptionUtils.handleAsync(
+            async () => {
+                const chat = chatId ?
+                    await ctx.api.getChat(
+                        chatId,
+                    ) :
+                    await ctx.getChat()
+
+                return chat
+            },
+        )
+    }
+
     static async getStickerPack(
         ctx: BotContext,
         name: string
@@ -151,7 +172,7 @@ export default class ContextUtils {
             }
         )
     }
-    
+
     static async approveChatJoinRequest(
         ctx: BotContext,
         id: number
@@ -173,6 +194,44 @@ export default class ContextUtils {
                 return await ctx.declineChatJoinRequest(id)
             },
             false
+        )
+    }
+
+    static async createInviteLink(ctx: BotContext, chatId: number, options: CreateInviteLinkOptions = {}) {
+        return await ExceptionUtils.handleAsync(
+            async () => {
+                const {
+                    key,
+                    vars
+                } = options
+                const name = key ?
+                    ctx.t(
+                        key,
+                        vars
+                    ) :
+                    undefined
+
+                return ctx.api.createChatInviteLink(
+                    chatId,
+                    {
+                        creates_join_request: true,
+                        expire_date: TimeUtils.getUntilDateInSeconds(CHAT_LINK_EXPIRE_DATE),
+                        name,
+                    }
+                )
+            }
+        )
+    }
+
+    static async getFile(ctx: BotContext, fileId?: string) {
+        return await ExceptionUtils.handleAsync(
+            async () => {
+                if(fileId) {
+                    return ctx.api.getFile(fileId)
+                }
+
+                return ctx.getFile()
+            }
         )
     }
 }

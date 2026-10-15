@@ -1,8 +1,8 @@
-import type { BuckwheatCommandOptions } from "../../../../types/action-options"
-import type { BuckwheatCommandExecuteResult } from "../../../../types/results"
-import RankUtils from "../../../../utils/db/RankUtils"
-import { startExportImportKeyboard } from "../../../keyboards/export-import"
-import BuckwheatCommand from "../../base/BuckwheatCommand"
+import type { BuckwheatCommandOptions } from "../../../../../types/action-options"
+import type { BuckwheatCommandExecuteResult } from "../../../../../types/results"
+import RankUtils from "../../../../../utils/db/RankUtils"
+import { startExportImportKeyboard } from "../../../../keyboards/export-import"
+import BuckwheatCommand from "../../../base/BuckwheatCommand"
 
 export default class ExportImportCommand extends BuckwheatCommand {
     override aliases: string[] = ['импорт', 'экспорт']

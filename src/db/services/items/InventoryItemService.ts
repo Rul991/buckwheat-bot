@@ -355,7 +355,7 @@ class InventoryItemService extends BaseService<typeof InventoryItem> {
         return result
     }
 
-    async getRandomItem(chatId: number, id: number) {
+    async getRandomItem(chatId: number, id: number, count: number = 1) {
         const item = ItemUtils.getRandomItem()
         if (!item) return undefined
 
@@ -365,7 +365,7 @@ class InventoryItemService extends BaseService<typeof InventoryItem> {
             item
         })
 
-        if (remainingCount > 0) {
+        if (remainingCount >= count) {
             return item
         }
 

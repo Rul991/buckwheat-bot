@@ -1,5 +1,15 @@
 syntax = "proto3";
+import "scroller.proto";
 
 message TogglePublicButtonData {
 
+}
+
+message PublicChatScrollerButtonData {
+    ScrollerData data = 1;
+}
+
+message PublicChatLinkButtonData {
+    uint64 id = 1; // user's id
+    int64 chatId = 2; // public chat's id
 }

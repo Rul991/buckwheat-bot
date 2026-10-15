@@ -4,13 +4,15 @@
 
 import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import { fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
+import type { ScrollerData } from "./scroller_pb";
+import { file_scroller } from "./scroller_pb";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file chat.proto.
  */
 export const file_chat: GenFile = /*@__PURE__*/
-  fileDesc("CgpjaGF0LnByb3RvIhgKFlRvZ2dsZVB1YmxpY0J1dHRvbkRhdGFiBnByb3RvMw");
+  fileDesc("CgpjaGF0LnByb3RvIhgKFlRvZ2dsZVB1YmxpY0J1dHRvbkRhdGEiOwocUHVibGljQ2hhdFNjcm9sbGVyQnV0dG9uRGF0YRIbCgRkYXRhGAEgASgLMg0uU2Nyb2xsZXJEYXRhIjYKGFB1YmxpY0NoYXRMaW5rQnV0dG9uRGF0YRIKCgJpZBgBIAEoBBIOCgZjaGF0SWQYAiABKANiBnByb3RvMw", [file_scroller]);
 
 /**
  * @generated from message TogglePublicButtonData
@@ -24,4 +26,47 @@ export type TogglePublicButtonData = Message<"TogglePublicButtonData"> & {
  */
 export const TogglePublicButtonDataSchema: GenMessage<TogglePublicButtonData> = /*@__PURE__*/
   messageDesc(file_chat, 0);
+
+/**
+ * @generated from message PublicChatScrollerButtonData
+ */
+export type PublicChatScrollerButtonData = Message<"PublicChatScrollerButtonData"> & {
+  /**
+   * @generated from field: ScrollerData data = 1;
+   */
+  data?: ScrollerData | undefined;
+};
+
+/**
+ * Describes the message PublicChatScrollerButtonData.
+ * Use `create(PublicChatScrollerButtonDataSchema)` to create a new message.
+ */
+export const PublicChatScrollerButtonDataSchema: GenMessage<PublicChatScrollerButtonData> = /*@__PURE__*/
+  messageDesc(file_chat, 1);
+
+/**
+ * @generated from message PublicChatLinkButtonData
+ */
+export type PublicChatLinkButtonData = Message<"PublicChatLinkButtonData"> & {
+  /**
+   * user's id
+   *
+   * @generated from field: uint64 id = 1;
+   */
+  id: bigint;
+
+  /**
+   * public chat's id
+   *
+   * @generated from field: int64 chatId = 2;
+   */
+  chatId: bigint;
+};
+
+/**
+ * Describes the message PublicChatLinkButtonData.
+ * Use `create(PublicChatLinkButtonDataSchema)` to create a new message.
+ */
+export const PublicChatLinkButtonDataSchema: GenMessage<PublicChatLinkButtonData> = /*@__PURE__*/
+  messageDesc(file_chat, 2);
 

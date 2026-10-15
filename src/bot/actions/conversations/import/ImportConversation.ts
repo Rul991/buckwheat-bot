@@ -4,19 +4,14 @@ import type { BotContext } from "../../../../types/bot"
 import ConversationAction from "../../base/ConversationAction"
 import ConversationUtils from "../../../../utils/conversation/ConversationUtils"
 import ExportImportManager from "../../../../utils/data/ExportImportManager"
-import FileUtils from "../../../../utils/bot/FileUtils"
-import JsonUtils from "../../../../utils/string/JsonUtils"
-import { treeifyError } from "zod"
+import ExportImportDataService from "../../../../db/services/export-import/ExportImportDataService"
 
 class ImportConversation extends ConversationAction<[number]> {
-    private readonly _minFileSize = 2
-    private readonly _maxFileSize = 20 * 1024 * 1024
     override name: string = 'import'
 
     protected override async _execute(conversation: Conversation<BotContext, Context>, ctx: Context, definitionId: number): Promise<void> {
         const id = ctx.from!.id
         const definition = ExportImportManager.get(definitionId)!
-        const checkpoint = conversation.checkpoint()
 
         await ConversationUtils.replyInConversation(
             conversation,
@@ -29,9 +24,9 @@ class ImportConversation extends ConversationAction<[number]> {
             })
         )
 
-        const documentCtx = await conversation
+        const hashCtx = await conversation
             .waitFor(
-                'msg:document',
+                'msg:text',
                 {
                     otherwise: async _ => {
                         await ConversationUtils.replyInConversation(
@@ -47,78 +42,62 @@ class ImportConversation extends ConversationAction<[number]> {
             )
             .andFrom(id)
 
-        const isJson = documentCtx.msg.document.mime_type == 'application/json'
-        if (!isJson) {
-            return await conversation.rewind(checkpoint)
-        }
+        const hash = hashCtx.msg.text
+        const key = definition.key
+        const exportImportData = await conversation.external(
+            async () => {
+                return await ExportImportDataService.get(
+                    key,
+                    hash
+                )
+            }
+        )
 
-        const fileSize = documentCtx.msg.document.file_size ?? 0
-        if (fileSize < this._minFileSize || fileSize > this._maxFileSize) {
+        if (!exportImportData) {
             await ConversationUtils.replyInConversation(
                 conversation,
-                'import/conversation/wrong-size',
-                {
-                    lazyKeys: ['user'],
+                'import/conversation/wrong-hash',
+                async ctx => ({
                     vars: {
-                        size: {
-                            current: fileSize,
-                            min: this._minFileSize
-                        }
-                    }
-                }
-            )
-            return
-        }
-
-        const file = await documentCtx.getFile()
-        const filePath = file.file_path
-        const text = await FileUtils.downloadAsText(filePath)
-
-        if (!text) {
-            await ConversationUtils.replyInConversation(
-                conversation,
-                'import/conversation/no-text',
-                {
+                        definition: definition.getVars(ctx),
+                    },
                     lazyKeys: ['user']
-                }
+                })
             )
             return
         }
 
-        const json = JsonUtils.parse(text)
-        if (json === undefined) {
+        const parseResult = definition.schema.safeParse(
+            exportImportData.values
+        )
+
+        if (!parseResult.success) {
+            await conversation.external(
+                async () => {
+                    return await ExportImportDataService.delete(
+                        key,
+                        hash
+                    )
+                }
+            )
             await ConversationUtils.replyInConversation(
                 conversation,
                 'import/conversation/wrong-data',
-                {
-                    lazyKeys: ['user']
-                }
-            )
-            return
-        }
-        const schema = definition.schema
-        const parseResult = schema.safeParse(json)
-
-        if (parseResult.success === false) {
-            await ConversationUtils.replyInConversation(
-                conversation,
-                'import/conversation/wrong-data',
-                {
-                    lazyKeys: ['user'],
+                async ctx => ({
                     vars: {
-                        error: treeifyError(parseResult.error)
-                    }
-                }
+                        definition: definition.getVars(ctx),
+                    },
+                    lazyKeys: ['user']
+                })
             )
             return
         }
 
-        const data = parseResult.data
-        let result = false
-        await conversation.external(
+        const data = exportImportData.values
+        const result = await conversation.external(
             async ctx => {
                 const chatId = ctx.vars.chatId!
-                result = await definition.importCallback({
+                return await definition.importCallback({
                     chatId,
                     id,
                     data,

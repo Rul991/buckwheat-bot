@@ -126,7 +126,7 @@ import HelpTelegramCommand from "../bot/actions/commands/telegram/HelpTelegramCo
 import MarryCommand from "../bot/actions/commands/buckwheat/marriage/MarryCommand"
 import MarryButton from "../bot/actions/callback-query/marriage/MarryButton"
 import DivorceCommand from "../bot/actions/commands/buckwheat/marriage/DivorceCommand"
-import ExportImportCommand from "../bot/actions/commands/export-import/ExportImportCommand"
+import ExportImportCommand from "../bot/actions/commands/buckwheat/export-import/ExportImportCommand"
 import ExportImportScrollerButton from "../bot/actions/callback-query/export-import/ExportImportScrollerButton"
 import ExportImportShowButton from "../bot/actions/callback-query/export-import/ExportImportShowButton"
 import ExportButton from "../bot/actions/callback-query/export-import/ExportButton"
@@ -166,6 +166,13 @@ import AwardsCommand from "../bot/actions/commands/buckwheat/award/AwardsCommand
 import AwardDeleteButton from "../bot/actions/callback-query/award/AwardDeleteButton"
 import AwardShowButton from "../bot/actions/callback-query/award/AwardShowButton"
 import AwardScrollerButton from "../bot/actions/callback-query/award/AwardScrollerButton"
+import ChatsCommand from "../bot/actions/commands/buckwheat/chat/ChatsCommand"
+import PublicChatLinkButton from "../bot/actions/callback-query/chat/PublicChatLinkButton"
+import PublicChatScrollerButton from "../bot/actions/callback-query/chat/PublicChatScrollerButton"
+import GeneratorCommand from "../bot/actions/commands/buckwheat/generator/GeneratorCommand"
+import GeneratorCollectButton from "../bot/actions/callback-query/generator/GeneratorCollectButton"
+import GeneratorAddButton from "../bot/actions/callback-query/generator/GeneratorAddButton"
+import GeneratorUpgradeButton from "../bot/actions/callback-query/generator/GeneratorUpgradeButton"
 
 export const runBot = async () => {
     const bot = new TelegramBot()
@@ -264,6 +271,11 @@ export const runBot = async () => {
                 AwardDeleteButton,
                 AwardShowButton,
                 AwardScrollerButton,
+                PublicChatLinkButton,
+                PublicChatScrollerButton,
+                GeneratorCollectButton,
+                GeneratorAddButton,
+                GeneratorUpgradeButton,
             ),
 
         new MessageHandler()
@@ -371,6 +383,8 @@ export const runBot = async () => {
                 new ProbabilityCommand(),
                 new GiveAwardCommand(),
                 new AwardsCommand(),
+                new ChatsCommand(),
+                new GeneratorCommand(),
             ),
 
         new PhotoActionHandler()

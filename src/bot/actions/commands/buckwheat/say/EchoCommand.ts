@@ -3,10 +3,11 @@ import type { BuckwheatCommandExecuteResult } from "../../../../../types/results
 import MessageEntityUtils from "../../../../../utils/bot/MessageEntityUtils"
 import MessageUtils from "../../../../../utils/bot/MessageUtils"
 import RankUtils from "../../../../../utils/db/RankUtils"
+import Logger from "../../../../../utils/logs/Logger"
 import BuckwheatCommand from "../../../base/BuckwheatCommand"
 
 export default class EchoCommand extends BuckwheatCommand {
-    override aliases: string[] = ['скажи']
+    override aliases: string[] = []
     override minimumRank: number = RankUtils.min + 2
     override settingId: number = 18
     override name: string = 'эхо'
@@ -20,7 +21,7 @@ export default class EchoCommand extends BuckwheatCommand {
             other
         } = options
 
-        const user = await ctx.vars.user.get()
+        const user = await ctx.vars.user.require()
         const isPrivate = ctx.chat.type == 'private'
 
         if (!other) {
@@ -40,6 +41,7 @@ export default class EchoCommand extends BuckwheatCommand {
         }
 
         const text = MessageEntityUtils.messageToHtml(ctx.msg)
+        Logger.log(`${user.username ? `@${user.username}` : user.name}(${user.id}) echoed ${text}`)
         return {
             key: 'echo/done',
             options: {

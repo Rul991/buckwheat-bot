@@ -1,3 +1,4 @@
+import { IS_DEV } from "../../../consts/env"
 import type { MyBot } from "../../../types/bot"
 import type { PreCheckoutQueryContext, SuccessfulPaymentMessageContext } from "../../../types/contexts"
 import type { PreCheckoutResult, SuccessfulPaymentResult } from "../../../types/results"
@@ -85,6 +86,10 @@ export default class PaymentHandler extends BaseHandler<PaymentAction<any>> {
 
     private async _handleSuccessfulPayment(ctx: SuccessfulPaymentMessageContext): Promise<SuccessfulPaymentResult> {
         try {
+            if (IS_DEV) {
+                await ctx.refundStarPayment()
+            }
+
             const id = ctx.vars.id
             const chatId = ctx.vars.chatId
             if (!chatId) return {
@@ -113,6 +118,7 @@ export default class PaymentHandler extends BaseHandler<PaymentAction<any>> {
             })
         }
         catch (e) {
+            await ctx.refundStarPayment()
             return {
                 key: 'payment/system/error',
                 options: {

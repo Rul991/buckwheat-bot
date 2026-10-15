@@ -17,11 +17,11 @@ import { UNKNOWN_NAME } from "../../../consts/texts"
     }
 )
 export default class User extends ChatIdEntity {
-    static dummy(): User {
+    static dummy(name?: string, id?: number): User {
         return new User({
             chatId: 0,
-            id: 0,
-            name: UNKNOWN_NAME
+            id: id ?? 0,
+            name: name ?? UNKNOWN_NAME
         })
     }
 

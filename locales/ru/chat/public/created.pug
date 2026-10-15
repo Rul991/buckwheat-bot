@@ -1,0 +1,12 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.APPROVE} Игрок 
++link(user)
+| , была создана 
+a(href=link) ссылка
+|  на чат 
+b #{chat.title}
+| !
+| #{EMOJIES.TIME} Ее время действия истечет через 
+u #{expireTime}
+| !

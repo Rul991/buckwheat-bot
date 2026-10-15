@@ -48,7 +48,7 @@ export default class BuckwheatCommandHandler extends ShowableActionHandler<Buckw
 
         const {
             key,
-            options: resultOptions
+            options: resultOptions,
         } = result
 
         const {
