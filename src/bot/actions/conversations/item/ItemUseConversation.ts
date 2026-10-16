@@ -27,7 +27,8 @@ class ItemUseConversation extends ConversationAction<[InventoryItem]> {
 
         const needId = ctx.from!.id
         const min = 1
-        const max = inventoryItem.count
+        const max = Math.min(inventoryItem.count, item.maxCount.use)
+        let rawCount = min.toString()
 
         if (min > max) {
             await ConversationUtils.replyInConversation(
@@ -45,23 +46,25 @@ class ItemUseConversation extends ConversationAction<[InventoryItem]> {
             return
         }
 
-        await ConversationUtils.replyInConversation(
-            convo,
-            'items/convo/count',
-            ctx => ({
-                vars: {
-                    min,
-                    max,
-                    item: {
-                        emoji: item.getEmoji(ctx)
-                    }
-                },
-                lazyKeys: ['user']
-            })
-        )
-        const rawCountCtx = await convo.waitFor('msg:text')
-            .andFrom(needId)
-        const rawCount = rawCountCtx.msg.text
+        if (max != min) {
+            await ConversationUtils.replyInConversation(
+                convo,
+                'items/convo/count',
+                ctx => ({
+                    vars: {
+                        min,
+                        max,
+                        item: {
+                            emoji: item.getEmoji(ctx)
+                        }
+                    },
+                    lazyKeys: ['user']
+                })
+            )
+            const rawCountCtx = await convo.waitFor('msg:text')
+                .andFrom(needId)
+            rawCount = rawCountCtx.msg.text
+        }
 
         const count = MathUtils.clamp(
             Math.floor(
@@ -73,7 +76,7 @@ class ItemUseConversation extends ConversationAction<[InventoryItem]> {
             min,
             max
         )
-        
+
         await convo.external(
             async ctx => {
                 const id = ctx.vars.id!

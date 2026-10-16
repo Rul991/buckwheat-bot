@@ -1,3 +1,6 @@
 include /utils/emojies.pug
 
-| #{EMOJIES.SHOP} Купить
+if !useCoupon
+    | #{EMOJIES.SHOP} Купить
+else
+    | #{EMOJIES.COUPON} Использовать купон

@@ -1,4 +1,5 @@
 import { MAX_PERCENTS } from "../../consts/number"
+import type { RandomItemType } from "../../types/items"
 import MathUtils from "../math/MathUtils"
 import RandomUtils from "../math/RandomUtils"
 import Item from "./Item"
@@ -30,25 +31,32 @@ export default class ItemUtils {
         )
     }
 
-    static getRandomItem(): Item<any> | undefined {
+    private static _getItemsByRarityAndType(rarity: number, type: RandomItemType): Item[] {
+        return this._itemsByRarity.getOrInsert(
+            rarity,
+            []
+        ).filter(v => {
+            return (v.drop.canDropFromLootBox && type == 'lootbox') ||
+                (v.drop.canDropFromWork && type == 'work')
+        })
+    }
+
+    static getRandomItem(type: RandomItemType): Item<any> | undefined {
         const rarity = RandomUtils.rarity(
             this._rarityChance,
             this._maxRarity
         )
 
         return RandomUtils.choose(
-            this._itemsByRarity.getOrInsert(
-                rarity,
-                []
-            )
+            this._getItemsByRarityAndType(rarity, type)
         )
     }
 
-    static getDropPercents(item: Item<any>): number {
+    static getDropPercents(item: Item<any>, type: RandomItemType = 'work'): number {
         const rarity = item.rarity
         if (rarity == Item.notDroppableRarity) return 0
 
-        const length = this._itemsByRarity.getOrInsert(rarity, []).length
+        const length = this._getItemsByRarityAndType(rarity, type).length
         if (!length) return 0
 
         return MathUtils.floor((this._rarityChance ** rarity) / length * MAX_PERCENTS, 3)

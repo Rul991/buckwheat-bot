@@ -55,8 +55,6 @@ class InventoryShowButton extends CallbackQueryAction<InventoryShowButtonData> {
             }
         }
 
-        const percents = ItemUtils.getDropPercents(item)
-
         await MessageUtils.editText(
             ctx,
             'inventory/show',
@@ -65,7 +63,10 @@ class InventoryShowButton extends CallbackQueryAction<InventoryShowButtonData> {
                     itemVars: item.getVars(ctx),
                     item,
                     inventoryItem,
-                    percents,
+                    percents: {
+                        work: ItemUtils.getDropPercents(item, 'work'),
+                        lootbox: ItemUtils.getDropPercents(item, 'lootbox')
+                    },
                     ammo: item.gun?.ammo.getTitle(ctx)
                 },
                 keyboard: await showItemKeyboard(

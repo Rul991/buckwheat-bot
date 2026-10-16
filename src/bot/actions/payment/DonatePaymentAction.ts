@@ -5,6 +5,8 @@ import type { PreCheckoutResult, SuccessfulPaymentResult } from "../../../types/
 import PaymentAction from "../base/PaymentAction"
 import PaymentUtils from "../../../utils/payment/PaymentUtils"
 import BalanceService from "../../../db/services/money/BalanceService"
+import DonateService from "../../../db/services/donate/DonateService"
+import Donate from "../../../db/entities/donate/Donate"
 
 class DonatePaymentAction extends PaymentAction<DonatePaymentData> {
     override schema: GenMessage<DonatePaymentData> = DonatePaymentDataSchema
@@ -29,11 +31,20 @@ class DonatePaymentAction extends PaymentAction<DonatePaymentData> {
         const user = await ctx.vars.user.get()
         const chatId = Number(data.chatId)
 
-        await BalanceService.add({
-            chatId,
-            id,
-            money
-        })
+        await Promise.all([
+            BalanceService.add({
+                chatId,
+                id,
+                money
+            }),
+            DonateService.create(
+                new Donate({
+                    chatId,
+                    id,
+                    stars
+                })
+            )
+        ])
 
         return {
             key: 'donate/donate',

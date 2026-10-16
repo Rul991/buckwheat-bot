@@ -18,7 +18,7 @@ class RecipeScrollerButton extends ScrollerButton<Recipe, BaseScrollerData> {
     override name: string = 'rsc'
 
     protected override _isNeedCache: boolean = false
-    protected override _objectsPerPage: number = 5
+    protected override _objectsPerPage: number = 6
     
     protected override async _getRawObjects(options: CallbackQueryActionOptions<BaseScrollerData>): Promise<Recipe[]> {
         const {

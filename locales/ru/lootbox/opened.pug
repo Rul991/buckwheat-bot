@@ -1,0 +1,19 @@
+include /utils/mixins.pug
+
+blockquote 
+    if itemResults.length
+        for result in itemResults
+            +item(result.item)
+            |  x#{formatNumber(result.count)}
+            |
+    else
+        i Ничего
+        |
+| #{EMOJIES.LOOTBOX} Игрок 
++link(user)
+|  открыл чудо-ящик, получив 
+if itemResults.length
+    | эти предметы
+else
+    | ничего
+| !

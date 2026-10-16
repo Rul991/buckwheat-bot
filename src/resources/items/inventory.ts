@@ -6,6 +6,7 @@ import GreedBoxService from "../../db/services/greed-box/GreedBoxService"
 import InventoryItemService from "../../db/services/items/InventoryItemService"
 import LevelService from "../../db/services/level/LevelService"
 import BalanceService from "../../db/services/money/BalanceService"
+import SettingValueService from "../../db/services/settings/SettingValueService"
 import UserClassService from "../../db/services/user/UserClassService"
 import WorkService from "../../db/services/work/WorkService"
 import AdminUtils from "../../utils/bot/AdminUtils"
@@ -14,10 +15,10 @@ import ClassUtils from "../../utils/db/ClassUtils"
 import GrindUtils from "../../utils/grind/GrindUtils"
 import Item from "../../utils/items/Item"
 import Logger from "../../utils/logs/Logger"
+import LootBoxUtils from "../../utils/lootbox/LootBoxUtils"
 import RandomUtils from "../../utils/math/RandomUtils"
 import ShieldUtils from "../../utils/shield/ShieldUtils"
-
-// TODO: add drop for everyone
+import { canUseUnmuteSetting } from "../settings/chat"
 
 export const businessPaperItem = new Item({
     id: 0,
@@ -27,7 +28,7 @@ export const businessPaperItem = new Item({
     emoji: 'book',
     drop: {
         rarity: 12,
-        lootBoxCount: [1, 2]
+        lootBoxCount: [1, 2],
     }
 })
 
@@ -67,7 +68,7 @@ export const cookieItem = new Item({
     },
     drop: {
         rarity: 1,
-        lootBoxCount: [3, 40]
+        lootBoxCount: [3, 20]
     }
 })
 
@@ -88,7 +89,11 @@ export const craftWorkUpItem = new Item({
     key: 'work/craft-boost',
     isConsumable: false,
     basePrice: 450,
-    emoji: 'boost'
+    emoji: 'boost',
+    drop: {
+        rarity: 4,
+        lootBoxCount: [1, 5],
+    }
 })
 
 export const effectBookItem = new Item({
@@ -96,7 +101,11 @@ export const effectBookItem = new Item({
     key: 'other/effect-book',
     isConsumable: false,
     basePrice: 1000,
-    emoji: 'book'
+    emoji: 'book',
+    drop: {
+        rarity: 6,
+        lootBoxCount: [1, 3]
+    }
 })
 
 export const freeBuyItem = new Item({
@@ -160,7 +169,8 @@ export const greedBoxItem = new Item({
     key: 'other/greed-box',
     isConsumable: false,
     maxCount: {
-        chat: 1
+        chat: 1,
+        use: 1
     },
     basePrice: 2_000_000,
     emoji: 'moneyfarm',
@@ -225,7 +235,6 @@ export const greedBoxItem = new Item({
     },
     drop: {
         rarity: 15,
-        canDropFromLootBox: false,
         canDropFromWork: true
     }
 })
@@ -235,7 +244,11 @@ export const infinityCasinoItem = new Item({
     key: 'casino/infinity',
     isConsumable: false,
     basePrice: 50_000,
-    emoji: 'casino'
+    emoji: 'casino',
+    drop: {
+        rarity: 12,
+        lootBoxCount: 1
+    }
 })
 
 export const levelBoostItem = new Item({
@@ -243,7 +256,11 @@ export const levelBoostItem = new Item({
     key: 'other/level-boost',
     isConsumable: false,
     basePrice: 1000,
-    emoji: 'level'
+    emoji: 'level',
+    drop: {
+        rarity: 6,
+        lootBoxCount: [1, 3]
+    }
 })
 
 export const casinoBoostItem = new Item({
@@ -251,7 +268,11 @@ export const casinoBoostItem = new Item({
     key: 'casino/boost',
     isConsumable: false,
     basePrice: 5_000,
-    emoji: 'casino'
+    emoji: 'casino',
+    drop: {
+        rarity: 9,
+        lootBoxCount: [1, 2]
+    }
 })
 
 export const metalItem = new Item({
@@ -272,7 +293,11 @@ export const moneyGeneratorItem = new Item({
     key: 'gen/device',
     isConsumable: true,
     basePrice: 2500,
-    emoji: 'moneyfarm'
+    emoji: 'moneyfarm',
+    drop: {
+        rarity: 7,
+        lootBoxCount: [1, 2]
+    }
 })
 
 export const moneyGenLicenseItem = new Item({
@@ -283,7 +308,11 @@ export const moneyGenLicenseItem = new Item({
         chat: 20
     },
     basePrice: 10_000,
-    emoji: 'book'
+    emoji: 'book',
+    drop: {
+        rarity: 10,
+        lootBoxCount: 1
+    }
 })
 
 export const newGameItem = new Item({
@@ -331,6 +360,10 @@ export const defaultGunItem = new Item({
     },
     basePrice: 1000,
     emoji: 'gun',
+    drop: {
+        rarity: 6,
+        lootBoxCount: [1, 2]
+    }
 })
 
 export const rockVoidItem = new Item({
@@ -376,7 +409,6 @@ export const rockVoidItem = new Item({
     drop: {
         rarity: 15,
         canDropFromWork: true,
-        canDropFromLootBox: false
     }
 })
 
@@ -386,7 +418,7 @@ export const shopPercentItem = new Item({
     isConsumable: true,
     maxCount: {
         chat: 100,
-        user: 99
+        user: 100
     },
     basePrice: 7_500,
     emoji: 'moneyfarm'
@@ -403,6 +435,10 @@ export const simpleShieldItem = new Item({
     emoji: 'shield',
     callbacks: {
         use: options => ShieldUtils.use(options)
+    },
+    drop: {
+        rarity: 6,
+        lootBoxCount: [1, 2]
     }
 })
 
@@ -449,6 +485,10 @@ export const coolShieldItem = new Item({
     emoji: 'shield',
     callbacks: {
         use: options => ShieldUtils.use(options)
+    },
+    drop: {
+        rarity: 10,
+        lootBoxCount: [1, 2]
     }
 })
 
@@ -469,7 +509,6 @@ export const valLeafItem = new Item({
     drop: {
         rarity: 9,
         canDropFromWork: true,
-        canDropFromLootBox: false
     }
 })
 
@@ -481,7 +520,7 @@ export const woodItem = new Item({
     emoji: 'wood',
     drop: {
         rarity: 1,
-        lootBoxCount: [1, 150],
+        lootBoxCount: [1, 25],
         canDropFromWork: true
     }
 })
@@ -551,10 +590,28 @@ export const unmuteItem = new Item({
     callbacks: {
         use: async ({
             ctx,
+            chatId,
             id,
             item,
-            count
         }) => {
+            const canUnmuteSettingValue = await SettingValueService.get({
+                id: chatId,
+                setting: canUseUnmuteSetting
+            })
+            const canUnmute = canUnmuteSettingValue.value
+            if (!canUnmute) {
+                await MessageUtils.reply(
+                    ctx,
+                    'admin/unmute/cant-item',
+                    {
+                        vars: {
+                            user: await ctx.vars.user.get(),
+                        }
+                    }
+                )
+                return
+            }
+
             const isUnmuted = await AdminUtils.unmute(ctx, id)
 
             await MessageUtils.reply(
@@ -564,7 +621,6 @@ export const unmuteItem = new Item({
                     vars: {
                         title: item.getTitle(ctx),
                         user: await ctx.vars.user.get(),
-                        count,
                         isUnmuted
                     }
                 }
@@ -572,6 +628,9 @@ export const unmuteItem = new Item({
 
             return isUnmuted
         }
+    },
+    maxCount: {
+        use: 1
     }
 })
 
@@ -737,7 +796,17 @@ export const lootboxItem = new Item({
     key: 'lootbox/lootbox',
     isConsumable: true,
     basePrice: 35_000,
-    emoji: 'lootbox'
+    emoji: 'lootbox',
+    callbacks: {
+        use: async (options) => LootBoxUtils.use(options)
+    },
+    maxCount: {
+        use: 50
+    },
+    drop: {
+        rarity: 5,
+        lootBoxCount: [2, 3]
+    }
 })
 
 export const lootboxMaterialItem = new Item({
@@ -745,7 +814,19 @@ export const lootboxMaterialItem = new Item({
     key: 'lootbox/material',
     isConsumable: true,
     basePrice: 500,
-    emoji: 'lootbox'
+    emoji: 'lootbox',
+    drop: {
+        rarity: 3,
+        lootBoxCount: [2, 8]
+    }
+})
+
+export const damItem = new Item({
+    id: 44,
+    key: 'other/dam',
+    isConsumable: true,
+    basePrice: 50_000,
+    emoji: 'wood'
 })
 
 export const inventoryItems: Item<any>[] = [
@@ -792,5 +873,6 @@ export const inventoryItems: Item<any>[] = [
     glockGunItem,
     soapGunItem,
     lootboxItem,
-    lootboxMaterialItem
+    lootboxMaterialItem,
+    damItem
 ]

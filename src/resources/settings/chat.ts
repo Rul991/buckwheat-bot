@@ -82,9 +82,9 @@ export const hasHelloButtonSetting = new Setting({
     valueType: SettingValueTypes.Chat,
 })
 
-export const canBuyUnmuteSetting = new Setting({
+export const canUseUnmuteSetting = new Setting({
     id: 10,
-    textKey: 'can/buy-unmute',
+    textKey: 'can/use-unmute',
     type: 'boolean',
     properties: {},
     default: false,
@@ -187,9 +187,11 @@ export const chatSettings = [
     antispamMessageSetting,
     antispamPeriodSetting,
     antispamMuteSetting,
+    privateCasinoSetting,
+    privateWorkSetting,
     spawnBoxSetting,
     hasHelloButtonSetting,
-    canBuyUnmuteSetting,
+    canUseUnmuteSetting,
     negativeRankSetting,
     wrongCommandReactSetting,
     showRankInTopSetting,
@@ -197,6 +199,4 @@ export const chatSettings = [
     kickPvpSetting,
     autoJoinSetting,
     stickerChanceSetting,
-    privateCasinoSetting,
-    privateWorkSetting,
 ]

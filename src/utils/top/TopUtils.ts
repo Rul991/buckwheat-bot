@@ -1,5 +1,6 @@
 import { UNKNOWN_NAME } from "../../consts/texts"
 import InventoryItem from "../../db/entities/items/InventoryItem"
+import DonateService from "../../db/services/donate/DonateService"
 import GameService from "../../db/services/game/GameService"
 import InventoryItemService from "../../db/services/items/InventoryItemService"
 import LevelService from "../../db/services/level/LevelService"
@@ -7,7 +8,9 @@ import MarriageService from "../../db/services/marriage/MarriageService"
 import MessagesService from "../../db/services/message/MessagesService"
 import BalanceService from "../../db/services/money/BalanceService"
 import RouletteService from "../../db/services/roulette/RouletteService"
+import SettingValueService from "../../db/services/settings/SettingValueService"
 import UserService from "../../db/services/user/UserService"
+import { showRankInTopSetting } from "../../resources/settings/chat"
 import type { ClassTypes } from "../../types/class"
 import type { TopValues } from "../../types/top"
 import ClassUtils from "../db/ClassUtils"
@@ -37,6 +40,10 @@ export default class TopUtils {
                     ctx,
                     chatId,
                 )
+                const showRank = await SettingValueService.getValue({
+                    id: chatId,
+                    setting: showRankInTopSetting
+                })
 
                 Logger.debug(
                     'TopUtils.handleSortedValuesCallback | staff',
@@ -59,7 +66,7 @@ export default class TopUtils {
                                 {
                                     emoji: rankVar.emoji,
                                     name: rankVar.name,
-                                    rank
+                                    rank: showRank ? rank : undefined
                                 }
                             )
                         }
@@ -280,6 +287,13 @@ export default class TopUtils {
             },
             hasTotalCount: false,
             hasWinner: true
+        }),
+
+        new TopSubCommand({
+            key: 'donate',
+            getUnsortedValuesCallback: async (_ctx, chatId) => {
+                return await DonateService.getTop(chatId)
+            }
         })
     ]
 

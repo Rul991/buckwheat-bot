@@ -1,7 +1,9 @@
 import SettingValueService from "../../db/services/settings/SettingValueService"
+import UserRankService from "../../db/services/user/UserRankService"
 import type { SettingValueTypes } from "../../protos/settings_pb"
-import { gameKickSetting } from "../../resources/settings/chat"
+import { gameKickSetting, negativeRankSetting } from "../../resources/settings/chat"
 import type { BotContext } from "../../types/bot"
+import RankUtils from "../db/RankUtils"
 import ExceptionUtils from "../exceptions/ExceptionUtils"
 import type Setting from "../settings/Setting"
 import TimeUtils from "../time/TimeUtils"
@@ -18,10 +20,29 @@ export default class AdminUtils {
         return ctx.me.id == id
     }
 
+    private static async _setNegativeRankIfNeed(ctx: BotContext, id: number) {
+        const chatId = ctx.vars.chatId
+        if (!chatId) return
+
+        const negativeRankSettingValue = await SettingValueService.get({
+            id: chatId,
+            setting: negativeRankSetting
+        })
+        const needNegativeRank = negativeRankSettingValue.value
+
+        if (needNegativeRank) {
+            await UserRankService.set(
+                chatId,
+                id,
+                RankUtils.negative
+            )
+        }
+    }
+
     static async unban(ctx: BotContext, id: number, onlyIfBanned = true): Promise<boolean> {
         if (this._isBuckwheat(ctx, id)) return false
 
-        return ExceptionUtils.handleAsync(
+        return await ExceptionUtils.handleAsync(
             async () => {
                 return await ctx.unbanChatMember(
                     id,
@@ -34,8 +55,14 @@ export default class AdminUtils {
         )
     }
 
-    static kick(ctx: BotContext, id: number): Promise<boolean> {
-        return this.unban(ctx, id, false)
+    static async kick(ctx: BotContext, id: number): Promise<boolean> {
+        const result = await this.unban(ctx, id, false)
+
+        if (result) {
+            await this._setNegativeRankIfNeed(ctx, id)
+        }
+
+        return result
     }
 
     static async gameKick({
@@ -58,7 +85,7 @@ export default class AdminUtils {
     static async ban(ctx: BotContext, id: number, ms: number): Promise<boolean> {
         if (this._isBuckwheat(ctx, id)) return false
 
-        return ExceptionUtils.handleAsync(
+        const result = await ExceptionUtils.handleAsync(
             async () => {
                 const untilDate = TimeUtils.getUntilDateInSeconds(ms)
                 return await ctx.banChatMember(
@@ -70,12 +97,18 @@ export default class AdminUtils {
             },
             false
         )
+
+        if (result) {
+            await this._setNegativeRankIfNeed(ctx, id)
+        }
+
+        return result
     }
 
     static async mute(ctx: BotContext, id: number, ms: number): Promise<boolean> {
         if (this._isBuckwheat(ctx, id)) return false
 
-        return ExceptionUtils.handleAsync(
+        const result = await ExceptionUtils.handleAsync(
             async () => {
                 const untilDate = TimeUtils.getUntilDateInSeconds(ms)
                 return await ctx.restrictChatMember(
@@ -105,6 +138,12 @@ export default class AdminUtils {
             },
             false
         )
+
+        if (result) {
+            await this._setNegativeRankIfNeed(ctx, id)
+        }
+
+        return result
     }
 
     static async unmute(ctx: BotContext, id: number): Promise<boolean> {
@@ -129,7 +168,7 @@ export default class AdminUtils {
                         can_manage_chat: !!tag.length
                     }
                 )
-                
+
                 const isSetTag = await ctx.setChatMemberTag(
                     id,
                     tag

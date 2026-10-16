@@ -43,6 +43,7 @@ export const showShopKeyboard = KeyboardCreator.create<{
     remainingCount: number
     count: number
     index: number
+    hasCoupon: boolean
 }>(
     async ({
         keyboard,
@@ -52,7 +53,8 @@ export const showShopKeyboard = KeyboardCreator.create<{
             id,
             remainingCount,
             count,
-            index
+            index,
+            hasCoupon
         }
     }) => {
         const bigId = BigInt(id)
@@ -93,6 +95,20 @@ export const showShopKeyboard = KeyboardCreator.create<{
         }
 
         if (item) {
+            if (hasCoupon) {
+                keyboard
+                    .add(ShopBuyButton.button({
+                        ctx,
+                        data: {
+                            count,
+                            id: bigId,
+                            index,
+                            page,
+                            useCoupon: hasCoupon
+                        }
+                    }))
+            }
+
             keyboard
                 .add(ShopBuyButton.button({
                     ctx,
@@ -100,9 +116,13 @@ export const showShopKeyboard = KeyboardCreator.create<{
                         count,
                         id: bigId,
                         index,
-                        page
+                        page,
+                        useCoupon: false
                     }
                 }))
+                .row()
+
+            keyboard
                 .add(InventoryShowButton.button({
                     ctx,
                     data: {

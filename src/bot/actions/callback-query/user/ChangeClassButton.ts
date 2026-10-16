@@ -19,6 +19,10 @@ class ChangeClassButton extends CallbackQueryAction<ClassData> {
     override minimumRank: number = RankUtils.min
     override name: string = 'chcl'
 
+    protected override async _getId(options: CallbackQueryActionOptions<ClassData>): Promise<number | number[] | undefined> {
+        return Number(options.data.id)
+    }
+
     protected override async _execute(options: CallbackQueryActionOptions<ClassData>): Promise<CallbackQueryExecuteResult> {
         const {
             ctx,

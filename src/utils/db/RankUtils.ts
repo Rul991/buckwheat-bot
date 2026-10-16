@@ -12,6 +12,7 @@ import { SettingValueTypes } from "../../protos/settings_pb"
 export default class RankUtils {
     static readonly min = 0
     static readonly unknown = this.min - 1
+    static readonly negative = this.min - 1
     static readonly max = 5
     static readonly owner = this.max + 1
 

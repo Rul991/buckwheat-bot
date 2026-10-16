@@ -9,6 +9,19 @@ import InventoryItemService from "../../../../db/services/items/InventoryItemSer
 import MessageUtils from "../../../../utils/bot/MessageUtils"
 import ShopUtils from "../../../../utils/items/ShopUtils"
 import BalanceService from "../../../../db/services/money/BalanceService"
+import type Item from "../../../../utils/items/Item"
+import type { BotContext } from "../../../../types/bot"
+import { freeBuyItem } from "../../../../resources/items/inventory"
+
+type BuyOptions = {
+    chatId: number
+    botId: number
+    id: number
+    shopItem: Item
+    count: number
+    ctx: BotContext
+    useCoupon: boolean
+}
 
 class ShopBuyButton extends CallbackQueryAction<ShopBuyButtonData> {
     override schema: GenMessage<ShopBuyButtonData> = ShopBuyButtonDataSchema
@@ -16,6 +29,55 @@ class ShopBuyButton extends CallbackQueryAction<ShopBuyButtonData> {
     override minimumRank: number = RankUtils.min
     override settingId: number = 89
     override name: string = 'shopbuy'
+
+    private async _buy({
+        shopItem,
+        count,
+        chatId,
+        id,
+        botId,
+        ctx,
+        useCoupon
+    }: BuyOptions) {
+        const totalPrice = shopItem.basePrice * count
+        const current = await ctx.vars.balance.require()
+        if (useCoupon) {
+            const money = current.total
+            if (money < totalPrice) {
+                return { key: 'shop/not-enough-money', vars: { totalPrice, money } }
+            }
+
+            const useResult = await InventoryItemService.use({
+                chatId,
+                id,
+                item: freeBuyItem,
+                count: 1,
+                ctx
+            })
+
+            if (useResult.ok) {
+                await InventoryItemService.add({ chatId, id, item: shopItem, count })
+                return
+            }
+
+            return {
+                key: 'shop/no-coupon'
+            }
+        }
+        else {
+            const spent = await BalanceService.trySpend({ chatId, id, money: totalPrice })
+
+            if (!spent) {
+                return { key: 'shop/not-enough-money', vars: { totalPrice, money: current.total } }
+            }
+
+            ctx.vars.balance.set(spent)
+            await Promise.all([
+                InventoryItemService.add({ chatId, id, item: shopItem, count }),
+                BalanceService.add({ chatId, id: botId, money: totalPrice })
+            ])
+        }
+    }
 
     protected override async _execute(options: CallbackQueryActionOptions<ShopBuyButtonData>): Promise<CallbackQueryExecuteResult> {
         const {
@@ -28,7 +90,8 @@ class ShopBuyButton extends CallbackQueryAction<ShopBuyButtonData> {
         const {
             index,
             count,
-            page
+            page,
+            useCoupon
         } = data
         const botId = ctx.me.id
 
@@ -54,18 +117,18 @@ class ShopBuyButton extends CallbackQueryAction<ShopBuyButtonData> {
             }
         }
 
-        const totalPrice = shopItem.basePrice * count
-        const spent = await BalanceService.trySpend({ chatId, id, money: totalPrice })
-
-        if (!spent) {
-            const current = await ctx.vars.balance.require()
-            return { key: 'shop/not-enough-money', vars: { totalPrice, money: current.total } }
+        const buyResult = await this._buy({
+            chatId,
+            id,
+            botId,
+            ctx,
+            shopItem,
+            count,
+            useCoupon
+        })
+        if (buyResult) {
+            return buyResult
         }
-
-        await Promise.all([
-            InventoryItemService.add({ chatId, id, item: shopItem, count }),
-            BalanceService.add({ chatId, id: botId, money: totalPrice })
-        ])
 
         const {
             key,

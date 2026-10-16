@@ -77,21 +77,29 @@ export default class Item<T = any> {
         this.emoji = emoji ?? Item.defaultEmoji
 
         this.isConsumable = isConsumable
-        this.drop = {
-            canDropFromLootBox: drop?.canDropFromLootBox ?? true,
-            canDropFromWork: drop?.canDropFromWork ?? false,
-            rarity,
-            lootBoxCount: drop?.canDropFromLootBox ?
-                typeof drop.lootBoxCount == 'number' ?
-                    [drop.lootBoxCount, drop.lootBoxCount] :
-                    drop.lootBoxCount
-                : [0, 0]
-        }
+        this.drop = drop ?
+            {
+                canDropFromLootBox: 'lootBoxCount' in drop,
+                canDropFromWork: drop.canDropFromWork ?? false,
+                rarity,
+                lootBoxCount: 'lootBoxCount' in drop ?
+                    typeof drop.lootBoxCount == 'number' ?
+                        [drop.lootBoxCount, drop.lootBoxCount] :
+                        drop.lootBoxCount
+                    : [0, 0]
+            } :
+            {
+                canDropFromLootBox: false,
+                canDropFromWork: false,
+                rarity: Item.notDroppableRarity,
+                lootBoxCount: [0, 0]
+            }
 
         this.basePrice = basePrice
         this.maxCount = {
             user: maxCount?.user ?? Infinity,
-            chat: maxCount?.chat ?? Infinity
+            chat: maxCount?.chat ?? Infinity,
+            use: maxCount?.use ?? Infinity,
         }
 
         this.gun = gun as Gun

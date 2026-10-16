@@ -16,6 +16,7 @@ class InventoryScrollerButton extends ScrollerButton<InventoryItem, InventoryScr
     override minimumRank: number = RankUtils.min
     override settingId: number = 69
     override name: string = 'invscr'
+    protected override _objectsPerPage: number = 7
 
     protected override async _getKeyboard(options: ScrollerButtonEditMessageOptions<InventoryItem, InventoryScrollerButtonData>): Promise<InlineKeyboard> {
         const {

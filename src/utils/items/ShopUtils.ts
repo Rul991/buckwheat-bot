@@ -1,5 +1,6 @@
 import { showShopKeyboard } from "../../bot/keyboards/shop"
 import InventoryItemService from "../../db/services/items/InventoryItemService"
+import { freeBuyItem } from "../../resources/items/inventory"
 import type { BotContext } from "../../types/bot"
 import type Item from "./Item"
 
@@ -44,6 +45,12 @@ export default class ShopUtils {
             })
         }
 
+        const hasCoupon = await InventoryItemService.hasByUser({
+            chatId,
+            id,
+            item: freeBuyItem
+        })
+
         return {
             key: 'shop/show',
             options: {
@@ -60,7 +67,8 @@ export default class ShopUtils {
                         id,
                         remainingCount: count.remaining,
                         index,
-                        count: chooseCount
+                        count: chooseCount,
+                        hasCoupon
                     }
                 )
             }

@@ -1,8 +1,8 @@
 include /utils/mixins.pug
 
 - const percents = range(0, 100)
-- const rawText = (other || 'ничего').toLowerCase()
-- const text = toDefaultCase(other)
+- const rawText = other || 'ничего'
+- const text = toDefaultCase(rawText)
 
 - 
     const textsDescription = [
@@ -76,12 +76,17 @@ include /utils/mixins.pug
     ]
 
     const descriptions = textsDescription.find(v => percents >= v.min && percents <= v.max) || []
+    const emoji = percents < 40 ? 
+        EMOJIES.DECLINE : 
+        percents > 60 ?
+            EMOJIES.APPROVE :
+            EMOJIES.IDK
 
 blockquote #{text}
 |
-| Вероятность этого - 
+| #{EMOJIES.RANDOM} Вероятность этого - 
 u #{percents}%
 | !
 |
-b
+b #{EMOJIES.MINUS} 
     +random(descriptions.texts)

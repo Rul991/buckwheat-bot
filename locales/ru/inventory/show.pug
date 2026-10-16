@@ -2,7 +2,7 @@ include /utils/mixins.pug
 
 -
     const type = item.isConsumable ? 
-        range(1, 10) == 1 ? 
+        range(1, 50) == 1 ? 
             choose(['Единоразовый', 'Одиноразовый']) : 
             'Одноразовый' : 
         'Многоразовый'
@@ -23,14 +23,15 @@ blockquote(expandable) !{itemVars.description}
 +plain_bold_param(`${EMOJIES.LIST} Тип`, type)
 +plain_bold_param(`${EMOJIES.MONEY} Рыночная цена`, `${formatNumber(item.basePrice)}${EMOJIES.MONEY}`)
 +plain_bold_param(`${EMOJIES.COUNT} Кол-во`, `x${formatNumber(inventoryItem.count)} ${item.isConsumable ? '' : `(${EMOJIES.INFINITY})`}`)
-|
-|
-if percents > 0
-    +plain_bold_param(`${EMOJIES.PERCENTS} Шанс выпадения`, `${percents}%`)
-    +plain_bold_param(`${EMOJIES.WORK} Выпадает с работы`, bool(item.drop.canDropFromWork))
-    +plain_bold_param(`${EMOJIES.LOOTBOX} Выпадает с чудо-ящика`, bool(item.drop.canDropFromLootBox))
+if item.rarity >= 0
     |
     |
+    +condition(`${EMOJIES.WORK} Выпадает с работы`, item.drop.canDropFromWork)
+        +plain_bold_param(`     ${EMOJIES.PERCENTS} Шанс выпадения`, `${percents.work}%`)
+    +condition(`${EMOJIES.LOOTBOX} Выпадает с чудо-ящика`, item.drop.canDropFromLootBox)
+        +plain_bold_param(`     ${EMOJIES.PERCENTS} Шанс выпадения`, `${percents.lootbox}%`)
+|
+|
 +condition(`${EMOJIES.SHIELD} Щит`, item.shield)
     +plain_code_param(`     ${EMOJIES.MINUS} Прочность`, formatNumber(item.shield.durability))
 +condition(`${EMOJIES.GUN} Оружие`, item.gun)

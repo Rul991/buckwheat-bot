@@ -1,5 +1,5 @@
 import type { SettingValueTypes } from "../../../protos/settings_pb"
-import type { SettingSetValueOptions, SettingTypes, SettingValueOptions } from "../../../types/settings"
+import type { SettingSetValueOptions, SettingTypes, SettingTypeToDefault, SettingValueOptions } from "../../../types/settings"
 import type Setting from "../../../utils/settings/Setting"
 import SettingValue from "../../entities/settings/SettingValue"
 import BaseService from "../base/BaseService"
@@ -46,6 +46,11 @@ class SettingValueService extends BaseService<typeof SettingValue> {
             },
             new SettingValue(options)
         ) as unknown as SettingValue<T, V>
+    }
+
+    async getValue<T extends SettingTypes, V extends SettingValueTypes>(options: SettingValueOptions<T, V>): Promise<SettingTypeToDefault[T]> {
+        const settingValue = await this.get(options)
+        return settingValue.value
     }
 
     async getArray<V extends SettingValueTypes>(id: number, valueType: V): Promise<SettingValue<SettingTypes, V>[]> {

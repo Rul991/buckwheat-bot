@@ -158,3 +158,29 @@ export const gunsKeyboard = KeyboardCreator.create<{
         }
     }
 )
+
+export const itemKeyboard = KeyboardCreator.create<{
+    id: number
+    item: Item
+}>(
+    async ({
+        ctx,
+        keyboard,
+        data
+    }) => {
+        const id = BigInt(data.id)
+        const {
+            item
+        } = data
+
+        keyboard.add(
+            InventoryUseButton.button({
+                ctx,
+                data: {
+                    id,
+                    itemId: item.id
+                }
+            })
+        )
+    }
+)

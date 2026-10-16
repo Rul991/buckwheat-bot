@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file shop.proto.
  */
 export const file_shop: GenFile = /*@__PURE__*/
-  fileDesc("CgpzaG9wLnByb3RvIkwKElNob3BTaG93QnV0dG9uRGF0YRIKCgJpZBgBIAEoBBINCgVpbmRleBgCIAEoDRIMCgRwYWdlGAMgASgNEg0KBWNvdW50GAQgASgNIksKEVNob3BCdXlCdXR0b25EYXRhEgoKAmlkGAEgASgEEg0KBWluZGV4GAIgASgNEgwKBHBhZ2UYAyABKA0SDQoFY291bnQYBCABKA0iPgoTU2hvcENvdW50QnV0dG9uRGF0YRIKCgJpZBgBIAEoBBINCgVpbmRleBgCIAEoDRIMCgRwYWdlGAMgASgNYgZwcm90bzM");
+  fileDesc("CgpzaG9wLnByb3RvIkwKElNob3BTaG93QnV0dG9uRGF0YRIKCgJpZBgBIAEoBBINCgVpbmRleBgCIAEoDRIMCgRwYWdlGAMgASgNEg0KBWNvdW50GAQgASgNIl4KEVNob3BCdXlCdXR0b25EYXRhEgoKAmlkGAEgASgEEg0KBWluZGV4GAIgASgNEgwKBHBhZ2UYAyABKA0SDQoFY291bnQYBCABKA0SEQoJdXNlQ291cG9uGAUgASgIIj4KE1Nob3BDb3VudEJ1dHRvbkRhdGESCgoCaWQYASABKAQSDQoFaW5kZXgYAiABKA0SDAoEcGFnZRgDIAEoDWIGcHJvdG8z");
 
 /**
  * @generated from message ShopShowButtonData
@@ -83,6 +83,13 @@ export type ShopBuyButtonData = Message<"ShopBuyButtonData"> & {
    * @generated from field: uint32 count = 4;
    */
   count: number;
+
+  /**
+   *
+   *
+   * @generated from field: bool useCoupon = 5;
+   */
+  useCoupon: boolean;
 };
 
 /**

@@ -12,6 +12,7 @@ message ShopBuyButtonData {
     uint32 index = 2; // shopItems' index
     uint32 page = 3; // back page
     uint32 count = 4; // item's count
+    bool useCoupon = 5; // 
 }
 
 message ShopCountButtonData {

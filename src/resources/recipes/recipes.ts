@@ -1,5 +1,5 @@
 import Recipe from "../../utils/recipes/Recipe"
-import { craftWorkUpItem, glassItem, lootboxItem, lootboxMaterialItem, metalItem, pistolAmmoItem, stringsItem, valGiftItem, valLeafItem, woodItem, woodSwordItem } from "../items/inventory"
+import { craftWorkUpItem, damItem, fuelOreItem, glassItem, lootboxItem, lootboxMaterialItem, metalItem, orbitalGunItem, pistolAmmoItem, stringsItem, valGiftItem, valLeafItem, woodItem, woodSwordItem } from "../items/inventory"
 
 export const craftWorkUpRecipe = new Recipe({
     id: 0,
@@ -97,10 +97,48 @@ export const lootboxRecipe = new Recipe({
     }
 })
 
+export const orbitalGunRecipe = new Recipe({
+    id: 5,
+    level: 99,
+    experience: 1_000_000,
+    materials: [
+        {
+            item: metalItem,
+            count: 10_000
+        },
+        {
+            item: fuelOreItem,
+            count: 2_000
+        }
+    ],
+    result: {
+        item: orbitalGunItem,
+        count: 1
+    }
+})
+
+export const woodFromDamRecipe = new Recipe({
+    id: 6,
+    level: 35,
+    experience: 5,
+    materials: [
+        {
+            item: damItem,
+            count: 1
+        }
+    ],
+    result: {
+        item: woodItem,
+        count: 110
+    }
+})
+
 export const recipes: Recipe[] = [
     craftWorkUpRecipe,
     pistolAmmoRecipe,
     valGiftRecipe,
     woodSwordRecipe,
-    lootboxRecipe
+    lootboxRecipe,
+    orbitalGunRecipe,
+    woodFromDamRecipe
 ]

@@ -5,6 +5,7 @@ import type InventoryItem from "../db/entities/items/InventoryItem"
 export type ItemMaxCount = {
     user?: number
     chat?: number
+    use?: number
 }
 
 export type Gun = {
@@ -33,20 +34,18 @@ export type ContructorItemDrop =
     & {
         canDropFromWork?: boolean
         rarity: number
+        lootBoxCount?: [number, number] | number
     }
-    & (
-        | {
-            canDropFromLootBox?: true
-            lootBoxCount: [number, number] | number
-        }
-        | {
-            canDropFromLootBox?: false
-        }
-    )
 
 export type ItemDrop = {
     canDropFromWork: boolean
     rarity: number
     canDropFromLootBox: boolean
     lootBoxCount: [number, number]
+}
+
+export type RandomItemType = 'lootbox' | 'work'
+export type GetRandomItemResult = {
+    item: Item | undefined
+    count: number
 }

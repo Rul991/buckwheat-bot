@@ -173,6 +173,8 @@ import GeneratorCommand from "../bot/actions/commands/buckwheat/generator/Genera
 import GeneratorCollectButton from "../bot/actions/callback-query/generator/GeneratorCollectButton"
 import GeneratorAddButton from "../bot/actions/callback-query/generator/GeneratorAddButton"
 import GeneratorUpgradeButton from "../bot/actions/callback-query/generator/GeneratorUpgradeButton"
+import WipeButton from "../bot/actions/callback-query/wipe/WipeButton"
+import WipeCommand from "../bot/actions/commands/buckwheat/admin/WipeCommand"
 
 export const runBot = async () => {
     const bot = new TelegramBot()
@@ -276,6 +278,7 @@ export const runBot = async () => {
                 GeneratorCollectButton,
                 GeneratorAddButton,
                 GeneratorUpgradeButton,
+                WipeButton,
             ),
 
         new MessageHandler()
@@ -385,6 +388,7 @@ export const runBot = async () => {
                 new AwardsCommand(),
                 new ChatsCommand(),
                 new GeneratorCommand(),
+                new WipeCommand(),
             ),
 
         new PhotoActionHandler()

@@ -27,13 +27,13 @@ export default class WorkCommand extends BuckwheatCommand {
             id,
         } = options
         const isPrivate = ctx.hasChatType('private')
-        if(!isPrivate) {
+        if (!isPrivate) {
             const privateWorkSettingValue = await SettingValueService.get({
                 setting: privateWorkSetting,
                 id: chatId
             })
 
-            if(privateWorkSettingValue.value) {
+            if (privateWorkSettingValue.value) {
                 return {
                     key: 'work/not-private'
                 }
@@ -72,7 +72,11 @@ export default class WorkCommand extends BuckwheatCommand {
         )
 
         const quest = WorkUtils.getQuest(ctx, user?.className)
-        const item = await InventoryItemService.getRandomItem(chatId, id)
+        const { item, count } = await InventoryItemService.getRandomItem({
+            chatId,
+            id,
+            type: 'work'
+        })
 
         await Promise.all([
             BalanceService.add({ chatId, id, money }),
@@ -85,12 +89,13 @@ export default class WorkCommand extends BuckwheatCommand {
             await InventoryItemService.add({
                 chatId,
                 id,
-                item
+                item,
+                count
             })
         }
 
         const isSendMessage = await GrindUtils.isSendMessage(ctx, id)
-        if(!isSendMessage) return
+        if (!isSendMessage) return
 
         return {
             key: 'work/work',

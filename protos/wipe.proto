@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message WipeButtonData {
+    uint64 id = 1; // user's id
+    bool isWipe = 2; // is wipe
+}

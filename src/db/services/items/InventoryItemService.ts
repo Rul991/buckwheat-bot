@@ -1,7 +1,9 @@
 import type { BotContext } from "../../../types/bot"
+import type { GetRandomItemResult, RandomItemType } from "../../../types/items"
 import Item from "../../../utils/items/Item"
 import ItemUtils from "../../../utils/items/ItemUtils"
 import Logger from "../../../utils/logs/Logger"
+import RandomUtils from "../../../utils/math/RandomUtils"
 import type Recipe from "../../../utils/recipes/Recipe"
 import InventoryItem from "../../entities/items/InventoryItem"
 import BaseService from "../base/BaseService"
@@ -72,6 +74,12 @@ type CraftOptions = {
 
 type CraftResult =
     & GiftResult
+
+type GetRandomItemOptions = {
+    chatId: number
+    id: number
+    type: RandomItemType
+}
 
 class InventoryItemService extends BaseService<typeof InventoryItem> {
     constructor() {
@@ -242,6 +250,13 @@ class InventoryItemService extends BaseService<typeof InventoryItem> {
         item,
         count = 1
     }: GiftOptions): Promise<GiftResult> {
+        if (count <= 0) {
+            return {
+                ok: true,
+                reason: 'count-less-than-one'
+            }
+        }
+
         if (owner == target) {
             return {
                 ok: true,
@@ -355,21 +370,64 @@ class InventoryItemService extends BaseService<typeof InventoryItem> {
         return result
     }
 
-    async getRandomItem(chatId: number, id: number, count: number = 1) {
-        const item = ItemUtils.getRandomItem()
-        if (!item) return undefined
+    async getRandomItem({
+        chatId,
+        id,
+        type
+    }: GetRandomItemOptions): Promise<GetRandomItemResult> {
+        const item = ItemUtils.getRandomItem(type)
+        Logger.debug(
+            'InventoryItemService.getRandomItem',
+            {
+                chatId,
+                id,
+                type,
+                item
+            }
+        )
+        if (!item) return {
+            item: undefined,
+            count: 0
+        }
 
         const remainingCount = await this.getRemainingCount({
             chatId,
             id,
             item
         })
-
-        if (remainingCount >= count) {
-            return item
+        Logger.debug(
+            'InventoryItemService.getRandomItem',
+            {
+                remainingCount
+            }
+        )
+        if (remainingCount <= 0) {
+            return {
+                item: undefined,
+                count: 0
+            }
         }
 
-        return undefined
+        const [min, max] = item.drop.lootBoxCount
+        const count = type == 'work' ?
+            1 :
+            RandomUtils.range(min, max)
+        const availableCount = Math.min(count, remainingCount)
+
+        Logger.debug(
+            'InventoryItemService.getRandomItem',
+            {
+                count,
+                min,
+                max,
+                availableCount
+            }
+        )
+
+        return {
+            item,
+            count: availableCount
+        }
     }
 
     async getItems(chatId: number, id: number, items: Item[]): Promise<Map<number, InventoryItem>> {
@@ -387,6 +445,26 @@ class InventoryItemService extends BaseService<typeof InventoryItem> {
                 inventoryItem.itemId,
                 inventoryItem
             )
+        }
+
+        return result
+    }
+
+    async getItemsByChatId(chatId: number, items: Item[]): Promise<Map<number, InventoryItem[]>> {
+        const result: Map<number, InventoryItem[]> = new Map()
+        const inventoryItems = await this._repo.find({
+            chatId,
+            itemId: {
+                $in: items.map(v => v.id)
+            }
+        })
+
+        for (const inventoryItem of inventoryItems) {
+            const items = result.getOrInsert(
+                inventoryItem.id,
+                []
+            )
+            items.push(inventoryItem)
         }
 
         return result
