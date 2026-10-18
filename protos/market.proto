@@ -1,0 +1,30 @@
+syntax = "proto3";
+import "scroller.proto";
+
+message MarketSlotScrollerButtonData {
+    ScrollerData data = 1;
+}
+
+message MarketShowButtonData {
+    uint64 id = 1; // user's id
+    uint32 slotId = 2; // market slot's id
+    uint32 count = 3; // count
+    uint32 page = 4; // back page's index
+}
+
+message MarketBuyButtonData {
+    uint64 id = 1; // user's id
+    uint32 slotId = 2; // market slot's id
+    uint32 count = 3; // count
+    uint32 page = 4; // back page's index
+}
+
+message MarketSellButtonData {
+    uint64 id = 1; // user's id
+    uint32 itemId = 2; // item's id
+}
+
+message MarketDeleteButtonData {
+    uint64 id = 1; // user's id
+    uint32 slotId = 2; // market slot's id
+}

@@ -1,0 +1,9 @@
+include /utils/mixins.pug
+
++reverse_heading(EMOJIES.NOTE)
+    | Заметка игрока 
+    +link(owner)
+    |  из 
+    u
+        i #{folder.title}
+| !{note.text}

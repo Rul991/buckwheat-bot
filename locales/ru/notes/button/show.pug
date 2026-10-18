@@ -1,0 +1,7 @@
+include /utils/mixins.pug
+
+- 
+    const emojiesArray = Array.from(emojies)
+
+| #{emojiesArray[index % emojiesArray.length]} 
++shorten(text, 32)

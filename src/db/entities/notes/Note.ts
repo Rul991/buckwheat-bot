@@ -1,29 +1,33 @@
-import { plugin, prop } from "@typegoose/typegoose"
+import { index, plugin, prop } from "@typegoose/typegoose"
 import IdEntity from "../base/IdEntity"
 import { autoIncrementPlugin } from "../../plugins/auto-increment"
 
+@index(
+    {
+        id: 1
+    },
+    {
+        unique: true
+    }
+)
 @plugin(autoIncrementPlugin)
 export default class Note extends IdEntity {
-    @prop({ unique: true })
-    declare id: number
-
-    @prop()
-    owner: number
-
     @prop()
     text: string
 
+    @prop({ index: true })
+    folderId: number
+
     @prop()
-    folder: string  
+    createdAt: Date
 
     constructor({
-        owner,
         text,
-        folder
-    }: Omit<Note, '_id' | 'id'>) {
+        folderId
+    }: Pick<Note, 'text' | 'folderId'>) {
         super()
-        this.owner = owner
         this.text = text
-        this.folder = folder
+        this.folderId = folderId
+        this.createdAt = new Date()
     }
 }

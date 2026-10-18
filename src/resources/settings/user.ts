@@ -35,7 +35,7 @@ export const summonEmojiSetting = new Setting({
 
 export const notesPublicSetting = new Setting({
     id: 3,
-    textKey: 'notes-public',
+    textKey: 'notes/public',
     type: 'boolean',
     properties: {},
     default: false,
@@ -51,10 +51,23 @@ export const autolinkSetting = new Setting({
     valueType: SettingValueTypes.User,
 })
 
+export const noteEmojiesSetting = new Setting({
+    id: 5,
+    textKey: 'notes/emojies',
+    type: 'string',
+    properties: {
+        min: 1,
+        max: 16
+    },
+    default: '📄📜📰',
+    valueType: SettingValueTypes.User
+})
+
 export const userSettings = [
     grindSetting,
     pingEmojiSetting,
     summonEmojiSetting,
     notesPublicSetting,
     autolinkSetting,
+    noteEmojiesSetting,
 ]

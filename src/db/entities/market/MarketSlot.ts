@@ -1,16 +1,30 @@
-import { plugin, prop } from "@typegoose/typegoose"
+import { index, plugin, prop } from "@typegoose/typegoose"
 import IdEntity from "../base/IdEntity"
 import { autoIncrementPlugin } from "../../plugins/auto-increment"
+import type Item from "../../../utils/items/Item"
 
-type ConstructorOptions = Omit<MarketSlot, 'id'>
+type ConstructorOptions = Omit<MarketSlot, 'id' | 'itemId'>
+    & {
+        item: Item
+    }
 
 @plugin(autoIncrementPlugin)
+@index(
+    {
+        itemId: -1,
+        count: -1,
+        price: 1
+    }
+)
 export default class MarketSlot extends IdEntity {
+    @prop({ unique: true })
+    declare id: number
+
     @prop()
     chatId: number
 
     @prop()
-    owner: number
+    seller: number
 
     @prop()
     price: number
@@ -23,15 +37,15 @@ export default class MarketSlot extends IdEntity {
 
     constructor({
         chatId,
-        owner,
+        seller,
         price,
         count,
-        itemId,
+        item,
     }: ConstructorOptions) {
         super()
         this.chatId = chatId
-        this.itemId = itemId
-        this.owner = owner
+        this.itemId = item.id
+        this.seller = seller
         this.price = price
         this.count = count
     }

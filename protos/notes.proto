@@ -1,0 +1,43 @@
+syntax = "proto3";
+import "scroller.proto";
+
+message NoteScrollerButtonData {
+    ScrollerData data = 1;
+    uint32 folderId = 2; // note folder's id (show only folder's notes)
+    uint64 owner = 3; // note owner's id
+}
+
+message NoteAddButtonData {
+    uint64 id = 1; // user's id
+    uint32 folderId = 2; // note folder's id
+}
+
+message NoteShowButtonData {
+    uint64 id = 1; // user's id
+    uint32 noteId = 3; // note's id
+    uint32 page = 4; // back page's index
+}
+
+message NoteDeleteButtonData {
+    uint64 id = 1; // user's id
+    uint32 noteId = 2; // note's id
+}
+
+message NoteFolderScrollerButtonData {
+    ScrollerData data = 1;
+    uint64 owner = 3; // note owner's id
+}
+
+message NoteFolderAddButtonData {
+    uint64 id = 1; // user's id
+}
+
+message NoteFolderDeleteButtonData {
+    uint64 id = 1; // user's id
+    uint32 folderId = 2; // folder's id
+}
+
+message NoteFolderChangePublicButtonData {
+    uint64 id = 1; // user's id
+    uint32 folderId = 2; // folder's id
+}

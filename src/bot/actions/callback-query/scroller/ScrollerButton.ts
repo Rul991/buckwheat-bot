@@ -29,6 +29,7 @@ export default abstract class ScrollerButton<O, M extends Omit<BaseScrollerData,
 
     protected _objectsPerPage = 5
     protected _isNeedCache = true
+    protected _stopIfNoObjects = true
 
     override defaultTextKey: string = 'scroller/arrow'
     protected _arrowTextKey = 'scroller/arrow'
@@ -130,6 +131,7 @@ export default abstract class ScrollerButton<O, M extends Omit<BaseScrollerData,
                         id: bigId
                     })
                 } as M,
+                style: 'primary' as const,
                 vars: {
                     page: {
                         current: page,
@@ -150,7 +152,7 @@ export default abstract class ScrollerButton<O, M extends Omit<BaseScrollerData,
                         maxPage,
                         increase,
                         id: bigId
-                    })
+                    }),
                 } as M,
                 vars: {
                     page: {
@@ -231,7 +233,7 @@ export default abstract class ScrollerButton<O, M extends Omit<BaseScrollerData,
         const maxPage = Math.ceil(objects.length / this._objectsPerPage)
         const slicedObjects = this._getSlicedObjects(page, objects)
 
-        if (objects.length <= 0) {
+        if (objects.length <= 0 && this._stopIfNoObjects) {
             return {
                 key: this._zeroPagesKey
             }

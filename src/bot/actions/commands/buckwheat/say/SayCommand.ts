@@ -10,6 +10,7 @@ export default class SayCommand extends BuckwheatCommand {
     override minimumRank: number = RankUtils.min
     override settingId: number = 93
     override name: string = 'сказать'
+    override needData: boolean = true
     
     override async execute(options: BuckwheatCommandOptions): Promise<BuckwheatCommandExecuteResult> {
         const {

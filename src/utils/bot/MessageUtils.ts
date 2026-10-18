@@ -211,10 +211,20 @@ export default class MessageUtils {
                 } = options
 
                 const text = ctx.t(key, vars)
-                return await ctx.editMessageText(
-                    text,
-                    this._getReplyOptions(ctx, options)
-                ) && true
+                if (ctx.msg?.text) {
+                    return await ctx.editMessageText(
+                        text,
+                        this._getReplyOptions(ctx, options)
+                    ) && true
+                }
+                else {
+                    return await ctx.editMessageCaption(
+                        {
+                            ...this._getReplyOptions(ctx, options),
+                            caption: text
+                        }
+                    ) && true
+                }
             },
             false
         )

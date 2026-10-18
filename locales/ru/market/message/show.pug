@@ -1,0 +1,23 @@
+include /utils/mixins.pug
+
+- 
+    const {
+        price,
+        count: slotCount
+    } = slot
+    const totalPrice = price * count
+
++heading(item.emoji)
+    | #{item.title}
+|
+blockquote !{item.description}
+|
+|
++plain_code_param(`${EMOJIES.MONEY} Рыночная цена`, `${formatNumber(item.basePrice)}${EMOJIES.MONEY}`)
++plain_code_param(`${EMOJIES.PRICE} Цена`, `${formatNumber(price)} * ${formatNumber(count)} = ${formatNumber(totalPrice)}${EMOJIES.MONEY}`)
++plain_code_param(`${EMOJIES.COUNT2} Кол-во`, formatNumber(slotCount))
+|
+|
++plain_code_param(`${EMOJIES.PLAYER} Продавец`, '')
++link(seller)
++plain_code_param(`${EMOJIES.BALANCE} Твой баланс`, `${formatNumber(balance)}${EMOJIES.MONEY}`)

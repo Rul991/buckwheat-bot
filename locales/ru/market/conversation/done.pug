@@ -1,0 +1,11 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.APPROVE} Игрок 
++link(vars.user)
+| , ваш товар 
+u
+    +item(item)
+    |  x#{formatNumber(count)}
+|  появился на рынке за 
+code #{formatNumber(price)}#{EMOJIES.MONEY}
+| !

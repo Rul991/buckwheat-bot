@@ -44,7 +44,7 @@ include /utils/emojies.pug
         }
     }
 
-    const bool = value => value ? EMOJIES.APPROVE : EMOJIES.DECLINE
+    const bool = (value, arr = [EMOJIES.APPROVE, EMOJIES.DECLINE]) => arr[value ? 0 : 1] || ''
     const range = (min, max, step = 0) => {
         if(min >= max) return min
 

@@ -7,3 +7,4 @@ node_modules
 *.fish
 /src/app/migrate-db.ts
 /*.txt
+work-notes/

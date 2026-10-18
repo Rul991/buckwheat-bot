@@ -10,6 +10,7 @@ blockquote !{setting.description}
 +heading(EMOJIES.PROPERTY, false)
     | СВОЙСТВА:
 +plain_code_param(`${EMOJIES.LIST} Текущее значение`, formatValue(setting.value))
++plain_code_param(`${EMOJIES.DEFAULT} Значение по умолчанию`, formatValue(setting.default))
 if setting.properties.min !== undefined
     -
         const text = (() => {

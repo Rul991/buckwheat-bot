@@ -175,6 +175,24 @@ import GeneratorAddButton from "../bot/actions/callback-query/generator/Generato
 import GeneratorUpgradeButton from "../bot/actions/callback-query/generator/GeneratorUpgradeButton"
 import WipeButton from "../bot/actions/callback-query/wipe/WipeButton"
 import WipeCommand from "../bot/actions/commands/buckwheat/admin/WipeCommand"
+import MarketCommand from "../bot/actions/commands/buckwheat/market/MarketCommand"
+import MarketSlotScrollerButton from "../bot/actions/callback-query/market/MarketSlotScrollerButton"
+import MarketShowButton from "../bot/actions/callback-query/market/MarketShowButton"
+import MarketSellButton from "../bot/actions/callback-query/market/MarketSellButton"
+import MarketSellConversation from "../bot/actions/conversations/market/MarketSellConversation"
+import MarketBuyButton from "../bot/actions/callback-query/market/MarketBuyButton"
+import MarketDeleteButton from "../bot/actions/callback-query/market/MarketDeleteButton"
+import NoteCommand from "../bot/actions/commands/notes/NoteCommand"
+import NoteFolderScrollerButton from "../bot/actions/callback-query/notes/NoteFolderScrollerButton"
+import NoteScrollerButton from "../bot/actions/callback-query/notes/NoteScrollerButton"
+import NoteFolderAddButton from "../bot/actions/callback-query/notes/NoteFolderAddButton"
+import NoteFolderAddConversation from "../bot/actions/conversations/notes/NoteFolderAddConversation"
+import NoteAddConversation from "../bot/actions/conversations/notes/NoteAddConversation"
+import NoteAddButton from "../bot/actions/callback-query/notes/NoteAddButton"
+import NoteShowButton from "../bot/actions/callback-query/notes/NoteShowButton"
+import NoteFolderDeleteButton from "../bot/actions/callback-query/notes/NoteFolderDeleteButton"
+import NoteDeleteButton from "../bot/actions/callback-query/notes/NoteDeleteButton"
+import NoteFolderChangePublicButton from "../bot/actions/callback-query/notes/NoteFolderChangePublicButton"
 
 export const runBot = async () => {
     const bot = new TelegramBot()
@@ -216,6 +234,9 @@ export const runBot = async () => {
                 SetDateSettingConversation,
                 ItemGiftConversation,
                 GiveAwardConversation,
+                MarketSellConversation,
+                NoteFolderAddConversation,
+                NoteAddConversation
             ),
 
         new CallbackQueryHandler()
@@ -279,6 +300,19 @@ export const runBot = async () => {
                 GeneratorAddButton,
                 GeneratorUpgradeButton,
                 WipeButton,
+                MarketSlotScrollerButton,
+                MarketShowButton,
+                MarketSellButton,
+                MarketBuyButton,
+                MarketDeleteButton,
+                NoteFolderScrollerButton,
+                NoteScrollerButton,
+                NoteFolderAddButton,
+                NoteAddButton,
+                NoteShowButton,
+                NoteFolderDeleteButton,
+                NoteDeleteButton,
+                NoteFolderChangePublicButton
             ),
 
         new MessageHandler()
@@ -389,6 +423,8 @@ export const runBot = async () => {
                 new ChatsCommand(),
                 new GeneratorCommand(),
                 new WipeCommand(),
+                new MarketCommand(),
+                new NoteCommand(),
             ),
 
         new PhotoActionHandler()

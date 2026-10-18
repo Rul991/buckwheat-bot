@@ -112,4 +112,12 @@ export default class StringUtils {
             }
         )
     }
+
+    static stripTags(text: string, keepContent = true): string {
+        return sanitize(text, {
+            ALLOWED_TAGS: [],
+            ALLOWED_ATTR: [],
+            KEEP_CONTENT: keepContent,
+        })
+    }
 }

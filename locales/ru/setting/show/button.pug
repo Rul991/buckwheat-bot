@@ -1,5 +1,5 @@
 include /utils/functions.pug
 
-- const showableValue = formatValue(setting.value)
+- const showableValue = formatValue(setting.value) || '-'
 
 | !{setting.title} [#{showableValue}]

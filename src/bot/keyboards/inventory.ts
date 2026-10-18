@@ -5,6 +5,7 @@ import GunSetButton from "../actions/callback-query/gun/GunSetButton"
 import InventoryGiftButton from "../actions/callback-query/inventory/InventoryGiftButton"
 import InventoryScrollerButton from "../actions/callback-query/inventory/InventoryScrollerButton"
 import InventoryUseButton from "../actions/callback-query/inventory/InventoryUseButton"
+import MarketSellButton from "../actions/callback-query/market/MarketSellButton"
 import ShopShowButton from "../actions/callback-query/shop/ShopShowButton"
 
 export const startInventoryKeyboard = KeyboardCreator.create<{
@@ -101,6 +102,15 @@ export const showItemKeyboard = KeyboardCreator.create<{
             .row()
             .add(
                 InventoryGiftButton.button({
+                    ctx,
+                    data: {
+                        id: bigId,
+                        itemId,
+                    }
+                })
+            )
+            .add(
+                MarketSellButton.button({
                     ctx,
                     data: {
                         id: bigId,

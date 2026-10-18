@@ -1,0 +1,9 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.PRICE} Игрок 
++link(vars.user)
+| , введите цену от 
+code #{formatNumber(min)}
+|  до 
+code #{formatNumber(max)}
+| !

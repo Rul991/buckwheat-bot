@@ -102,6 +102,12 @@ export default class BaseRepository<T extends RepoExtends> {
         ).exec()
     }
 
+    async deleteMany(filter: Filter<T>) {
+        return await this.model.deleteMany(
+            filter
+        ).exec()
+    }
+
     async count(filter?: Filter<T>): Promise<number> {
         return await this.model.countDocuments(filter).lean().exec()
     }

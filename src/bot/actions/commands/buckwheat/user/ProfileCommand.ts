@@ -287,7 +287,8 @@ export default class ProfileCommand extends BuckwheatCommand {
             keyboard: await profileKeyboard(
                 ctx,
                 {
-                    id: user.id
+                    owner: id,
+                    id: options.id
                 }
             )
         }
