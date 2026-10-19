@@ -1,0 +1,10 @@
+include utils/functions.pug
+include utils/mixins.pug
+
+| ✋ Игрок 
++link(user)
+| передал предмет 
+u #{itemName}
+|  x#{formatNumber(count)} игроку 
++link(reply, false)
+| !

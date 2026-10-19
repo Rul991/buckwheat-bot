@@ -15,6 +15,7 @@ import UserNameService from '../../db/services/user/UserNameService'
 import UserRankService from '../../db/services/user/UserRankService'
 import LinkedChatService from '../../db/services/linkedChat/LinkedChatService'
 import { NewMemberOptions } from '../../../utils/values/types/action-options'
+import UserSettingsService from '../../db/services/settings/UserSettingsService'
 
 export default class AddInDatabaseAction extends NewMemberAction {
     private async _updateIfBot(ctx: NewMemberContext, from: User, chatId: number): Promise<void> {
@@ -59,10 +60,17 @@ export default class AddInDatabaseAction extends NewMemberAction {
             MessagesService.get(chatId, id),
             LevelService.get(chatId, id),
             UserLeftService.update(chatId, id, false),
+            LinkedChatService.getRaw(id),
         ])
 
-        await LinkedChatService.getRaw(id)
-        await LinkedChatService.set(id, chatId)
+        const isAutoLink = await UserSettingsService.get<'boolean'>(
+            id,
+            'autolink'
+        )
+
+        if (isAutoLink) {
+            await LinkedChatService.set(id, chatId)
+        }
 
         await this._updateIfBot(ctx, from, chatId)
     }

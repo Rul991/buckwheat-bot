@@ -229,6 +229,9 @@ import ChatsCommand from '../classes/commands/buckwheat/chats/ChatsCommand'
 import ChatPublicCommand from '../classes/commands/buckwheat/chats/ChatPublicCommand'
 import ChatsChangeAction from '../classes/callback-button/chats/ChatsChangeAction'
 import ChatLinkAction from '../classes/callback-button/chats/ChatLinkAction'
+import ItemMoveAction from '../classes/actions/scenes/inventory/ItemMoveAction'
+import InventoryItemMoveAction from '../classes/callback-button/inventory/InventoryItemMoveAction'
+import ShCommand from '../classes/commands/buckwheat/dev/ShCommand'
 
 const isEnvVarsValidate = () => {
     StartValidator.validate([
@@ -394,6 +397,7 @@ const launchBot = async (bot: Bot) => {
         new DeleteUserAction(),
         new ChatsChangeAction(),
         new ChatLinkAction(),
+        new InventoryItemMoveAction(),
     )
 
     // dice 
@@ -452,6 +456,7 @@ const launchBot = async (bot: Bot) => {
         new PingCommand(),
         new CubeCommand(),
         new UpdateCommand(),
+        new ShCommand(),
         new RuleCommand(),
         new WorkCommand(),
         new HelloCommand(),
@@ -530,7 +535,8 @@ const launchBot = async (bot: Bot) => {
         new SuggestCardAction(),
         new CardPriceSellAction(),
         new ImportSceneAction(),
-        new MarketSellSceneAction()
+        new MarketSellSceneAction(),
+        new ItemMoveAction(),
     )
 
     // my chat member

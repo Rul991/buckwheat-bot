@@ -29,6 +29,7 @@ export default class extends ButtonScrollerAction<Skill, TinyCurrentIncreaseId> 
             LevelUtils.max
         )
             .filter(skill => currentSkills.every(s => skill.id != s))
+            .sort((a, b) => a.level - b.level)
 
         return availableSkills
     }

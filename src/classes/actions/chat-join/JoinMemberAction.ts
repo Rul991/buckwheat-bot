@@ -23,13 +23,14 @@ export default class extends ChatJoinRequestAction {
                 ctx
             } = options
             const bio = ctx.chatJoinRequest.bio
+            const firstName = ctx.from.first_name
 
             await MessageUtils.answerMessageFromResource(
                 ctx,
                 'text/join/add-member.pug',
                 {
                     changeValues: {
-                        user: await ContextUtils.getUser(chatId, id),
+                        user: await ContextUtils.getUser(chatId, id, firstName),
                         bio
                     },
                     inlineKeyboard: await InlineKeyboardManager.get(
