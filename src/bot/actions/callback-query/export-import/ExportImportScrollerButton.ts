@@ -17,7 +17,7 @@ class ExportImportScrollerButton extends ScrollerButton<ExportImportDefinition<a
     override name: string = 'eiscr'
 
     protected override _isNeedCache: boolean = false
-    protected override _objectsPerPage: number = 5
+    protected override _objectsPerPage: number = 6
     
     protected override async _getRawObjects(_options: CallbackQueryActionOptions<ExportImportScrollerButtonData>): Promise<ExportImportDefinition<any>[]> {
         return ExportImportManager.getAll()

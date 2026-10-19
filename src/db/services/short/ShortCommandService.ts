@@ -17,6 +17,14 @@ class ShortCommandService extends BaseService<typeof ShortCommand> {
         )
     }
 
+    async createMany(arr: ShortCommand[]) {
+        return await Promise.all(
+            arr.map(v => {
+                return this.create(v)
+            })
+        )
+    }
+
     async get(objectId: Uint8Array): Promise<ShortCommand | undefined> {
         return await this._repo.findOne({
             _id: new Types.ObjectId(objectId)

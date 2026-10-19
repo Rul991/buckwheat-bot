@@ -13,6 +13,8 @@ import StringUtils from "../string/StringUtils"
 import { SettingValueTypes } from "../../protos/settings_pb"
 import SettingValueService from "../../db/services/settings/SettingValueService"
 import type { SettingImportData } from "../../types/settings"
+import ShortCommandService from "../../db/services/short/ShortCommandService"
+import ShortCommand from "../../db/entities/short/ShortCommand"
 
 export default class ExportImportManager {
     private static _definitions: Map<number, ExportImportDefinition<any>> = new Map(
@@ -68,8 +70,9 @@ export default class ExportImportManager {
                 id: 1,
                 key: 'chat',
                 schema: object({
-                    rules: string().min(1).max(MAX_USER_TEXT_LENGTH).array(),
-                    hello: string().min(0).max(MAX_USER_TEXT_LENGTH)
+                    hello: string().min(0).max(MAX_USER_TEXT_LENGTH),
+                    isPublic: boolean(),
+                    stickerPack: string().optional(),
                 }),
                 importCallback: async options => {
                     const {
@@ -78,21 +81,9 @@ export default class ExportImportManager {
                     } = options
 
                     await Promise.all([
-                        data.rules.length && RuleService.createMany(
-                            data.rules.map(
-                                v => {
-                                    return new Rule({
-                                        chatId,
-                                        text: StringUtils.sanitizeHTML(v)
-                                    })
-                                }
-                            )
-                        ),
                         ChatService.update(
                             chatId,
-                            {
-                                hello: data.hello
-                            }
+                            data
                         )
                     ])
 
@@ -100,18 +91,20 @@ export default class ExportImportManager {
                 },
                 exportCallback: async options => {
                     const {
-                        chatId,
                         ctx
                     } = options
 
-                    const rules = await RuleService.getAllByChatId(chatId)
-                    const rulesText = rules.map(v => v.text)
-                    const chat = await ctx.vars.chat.get()
-                    const hello = chat?.hello ?? ''
+                    const chat = await ctx.vars.chat.require()
+                    const {
+                        hello,
+                        stickerPack,
+                        isPublic
+                    } = chat
 
                     return {
-                        rules: rulesText,
-                        hello
+                        hello,
+                        stickerPack,
+                        isPublic
                     }
                 }
             }),
@@ -249,6 +242,45 @@ export default class ExportImportManager {
                         }
                     })
                 }
+            }),
+            new ExportImportDefinition({
+                id: 5,
+                key: 'shorten',
+                forChat: false,
+                schema: object({
+                    command: string(),
+                    text: string()
+                }).array(),
+                async importCallback(options) {
+                    const {
+                        id,
+                        data
+                    } = options
+
+                    await ShortCommandService.createMany(
+                        data.map(v => {
+                            return new ShortCommand({
+                                id,
+                                command: v.command,
+                                text: v.text
+                            })
+                        })
+                    )
+                    return true
+                },
+                async exportCallback(options) {
+                    const {
+                        id
+                    } = options
+
+                    const shortCommands = await ShortCommandService.getAllByUserId(id)
+                    return shortCommands.map(v => {
+                        return {
+                            command: v.command,
+                            text: v.text
+                        }
+                    })
+                },
             })
         ]
             .map(v => {
