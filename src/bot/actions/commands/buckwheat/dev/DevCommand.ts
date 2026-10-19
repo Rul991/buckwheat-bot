@@ -7,13 +7,14 @@ import BuckwheatCommand from "../../../base/BuckwheatCommand"
 import MessageUtils from "../../../../../utils/bot/MessageUtils"
 import Logger from "../../../../../utils/logs/Logger"
 import type { BotContext } from "../../../../../types/bot"
-import { cookieItem, inventoryItems, newGameItem } from "../../../../../resources/items/inventory"
+import { inventoryItems, newGameItem } from "../../../../../resources/items/inventory"
 import InventoryItemService from "../../../../../db/services/items/InventoryItemService"
 import AwardService from "../../../../../db/services/award/AwardService"
 import UserService from "../../../../../db/services/user/UserService"
 import type User from "../../../../../db/entities/user/User"
 import MarketSlotService from "../../../../../db/services/market/MarketSlotService"
 import MarketSlot from "../../../../../db/entities/market/MarketSlot"
+import MessagesService from "../../../../../db/services/message/MessagesService"
 
 type ShowAwardOptions = {
     ctx: BotContext,
@@ -148,15 +149,10 @@ export default class DevCommand extends BuckwheatCommand {
         }
 
         await this._giveItems(chatId, id)
-
-        await MarketSlotService.create(
-            new MarketSlot({
-                chatId,
-                seller: id,
-                price: 100,
-                item: newGameItem,
-                count: 51000
-            })
+        Logger.debug(
+            'DevCommand',
+            (await MessagesService.getTotalUnactiveUsers(chatId, 1000))
+                .map(v => ({ messages: v.messages, name: v.name }))
         )
 
         return {

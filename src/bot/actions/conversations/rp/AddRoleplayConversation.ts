@@ -15,7 +15,7 @@ class AddRoleplayConversation extends ConversationAction {
         const needId = ctx.from!.id
         const name = await RoleplayUtils.getName(conversation, needId)
 
-        if (CommandDescriptionUtils.hasByName(name)) {
+        if (CommandDescriptionUtils.hasByName(name) || CommandDescriptionUtils.hasByAlias(name)) {
             await ConversationUtils.replyInConversation(
                 conversation,
                 'rp/already-has',

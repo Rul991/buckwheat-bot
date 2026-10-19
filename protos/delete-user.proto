@@ -1,0 +1,11 @@
+syntax = "proto3";
+import "scroller.proto";
+
+message DeleteUserScrollerButtonData {
+    ScrollerData data = 1;
+}
+
+message DeleteUserButtonData {
+    uint64 id = 1; // user's id
+    optional uint64 deletedUserId = 2; // if exist, delete only one user, else, delete all users
+}

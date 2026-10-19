@@ -1,6 +1,8 @@
-import { Types } from "mongoose"
+import { Types, type QueryFilter } from "mongoose"
 import type { RepoExtends } from "../../../types/types"
 import BaseRepository from "../../repos/base/BaseRepository"
+
+
 
 export default class BaseService<T extends RepoExtends> {
     protected _repo: BaseRepository<T>
@@ -31,9 +33,11 @@ export default class BaseService<T extends RepoExtends> {
         )
     }
 
-    async wipe(
-        filter: Partial<InstanceType<T>>
-    ) {
-        return await this._repo.model.deleteMany(filter)
+    async deleteOne(filter: QueryFilter<InstanceType<T>>) {
+        return await this._repo.deleteOne(filter)
+    }
+
+    async deleteMany(filter: QueryFilter<InstanceType<T>>) {
+        return await this._repo.deleteMany(filter)
     }
 }

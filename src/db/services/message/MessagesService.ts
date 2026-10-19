@@ -1,7 +1,11 @@
+import { deleteUserMinCountSetting } from "../../../resources/settings/chat"
 import type { TopValues } from "../../../types/top"
 import type { MessagesType } from "../../../types/unions"
 import Messages from "../../entities/message/Messages"
+import type User from "../../entities/user/User"
 import BaseService from "../base/BaseService"
+import SettingValueService from "../settings/SettingValueService"
+import UserService from "../user/UserService"
 
 class MessagesService extends BaseService<typeof Messages> {
     private _types: MessagesType[] = ['total', 'year', 'month', 'day']
@@ -101,6 +105,37 @@ class MessagesService extends BaseService<typeof Messages> {
                     id: v.id
                 }
             })
+    }
+
+    async getTotalUnactiveUsers(chatId: number, meId: number): Promise<(User & { messages: number })[]> {
+        const messages = await this._repo.find({
+            type: 'total',
+            count: {
+                $lt: await SettingValueService.getValue({
+                    id: chatId,
+                    setting: deleteUserMinCountSetting
+                }),
+            },
+            chatId
+        })
+        const users = await UserService.getAllByIds(
+            chatId,
+            messages
+                .map(message => message.id)
+        )
+
+        return messages
+            .filter(v => v.id !== meId)
+            .map(v => {
+                const user = users.get(v.id)
+                if (!user) return undefined
+
+                return {
+                    ...user,
+                    messages: v.count
+                }
+            })
+            .filter(v => v !== undefined)
     }
 }
 

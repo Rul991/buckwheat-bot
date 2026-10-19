@@ -193,6 +193,9 @@ import NoteShowButton from "../bot/actions/callback-query/notes/NoteShowButton"
 import NoteFolderDeleteButton from "../bot/actions/callback-query/notes/NoteFolderDeleteButton"
 import NoteDeleteButton from "../bot/actions/callback-query/notes/NoteDeleteButton"
 import NoteFolderChangePublicButton from "../bot/actions/callback-query/notes/NoteFolderChangePublicButton"
+import DeleteUserButton from "../bot/actions/callback-query/delete-user/DeleteUserButton"
+import DeleteUserScrollerButton from "../bot/actions/callback-query/delete-user/DeleteUserScrollerButton"
+import DeleteUserCommand from "../bot/actions/commands/buckwheat/delete-user/DeleteUserCommand"
 
 export const runBot = async () => {
     const bot = new TelegramBot()
@@ -312,7 +315,9 @@ export const runBot = async () => {
                 NoteShowButton,
                 NoteFolderDeleteButton,
                 NoteDeleteButton,
-                NoteFolderChangePublicButton
+                NoteFolderChangePublicButton,
+                DeleteUserButton,
+                DeleteUserScrollerButton,
             ),
 
         new MessageHandler()
@@ -425,6 +430,7 @@ export const runBot = async () => {
                 new WipeCommand(),
                 new MarketCommand(),
                 new NoteCommand(),
+                new DeleteUserCommand(),
             ),
 
         new PhotoActionHandler()

@@ -29,7 +29,7 @@ const setup = async () => {
     ])
 }
 
-const test = async (): Promise<boolean | void> => {
+const dev = async (): Promise<boolean | void> => {
     
 }
 
@@ -39,7 +39,7 @@ const main = async () => {
     Logger.log('[db] connected')
 
     await setup()
-    if (IS_PROD || (await test() ?? true)) {
+    if (IS_PROD || (await dev() ?? true)) {
         Logger.log('[bot] starting')
         await runBot()
     }

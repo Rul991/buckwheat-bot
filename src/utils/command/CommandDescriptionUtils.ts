@@ -29,6 +29,17 @@ export default class CommandDescriptionUtils {
         return this.types.some(type => this._descriptionsByTypes[type].has(name))
     }
 
+    static hasByAlias(name: string): boolean {
+        return this.types.some(type => {
+            const descriptions = this._descriptionArraysByTypes[type]
+            for (const description of descriptions) {
+                if(description.aliases.includes(name)) {
+                    return true
+                }
+            }
+        })
+    }
+
     static add(description: CommandDescription): void {
         if (!description.isShow) return
         if (this.has(description)) return

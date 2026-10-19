@@ -1,3 +1,4 @@
+import type { QueryFilter } from "mongoose"
 import { SettingValueTypes } from "../../../protos/settings_pb"
 import { greedBoxItem, newGameItem } from "../../../resources/items/inventory"
 import InventoryItem from "../../entities/items/InventoryItem"
@@ -8,7 +9,6 @@ import GameService from "../game/GameService"
 import GeneratorService from "../generator/GeneratorService"
 import GreedBoxService from "../greed-box/GreedBoxService"
 import SelectedGunService from "../gun/SelectedGunService"
-import IdeaService from "../ideas/IdeaService"
 import InventoryItemService from "../items/InventoryItemService"
 import LevelService from "../level/LevelService"
 import MarketSlotService from "../market/MarketSlotService"
@@ -19,23 +19,33 @@ import RoleplayService from "../rp/RoleplayService"
 import SettingValueService from "../settings/SettingValueService"
 import UserService from "../user/UserService"
 import WorkService from "../work/WorkService"
+import AwardService from "../award/AwardService"
+import DonateService from "../donate/DonateService"
+import MarriageService from "../marriage/MarriageService"
 
 type Service<T extends Record<string, any>> = {
     migrate(filter: T, value: T): Promise<unknown>
-    wipe(filter: T): Promise<unknown>
+    deleteOne(filter: T): Promise<unknown>
+    deleteMany(filter: T): Promise<unknown>
 }
 
-type ChatIdService = Service<{ chatId?: number }>
-type IdService = Service<{ id?: number }>
+type ChatIdService = Service<{ chatId: number }>
+type IdService = Service<{ id: number }>
+type ChatIdAndIdService = Service<QueryFilter<{ chatId: number, id: number }>>
 
 export default class TotalService {
-    static readonly chatIdServices: ChatIdService[] = [
+    static readonly migrateChatIdServices: ChatIdService[] = [
+        AwardService,
         BalanceService,
+        DonateService,
         DuelistService,
         GameService,
+        GeneratorService,
         GreedBoxService,
         InventoryItemService,
         LevelService,
+        MarketSlotService,
+        MarriageService,
         MessagesService,
         RouletteService,
         RuleService,
@@ -44,10 +54,9 @@ export default class TotalService {
         WorkService
     ]
 
-    static readonly idServices: IdService[] = [
+    static readonly migrateIdServices: IdService[] = [
         ChatService,
         RoleplayService,
-        IdeaService
     ]
 
     static readonly wipeServices: ChatIdService[] = [
@@ -60,12 +69,30 @@ export default class TotalService {
         GreedBoxService,
     ]
 
+    static readonly deleteChatIdAndIdServices: ChatIdAndIdService[] = [
+        AwardService,
+        BalanceService,
+        DuelistService,
+        GameService,
+        GeneratorService,
+        GreedBoxService,
+        InventoryItemService,
+        LevelService,
+        MarketSlotService,
+        MessagesService,
+        RouletteService,
+        RuleService,
+        SelectedGunService,
+        UserService,
+        WorkService
+    ]
+
     static async migrate(oldChatId: number, newChatId: number) {
         await Promise.all([
-            ...this.chatIdServices.map(async service => {
+            ...this.migrateChatIdServices.map(async service => {
                 return await service.migrate({ chatId: oldChatId }, { chatId: newChatId })
             }),
-            ...this.idServices.map(async service => {
+            ...this.migrateIdServices.map(async service => {
                 return await service.migrate({ id: oldChatId }, { id: newChatId })
             }),
             SettingValueService.migrate(
@@ -133,7 +160,7 @@ export default class TotalService {
         await Promise.all(
             this.wipeServices.map(
                 service => {
-                    return service.wipe({ chatId })
+                    return service.deleteMany({ chatId })
                 }
             )
         )
@@ -148,5 +175,31 @@ export default class TotalService {
                 })
             )
         }
+    }
+
+    static async deleteUser(chatId: number, id: number) {
+        return await Promise.all([
+            ...this.deleteChatIdAndIdServices.map(async v => {
+                return v.deleteOne({ chatId, id })
+            }),
+        ])
+    }
+
+    static async deleteUnactiveUsers(chatId: number, meId: number) {
+        const users = await MessagesService.getTotalUnactiveUsers(chatId, meId)
+        const ids = users
+            .map(v => v.id)
+            .filter(v => v != meId)
+
+        return await Promise.all([
+            ...this.deleteChatIdAndIdServices.map(async v => {
+                return v.deleteMany({
+                    chatId,
+                    id: {
+                        $in: ids
+                    }
+                })
+            })
+        ])
     }
 }

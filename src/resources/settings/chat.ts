@@ -181,6 +181,18 @@ export const privateWorkSetting = new Setting({
     valueType: SettingValueTypes.Chat
 })
 
+export const deleteUserMinCountSetting = new Setting({
+    id: 21,
+    textKey: 'delete-user/min-count',
+    type: 'number',
+    properties: {
+        min: 2,
+        max: 1000
+    },
+    default: 25,
+    valueType: SettingValueTypes.Chat
+})
+
 export const chatSettings = [
     reactChanceSetting,
     diceAnswerChanceSetting,
@@ -199,4 +211,5 @@ export const chatSettings = [
     kickPvpSetting,
     autoJoinSetting,
     stickerChanceSetting,
+    deleteUserMinCountSetting
 ]
