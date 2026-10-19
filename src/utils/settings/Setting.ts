@@ -1,15 +1,7 @@
-import z, { boolean, literal, never, number, object, string, ZodType } from "zod"
 import type { SettingValueTypes } from "../../protos/settings_pb"
 import type { SettingTypes, SettingTypeToProperties, SettingTypeToDefault } from "../../types/settings"
 import type { BotContext } from "../../types/bot"
 import TimeUtils from "../time/TimeUtils"
-
-type Schema<K extends SettingTypes, V extends SettingValueTypes> = ZodType<{
-    id: number
-    type: K
-    valueType: V
-    value: string | number | boolean
-}>
 
 type ConstructorOptions<K extends SettingTypes, V extends SettingValueTypes> =
     & Omit<Setting<K, V>, 'titleKey' | 'descriptionKey' | 'clone' | 'schema' | 'getVars' | 'getShowableValue'>
@@ -28,7 +20,6 @@ export default class Setting<K extends SettingTypes, V extends SettingValueTypes
     default: SettingTypeToDefault[K]
     properties: SettingTypeToProperties[K]
     textKey: string
-    schema: Schema<K, V>
 
     constructor({
         type,
@@ -47,42 +38,6 @@ export default class Setting<K extends SettingTypes, V extends SettingValueTypes
         this.default = defaultValue
         this.properties = properties
         this.vars = vars ?? {}
-        this.schema = this._getSchema()
-    }
-
-    private _getValueSchema() {
-        if (this.type == 'boolean') {
-            return boolean()
-        }
-        else if ('min' in this.properties) {
-            const {
-                min,
-                max
-            } = this.properties
-
-            if (this.type == 'string') {
-                return string().min(min).max(max)
-            }
-
-            return number().min(min).max(max)
-
-        }
-        else if ('values' in this.properties) {
-            return z.enum(this.properties.values)
-        }
-
-        return never()
-    }
-
-    private _getSchema() {
-        const result = object({
-            id: literal(this.id),
-            type: literal(this.type),
-            valueType: literal(this.valueType),
-            value: this._getValueSchema()
-        })
-
-        return result
     }
 
     get titleKey(): string {

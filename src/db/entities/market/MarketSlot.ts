@@ -2,8 +2,9 @@ import { index, plugin, prop } from "@typegoose/typegoose"
 import IdEntity from "../base/IdEntity"
 import { autoIncrementPlugin } from "../../plugins/auto-increment"
 import type Item from "../../../utils/items/Item"
+import { MARKET_SLOT_EXPIRE_SECONDS } from "../../../consts/time"
 
-type ConstructorOptions = Omit<MarketSlot, 'id' | 'itemId'>
+type ConstructorOptions = Omit<MarketSlot, 'id' | 'itemId' | 'createdAt'>
     & {
         item: Item
     }
@@ -14,6 +15,14 @@ type ConstructorOptions = Omit<MarketSlot, 'id' | 'itemId'>
         itemId: -1,
         count: -1,
         price: 1
+    }
+)
+@index(
+    {
+        createdAt: 1
+    },
+    {
+        expireAfterSeconds: MARKET_SLOT_EXPIRE_SECONDS
     }
 )
 export default class MarketSlot extends IdEntity {
@@ -35,6 +44,9 @@ export default class MarketSlot extends IdEntity {
     @prop()
     itemId: number
 
+    @prop()
+    createdAt: Date
+
     constructor({
         chatId,
         seller,
@@ -48,5 +60,6 @@ export default class MarketSlot extends IdEntity {
         this.seller = seller
         this.price = price
         this.count = count
+        this.createdAt = new Date()
     }
 }

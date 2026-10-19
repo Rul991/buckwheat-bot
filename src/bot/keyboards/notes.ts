@@ -1,7 +1,6 @@
 import type Note from "../../db/entities/notes/Note"
 import KeyboardCreator from "../../utils/keyboard/KeyboardCreator"
 import NoteDeleteButton from "../actions/callback-query/notes/NoteDeleteButton"
-import NoteFolderAddButton from "../actions/callback-query/notes/NoteFolderAddButton"
 import NoteFolderScrollerButton from "../actions/callback-query/notes/NoteFolderScrollerButton"
 import NoteScrollerButton from "../actions/callback-query/notes/NoteScrollerButton"
 
@@ -35,18 +34,6 @@ export const startNotesKeyboard = KeyboardCreator.create<{
                     key: 'button/show'
                 })
             )
-
-        if (id == owner) {
-            keyboard.add(
-                NoteFolderAddButton.button({
-                    ctx,
-                    data: {
-                        id
-                    },
-                    style: 'success'
-                })
-            )
-        }
 
         return keyboard.toFlowed(1)
     }

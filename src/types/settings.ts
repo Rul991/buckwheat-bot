@@ -34,3 +34,8 @@ export type SettingSetValueOptions<T extends SettingTypes, V extends SettingValu
 >
 
 export type DefaultSetting = Setting<SettingTypes, SettingValueTypes>
+export type SettingImportData = {
+    settingId: number
+    value: string | number | boolean
+    valueType: SettingValueTypes
+}

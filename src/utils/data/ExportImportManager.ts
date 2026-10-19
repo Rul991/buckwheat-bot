@@ -1,4 +1,4 @@
-import z, { literal, object, string } from "zod"
+import z, { boolean, literal, number, object, string } from "zod"
 import ExportImportDefinition from "./ExportImportDefinition"
 import { MAX_DESCRIPTION_LENGTH, MAX_NAME_LENGTH, MAX_ROLEPLAY_NAME_LENGTH, MAX_ROLEPLAY_TEXT_LENGTH, MAX_USER_TEXT_LENGTH, MIN_DESCRIPTION_LENGTH, MIN_NAME_LENGTH, MIN_ROLEPLAY_NAME_LENGTH, MIN_ROLEPLAY_TEXT_LENGTH } from "../../consts/lengths"
 import RoleplayService from "../../db/services/rp/RoleplayService"
@@ -10,6 +10,9 @@ import UserService from "../../db/services/user/UserService"
 import UserAvaService from "../../db/services/user/UserAvaService"
 import AvaHistory from "../../db/entities/user/AvaHistory"
 import StringUtils from "../string/StringUtils"
+import { SettingValueTypes } from "../../protos/settings_pb"
+import SettingValueService from "../../db/services/settings/SettingValueService"
+import type { SettingImportData } from "../../types/settings"
 
 export default class ExportImportManager {
     private static _definitions: Map<number, ExportImportDefinition<any>> = new Map(
@@ -204,6 +207,47 @@ export default class ExportImportManager {
                             type: user.currentAva.type
                         } : undefined
                     }
+                }
+            }),
+            new ExportImportDefinition<SettingImportData[]>({
+                id: 4,
+                key: 'settings',
+                schema: object({
+                    settingId: number(),
+                    value: number().or(boolean()).or(string()),
+                    valueType: z.enum(SettingValueTypes)
+                }).array(),
+                importCallback: async options => {
+                    const {
+                        chatId,
+                        data
+                    } = options
+
+                    await SettingValueService.import(chatId, data)
+                    return true
+                },
+                exportCallback: async options => {
+                    const {
+                        chatId
+                    } = options
+
+                    const settings = await SettingValueService.getAllById(
+                        chatId,
+                        [
+                            SettingValueTypes.Chat,
+                            SettingValueTypes.Command,
+                            SettingValueTypes.Button,
+                            SettingValueTypes.Ranks,
+                        ]
+                    )
+
+                    return settings.map(v => {
+                        return {
+                            settingId: v.settingId,
+                            value: v.value,
+                            valueType: v.valueType
+                        }
+                    })
                 }
             })
         ]

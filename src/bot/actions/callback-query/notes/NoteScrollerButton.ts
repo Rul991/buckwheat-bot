@@ -28,7 +28,7 @@ class NoteScrollerButton extends ScrollerButton<T, NoteScrollerButtonData> {
     override name: string = 'nscr'
 
     protected override _isNeedCache: boolean = true
-    protected override _objectsPerPage: number = 5
+    protected override _objectsPerPage: number = 7
     protected override _stopIfNoObjects: boolean = false
 
     protected override async _getControlsButtonData(options: ScrollerButtonEditMessageOptions<Note, NoteScrollerButtonData>): Promise<Omit<NoteScrollerButtonData, "data" | "$typeName" | "$unknown">> {

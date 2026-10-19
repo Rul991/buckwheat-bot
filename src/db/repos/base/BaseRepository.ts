@@ -68,18 +68,19 @@ export default class BaseRepository<T extends RepoExtends> {
     }
 
     async updateOrCreate(filter: Filter<T>, obj: InstanceType<T>): Promise<InstanceType<T> & { new?: true }> {
-        const found = await this.findOne(filter)
-        if (!found) {
-            return {
-                ...await this.create(obj),
-                new: true
-            }
-        }
-
-        return (await this.updateOne(
+        const found = await this.updateOne(
             filter,
             obj
-        ))!
+        )
+
+        if (found) {
+            return found
+        }
+
+        return {
+            ...await this.create(obj),
+            new: true
+        }
     }
 
     async updateOrCreateMany(filter: Filter<T>, arr: InstanceType<T>[]) {

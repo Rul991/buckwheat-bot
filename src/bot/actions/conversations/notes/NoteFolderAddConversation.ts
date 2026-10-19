@@ -31,6 +31,7 @@ class NoteFolderAddConversation extends ConversationAction<T> {
         const textCtx = await conversation.waitFor('msg:text')
             .andFrom(needId)
         const text = textCtx.msg.text
+            .replaceAll('\n', ' ')
             .slice(0, MAX_NOTE_FOLDER_TITLE_LENGTH)
             .trim()
 

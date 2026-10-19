@@ -1,6 +1,7 @@
 import type { SettingValueTypes } from "../../../protos/settings_pb"
-import type { SettingSetValueOptions, SettingTypes, SettingTypeToDefault, SettingValueOptions } from "../../../types/settings"
+import type { SettingImportData, SettingSetValueOptions, SettingTypes, SettingTypeToDefault, SettingValueOptions } from "../../../types/settings"
 import type Setting from "../../../utils/settings/Setting"
+import SettingUtils from "../../../utils/settings/SettingUtils"
 import SettingValue from "../../entities/settings/SettingValue"
 import BaseService from "../base/BaseService"
 
@@ -9,7 +10,7 @@ class SettingValueService extends BaseService<typeof SettingValue> {
         super(SettingValue)
     }
 
-    async set<T extends SettingTypes, V extends SettingValueTypes>(options: SettingSetValueOptions<T, V>): Promise<SettingValue<T, V> | undefined> {
+    async set<T extends SettingTypes, V extends SettingValueTypes>(options: SettingSetValueOptions<T, V>): Promise<SettingValue<T, V>> {
         const {
             id,
             setting,
@@ -18,16 +19,18 @@ class SettingValueService extends BaseService<typeof SettingValue> {
         const settingId = setting.id
         const valueType = setting.valueType
 
-        return await this._repo.updateOne(
+        return await this._repo.updateOrCreate(
             {
                 id,
                 settingId,
                 valueType
             },
-            {
+            new SettingValue({
+                id,
+                setting,
                 value
-            }
-        ) as SettingValue<T, V> | undefined
+            })
+        ) as unknown as SettingValue<T, V>
     }
 
     async get<T extends SettingTypes, V extends SettingValueTypes>(options: SettingValueOptions<T, V>): Promise<SettingValue<T, V>> {
@@ -46,6 +49,34 @@ class SettingValueService extends BaseService<typeof SettingValue> {
             },
             new SettingValue(options)
         ) as unknown as SettingValue<T, V>
+    }
+
+    async getAllById(id: number, valueTypes: SettingValueTypes[]) {
+        return await this._repo.find({
+            id,
+            valueType: {
+                $in: valueTypes
+            }
+        })
+    }
+
+    async import(id: number, data: SettingImportData[]) {
+        return await Promise.all(
+            data.map(async v => {
+                const {
+                    value,
+                    settingId,
+                    valueType
+                } = v
+                const setting = SettingUtils.get(valueType, settingId)
+                if(!setting) return undefined
+                return await this.set({
+                    id,
+                    setting,
+                    value
+                })
+            })
+        )
     }
 
     async getValue<T extends SettingTypes, V extends SettingValueTypes>(options: SettingValueOptions<T, V>): Promise<SettingTypeToDefault[T]> {
