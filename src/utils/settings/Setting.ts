@@ -41,7 +41,7 @@ export default class Setting<K extends SettingTypes, V extends SettingValueTypes
     }
 
     get titleKey(): string {
-        return `settings/title/${this.textKey}`
+        return `settings/${this.textKey}/title`
     }
 
     set descriptionKey(value: string | undefined) {
@@ -49,7 +49,7 @@ export default class Setting<K extends SettingTypes, V extends SettingValueTypes
     }
 
     get descriptionKey(): string {
-        return `settings/description/${this._descriptionKey ?? this.textKey}`
+        return `settings/${this._descriptionKey ?? this.textKey}/description`
     }
 
     clone(): Setting<K, V> {

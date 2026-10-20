@@ -85,7 +85,7 @@ export default class Item<T = any> {
                 lootBoxCount: 'lootBoxCount' in drop ?
                     typeof drop.lootBoxCount == 'number' ?
                         [drop.lootBoxCount, drop.lootBoxCount] :
-                        drop.lootBoxCount
+                        drop.lootBoxCount ?? [0, 0]
                     : [0, 0]
             } :
             {
@@ -117,11 +117,11 @@ export default class Item<T = any> {
     }
 
     getDescription(ctx: BotContext): string {
-        return ctx.t(`items/description/${this.key}`)
+        return ctx.t(`items/${this.key}/description`)
     }
 
     getTitle(ctx: BotContext): string {
-        return ctx.t(`items/title/${this.key}`)
+        return ctx.t(`items/${this.key}/title`)
     }
 
     getEmoji(ctx: BotContext): string {

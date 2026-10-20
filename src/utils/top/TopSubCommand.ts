@@ -63,14 +63,14 @@ export default class TopSubCommand {
     }
 
     heading(ctx: BotContext): string {
-        return ctx.t(`top/heading/${this.key}`)
+        return ctx.t(`top/${this.key}/heading`)
     }
 
     title(ctx: BotContext): string {
-        return ctx.t(`top/title/${this.key}`)
+        return ctx.t(`top/${this.key}/title`)
     }
 
     emoji(ctx: BotContext): string {
-        return ctx.t(`top/emoji/${this.key}`)
+        return ctx.t(`top/${this.key}/emoji`)
     }
 }
