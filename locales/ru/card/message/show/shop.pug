@@ -1,0 +1,25 @@
+include /utils/mixins.pug
+include ../../../utils/consts.pug
+
+- 
+    const {
+        price,
+        count
+    } = shopCard
+    const totalPrice = price * currentCount
+
++heading(EMOJIES.CARD)
+    | Карточка 
+    u #{card.name}
+|
+blockquote !{card.description}
+|
+|
++plain_bold_param(`${CARD_RARITY_EMOJIES[card.rarity]} Редкость`, cardRarityNames[card.rarity])
++plain_bold_param(`${EMOJIES.COUNT2} Кол-во`, formatNumber(shopCard.count))
++plain_bold_param(`${EMOJIES.PLAYER} Продавец`, '')
++link(seller)
+|
+|
++plain_code_param(`${EMOJIES.PRICE} Цена`, `${formatNumber(price)} * ${formatNumber(currentCount)} = ${formatNumber(totalPrice)}${EMOJIES.MONEY}`)
++plain_code_param(`${EMOJIES.MONEY} Твой баланс`, `${formatNumber(balance)}${EMOJIES.MONEY}`)

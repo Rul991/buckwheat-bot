@@ -1,0 +1,9 @@
+include /utils/mixins.pug
+
++heading(EMOJIES.CARD)
+    | Карты игрока 
+    +link(user)
+    | :
+|
++plain_code_param(`${bool(stats.unique >= stats.max, [EMOJIES.FULL, EMOJIES.UNIQUE])} Уникальные карточки`, `${formatNumber(stats.unique)} / ${formatNumber(stats.max)}`)
++plain_code_param(`${EMOJIES.CARD} Всего карточек`, formatNumber(stats.total))

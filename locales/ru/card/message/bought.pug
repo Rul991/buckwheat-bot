@@ -1,0 +1,8 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.APPROVE} Была куплена карта
+if card
+    |  
+    +card(card)
+    |  x#{formatNumber(count)}
+| !

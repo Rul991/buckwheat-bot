@@ -5,11 +5,12 @@ import ConversationAction from "../../base/ConversationAction"
 import ConversationUtils from "../../../../utils/conversation/ConversationUtils"
 import { chooseRankAwardKeyboard } from "../../../keyboards/award"
 import { ONLY_NUMBER_REGEX } from "../../../../consts/regex"
-import { MAX_AWARD_TEXT_LENGTH } from "../../../../consts/award"
+import { MAX_AWARD_RANK, MAX_AWARD_TEXT_LENGTH, MIN_AWARD_RANK } from "../../../../consts/award"
 import AwardService from "../../../../db/services/award/AwardService"
 import Award from "../../../../db/entities/award/Award"
 import UserService from "../../../../db/services/user/UserService"
 import MessageUtils from "../../../../utils/bot/MessageUtils"
+import MathUtils from "../../../../utils/math/MathUtils"
 
 type T = [
     {
@@ -42,7 +43,11 @@ class GiveAwardConversation extends ConversationAction<T> {
             .andFrom(giverId)
         await callbackCtx.deleteMessage()
 
-        const rank = +callbackCtx.callbackQuery.data
+        const rank = MathUtils.clamp(
+            +callbackCtx.callbackQuery.data,
+            MIN_AWARD_RANK,
+            MAX_AWARD_RANK
+        )
         const text = await ConversationUtils.getFormattedText({
             conversation,
             needId: giverId,

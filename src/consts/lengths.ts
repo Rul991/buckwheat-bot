@@ -20,3 +20,6 @@ export const MAX_TAG_LENGTH = 16
 export const MAX_NOTE_TEXT_LENGTH = 3072
 // note folders
 export const MAX_NOTE_FOLDER_TITLE_LENGTH = 32
+// card
+export const MAX_CARD_NAME_LENGTH = 64
+export const MAX_CARD_DESCRIPTION_LENGTH = 256

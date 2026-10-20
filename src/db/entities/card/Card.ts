@@ -4,6 +4,9 @@ import { autoIncrementPlugin } from "../../plugins/auto-increment"
 
 @plugin(autoIncrementPlugin)
 export default class Card extends IdEntity {
+    @prop({ index: true })
+    declare id: number
+
     @prop()
     name: string
 
@@ -13,7 +16,7 @@ export default class Card extends IdEntity {
     @prop()
     image: string
 
-    @prop()
+    @prop({ index: true })
     rarity: number
 
     @prop()

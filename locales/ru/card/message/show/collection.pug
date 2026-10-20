@@ -1,0 +1,12 @@
+include /utils/mixins.pug
+include ../../../utils/consts.pug
+
++heading(EMOJIES.CARD)
+    | Карточка 
+    u #{card.name}
+|
+blockquote !{card.description}
+|
+|
++plain_bold_param(`${CARD_RARITY_EMOJIES[card.rarity]} Редкость`, cardRarityNames[card.rarity])
++plain_bold_param(`${EMOJIES.COUNT2} Количество`, formatNumber(userCard.count))

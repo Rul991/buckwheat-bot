@@ -1,0 +1,51 @@
+syntax = "proto3";
+import "scroller.proto";
+
+message CardCollectionScrollerButtonData {
+    ScrollerData data = 1;
+}
+
+message SuggestCardButtonData {
+    uint64 id = 1; // user's id
+}
+
+message SuggestedCardScrollerButtonData {
+    ScrollerData data = 1;
+}
+
+message SuggestedCardModerateButtonData {
+    uint64 id = 1; // user's id
+    bool isApprove = 2; // true -> approve, false -> reject
+    uint32 cardId = 3; // card's id
+}
+
+message UnpackCardBoxButtonData {
+    uint64 id = 1; // user's id
+    optional uint32 tries = 2; // tries
+}
+
+message ExchangeCardButtonData {
+    uint64 id = 1; // user's id
+    uint32 cardId = 2; // card's id
+}
+
+message ShopCardScrollerButtonData {
+    ScrollerData data = 1;
+    uint32 cardId = 2; // card's id
+    uint32 count = 3; // selected count
+}
+
+message ShopCardBuyButtonData {
+    uint64 id = 1; // user's id
+    uint32 slotId = 2; // shop card's id
+    uint32 count = 3; // selected count
+}
+
+message ShopCardSellButtonData {
+    uint64 id = 1; // user's id
+    uint32 cardId = 2; // card's id
+}
+
+message ShopCardListScrollerButtonData {
+    ScrollerData data = 1;
+}

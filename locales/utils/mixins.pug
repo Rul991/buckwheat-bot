@@ -154,3 +154,6 @@ mixin shorten(text, length)
 
 mixin item(item)
     | #{item.emoji} #{item.title}
+
+mixin card(card)
+    | #{CARD_RARITY_EMOJIES[card.rarity]} #{card.name}

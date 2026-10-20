@@ -196,6 +196,19 @@ import NoteFolderChangePublicButton from "../bot/actions/callback-query/notes/No
 import DeleteUserButton from "../bot/actions/callback-query/delete-user/DeleteUserButton"
 import DeleteUserScrollerButton from "../bot/actions/callback-query/delete-user/DeleteUserScrollerButton"
 import DeleteUserCommand from "../bot/actions/commands/buckwheat/delete-user/DeleteUserCommand"
+import CardCommand from "../bot/actions/commands/buckwheat/card/CardCommand"
+import CardCollectionScrollerButton from "../bot/actions/callback-query/card/CardCollectionScrollerButton"
+import SuggestCardConversation from "../bot/actions/conversations/card/SuggestCardConversation"
+import SuggestCardButton from "../bot/actions/callback-query/card/SuggestCardButton"
+import SuggestedCardScrollerButton from "../bot/actions/callback-query/card/SuggestedCardScrollerButton"
+import SuggestedCardModerateButton from "../bot/actions/callback-query/card/SuggestedCardModerateButton"
+import UnpackCardBoxButton from "../bot/actions/callback-query/card/UnpackCardBoxButton"
+import ExchangeCardButton from "../bot/actions/callback-query/card/ExchangeCardButton"
+import ShopCardScrollerButton from "../bot/actions/callback-query/card/ShopCardScrollerButton"
+import ShopCardBuyButton from "../bot/actions/callback-query/card/ShopCardBuyButton"
+import ShopCardSellButton from "../bot/actions/callback-query/card/ShopCardSellButton"
+import SellCardConversation from "../bot/actions/conversations/card/SellCardConversation"
+import ShopCardListScrollerButton from "../bot/actions/callback-query/card/ShopCardListScrollerButton"
 
 export const runBot = async () => {
     const bot = new TelegramBot()
@@ -239,7 +252,9 @@ export const runBot = async () => {
                 GiveAwardConversation,
                 MarketSellConversation,
                 NoteFolderAddConversation,
-                NoteAddConversation
+                NoteAddConversation,
+                SuggestCardConversation,
+                SellCardConversation
             ),
 
         new CallbackQueryHandler()
@@ -318,6 +333,16 @@ export const runBot = async () => {
                 NoteFolderChangePublicButton,
                 DeleteUserButton,
                 DeleteUserScrollerButton,
+                CardCollectionScrollerButton,
+                SuggestCardButton,
+                SuggestedCardScrollerButton,
+                SuggestedCardModerateButton,
+                UnpackCardBoxButton,
+                ExchangeCardButton,
+                ShopCardScrollerButton,
+                ShopCardBuyButton,
+                ShopCardSellButton,
+                ShopCardListScrollerButton
             ),
 
         new MessageHandler()
@@ -431,6 +456,7 @@ export const runBot = async () => {
                 new MarketCommand(),
                 new NoteCommand(),
                 new DeleteUserCommand(),
+                new CardCommand(),
             ),
 
         new PhotoActionHandler()

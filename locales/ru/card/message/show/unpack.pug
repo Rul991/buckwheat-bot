@@ -1,0 +1,19 @@
+include /utils/mixins.pug
+include ../../../utils/consts.pug
+
++heading(EMOJIES.CARD)
+    | Найдена #{isDuplicate ? 'карточка' : 'новая карточка'} 
+    u #{card.name}
+|
+blockquote !{card.description}
+|
+|
+if tries > 0
+    +plain_bold_param(`${EMOJIES.LIST} Попытка`, `№${formatNumber(tries + 1)}`)
++plain_bold_param(`${CARD_RARITY_EMOJIES[card.rarity]} Редкость`, cardRarityNames[card.rarity])
+|
+|
+if isDuplicate
+    | #{EMOJIES.NEUTRAL_WARN} Дубликат
+else
+    | #{EMOJIES.CONGRATULATIONS} Поздравляю!

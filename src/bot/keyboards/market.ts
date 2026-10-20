@@ -102,7 +102,8 @@ export const showMarketKeyboard = KeyboardCreator.create<{
                         page,
                         id,
                         slotId: slot.id
-                    }
+                    },
+                    style: 'primary'
                 })
             )
         }

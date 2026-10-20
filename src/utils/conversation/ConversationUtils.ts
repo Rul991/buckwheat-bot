@@ -7,6 +7,8 @@ import MessageUtils from "../bot/MessageUtils"
 import type { GrullyI18nVars } from "@grully/i18n"
 import MessageEntityUtils from "../bot/MessageEntityUtils"
 import LazyValue from "../cache/LazyValue"
+import StringUtils from "../string/StringUtils"
+import MathUtils from "../math/MathUtils"
 
 type GetTextOptions = {
     conversation: Conversation<BotContext, Context>
@@ -16,6 +18,12 @@ type GetTextOptions = {
     key: string
     lazyKeys?: ReplyInConversationOptions['lazyKeys']
 }
+
+type GetNumberOptions =
+    & {
+        min: number
+    }
+    & GetTextOptions
 
 type LazyKey = (ReplyInConversationOptions['lazyKeys'] & {})[number]
 type LazyKeys = LazyKey[]
@@ -104,6 +112,44 @@ export default class ConversationUtils {
                 text: message.text.slice(0, max)
             },
             -1
+        )
+
+        return result
+    }
+
+    static async getNumber({
+        conversation,
+        needId,
+        min,
+        max,
+        vars,
+        lazyKeys,
+        key
+    }: GetNumberOptions): Promise<number> {
+        await this.replyInConversation(
+            conversation,
+            key,
+            {
+                vars: {
+                    max,
+                    min,
+                    ...vars,
+                },
+                lazyKeys
+            }
+        )
+
+        const ctx = await conversation.waitFor('msg:text')
+            .andFrom(needId)
+        const text = ctx.msg.text
+        const inputValue = StringUtils.getNumberFromString(
+            text,
+            min
+        )
+        const result = MathUtils.clamp(
+            inputValue,
+            min,
+            max
         )
 
         return result

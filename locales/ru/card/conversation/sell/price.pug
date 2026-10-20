@@ -1,0 +1,8 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.WRITE} Игрок 
++link(vars.user)
+| , введите цену карточки 
+b
+    +card(card)
+|  (от #{formatNumber(min)} до #{formatNumber(max)})!

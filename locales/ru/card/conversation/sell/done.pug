@@ -1,0 +1,9 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.APPROVE} Игрок 
++link(vars.user)
+| , ваша карточка 
+b
+    +card(card)
+    |  x#{formatNumber(count)}
+|  была выставлена на продажу за #{formatNumber(price)}#{EMOJIES.MONEY}!

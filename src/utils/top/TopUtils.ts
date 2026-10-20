@@ -1,5 +1,6 @@
 import { UNKNOWN_NAME } from "../../consts/texts"
 import InventoryItem from "../../db/entities/items/InventoryItem"
+import UserCardService from "../../db/services/card/UserCardService"
 import DonateService from "../../db/services/donate/DonateService"
 import GameService from "../../db/services/game/GameService"
 import InventoryItemService from "../../db/services/items/InventoryItemService"
@@ -186,6 +187,13 @@ export default class TopUtils {
         }),
 
         new TopSubCommand({
+            key: 'donate',
+            getUnsortedValuesCallback: async (_ctx, chatId) => {
+                return await DonateService.getTop(chatId)
+            }
+        }),
+
+        new TopSubCommand({
             key: 'games/cube',
             getUnsortedValuesCallback: async (_ctx, chatId) => {
                 return await GameService.getUnsortedTopValues(chatId, 'cube')
@@ -242,6 +250,32 @@ export default class TopUtils {
         }),
 
         new TopSubCommand({
+            key: 'card',
+            getUnsortedValuesCallback: async (_ctx, chatId) => {
+                const cards = await UserCardService.getAllByChatId(chatId)
+                const userToCountMap = cards.reduce(
+                    (map, card) => {
+                        map.set(
+                            card.id,
+                            1 + (map.get(card.id) ?? 0)
+                        )
+                        return map
+                    },
+                    new Map<number, number>()
+                )
+
+                return userToCountMap.entries()
+                    .map(([id, count]) => {
+                        return {
+                            id,
+                            value: count
+                        }
+                    })
+                    .toArray()
+            }
+        }),
+
+        new TopSubCommand({
             key: 'marriages',
             type: 'role',
             getUnsortedValuesCallback: async (ctx, chatId) => {
@@ -288,13 +322,6 @@ export default class TopUtils {
             hasTotalCount: false,
             hasWinner: true
         }),
-
-        new TopSubCommand({
-            key: 'donate',
-            getUnsortedValuesCallback: async (_ctx, chatId) => {
-                return await DonateService.getTop(chatId)
-            }
-        })
     ]
 
     static keys = Object.keys(this._subCommands).map(v => +v)
