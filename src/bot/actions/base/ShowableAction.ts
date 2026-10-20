@@ -22,8 +22,8 @@ export default abstract class ShowableAction<T extends CommandType> extends Rank
 
         return {
             name: this.name,
-            argumentText: `commands/${key}/argument`,
-            description: `commands/${key}/description`,
+            argumentText: `commands/texts/${key}/argument`,
+            description: `commands/texts/${key}/description`,
             aliases: this.aliases,
             isSupportReply: this.isSupportReply,
             needData: this.needData,
