@@ -1,7 +1,6 @@
 import type Roleplay from "../../db/entities/rp/Roleplay"
 import { GrammaticalCase } from "../../protos/rp_pb"
 import KeyboardCreator from "../../utils/keyboard/KeyboardCreator"
-import RoleplayAddButton from "../actions/callback-query/rp/RoleplayAddButton"
 import RoleplayChangeCaseButton from "../actions/callback-query/rp/RoleplayChangeCaseButton"
 import RoleplayDeleteButton from "../actions/callback-query/rp/RoleplayDeleteButton"
 import RoleplayEditTextButton from "../actions/callback-query/rp/RoleplayEditTextButton"
@@ -35,16 +34,6 @@ export const startRoleplayKeyboard = KeyboardCreator.create<{
                     key: 'rp/button/start'
                 })
             )
-            .row()
-            .add(
-                RoleplayAddButton.button({
-                    ctx,
-                    data: {
-                        id: bigId
-                    }
-                })
-            )
-            .row()
     }
 )
 

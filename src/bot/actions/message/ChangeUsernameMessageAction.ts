@@ -17,7 +17,9 @@ export default class ChangeUsernameMessageAction extends MessageAction {
         const tgUsername = ctx.from.username?.toLowerCase() ?? ''
 
         if (dbUsername != tgUsername) {
-            await UserUsernameService.set(chatId, id, tgUsername)
+            ctx.vars.user.set(
+                await UserUsernameService.set(chatId, id, tgUsername)
+            )
             Logger.debug('ChangeUsernameMessageAction', { chatId, id, tgUsername, dbUsername })
         }
     }

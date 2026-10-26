@@ -15,3 +15,7 @@ message ShortCommandShowButtonData {
     bytes command = 2; // short command's objectId
     uint32 page = 3; // back page index
 }
+
+message ShortCommandAddButtonData {
+    uint64 id = 1; // user's id
+}

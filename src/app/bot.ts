@@ -209,6 +209,18 @@ import ShopCardBuyButton from "../bot/actions/callback-query/card/ShopCardBuyBut
 import ShopCardSellButton from "../bot/actions/callback-query/card/ShopCardSellButton"
 import SellCardConversation from "../bot/actions/conversations/card/SellCardConversation"
 import ShopCardListScrollerButton from "../bot/actions/callback-query/card/ShopCardListScrollerButton"
+import GunScrollerButton from "../bot/actions/callback-query/gun/GunScrollerButton"
+import BusinessCommand from "../bot/actions/commands/buckwheat/business/BusinessCommand"
+import NoClassConditionalCommand from "../bot/actions/commands/conditional/NoClassConditionalCommand"
+import ShortCommandAddConversation from "../bot/actions/conversations/short-command/ShortCommandAddConversation"
+import ShortCommandAddButton from "../bot/actions/callback-query/short-command/ShortCommandAddButton"
+import BusinessScrollerButton from "../bot/actions/callback-query/business/BusinessScrollerButton"
+import BusinessShowButton from "../bot/actions/callback-query/business/BusinessShowButton"
+import BusinessStockSellConversation from "../bot/actions/conversations/business/BusinessStockSellConversation"
+import BusinessStockSellButton from "../bot/actions/callback-query/business/BusinessStockSellButton"
+import BusinessStockShowButton from "../bot/actions/callback-query/business/BusinessStockShowButton"
+import BusinessStockMarketScrollerButton from "../bot/actions/callback-query/business/BusinessStockMarketScrollerButton"
+import BusinessStockBuyButton from "../bot/actions/callback-query/business/BusinessStockBuyButton"
 
 export const runBot = async () => {
     const bot = new TelegramBot()
@@ -254,7 +266,9 @@ export const runBot = async () => {
                 NoteFolderAddConversation,
                 NoteAddConversation,
                 SuggestCardConversation,
-                SellCardConversation
+                SellCardConversation,
+                ShortCommandAddConversation,
+                BusinessStockSellConversation,
             ),
 
         new CallbackQueryHandler()
@@ -283,6 +297,7 @@ export const runBot = async () => {
                 ShortCommandScrollerButton,
                 ShortCommandDeleteButton,
                 ShortCommandShowButton,
+                ShortCommandAddButton,
                 InventoryScrollerButton,
                 InventoryShowButton,
                 InventoryUseButton,
@@ -300,6 +315,7 @@ export const runBot = async () => {
                 ShopShowButton,
                 ShopBuyButton,
                 GunSetButton,
+                GunScrollerButton,
                 MarryButton,
                 ExportImportScrollerButton,
                 ExportImportShowButton,
@@ -342,7 +358,13 @@ export const runBot = async () => {
                 ShopCardBuyButton,
                 ShopCardSellButton,
                 ShopCardListScrollerButton,
-                DevButton
+                DevButton,
+                BusinessScrollerButton,
+                BusinessShowButton,
+                BusinessStockSellButton,
+                BusinessStockShowButton,
+                BusinessStockMarketScrollerButton,
+                BusinessStockBuyButton,
             ),
 
         new MessageHandler()
@@ -368,8 +390,9 @@ export const runBot = async () => {
 
         new ConditionalCommandHandler()
             .add(
-                new ShortCommandConditionalCommand(),
                 new CapsConditionalCommand(),
+                new NoClassConditionalCommand(),
+                new ShortCommandConditionalCommand(),
                 new RoleplayConditionalCommand(),
             ),
 
@@ -457,6 +480,7 @@ export const runBot = async () => {
                 new InfoCommand(),
                 new GeneratorCommand(),
                 new NoteCommand(),
+                new BusinessCommand(),
             ),
 
         new PhotoActionHandler()

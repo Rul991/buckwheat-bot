@@ -1,36 +1,28 @@
-import { index, prop } from "@typegoose/typegoose"
-import IdEntity from "../base/IdEntity"
-import DuelStep from "./DuelStep"
+import { prop } from "@typegoose/typegoose"
+import BaseEntity from "../base/BaseEntity"
 
 type DuelConstructorOptions =
-    & Pick<Duel, 'firstDuelist' | 'secondDuelist'>
+    & Pick<Duel, 'firstDuelist' | 'secondDuelist' | 'chatId'>
 
-@index(
-    {
-        id: 1
-    },
-    {
-        unique: true
-    }
-)
-export default class Duel extends IdEntity {
+export default class Duel extends BaseEntity {
     @prop()
     firstDuelist: number
 
     @prop()
     secondDuelist: number
 
-    @prop({ type: [DuelStep] })
-    steps: DuelStep[]
+    @prop({ unique: true })
+    chatId: number
 
     constructor({
         firstDuelist,
         secondDuelist,
+        chatId,
     }: DuelConstructorOptions) {
         super()
 
         this.firstDuelist = firstDuelist
         this.secondDuelist = secondDuelist
-        this.steps = []
+        this.chatId = chatId
     }
 }

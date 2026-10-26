@@ -224,7 +224,7 @@ export default class ExportImportManager {
                         chatId
                     } = options
 
-                    const settings = await SettingValueService.getAllById(
+                    const settings = await SettingValueService.getAllByOwnerIdAndTypes(
                         chatId,
                         [
                             SettingValueTypes.Chat,

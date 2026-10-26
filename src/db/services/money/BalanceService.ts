@@ -16,6 +16,12 @@ type TransferOptions = {
     money: number
 }
 
+type Income = {
+    chatId: number
+    id: number
+    income: number
+}
+
 class BalanceService extends BaseService<typeof Balance> {
     constructor() {
         super(Balance)
@@ -88,13 +94,36 @@ class BalanceService extends BaseService<typeof Balance> {
     }
 
     async transfer({ chatId, owner, target, money }: TransferOptions): Promise<boolean> {
-        if (money <= 0 || owner === target) return false
+        if (money <= 0 || owner === target) return true
 
         const spent = await this.trySpend({ chatId, id: owner, money })
         if (!spent) return false
 
         await this.add({ chatId, id: target, money })
         return true
+    }
+
+    async addMany(incomes: Income[]) {
+        const result = await this._repo.model.bulkWrite(
+            incomes.map(v => {
+                return {
+                    updateOne: {
+                        filter: {
+                            chatId: v.chatId,
+                            id: v.id
+                        },
+                        update: {
+                            $inc: {
+                                total: v.income
+                            }
+                        },
+                        upsert: true,
+                        setDefaultsOnInsert: true
+                    }
+                }
+            })
+        )
+        return result.isOk()
     }
 }
 

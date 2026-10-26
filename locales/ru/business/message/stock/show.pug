@@ -1,0 +1,7 @@
+include /utils/mixins.pug
+
++heading(BUSINESS_EMOJIES[business.type])
+    | #{business.title}
+|
++plain_bold_param(`${EMOJIES.COUNT2} Кол-во купленных акций`, `${formatNumber(stock.count)} / ${formatNumber(stock.max)} (${percents(stock.count, stock.max)})`)
++plain_bold_param(`${bool(stock.totalIncome >= 0, [EMOJIES.GROW_UP, EMOJIES.GROW_DOWN])} Общий доход`, `${formatNumber(stock.totalIncome)}${EMOJIES.MONEY}`)

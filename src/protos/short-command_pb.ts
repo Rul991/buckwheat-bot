@@ -12,7 +12,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file short-command.proto.
  */
 export const file_short_command: GenFile = /*@__PURE__*/
-  fileDesc("ChNzaG9ydC1jb21tYW5kLnByb3RvIjsKHFNob3J0Q29tbWFuZERlbGV0ZUJ1dHRvbkRhdGESCgoCaWQYASABKAQSDwoHY29tbWFuZBgCIAEoDCI9Ch5TaG9ydENvbW1hbmRTY3JvbGxlckJ1dHRvbkRhdGESGwoEZGF0YRgBIAEoCzINLlNjcm9sbGVyRGF0YSJHChpTaG9ydENvbW1hbmRTaG93QnV0dG9uRGF0YRIKCgJpZBgBIAEoBBIPCgdjb21tYW5kGAIgASgMEgwKBHBhZ2UYAyABKA1iBnByb3RvMw", [file_scroller]);
+  fileDesc("ChNzaG9ydC1jb21tYW5kLnByb3RvIjsKHFNob3J0Q29tbWFuZERlbGV0ZUJ1dHRvbkRhdGESCgoCaWQYASABKAQSDwoHY29tbWFuZBgCIAEoDCI9Ch5TaG9ydENvbW1hbmRTY3JvbGxlckJ1dHRvbkRhdGESGwoEZGF0YRgBIAEoCzINLlNjcm9sbGVyRGF0YSJHChpTaG9ydENvbW1hbmRTaG93QnV0dG9uRGF0YRIKCgJpZBgBIAEoBBIPCgdjb21tYW5kGAIgASgMEgwKBHBhZ2UYAyABKA0iJwoZU2hvcnRDb21tYW5kQWRkQnV0dG9uRGF0YRIKCgJpZBgBIAEoBGIGcHJvdG8z", [file_scroller]);
 
 /**
  * @generated from message ShortCommandDeleteButtonData
@@ -91,4 +91,23 @@ export type ShortCommandShowButtonData = Message<"ShortCommandShowButtonData"> &
  */
 export const ShortCommandShowButtonDataSchema: GenMessage<ShortCommandShowButtonData> = /*@__PURE__*/
   messageDesc(file_short_command, 2);
+
+/**
+ * @generated from message ShortCommandAddButtonData
+ */
+export type ShortCommandAddButtonData = Message<"ShortCommandAddButtonData"> & {
+  /**
+   * user's id
+   *
+   * @generated from field: uint64 id = 1;
+   */
+  id: bigint;
+};
+
+/**
+ * Describes the message ShortCommandAddButtonData.
+ * Use `create(ShortCommandAddButtonDataSchema)` to create a new message.
+ */
+export const ShortCommandAddButtonDataSchema: GenMessage<ShortCommandAddButtonData> = /*@__PURE__*/
+  messageDesc(file_short_command, 3);
 

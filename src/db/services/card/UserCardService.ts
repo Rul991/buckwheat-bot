@@ -72,7 +72,7 @@ class UserCardService extends BaseService<typeof UserCard> {
             (a, b) => {
                 const aRarity = cards.get(a.card)!.rarity
                 const bRarity = cards.get(b.card)!.rarity
-                return bRarity - aRarity
+                return aRarity - bRarity
             }
         )
     }

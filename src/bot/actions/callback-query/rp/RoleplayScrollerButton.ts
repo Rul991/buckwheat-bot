@@ -9,28 +9,30 @@ import type Roleplay from "../../../../db/entities/rp/Roleplay"
 import RoleplayService from "../../../../db/services/rp/RoleplayService"
 import { InlineKeyboard } from "grammy"
 import RoleplayShowButton from "./RoleplayShowButton"
+import RoleplayAddButton from "./RoleplayAddButton"
 
 class RoleplayScrollerButton extends ScrollerButton<Roleplay, RoleplayScrollerButtonData> {
     override schema: GenMessage<RoleplayScrollerButtonData> = RoleplayScrollerButtonDataSchema
     override minimumRank: number = RankUtils.min
     override settingId: number = 61
     override name: string = 'rplist'
+    protected override _stopIfNoObjects: boolean = false
 
     protected override async _getKeyboard(options: ScrollerButtonEditMessageOptions<Roleplay, RoleplayScrollerButtonData>): Promise<InlineKeyboard> {
         const {
             ctx,
-            id,
             slicedObjects,
             page
         } = options
-
         const keyboard = new InlineKeyboard()
+        const id = BigInt(options.id)
+
         for (const roleplay of slicedObjects) {
             keyboard
                 .add(RoleplayShowButton.button({
                     ctx,
                     data: {
-                        id: BigInt(id),
+                        id: id,
                         page,
                         objectId: roleplay._id!.id
                     },
@@ -38,10 +40,19 @@ class RoleplayScrollerButton extends ScrollerButton<Roleplay, RoleplayScrollerBu
                         name: roleplay.name
                     }
                 }))
-                .row()
         }
 
-        return keyboard
+        keyboard.add(
+            RoleplayAddButton.button({
+                ctx,
+                data: {
+                    id
+                },
+                style: 'success'
+            })
+        )
+
+        return keyboard.toFlowed(1)
     }
 
     protected override async _getRawObjects(options: CallbackQueryActionOptions<RoleplayScrollerButtonData>): Promise<Roleplay[]> {

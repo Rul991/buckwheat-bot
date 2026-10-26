@@ -9,9 +9,10 @@ blockquote
     else
         i Ничего
         |
+        |
 | #{EMOJIES.LOOTBOX} Игрок 
 +link(user)
-|  открыл чудо-ящик, получив 
+|  открыл чудо-ящик#{count > 1 ? 'и' : ''}, получив 
 if itemResults.length
     | эти предметы
 else

@@ -1,0 +1,41 @@
+syntax = "proto3";
+import "scroller.proto";
+
+message BusinessScrollerButtonData {
+    ScrollerData data = 1;
+}
+
+message BusinessOwnButtonData {
+    uint64 id = 1; // user's id
+}
+
+message BusinessShowButtonData {
+    uint64 id = 1; // user's id
+    uint32 businessId = 2; // business's id
+    uint32 page = 3; // back page index
+}
+
+message BusinessStockMarketScrollerButtonData {
+    ScrollerData data = 1;
+}
+
+message BusinessStockShowButtonData {
+    uint64 id = 1; // user's id
+    uint32 businessId = 2; // business's id
+    uint32 page = 3; // back page index
+    uint32 count = 4; // stock's count
+    uint64 sellerId = 5; // seller's id
+}
+
+message BusinessStockBuyButtonData {
+    uint64 id = 1; // user's id
+    uint32 businessId = 2; // business's id
+    uint32 count = 3; // selected stocks count
+    uint32 page = 4; // back page index
+    uint64 sellerId = 5; // seller's id
+}
+
+message BusinessStockSellButtonData {
+    uint64 id = 1; // user's id
+    uint32 businessId = 2; // business's id
+}

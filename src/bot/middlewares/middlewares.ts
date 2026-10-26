@@ -9,7 +9,6 @@ import type { BotContext } from "../../types/bot"
 import ContextUtils from "../../utils/bot/ContextUtils"
 import LazyValue from "../../utils/cache/LazyValue"
 import RankUtils from "../../utils/db/RankUtils"
-import Logger from "../../utils/logs/Logger"
 
 export const setContextVarsAndData = async (ctx: BotContext, next: () => Promise<void>) => {
     const id = ctx.from?.id
@@ -92,6 +91,5 @@ export const setContextVarsAndData = async (ctx: BotContext, next: () => Promise
 
     ctx.actionData = {}
 
-    Logger.system('setContextVars', ctx.vars)
     return next()
 }

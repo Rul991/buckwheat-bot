@@ -293,6 +293,10 @@ export default class ProfileCommand extends BuckwheatCommand {
             )
         }
 
+        Logger.debug(
+            'ProfileCommand.execute',
+            messageOptions
+        )
         if (ava && ava.fileId) {
             await this._replyMedia({
                 ctx,

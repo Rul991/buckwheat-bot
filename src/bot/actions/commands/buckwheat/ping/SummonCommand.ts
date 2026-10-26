@@ -99,7 +99,7 @@ export default class SummonCommand extends BuckwheatCommand {
         }
 
         const users = await UserService.getAllByChatId(chatId)
-        const emojies = await SettingValueService.getByIds(
+        const emojies = await SettingValueService.getByOwnerIds(
             users.map(v => v.id),
             summonEmojiSetting
         )

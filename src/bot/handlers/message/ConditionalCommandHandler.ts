@@ -22,7 +22,8 @@ export default class ConditionalCommandHandler extends BaseHandler<ConditionalCo
                     ctx,
                     commandStrings,
                     id,
-                    chatId
+                    chatId,
+                    isSelf: !ctx.msg.reply_to_message || id == ctx.msg.reply_to_message?.from?.id
                 }
 
                 for (const [_, action] of this._container) {

@@ -45,15 +45,17 @@ class CardCollectionScrollerButton extends ScrollerButton<T, CardCollectionScrol
         if (!card) return keyboard
 
         if (card.count >= MIN_EXCHANGE_COUNT) {
-            keyboard.add(
-                ExchangeCardButton.button({
-                    ctx,
-                    data: {
-                        id: bigId,
-                        cardId: card.card
-                    }
-                })
-            )
+            keyboard
+                .add(
+                    ExchangeCardButton.button({
+                        ctx,
+                        data: {
+                            id: bigId,
+                            cardId: card.card
+                        }
+                    })
+                )
+                .row()
         }
 
         const cardId = card.card
@@ -86,7 +88,7 @@ class CardCollectionScrollerButton extends ScrollerButton<T, CardCollectionScrol
                 })
             )
 
-        return keyboard.toFlowed(1)
+        return keyboard
     }
 
     protected override async _editMessage(options: ScrollerButtonEditMessageOptions<T, CardCollectionScrollerButtonData>): Promise<ScrollerButtonEditMessageResult> {

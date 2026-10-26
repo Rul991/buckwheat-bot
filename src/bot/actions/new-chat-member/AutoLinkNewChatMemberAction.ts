@@ -11,14 +11,18 @@ export default class AutoLinkNewChatMemberAction extends NewChatMemberAction {
             ctx
         } = options
 
+        const users = ctx.msg.new_chat_members
+        const ids = users.map(v => v.id)
+
+        const autoLinkSettingValues = await SettingValueService.getByOwnerIds(
+            ids,
+            autolinkSetting
+        )
+
         for (const user of ctx.msg.new_chat_members) {
             const id = user.id
-            const autoLinkSettingValue = await SettingValueService.get({
-                id,
-                setting: autolinkSetting
-            })
-
-            const isAutoLink = autoLinkSettingValue.value
+            const autoLinkSettingValue = autoLinkSettingValues.get(id)
+            const isAutoLink = autoLinkSettingValue?.value ?? autolinkSetting.default
             if (!isAutoLink) continue
 
             await LinkedChatService.set(

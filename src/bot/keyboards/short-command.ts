@@ -8,25 +8,27 @@ export const startShortCommandKeyboard = KeyboardCreator.create<{
 }>(
     async ({
         ctx,
-        data: {
-            id
-        },
+        data,
         keyboard
     }) => {
-        keyboard.add(ShortCommandScrollerButton.button({
-            ctx,
-            data: {
+        const id = BigInt(data.id)
+        keyboard
+            .add(ShortCommandScrollerButton.button({
+                ctx,
                 data: {
                     data: {
-                        case: 'update',
-                        value: false
-                    },
-                    id: BigInt(id),
-                    $typeName: 'ScrollerData'
-                }
-            },
-            key: 'button/show'
-        }))
+                        data: {
+                            case: 'update',
+                            value: false
+                        },
+                        id,
+                        $typeName: 'ScrollerData'
+                    }
+                },
+                key: 'button/show'
+            }))
+
+        return keyboard.toFlowed(1)
     }
 )
 

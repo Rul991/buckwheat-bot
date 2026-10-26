@@ -1,0 +1,8 @@
+include /utils/functions.pug
+
+| #{EMOJIES.APPROVE} Вы купили 
+if business
+    | '#{BUSINESS_EMOJIES[business.type]} #{business.title}'
+else
+    | акции
+|  x#{formatNumber(count)}!

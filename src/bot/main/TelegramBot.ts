@@ -1,4 +1,4 @@
-import { Bot } from "grammy"
+import { Bot, HttpError } from "grammy"
 import type { MyBot } from "../../types/bot"
 import { BASE_URL, BOT_TOKEN, CHAT_ID, DEV_ID, IS_DEV, IS_PROD } from "../../consts/env"
 import type BaseHandler from "../handlers/base/BaseHandler"
@@ -204,6 +204,10 @@ export default class TelegramBot {
                 ctx
             } = e
 
+            if(e.error instanceof HttpError) {
+                throw e.error
+            }
+
             Logger.error('bot.catch', e)
             await Promise.all([
                 MessageUtils.reply(
@@ -239,7 +243,10 @@ export default class TelegramBot {
                 try {
                     this._bot.api.sendMessage(
                         CHAT_ID,
-                        START_MESSAGE
+                        START_MESSAGE,
+                        {
+                            parse_mode: 'HTML'
+                        }
                     )
                 }
                 catch (e) {

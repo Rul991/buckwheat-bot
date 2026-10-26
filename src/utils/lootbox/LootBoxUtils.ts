@@ -61,6 +61,8 @@ export default class LootBoxUtils {
                                 }
                             }
                         )
+                        .sort((a, b) => b.count - a.count),
+                    count
                 }
             }
         )

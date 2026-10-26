@@ -75,7 +75,8 @@ export const startCardKeyboard = KeyboardCreator.create<{
                         }
                     }
                 },
-                key: 'card/button/suggested'
+                key: 'card/button/suggested',
+                style: 'primary'
             })
         )
         }
@@ -91,28 +92,6 @@ export const startCardKeyboard = KeyboardCreator.create<{
                 })
             )
         return keyboard.toFlowed(1)
-    }
-)
-
-export const chooseCardRarityKeyboard = KeyboardCreator.create<{}>(
-    async ({
-        ctx,
-        keyboard
-    }) => {
-        for (const index of ArrayUtils.range(MIN_CARD_RARITY, MAX_CARD_RARITY)) {
-            const data = index.toString()
-            keyboard.text(
-                ctx.t(
-                    'card/button/rarity',
-                    {
-                        rarity: index
-                    }
-                ),
-                data
-            )
-        }
-
-        return keyboard.toFlowed(3)
     }
 )
 

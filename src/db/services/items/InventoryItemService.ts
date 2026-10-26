@@ -560,6 +560,43 @@ class InventoryItemService extends BaseService<typeof InventoryItem> {
             reason: 'done'
         }
     }
+
+    async getAllByChatId(chatId: number): Promise<InventoryItem[]> {
+        return await this._repo.find({ chatId })
+    }
+
+    async wipe(chatId: number) {
+        const items = await this.getAllByChatId(chatId)
+        const afterWipeInventoryByUser: InventoryItem[] = []
+
+        for (const inventoryItem of items) {
+            const itemId = inventoryItem.itemId
+            const item = ItemUtils.get(itemId)
+            if (!item || !item.afterWipeItem) continue
+
+            const afterWipeItem = item.afterWipeItem
+            const inventoryItemInArray = afterWipeInventoryByUser.find(v => {
+                return v.itemId == afterWipeItem.id && v.id == inventoryItem.id
+            })
+
+            if (inventoryItemInArray) {
+                inventoryItemInArray.count += inventoryItem.count
+            }
+            else {
+                afterWipeInventoryByUser.push(
+                    new InventoryItem({
+                        chatId: inventoryItem.chatId,
+                        id: inventoryItem.id,
+                        item: afterWipeItem,
+                        count: inventoryItem.count
+                    })
+                )
+            }
+        }
+
+        await this.deleteMany({ chatId })
+        afterWipeInventoryByUser.length && await this._repo.model.insertMany(afterWipeInventoryByUser)
+    }
 }
 
 export default new InventoryItemService()

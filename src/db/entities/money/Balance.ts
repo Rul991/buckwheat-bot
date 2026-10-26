@@ -11,7 +11,7 @@ export default class Balance extends ChatIdEntity {
         })
     }
 
-    @prop()
+    @prop({ default: START_MONEY })
     total: number
 
     constructor({

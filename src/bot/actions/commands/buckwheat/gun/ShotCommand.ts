@@ -1,4 +1,3 @@
-import InventoryItem from "../../../../../db/entities/items/InventoryItem"
 import DuelistService from "../../../../../db/services/duel/DuelistService"
 import SelectedGunService from "../../../../../db/services/gun/SelectedGunService"
 import InventoryItemService from "../../../../../db/services/items/InventoryItemService"
@@ -8,8 +7,8 @@ import type { BuckwheatCommandOptions } from "../../../../../types/action-option
 import type { BuckwheatCommandExecuteResult } from "../../../../../types/results"
 import AdminUtils from "../../../../../utils/bot/AdminUtils"
 import RankUtils from "../../../../../utils/db/RankUtils"
+import GunUtils from "../../../../../utils/gun/GunUtils"
 import ItemUtils from "../../../../../utils/items/ItemUtils"
-import { gunsKeyboard } from "../../../../keyboards/inventory"
 import BuckwheatCommand from "../../../base/BuckwheatCommand"
 
 export default class ShotCommand extends BuckwheatCommand {
@@ -36,26 +35,11 @@ export default class ShotCommand extends BuckwheatCommand {
         const item = gunId !== undefined ? ItemUtils.get(gunId) : undefined
 
         if (!replyFrom || gunId === undefined || !item) {
-            const inventory = await InventoryItemService.getInventory(chatId, id)
-            const guns = InventoryItem.getGuns(inventory)
-            const shouldChoose = guns.length > 0
-
-            return {
-                key: 'gun/show',
-                options: {
-                    vars: {
-                        item: item?.getVars(ctx),
-                        shouldChoose
-                    },
-                    keyboard: shouldChoose ? await gunsKeyboard(
-                        ctx,
-                        {
-                            guns,
-                            id
-                        }
-                    ) : undefined
-                }
-            }
+            return await GunUtils.show({
+                item,
+                ctx,
+                id
+            })
         }
 
         const replyId = replyFrom.id != ctx.me.id ? replyFrom.id : id

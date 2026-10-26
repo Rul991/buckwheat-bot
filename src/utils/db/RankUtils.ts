@@ -1,5 +1,5 @@
 import type { ChatMember } from "grammy/types"
-import { DEV_ID, MOMMY_ID } from "../../consts/env"
+import { DEV_ID, SPECIAL_IDS } from "../../consts/env"
 import type { BotContext } from "../../types/bot"
 import type { RankVars } from "../../types/types"
 import Logger from "../logs/Logger"
@@ -32,6 +32,7 @@ export default class RankUtils {
     }
 
     static getStatusByRank(ctx: BotContext, id: number, rank: number): string {
+        const specialId = SPECIAL_IDS.find(([specialId]) => specialId == id)
         return ctx.t(
             'rank/status',
             {
@@ -39,7 +40,6 @@ export default class RankUtils {
                     current: id,
                     dev: DEV_ID,
                     buckwheat: ctx.me.id,
-                    mommy: MOMMY_ID
                 },
                 ranks: {
                     current: rank,
@@ -48,6 +48,9 @@ export default class RankUtils {
                     admin: this.admin,
                     max: this.max,
                 },
+                specialId: specialId ?
+                    [specialId[0], ctx.t(`rank/special-ids/${specialId[1]}`)] :
+                    undefined
             }
         )
     }

@@ -20,7 +20,7 @@ export default class ChatCommand extends BuckwheatCommand {
 
         const chat = await ctx.vars.chat.require()
         const title = ctx.chat.title ?? ctx.chat.first_name
-        if(chat.title != ctx.chat.title) {
+        if(!ctx.hasChatType('private') && chat.title != ctx.chat.title) {
             await ChatService.update(
                 chatId,
                 {

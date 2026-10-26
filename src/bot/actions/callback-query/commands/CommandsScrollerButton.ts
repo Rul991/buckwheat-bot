@@ -46,6 +46,11 @@ class CommandsScrollerButton extends ScrollerButton<CommandDescription, Commands
             chatId
         } = options
 
+        const ranks = await RankUtils.getVarsEvery(
+            ctx,
+            chatId
+        )
+
         const commands = await Promise.all(
             slicedObjects
                 .map(async v => {
@@ -53,13 +58,13 @@ class CommandsScrollerButton extends ScrollerButton<CommandDescription, Commands
                         SettingValueTypes.Command,
                         v.settingId
                     )
-                    const rank = await SettingValueService.get({
+                    const rank = await SettingValueService.getValue({
                         setting,
                         id: chatId
                     })
                     return {
                         ...CommandDescriptionUtils.getRendered(ctx, v),
-                        rank: await RankUtils.getVars(ctx, chatId, +(rank?.value ?? setting.default))
+                        rank: ranks.get(+rank) ?? RankUtils.getDefaultVars(ctx, +rank)
                     }
                 })
         )

@@ -93,3 +93,5 @@ include /utils/emojies.pug
             .replace(/\s+/g, ' ')
             .trim()
     }
+
+    const percents = (current, min) => `${formatNumber(floor(current / min * 100, 3))}%`

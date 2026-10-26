@@ -25,6 +25,7 @@ type ItemConstructorOptions<T> =
         callbacks?: Partial<ItemCallbacks<T>>
         maxCount?: ItemMaxCount
         drop?: ContructorItemDrop
+        afterWipeItem?: Item['afterWipeItem'] | 'self'
     }
 
 type ItemCallbackExecuteOptions = Omit<ItemCallbackOptions, 'item'>
@@ -57,6 +58,7 @@ export default class Item<T = any> {
 
     callbacks: ItemCallbacks<T>
     canUse: boolean
+    afterWipeItem?: Item
 
     constructor({
         id,
@@ -68,7 +70,8 @@ export default class Item<T = any> {
         maxCount,
         isConsumable,
         basePrice,
-        drop
+        drop,
+        afterWipeItem
     }: ItemConstructorOptions<T>) {
         const rarity = drop?.rarity ?? Item.notDroppableRarity
 
@@ -114,6 +117,7 @@ export default class Item<T = any> {
         if (this.gun && !this.gun.ammo) {
             this.gun.ammo = this
         }
+        this.afterWipeItem = afterWipeItem == 'self' ? this : afterWipeItem
     }
 
     getDescription(ctx: BotContext): string {

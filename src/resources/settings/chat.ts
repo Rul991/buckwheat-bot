@@ -193,6 +193,15 @@ export const deleteUserMinCountSetting = new Setting({
     valueType: SettingValueTypes.Chat
 })
 
+export const notifySelectClassSetting = new Setting({
+    id: 22,
+    textKey: 'select-class',
+    type: 'boolean',
+    properties: {},
+    default: true,
+    valueType: SettingValueTypes.Chat
+})
+
 export const chatSettings = [
     reactChanceSetting,
     diceAnswerChanceSetting,
@@ -211,5 +220,6 @@ export const chatSettings = [
     kickPvpSetting,
     autoJoinSetting,
     stickerChanceSetting,
-    deleteUserMinCountSetting
+    deleteUserMinCountSetting,
+    notifySelectClassSetting
 ]

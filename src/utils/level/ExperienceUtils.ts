@@ -1,4 +1,4 @@
-import { LEVEL_BOOST_MULTIPLIER } from '../../consts/number'
+import { LEVEL_BOOST_MULTIPLIER, MAX_PERCENTS } from '../../consts/number'
 import InventoryItem from '../../db/entities/items/InventoryItem'
 import type Level from '../../db/entities/level/Level'
 import { levelBoostItem } from '../../resources/items/inventory'
@@ -47,7 +47,7 @@ export default class ExperienceUtils {
 
         const experienceDiff = nextLevelExperience - currentLevelExperience
         const progress = currentExperience - currentLevelExperience
-        const percents = progress / experienceDiff
+        const percents = progress / experienceDiff * MAX_PERCENTS
 
         return isFinite(percents) ? percents : 0
     }

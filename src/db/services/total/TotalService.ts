@@ -1,7 +1,5 @@
 import type { QueryFilter } from "mongoose"
 import { SettingValueTypes } from "../../../protos/settings_pb"
-import { greedBoxItem, newGameItem } from "../../../resources/items/inventory"
-import InventoryItem from "../../entities/items/InventoryItem"
 import ChatService from "../chat/ChatService"
 import RuleService from "../chat/RuleService"
 import DuelistService from "../duel/DuelistService"
@@ -62,7 +60,6 @@ export default class TotalService {
     static readonly wipeServices: ChatIdService[] = [
         BalanceService,
         LevelService,
-        InventoryItemService,
         WorkService,
         GeneratorService,
         MarketSlotService,
@@ -136,45 +133,15 @@ export default class TotalService {
     }
 
     static async wipe(chatId: number) {
-        const items = await InventoryItemService.getItemsByChatId(
-            chatId,
-            [
-                newGameItem,
-                greedBoxItem
-            ]
-        )
-        const newGames = new Map<number, number>()
-
-        for (const [id, itemArray] of items) {
-            newGames.set(
-                id,
-                itemArray.reduce(
-                    (total, item) => {
-                        return total + item.count
-                    },
-                    0
-                )
-            )
-        }
-
-        await Promise.all(
-            this.wipeServices.map(
+        await Promise.all([
+            ...this.wipeServices.map(
                 service => {
                     return service.deleteMany({ chatId })
                 }
-            )
-        )
+            ),
+            InventoryItemService.wipe(chatId)
+        ])
 
-        for (const [id, count] of newGames) {
-            await InventoryItemService.create(
-                new InventoryItem({
-                    chatId,
-                    id,
-                    count,
-                    item: newGameItem
-                })
-            )
-        }
     }
 
     static async deleteUser(chatId: number, id: number) {

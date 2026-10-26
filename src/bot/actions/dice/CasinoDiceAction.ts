@@ -9,6 +9,8 @@ import GameService from "../../../db/services/game/GameService"
 import GrindUtils from "../../../utils/grind/GrindUtils"
 import SettingValueService from "../../../db/services/settings/SettingValueService"
 import { privateCasinoSetting } from "../../../resources/settings/chat"
+import BusinessService from "../../../db/services/business/BusinessService"
+import BusinessStockService from "../../../db/services/business/BusinessStockService"
 
 type JackpotValues = {
     values: number[]
@@ -36,14 +38,14 @@ export default class CasinoDiceAction extends DiceAction {
         type: 'lose'
     }
     private _delay = 1750
-    
+
     override filename: string = 'casinodice'
     override name: Dices = '🎰'
-    
+
     private _getJackpotValue(value: number): JackpotValues {
         const jackpotValue = this._jackpotValues
-        .find(v => v.values.includes(value)) ?? this._loseValue
-        
+            .find(v => v.values.includes(value)) ?? this._loseValue
+
         return jackpotValue
     }
 
@@ -56,13 +58,13 @@ export default class CasinoDiceAction extends DiceAction {
         } = options
         const isPrivate = ctx.hasChatType('private')
 
-        if(!isPrivate) {
+        if (!isPrivate) {
             const privateCasinoSettingValue = await SettingValueService.get({
                 id: chatId,
                 setting: privateCasinoSetting
             })
-            
-            if(privateCasinoSettingValue.value) {
+
+            if (privateCasinoSettingValue.value) {
                 await MessageUtils.reply(
                     ctx,
                     'casino/not-private'
@@ -71,6 +73,10 @@ export default class CasinoDiceAction extends DiceAction {
             }
         }
 
+        const casino = await BusinessService.createBuckwheat({
+            ctx,
+            type: 'casino'
+        })
         const gameType = 'casino'
         const selfBalance = await ctx.vars.balance.get()
         const balance = selfBalance?.total ?? 0
@@ -80,7 +86,7 @@ export default class CasinoDiceAction extends DiceAction {
             type
         } = jackpotValue
 
-        if(type == 'lose') {
+        if (type == 'lose') {
             await GameService.lose({
                 chatId,
                 id,
@@ -96,16 +102,22 @@ export default class CasinoDiceAction extends DiceAction {
         }
 
         if (balance + prize >= MAX_DEBT_VALUE) {
-            await setTimeout(this._delay)
-            await BalanceService.add({
-                chatId,
-                id,
-                money: prize
-            })
+            await Promise.all([
+                setTimeout(this._delay),
+                BalanceService.add({
+                    chatId,
+                    id,
+                    money: prize
+                }),
+                BusinessStockService.income(
+                    casino.id,
+                    -prize
+                )
+            ])
 
             const isSendMessage = await GrindUtils.isSendMessage(ctx, id)
-            if(!isSendMessage) return
-            
+            if (!isSendMessage) return
+
             await MessageUtils.reply(
                 ctx,
                 'casino/result',

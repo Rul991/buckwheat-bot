@@ -4,13 +4,15 @@
 
 import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import { fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
+import type { ScrollerData } from "./scroller_pb";
+import { file_scroller } from "./scroller_pb";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file gun.proto.
  */
 export const file_gun: GenFile = /*@__PURE__*/
-  fileDesc("CglndW4ucHJvdG8iLgoQR3VuU2V0QnV0dG9uRGF0YRIKCgJpZBgBIAEoBBIOCgZpdGVtSWQYAiABKA1iBnByb3RvMw");
+  fileDesc("CglndW4ucHJvdG8iLgoQR3VuU2V0QnV0dG9uRGF0YRIKCgJpZBgBIAEoBBIOCgZpdGVtSWQYAiABKA0iNAoVR3VuU2Nyb2xsZXJCdXR0b25EYXRhEhsKBGRhdGEYASABKAsyDS5TY3JvbGxlckRhdGFiBnByb3RvMw", [file_scroller]);
 
 /**
  * @generated from message GunSetButtonData
@@ -37,4 +39,21 @@ export type GunSetButtonData = Message<"GunSetButtonData"> & {
  */
 export const GunSetButtonDataSchema: GenMessage<GunSetButtonData> = /*@__PURE__*/
   messageDesc(file_gun, 0);
+
+/**
+ * @generated from message GunScrollerButtonData
+ */
+export type GunScrollerButtonData = Message<"GunScrollerButtonData"> & {
+  /**
+   * @generated from field: ScrollerData data = 1;
+   */
+  data?: ScrollerData | undefined;
+};
+
+/**
+ * Describes the message GunScrollerButtonData.
+ * Use `create(GunScrollerButtonDataSchema)` to create a new message.
+ */
+export const GunScrollerButtonDataSchema: GenMessage<GunScrollerButtonData> = /*@__PURE__*/
+  messageDesc(file_gun, 1);
 

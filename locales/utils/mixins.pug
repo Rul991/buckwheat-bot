@@ -90,6 +90,12 @@ mixin plain_code_param(title, value)
     code #{value}
     |
 
+mixin plain_link_param(title, user)
+    |
+    | #{title}: 
+    +link(user)
+    |
+
 mixin progress(options = {})
     -
         const {

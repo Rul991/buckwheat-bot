@@ -51,7 +51,7 @@ class SettingValueService extends BaseService<typeof SettingValue> {
         ) as unknown as SettingValue<T, V>
     }
 
-    async getAllById(id: number, valueTypes: SettingValueTypes[]) {
+    async getAllByOwnerIdAndTypes(id: number, valueTypes: SettingValueTypes[]) {
         return await this._repo.find({
             id,
             valueType: {
@@ -80,8 +80,9 @@ class SettingValueService extends BaseService<typeof SettingValue> {
     }
 
     async getValue<T extends SettingTypes, V extends SettingValueTypes>(options: SettingValueOptions<T, V>): Promise<SettingTypeToDefault[T]> {
+        const setting = options.setting
         const settingValue = await this.get(options)
-        return settingValue.value
+        return settingValue.value ?? setting.default
     }
 
     async getArray<V extends SettingValueTypes>(id: number, valueType: V): Promise<SettingValue<SettingTypes, V>[]> {
@@ -113,7 +114,7 @@ class SettingValueService extends BaseService<typeof SettingValue> {
         return result
     }
 
-    async getByIds<T extends SettingTypes, V extends SettingValueTypes>(
+    async getByOwnerIds<T extends SettingTypes, V extends SettingValueTypes>(
         ids: number[],
         setting: Setting<T, V>
     ): Promise<Map<number, SettingValue<T, V>>> {

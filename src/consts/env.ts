@@ -1,6 +1,14 @@
 import { env } from "bun"
 import type { DevMode } from "../types/unions"
 import { coerce, literal, object, string, url } from 'zod'
+import { NUMBER_COLON_STRING_REGEX } from "./regex"
+
+const specialIdSchema = string()
+    .regex(NUMBER_COLON_STRING_REGEX)
+    .transform((s): [number, string] => {
+        const idx = s.indexOf(":")
+        return [Number(s.slice(0, idx)), s.slice(idx + 1)]
+    })
 
 const envSchema = object({
     BOT_TOKEN: string(),
@@ -10,7 +18,9 @@ const envSchema = object({
     CHAT_ID: coerce.number().int(),
     BASE_URL: url().optional(),
     START_MESSAGE: string().max(2048).default('Good morning, I’m awake!'),
-    MOMMY_ID: coerce.number().int().optional()
+    SPECIAL_IDS: string()
+        .transform(s => s.trim() === "" ? [] : s.split(","))
+        .pipe(specialIdSchema.array()),
 })
 
 const envData = envSchema.parse(env)
@@ -24,7 +34,7 @@ export const IS_DEV: boolean = MODE == 'dev'
 export const IS_PROD: boolean = !IS_DEV
 
 export const DEV_ID: number = envData.DEV_ID
-export const MOMMY_ID: number | undefined = envData.MOMMY_ID
+export const SPECIAL_IDS = envData.SPECIAL_IDS
 
 export const CHAT_ID: number = envData.CHAT_ID
 export const BASE_URL: string | undefined = envData.BASE_URL

@@ -1,6 +1,7 @@
 import { shopItems } from "../../resources/items/shop"
 import type Item from "../../utils/items/Item"
 import KeyboardCreator from "../../utils/keyboard/KeyboardCreator"
+import GunScrollerButton from "../actions/callback-query/gun/GunScrollerButton"
 import GunSetButton from "../actions/callback-query/gun/GunSetButton"
 import InventoryGiftButton from "../actions/callback-query/inventory/InventoryGiftButton"
 import InventoryScrollerButton from "../actions/callback-query/inventory/InventoryScrollerButton"
@@ -140,32 +141,31 @@ export const showItemKeyboard = KeyboardCreator.create<{
 
 export const gunsKeyboard = KeyboardCreator.create<{
     id: number
-    guns: Item[]
 }>(
     async ({
         data: {
             id,
-            guns
         },
         ctx,
         keyboard
     }) => {
         const bigId = BigInt(id)
-        for (const gun of guns) {
-            keyboard
-                .add(GunSetButton.button({
-                    ctx,
+        keyboard.add(
+            GunScrollerButton.button({
+                ctx,
+                data: {
                     data: {
+                        $typeName: 'ScrollerData',
                         id: bigId,
-                        itemId: gun.id
-                    },
-                    vars: {
-                        item: gun.getVars(ctx)
-                    },
-                    key: 'items/system/full-title'
-                }))
-                .row()
-        }
+                        data: {
+                            case: 'update',
+                            value: false
+                        }
+                    }
+                },
+                key: 'button/show'
+            })
+        )
     }
 )
 

@@ -1,0 +1,14 @@
+include /utils/mixins.pug
+
+- 
+    const totalPrice = selectedCount * slot.price
+
++heading(BUSINESS_EMOJIES[business.type])
+    | #{business.title}
+
++plain_code_param(`${EMOJIES.COUNT2} Кол-во`, `${formatNumber(slot.count)} (${percents(slot.count, slot.max)})`)
++plain_code_param(`${EMOJIES.PRICE} Цена`, `${formatNumber(slot.price)} * ${formatNumber(selectedCount)} = ${formatNumber(totalPrice)}${EMOJIES.MONEY}`)
+|
+|
++plain_link_param(`${EMOJIES.PLAYER} Владелец`, seller)
++plain_bold_param(`${EMOJIES.MONEY} Твой баланс`, `${formatNumber(balance)}${EMOJIES.MONEY}`)

@@ -1,6 +1,6 @@
 import type { Conversation } from "@grammyjs/conversations"
 import type { Message } from "grammy/types"
-import type { Context } from "grammy"
+import { type Context } from "grammy"
 import type { BotContext } from "../../types/bot"
 import type { ReplyInConversationOptions } from "../../types/options"
 import MessageUtils from "../bot/MessageUtils"
@@ -83,6 +83,34 @@ export default class ConversationUtils {
         )
     }
 
+    static async getText({
+        conversation,
+        needId,
+        vars,
+        max,
+        key,
+        lazyKeys
+    }: GetTextOptions) {
+        await this.replyInConversation(
+            conversation,
+            key,
+            {
+                vars: {
+                    ...vars,
+                    max,
+                },
+                lazyKeys
+            }
+        )
+
+        const ctx = await conversation.waitFor('msg:text')
+            .andFrom(needId)
+        const text = ctx.msg.text
+        const result = text.slice(0, max).trim()
+
+        return result
+    }
+
     static async getFormattedText({
         conversation,
         needId,
@@ -146,10 +174,12 @@ export default class ConversationUtils {
             text,
             min
         )
-        const result = MathUtils.clamp(
-            inputValue,
-            min,
-            max
+        const result = Math.floor(
+            MathUtils.clamp(
+                inputValue,
+                min,
+                max
+            )
         )
 
         return result

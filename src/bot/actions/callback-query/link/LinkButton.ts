@@ -12,7 +12,7 @@ class LinkButton extends CallbackQueryAction<LinkButtonData> {
     override schema: GenMessage<LinkButtonData> = LinkButtonDataSchema
     override defaultTextKey: string = 'link/button/link'
     override minimumRank: number = RankUtils.min
-    override settingId: number = 112
+    override settingId: number = 170
     override name: string = 'link'
 
     protected override async _getId(options: CallbackQueryActionOptions<LinkButtonData>): Promise<number | number[] | undefined> {

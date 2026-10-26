@@ -1,4 +1,5 @@
 import type Item from "../../../utils/items/Item"
+import ItemUtils from "../../../utils/items/ItemUtils"
 import SelectedGun from "../../entities/gun/SelectedGun"
 import BaseService from "../base/BaseService"
 
@@ -15,6 +16,15 @@ class SelectedGunService extends BaseService<typeof SelectedGun> {
             },
             new SelectedGun({ chatId, id })
         )
+    }
+
+    async getItem(chatId: number, id: number) {
+        const gun = await this.get(chatId, id)
+        const item = gun.selectedGun ?
+            ItemUtils.get(gun.selectedGun) :
+            undefined
+
+        return item
     }
 
     async set(chatId: number, id: number, item: Item): Promise<SelectedGun> {

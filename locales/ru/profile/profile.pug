@@ -30,7 +30,7 @@ if linkedChat || user.left
 
 +status(linkedChat)
     | #{EMOJIES.LINKED} Привязан к чату 
-    u #{linkedChat ? linkedChat.title : '???'}
+    u #{linkedChat.title || '???'}
 +status(user.left)
     | #{EMOJIES.LEFT} Вышел из чата  
 |
@@ -39,7 +39,7 @@ if linkedChat || user.left
 +withTitle(`${userClass.emoji} Класс`)
     | #{userClass.name}
 +withTitle(`${EMOJIES.LEVEL} Уровень`)
-    | #{level.current}/#{level.max} (#{formatNumber(floor(level.percents * 100))}%)
+    | #{level.current}/#{level.max} (#{formatNumber(floor(level.percents))}%)
 |
 +withTitle(`${EMOJIES.MESSAGES} Кол-во сообщений`)
     | #{formatNumber(messages)}

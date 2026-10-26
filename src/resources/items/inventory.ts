@@ -164,6 +164,15 @@ export const glassItem = new Item({
     }
 })
 
+export const newGameItem = new Item({
+    id: 16,
+    key: 'other/new-game',
+    isConsumable: false,
+    basePrice: 2_000_000,
+    emoji: 'newgame',
+    afterWipeItem: 'self'
+})
+
 export const greedBoxItem = new Item({
     id: 9,
     key: 'other/greed-box',
@@ -172,7 +181,7 @@ export const greedBoxItem = new Item({
         chat: 1,
         use: 1
     },
-    basePrice: 2_000_000,
+    basePrice: newGameItem.basePrice,
     emoji: 'moneyfarm',
     callbacks: {
         use: async ({
@@ -236,7 +245,8 @@ export const greedBoxItem = new Item({
     drop: {
         rarity: 15,
         canDropFromWork: true
-    }
+    },
+    afterWipeItem: newGameItem
 })
 
 export const infinityCasinoItem = new Item({
@@ -313,14 +323,6 @@ export const moneyGenLicenseItem = new Item({
         rarity: 10,
         lootBoxCount: 1
     }
-})
-
-export const newGameItem = new Item({
-    id: 16,
-    key: 'other/new-game',
-    isConsumable: false,
-    basePrice: greedBoxItem.basePrice,
-    emoji: 'newgame'
 })
 
 export const oneTimeGunItem = new Item({
@@ -421,7 +423,8 @@ export const shopPercentItem = new Item({
         user: 100
     },
     basePrice: 7_500,
-    emoji: 'moneyfarm'
+    emoji: 'moneyfarm',
+    afterWipeItem: 'self'
 })
 
 export const simpleShieldItem = new Item({
@@ -723,6 +726,9 @@ export const resetClassItem = new Item({
                 }
             )
         }
+    },
+    maxCount: {
+        use: 1
     }
 })
 
@@ -750,6 +756,9 @@ export const resetSaveCooldownItem = new Item({
                 }
             )
         }
+    },
+    maxCount: {
+        use: 1
     }
 })
 

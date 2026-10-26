@@ -71,10 +71,10 @@ export default abstract class CallbackQueryAction<T extends Record<string, any>>
                 ? []
                 : getIdResult
 
-        const hasNeedId = needIds.length && needIds.every(v => v != id)
-        Logger.system('CallbackQueryAction._getId', { needIds, id, hasNeedId })
+        const hasntNeedId = needIds.length && needIds.every(v => v != id)
+        Logger.system('CallbackQueryAction._getId', { needIds, id, hasntNeedId })
 
-        if (hasNeedId) {
+        if (hasntNeedId) {
             return {
                 isAlert: true,
                 key: 'cb-query/wrong-id'

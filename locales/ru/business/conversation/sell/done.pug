@@ -1,0 +1,9 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.APPROVE} Игрок 
++link(vars.user)
+| , была #{isNew ? 'обновлена' : 'выставлена'} акция 
+b #{BUSINESS_EMOJIES[business.type]} #{business.title}
+|  x#{formatNumber(slot.count)} за 
+code #{formatNumber(slot.price)}
+| #{EMOJIES.MONEY}!

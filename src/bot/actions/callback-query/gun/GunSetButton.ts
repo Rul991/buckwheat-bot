@@ -6,6 +6,8 @@ import CallbackQueryAction from "../../base/CallbackQueryAction"
 import { GunSetButtonDataSchema, type GunSetButtonData } from "../../../../protos/gun_pb"
 import ItemUtils from "../../../../utils/items/ItemUtils"
 import SelectedGunService from "../../../../db/services/gun/SelectedGunService"
+import GunUtils from "../../../../utils/gun/GunUtils"
+import MessageUtils from "../../../../utils/bot/MessageUtils"
 
 class GunSetButton extends CallbackQueryAction<GunSetButtonData> {
     override schema: GenMessage<GunSetButtonData> = GunSetButtonDataSchema
@@ -44,6 +46,21 @@ class GunSetButton extends CallbackQueryAction<GunSetButtonData> {
             chatId,
             id,
             item
+        )
+
+        const {
+            key,
+            options: messageOptions
+        } = await GunUtils.show({
+            item,
+            ctx,
+            id
+        })
+
+        await MessageUtils.editText(
+            ctx,
+            key,
+            messageOptions
         )
 
         return {

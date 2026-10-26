@@ -20,13 +20,19 @@ class ShopCardListScrollerButton extends ScrollerButton<Object, ScrollerData> {
     override name: string = 'shcards'
 
     protected override _isNeedCache: boolean = true
-    protected override _objectsPerPage: number = 5
+    protected override _objectsPerPage: number = 7
     
     protected override async _getRawObjects(options: CallbackQueryActionOptions<ScrollerData>): Promise<Object[]> {
         const {
             chatId
         } = options
-        return await ShopCardService.getUniqueCardIds(chatId)
+        
+        const ids = await ShopCardService.getUniqueCardIds(chatId)
+        const cards = await CardService.getByIds(ids)
+        const cardsArray = cards.values().toArray().sort(
+            (a, b) => a.rarity - b.rarity
+        )
+        return cardsArray.map(v => v.id)
     }
 
     protected override async _getKeyboard(options: ScrollerButtonEditMessageOptions<Object, ScrollerData>): Promise<InlineKeyboard> {

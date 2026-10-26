@@ -12,10 +12,11 @@ import BalanceService from "../../../../db/services/money/BalanceService"
 import type Item from "../../../../utils/items/Item"
 import type { BotContext } from "../../../../types/bot"
 import { freeBuyItem } from "../../../../resources/items/inventory"
+import BusinessStockService from "../../../../db/services/business/BusinessStockService"
+import BusinessService from "../../../../db/services/business/BusinessService"
 
 type BuyOptions = {
     chatId: number
-    botId: number
     id: number
     shopItem: Item
     count: number
@@ -35,14 +36,14 @@ class ShopBuyButton extends CallbackQueryAction<ShopBuyButtonData> {
         count,
         chatId,
         id,
-        botId,
         ctx,
         useCoupon
     }: BuyOptions) {
         const totalPrice = shopItem.basePrice * count
-        const current = await ctx.vars.balance.require()
+        const current = await BalanceService.get(chatId, id)
+        const money = current?.total ?? 0
+
         if (useCoupon) {
-            const money = current.total
             if (money < totalPrice) {
                 return { key: 'shop/not-enough-money', vars: { totalPrice, money } }
             }
@@ -68,13 +69,18 @@ class ShopBuyButton extends CallbackQueryAction<ShopBuyButtonData> {
             const spent = await BalanceService.trySpend({ chatId, id, money: totalPrice })
 
             if (!spent) {
-                return { key: 'shop/not-enough-money', vars: { totalPrice, money: current.total } }
+                return { key: 'shop/not-enough-money', vars: { totalPrice, money } }
             }
+
+            const shop = await BusinessService.createBuckwheat({
+                ctx,
+                type: 'shop'
+            })
 
             ctx.vars.balance.set(spent)
             await Promise.all([
                 InventoryItemService.add({ chatId, id, item: shopItem, count }),
-                BalanceService.add({ chatId, id: botId, money: totalPrice })
+                BusinessStockService.income(shop.id, totalPrice)
             ])
         }
     }
@@ -93,7 +99,6 @@ class ShopBuyButton extends CallbackQueryAction<ShopBuyButtonData> {
             page,
             useCoupon
         } = data
-        const botId = ctx.me.id
 
         const shopItem = shopItems[index]
         if (!shopItem) {
@@ -120,7 +125,6 @@ class ShopBuyButton extends CallbackQueryAction<ShopBuyButtonData> {
         const buyResult = await this._buy({
             chatId,
             id,
-            botId,
             ctx,
             shopItem,
             count,

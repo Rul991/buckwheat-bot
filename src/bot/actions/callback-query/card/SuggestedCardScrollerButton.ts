@@ -49,7 +49,11 @@ class SuggestedCardScrollerButton extends ScrollerButton<T, SuggestedCardScrolle
                         isApprove,
                         cardId: card.id
                     },
-                    style: isApprove ? 'success' : 'danger'
+                    style: isApprove ? 'success' : 'danger',
+                    vars: {
+                        id,
+                        DEV_ID
+                    }
                 })
             )
         }
