@@ -221,6 +221,12 @@ import BusinessStockSellButton from "../bot/actions/callback-query/business/Busi
 import BusinessStockShowButton from "../bot/actions/callback-query/business/BusinessStockShowButton"
 import BusinessStockMarketScrollerButton from "../bot/actions/callback-query/business/BusinessStockMarketScrollerButton"
 import BusinessStockBuyButton from "../bot/actions/callback-query/business/BusinessStockBuyButton"
+import SelectedSkillsMenuButton from "../bot/actions/callback-query/skills/SelectedSkillsMenuButton"
+import SkillCommand from "../bot/actions/commands/buckwheat/duel/SkillCommand"
+import SkillAddScrollerButton from "../bot/actions/callback-query/skills/SkillAddScrollerButton"
+import SkillShowButton from "../bot/actions/callback-query/skills/SkillShowButton"
+import SkillAddButton from "../bot/actions/callback-query/skills/SkillAddButton"
+import SkillRemoveButton from "../bot/actions/callback-query/skills/SkillRemoveButton"
 
 export const runBot = async () => {
     const bot = new TelegramBot()
@@ -365,6 +371,11 @@ export const runBot = async () => {
                 BusinessStockShowButton,
                 BusinessStockMarketScrollerButton,
                 BusinessStockBuyButton,
+                SelectedSkillsMenuButton,
+                SkillAddScrollerButton,
+                SkillShowButton,
+                SkillAddButton,
+                SkillRemoveButton,
             ),
 
         new MessageHandler()
@@ -481,6 +492,7 @@ export const runBot = async () => {
                 new GeneratorCommand(),
                 new NoteCommand(),
                 new BusinessCommand(),
+                new SkillCommand(),
             ),
 
         new PhotoActionHandler()

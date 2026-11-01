@@ -1,11 +1,13 @@
 include /utils/mixins.pug
 
-| #{EMOJIES.MUTE} Рот игрока 
-+link(user)
+| #{EMOJIES.MUTE} Твой рот в чате 
+b
+    u #{chat.title || '???'}
 |  был заклеен антиспамным ботом!
 |
-b
+blockquote
     +random([
         'Флудить вредно!',
-        'Спамить вредно!'
+        'Спамить вредно!',
+        'Прекрати печатать так много!'
     ])

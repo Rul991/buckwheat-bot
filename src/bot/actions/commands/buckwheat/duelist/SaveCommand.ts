@@ -4,7 +4,7 @@ import type { BuckwheatCommandExecuteResult } from "../../../../../types/results
 import AdminUtils from "../../../../../utils/bot/AdminUtils"
 import ClassUtils from "../../../../../utils/db/ClassUtils"
 import RankUtils from "../../../../../utils/db/RankUtils"
-import DuelistUtils from "../../../../../utils/duel/DuelistUtils"
+import DuelistUtils from "../../../../../utils/duel/duelist/DuelistUtils"
 import ExperienceUtils from "../../../../../utils/level/ExperienceUtils"
 import TimeUtils from "../../../../../utils/time/TimeUtils"
 import BuckwheatCommand from "../../../base/BuckwheatCommand"

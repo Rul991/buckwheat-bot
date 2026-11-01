@@ -41,8 +41,9 @@ export default class AntispamMessageAction extends MessageAction {
                 'antispam/mute',
                 {
                     vars: {
-                        user: await ctx.vars.user.get()
-                    }
+                        chat: ctx.chat
+                    },
+                    chatId: id
                 }
             ),
             AdminUtils.mute(

@@ -73,9 +73,10 @@ export default class TelegramCommandHandler extends BaseHandler<TelegramCommand>
                         commandStrings: [`/${name}`, ctx.match, ctx.match],
                         id: ctx.vars.id,
                         chatId: ctx.vars.chatId,
-                        ctx: ctx as any,
+                        ctx,
                         replyOrUserFrom: ctx.from,
-                        other: ctx.match
+                        other: ctx.match,
+                        isSelf: true
                     })
                     if (result) {
                         const {

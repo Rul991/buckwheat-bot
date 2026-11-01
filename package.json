@@ -9,8 +9,7 @@
     "start:prod": "bunx --bun pm2 start pm2.config.cjs --env prod",
     "restart:prod": "bun install --production && bunx --bun pm2 restart buckwheat-bot",
     "stop:prod": "bunx --bun pm2 stop pm2.config.cjs && bunx --bun pm2 delete pm2.config.cjs",
-    "generate": "bunx protoc --es_out src/protos --es_opt target=ts --proto_path protos protos/*.proto",
-    "check": "bunx tsc -b"
+    "generate": "bunx protoc --es_out src/protos --es_opt target=ts --proto_path protos protos/*.proto"
   },
   "keywords": [
     "grammy",

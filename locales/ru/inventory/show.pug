@@ -14,7 +14,8 @@ mixin condition(title, value)
         block
         |
 
-b #{itemVars.emoji} #{itemVars.title}
+b
+    +item(itemVars)
 |
 |
 blockquote(expandable) !{itemVars.description}
@@ -27,9 +28,9 @@ if item.rarity >= 0
     |
     |
     +condition(`${EMOJIES.WORK} Выпадает с работы`, item.drop.canDropFromWork)
-        +plain_bold_param(`     ${EMOJIES.PERCENTS} Шанс выпадения`, `${percents.work}%`)
+        +plain_bold_param(`     ${EMOJIES.PERCENTS} Шанс выпадения`, `${formatNumber(chances.work)}%`)
     +condition(`${EMOJIES.LOOTBOX} Выпадает с чудо-ящика`, item.drop.canDropFromLootBox)
-        +plain_bold_param(`     ${EMOJIES.PERCENTS} Шанс выпадения`, `${percents.lootbox}%`)
+        +plain_bold_param(`     ${EMOJIES.PERCENTS} Шанс выпадения`, `${formatNumber(chances.lootbox)}%`)
 |
 |
 +condition(`${EMOJIES.SHIELD} Щит`, item.shield)

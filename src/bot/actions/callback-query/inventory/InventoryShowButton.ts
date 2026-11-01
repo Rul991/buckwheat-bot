@@ -63,7 +63,7 @@ class InventoryShowButton extends CallbackQueryAction<InventoryShowButtonData> {
                     itemVars: item.getVars(ctx),
                     item,
                     inventoryItem,
-                    percents: {
+                    chances: {
                         work: ItemUtils.getDropPercents(item, 'work'),
                         lootbox: ItemUtils.getDropPercents(item, 'lootbox')
                     },

@@ -80,7 +80,7 @@ export const corporationItem = new Item({
     emoji: 'book',
     drop: {
         rarity: 13,
-        lootBoxCount: 1
+        // lootBoxCount: 1
     }
 })
 
@@ -96,9 +96,9 @@ export const craftWorkUpItem = new Item({
     }
 })
 
-export const effectBookItem = new Item({
+export const skillsBookItem = new Item({
     id: 4,
-    key: 'other/effect-book',
+    key: 'other/skills-book',
     isConsumable: false,
     basePrice: 1000,
     emoji: 'book',
@@ -843,7 +843,7 @@ export const inventoryItems: Item<any>[] = [
     cookieItem,
     corporationItem,
     craftWorkUpItem,
-    effectBookItem,
+    skillsBookItem,
     freeBuyItem,
     fuelOreItem,
     fuelGunItem,

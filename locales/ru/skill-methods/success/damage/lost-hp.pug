@@ -1,0 +1,8 @@
+include ./mixins.pug
+
++message()
+    if showType == 'info'
+        | #{formatNumber(method.damage)}
+    else
+        | #{formatNumber(data)}
+|  (чем меньше у вас #{EMOJIES.HP}, тем больше урон)

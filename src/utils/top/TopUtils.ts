@@ -278,6 +278,7 @@ export default class TopUtils {
         new TopSubCommand({
             key: 'marriages',
             type: 'role',
+            needSort: false,
             getUnsortedValuesCallback: async (ctx, chatId) => {
                 const marriages = await MarriageService.getAllByChatId(chatId)
                 const ids = marriages.reduce(
@@ -295,6 +296,7 @@ export default class TopUtils {
                 )
 
                 return marriages
+                    .sort((a, b) => +a.createdAt - +b.createdAt)
                     .reduce(
                         (total, marriage) => {
                             const firstName = users.get(marriage.firstPartner)?.name ?? UNKNOWN_NAME
@@ -303,7 +305,14 @@ export default class TopUtils {
                                 ctx,
                                 TimeUtils.getElapsed(+marriage.createdAt)
                             )
-                            const value = `${firstName} - ${secondName} (${time})`
+                            const value = ctx.t(
+                                'marriage/top-text',
+                                {
+                                    firstName,
+                                    secondName,
+                                    time,
+                                }
+                            )
 
                             total.push({
                                 id: marriage.firstPartner,

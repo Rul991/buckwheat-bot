@@ -1,0 +1,53 @@
+syntax = "proto3";
+import "scroller.proto";
+
+enum SkillShowType {
+    Duel = 0; // on duel
+    Add = 1; // when add skill
+    Selected = 2; // in selected skill
+    Book = 3; // in skill book
+}
+
+// 'knight' | 'thief' | 'sorcerer' | 'engineer' | 'bard'
+enum SkillBookScrollerType {
+    Knight = 0;
+    Thief = 1;
+    Sorcerer = 2; 
+    Engineer = 3;
+    Bard = 4;
+    Effect = 5;
+}
+
+message SelectedSkillsMenuButtonData {
+    uint64 id = 1; // user's id
+}
+
+message SkillShowButtonData {
+    uint64 id = 1; // user's id
+    uint32 skillId = 2; // skill's id
+    SkillShowType type = 3; // skill show type
+    optional uint32 page = 4; // back page index
+}
+
+message SkillAddScrollerButtonData {
+    ScrollerData data = 1;
+}
+
+message SkillAddButtonData {
+    uint64 id = 1; // user's id
+    uint32 skillId = 2; // skill's id
+}
+
+message SkillRemoveButtonData {
+    uint64 id = 1; // user's id
+    uint32 skillId = 2; // skill's id
+}
+
+message SkillBookMenuButtonData {
+    uint64 id = 1; // user's id
+}
+
+message SkillBookScrollerButtonData {
+    ScrollerData data = 1;
+    SkillBookScrollerType type = 2;
+}

@@ -11,6 +11,7 @@ import type Duelist from "../db/entities/duel/Duelist"
 import type ShortCommand from "../db/entities/short/ShortCommand"
 import type { CommandStrings } from "./command"
 import type { LazyCacheRecord } from "./types"
+import type Duel from "../db/entities/duel/Duel"
 
 export type BotContext<T = Record<string, any>> =
     & Context
@@ -33,6 +34,7 @@ export type BotContext<T = Record<string, any>> =
             level: Level | undefined
             chat: Chat | undefined
             duelist: Duelist | undefined
+            duel: Duel | undefined
         }>
     }
     & {

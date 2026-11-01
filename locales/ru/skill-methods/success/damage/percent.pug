@@ -1,0 +1,7 @@
+include ./mixins.pug
+
++message()
+    if showType == 'info'
+        | #{percents(method.coef, 1)} от #{EMOJIES.HP} цели
+    else
+        | #{formatNumber(data)}

@@ -1,6 +1,119 @@
-import Character from "../../../duels/classes/Character"
-import Skill from "../../../duels/classes/Skill"
+import Character from "../../../utils/duel/character/Character"
 import type { ClassTypes } from "../../../types/class"
+import {
+    twoHandSkill,
+    angleSkill,
+    angryPickSkill,
+    artifactSkill,
+    ashSkill,
+    asuraSkill,
+    atheistSkill,
+    attackBardSkill,
+    attackBossSkill,
+    attackBotSkill,
+    attackEngineerSkill,
+    attackKnightSkill,
+    attackSorcererSkill,
+    attackThiefSkill,
+    attackUnknownSkill,
+    blackSkill,
+    breakSkill,
+    chainTrapSkill,
+    chaosSkill,
+    chiliRiffSkill,
+    chillSkill,
+    circleSkill,
+    clfrSkill,
+    coolArmorSkill,
+    creepSkill,
+    crookSkill,
+    crossSkill,
+    crptSkill,
+    dblFghtSkill,
+    drillSkill,
+    droneSkill,
+    electroSkill,
+    endSkill,
+    envellSkill,
+    feedbackSkill,
+    ffwfSkill,
+    fimaPlusSkill,
+    fimaSkill,
+    finishSkill,
+    flutterSkill,
+    forkSkill,
+    frarrSkill,
+    friendSkill,
+    gloveSkill,
+    goGoSkill,
+    godHealSkill,
+    grenadeSkill,
+    gtaSkill,
+    guitarHeroSkill,
+    gunSkill,
+    hardRockSkill,
+    heroSongSkill,
+    hideSkill,
+    honeySkill,
+    hrdArrSkill,
+    iceSkill,
+    invisSkill,
+    ironManSkill,
+    ironSkill,
+    jimmySkill,
+    keySkill,
+    key85Skill,
+    kingSongSkill,
+    koffySkill,
+    ktaroHiSkill,
+    kysSkill,
+    lampSkill,
+    laughSinSkill,
+    lockShldSkill,
+    loveSkill,
+    lShieldSkill,
+    lstLgtSkill,
+    lStoreSkill,
+    maadSkill,
+    manaUpSkill,
+    masterOfFieldSkill,
+    maximSkill,
+    morgartSkill,
+    noSkillSkill,
+    onSkySkill,
+    oneTowerSkill,
+    orbitSkill,
+    phantomSkill,
+    phenixSkill,
+    piglinsSkill,
+    punkRockSkill,
+    qsrSkill,
+    rockVoidSkill,
+    scaryNotesSkill,
+    shieldPlusSkill,
+    shieldSkill,
+    showerSkill,
+    sleepMelodySkill,
+    sleepSkill,
+    staySkill,
+    stfuLightSkill,
+    stringSkill,
+    subwaysurfSkill,
+    sugarRainSkill,
+    sunUpSkill,
+    superSkill,
+    theftSkill,
+    thndrSkill,
+    towerSkill,
+    trSkill,
+    weDieSkill,
+    whiteDefSkill,
+    whiteDefenderSkill,
+    womanetSkill,
+    woodSwordSkill,
+    yammySkill,
+    yeahRockSkill,
+} from "../../../resources/duels/skills/skills"
 
 export const bardCharacter = new Character({
     hp: {
@@ -12,23 +125,30 @@ export const bardCharacter = new Character({
         up: 11
     },
     skills: {
-        main: new Skill({} as any),
-        showable: []
-    }
-})
-
-export const bossCharacter = new Character({
-    hp: {
-        start: 2277,
-        up: 1
-    },
-    mana: {
-        start: 1961,
-        up: 1
-    },
-    skills: {
-        main: new Skill({} as any),
-        showable: []
+        main: attackBardSkill,
+        showable: [
+            stringSkill,
+            laughSinSkill,
+            whiteDefenderSkill,
+            scaryNotesSkill,
+            sleepMelodySkill,
+            jimmySkill,
+            yeahRockSkill,
+            staySkill,
+            lampSkill,
+            koffySkill,
+            chiliRiffSkill,
+            angryPickSkill,
+            manaUpSkill,
+            heroSongSkill,
+            punkRockSkill,
+            guitarHeroSkill,
+            kingSongSkill,
+            hardRockSkill,
+            weDieSkill,
+            angleSkill,
+            sunUpSkill,
+        ]
     }
 })
 
@@ -42,7 +162,7 @@ export const botCharacter = new Character({
         up: 0
     },
     skills: {
-        main: new Skill({} as any),
+        main: attackBotSkill,
         showable: []
     }
 })
@@ -57,8 +177,30 @@ export const engineerCharacter = new Character({
         up: 11
     },
     skills: {
-        main: new Skill({} as any),
-        showable: []
+        main: attackEngineerSkill,
+        showable: [
+            rockVoidSkill,
+            oneTowerSkill,
+            woodSwordSkill,
+            droneSkill,
+            phantomSkill,
+            onSkySkill,
+            drillSkill,
+            sleepSkill,
+            electroSkill,
+            towerSkill,
+            feedbackSkill,
+            artifactSkill,
+            coolArmorSkill,
+            masterOfFieldSkill,
+            chainTrapSkill,
+            flutterSkill,
+            atheistSkill,
+            womanetSkill,
+            loveSkill,
+            ironManSkill,
+            morgartSkill,
+        ]
     }
 })
 
@@ -72,8 +214,29 @@ export const knightCharacter = new Character({
         up: 6
     },
     skills: {
-        main: new Skill({} as any),
-        showable: []
+        main: attackKnightSkill,
+        showable: [
+            shieldSkill,
+            subwaysurfSkill,
+            gunSkill,
+            goGoSkill,
+            envellSkill,
+            kysSkill,
+            superSkill,
+            stfuLightSkill,
+            maadSkill,
+            grenadeSkill,
+            ironSkill,
+            gloveSkill,
+            breakSkill,
+            piglinsSkill,
+            phenixSkill,
+            crossSkill,
+            shieldPlusSkill,
+            whiteDefSkill,
+            lShieldSkill,
+            finishSkill,
+        ]
     }
 })
 
@@ -87,8 +250,31 @@ export const sorcererCharacter = new Character({
         up: 20
     },
     skills: {
-        main: new Skill({} as any),
-        showable: []
+        main: attackSorcererSkill,
+        showable: [
+            attackSorcererSkill,
+            iceSkill,
+            fimaSkill,
+            ashSkill,
+            sugarRainSkill,
+            fimaPlusSkill,
+            showerSkill,
+            creepSkill,
+            circleSkill,
+            yammySkill,
+            lStoreSkill,
+            lockShldSkill,
+            thndrSkill,
+            dblFghtSkill,
+            lstLgtSkill,
+            qsrSkill,
+            crptSkill,
+            chaosSkill,
+            godHealSkill,
+            chillSkill,
+            endSkill,
+            ktaroHiSkill,
+        ]
     }
 })
 
@@ -102,8 +288,30 @@ export const thiefCharacter = new Character({
         up: 11
     },
     skills: {
-        main: new Skill({} as any),
-        showable: []
+        main: attackThiefSkill,
+        showable: [
+            frarrSkill,
+            theftSkill,
+            invisSkill,
+            forkSkill,
+            hrdArrSkill,
+            orbitSkill,
+            crookSkill,
+            ffwfSkill,
+            maximSkill,
+            honeySkill,
+            keySkill,
+            blackSkill,
+            noSkillSkill,
+            twoHandSkill,
+            friendSkill,
+            hideSkill,
+            trSkill,
+            key85Skill,
+            clfrSkill,
+            asuraSkill,
+            gtaSkill,
+        ]
     }
 })
 
@@ -117,8 +325,29 @@ export const unknownCharacter = new Character({
         up: 0
     },
     skills: {
-        main: new Skill({} as any),
+        main: attackUnknownSkill,
         showable: []
+    }
+})
+
+export const bossCharacter = new Character({
+    hp: {
+        start: 2277,
+        up: 1
+    },
+    mana: {
+        start: 1961,
+        up: 1
+    },
+    skills: {
+        main: attackBossSkill,
+        showable: [
+            ...knightCharacter.skills.showable,
+            ...thiefCharacter.skills.showable,
+            ...sorcererCharacter.skills.showable,
+            ...engineerCharacter.skills.showable,
+            ...bardCharacter.skills.showable,
+        ]
     }
 })
 

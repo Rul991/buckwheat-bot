@@ -1,7 +1,5 @@
-import { MAX_CARD_RARITY, MIN_CARD_RARITY } from "../../consts/cards"
 import CardService from "../../db/services/card/CardService"
 import KeyboardCreator from "../../utils/keyboard/KeyboardCreator"
-import ArrayUtils from "../../utils/math/ArrayUtils"
 import CardCollectionScrollerButton from "../actions/callback-query/card/CardCollectionScrollerButton"
 import ShopCardListScrollerButton from "../actions/callback-query/card/ShopCardListScrollerButton"
 import SuggestCardButton from "../actions/callback-query/card/SuggestCardButton"

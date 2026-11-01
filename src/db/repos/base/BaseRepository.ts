@@ -2,7 +2,7 @@ import { getModelForClass, mongoose, type ReturnModelType } from "@typegoose/typ
 import type { AnyParamConstructor } from "@typegoose/typegoose/lib/types"
 import type { RepoExtends } from "../../../types/types"
 import type { ObjOrCallback } from "../../../types/callbacks"
-import type { QueryFilter } from "mongoose"
+import type { QueryFilter, QueryOptions } from "mongoose"
 
 type Filter<T extends AnyParamConstructor<any>> = QueryFilter<InstanceType<T>>
 type Result<T extends AnyParamConstructor<any>> = InstanceType<T> & { _id: mongoose.ObjectId }
@@ -14,14 +14,14 @@ export default class BaseRepository<T extends RepoExtends> {
         this.model = getModelForClass(obj)
     }
 
-    async updateOne(filter: Filter<T>, value: Filter<T>, upsert: boolean = false): Promise<Result<T> | undefined> {
+    async updateOne(filter: Filter<T>, value: Filter<T>, options?: QueryOptions): Promise<Result<T> | undefined> {
         return (await this.model.findOneAndUpdate(
             filter,
             value,
             {
                 returnDocument: 'after',
                 updatePipeline: value instanceof Array,
-                upsert
+                ...options
             }
         ).lean().exec()) as Result<T> | undefined
     }

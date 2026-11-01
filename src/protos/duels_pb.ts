@@ -4,12 +4,13 @@
 
 import type { GenEnum, GenFile } from "@bufbuild/protobuf/codegenv2";
 import { enumDesc, fileDesc } from "@bufbuild/protobuf/codegenv2";
+import { file_scroller } from "./scroller_pb";
 
 /**
  * Describes the file duels.proto.
  */
 export const file_duels: GenFile = /*@__PURE__*/
-  fileDesc("CgtkdWVscy5wcm90byotCgtTa2lsbEF0dGFjaxIICgRGYWlsEAASCgoGTm9ybWFsEAESCAoEQ3JpdBACYgZwcm90bzM");
+  fileDesc("CgtkdWVscy5wcm90byotCgtTa2lsbEF0dGFjaxIICgRGYWlsEAASCgoGTm9ybWFsEAESCAoEQ3JpdBACYgZwcm90bzM", [file_scroller]);
 
 /**
  * @generated from enum SkillAttack

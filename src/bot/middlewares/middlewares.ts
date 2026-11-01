@@ -2,6 +2,7 @@ import Balance from "../../db/entities/money/Balance"
 import ChatService from "../../db/services/chat/ChatService"
 import LinkedChatService from "../../db/services/chat/LinkedChatService"
 import DuelistService from "../../db/services/duel/DuelistService"
+import DuelService from "../../db/services/duel/DuelService"
 import LevelService from "../../db/services/level/LevelService"
 import BalanceService from "../../db/services/money/BalanceService"
 import UserService from "../../db/services/user/UserService"
@@ -9,6 +10,7 @@ import type { BotContext } from "../../types/bot"
 import ContextUtils from "../../utils/bot/ContextUtils"
 import LazyValue from "../../utils/cache/LazyValue"
 import RankUtils from "../../utils/db/RankUtils"
+import DuelUtils from "../../utils/duel/duel/DuelUtils"
 
 export const setContextVarsAndData = async (ctx: BotContext, next: () => Promise<void>) => {
     const id = ctx.from?.id
@@ -85,6 +87,15 @@ export const setContextVarsAndData = async (ctx: BotContext, next: () => Promise
         chat: new LazyValue(
             async () => {
                 return chatId ? await ChatService.get(chatId) : undefined
+            }
+        ),
+        duel: new LazyValue(
+            async () => {
+                const duel = chatId ? await DuelService.getByChatId(chatId) : undefined
+                if(!duel) return undefined
+                
+                if(DuelUtils.onDuel(duel, id)) return duel
+                return undefined
             }
         )
     }

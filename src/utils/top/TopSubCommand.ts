@@ -3,13 +3,14 @@ import type { TopValues, HandleSortedValuesOptions } from "../../types/top"
 
 type ConstructorOptions =
     & Pick<TopSubCommand, 'key' | 'getUnsortedValuesCallback'>
-    & Partial<Pick<TopSubCommand, 'type' | 'hasTotalCount' | 'hasWinner' | 'handleSortedValuesCallback'>>
+    & Partial<Pick<TopSubCommand, 'type' | 'hasTotalCount' | 'hasWinner' | 'handleSortedValuesCallback' | 'needSort'>>
 
 export default class TopSubCommand {
     key: string
     type: 'role' | 'top'
     hasTotalCount: boolean
     hasWinner: boolean
+    needSort: boolean
 
     getUnsortedValuesCallback: TopSubCommand['_getUnsortedValues']
     handleSortedValuesCallback: TopSubCommand['_handleSortedValues']
@@ -20,10 +21,12 @@ export default class TopSubCommand {
         hasTotalCount = true,
         hasWinner = hasTotalCount,
         getUnsortedValuesCallback,
-        handleSortedValuesCallback
+        handleSortedValuesCallback,
+        needSort = true
     }: ConstructorOptions) {
         this.key = key
         this.type = type
+        this.needSort = needSort
 
         this.hasTotalCount = hasTotalCount
         this.hasWinner = hasWinner
@@ -42,16 +45,19 @@ export default class TopSubCommand {
 
     async get(ctx: BotContext, chatId: number): Promise<TopValues[]> {
         const unsortedValues = await this._getUnsortedValues(ctx, chatId)
-        const sortedValues = unsortedValues.sort(
-            ({ value: a }, { value: b }) => {
-                if (typeof b == 'string' && typeof a == 'string') {
-                    return b.localeCompare(a)
-                }
-                else {
-                    return (b as number) - (a as number)
-                }
-            }
-        )
+        const sortedValues =
+            this.needSort ?
+                unsortedValues.sort(
+                    ({ value: a }, { value: b }) => {
+                        if (typeof b == 'string' && typeof a == 'string') {
+                            return b.localeCompare(a)
+                        }
+                        else {
+                            return (b as number) - (a as number)
+                        }
+                    }
+                ) :
+                unsortedValues
 
         const handledSortedValues = await this._handleSortedValues({
             chatId,

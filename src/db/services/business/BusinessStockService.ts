@@ -54,7 +54,9 @@ class BusinessStockService extends BaseService<typeof BusinessStock> {
                     totalIncome: 0
                 }
             },
-            true
+            {
+                upsert: true
+            }
         ))!
     }
 
