@@ -9,6 +9,8 @@ import PercentHealMethod from "../../../utils/duel/methods/heal/PercentHealMetho
 import PercentDamageMethod from "../../../utils/duel/methods/damage/PercentDamageMethod"
 import SimpleMoneyMethod from "../../../utils/duel/methods/money/SimpleMoneyMethod"
 import MoneyLevelMethod from "../../../utils/duel/methods/money/MoneyLevelMethod"
+import SimpleManaMethod from "../../../utils/duel/methods/mana/SimpleManaMethod"
+import PercentManaMethod from "../../../utils/duel/methods/mana/PercentManaMethod"
 
 // 2hand
 export const twoHandSkill = new Skill({
@@ -17,7 +19,7 @@ export const twoHandSkill = new Skill({
     key: 'thief/2hand',
     methods: {
         caster: [
-            // mana: [-400]
+            new SimpleManaMethod(-400),
         ],
         target: [
             // effect: ["2heff", 5]
@@ -33,7 +35,7 @@ export const angleSkill = new Skill({
     methods: {
         caster: [
             new SimpleHealMethod(200),
-            // mana: [-500]
+            new SimpleManaMethod(-500),
         ],
         target: [
             new SimpleDamageMethod(350)
@@ -48,7 +50,7 @@ export const angryPickSkill = new Skill({
     key: 'bard/angry-pick',
     methods: {
         caster: [
-            // mana: [-100]
+            new SimpleManaMethod(-100),
         ],
         target: [
             new RandomDamageMethod({ min: 50, max: 250 })
@@ -63,7 +65,7 @@ export const artifactSkill = new Skill({
     key: 'engineer/artifact',
     methods: {
         caster: [
-            // mana: [-150]
+            new SimpleManaMethod(-150),
         ],
         target: [
             // effect: ["psn35", 6]
@@ -78,11 +80,11 @@ export const ashSkill = new Skill({
     key: 'sorcerer/ash',
     methods: {
         caster: [
-            // mana: [-140]
+            new SimpleManaMethod(-140),
         ],
         target: [
             new SimpleDamageMethod(50),
-            // mana: [-60]
+            new SimpleManaMethod(-60),
         ]
     }
 })
@@ -94,7 +96,7 @@ export const asuraSkill = new Skill({
     key: 'thief/asura',
     methods: {
         caster: [
-            // mana: [-325]
+            new SimpleManaMethod(-325),
         ],
         target: [
             // effectHasntEffect: ["asuend", "asucont", 1]
@@ -110,12 +112,12 @@ export const atheistSkill = new Skill({
     key: 'engineer/atheist',
     methods: {
         caster: [
-            // mana: [-850]
+            new SimpleManaMethod(-850),
         ],
         target: [
             new SimpleDamageMethod(200),
             // effect: ["psn35", 5]
-            // precentMana: [-45]
+            new PercentManaMethod(-0.45)
         ]
     }
 })
@@ -217,7 +219,7 @@ export const attackUnknownSkill = new Skill({
     key: 'unknown/attack-unknown',
     methods: {
         caster: [
-            // mana: [1000000]
+            new SimpleManaMethod(1_000_000),
             new SimpleHealMethod(1_000_000),
         ],
         target: [
@@ -233,7 +235,7 @@ export const blackSkill = new Skill({
     key: 'thief/black',
     methods: {
         caster: [
-            // mana: [-200]
+            new SimpleManaMethod(-200),
         ],
         target: [
             // effect: ["reverse-skill", 1]
@@ -249,7 +251,7 @@ export const breakSkill = new Skill({
     methods: {
         caster: [
             new SimpleHealMethod(100),
-            // mana: [100]
+            new SimpleManaMethod(100),
         ],
         target: []
     }
@@ -262,7 +264,7 @@ export const chainTrapSkill = new Skill({
     key: 'engineer/chain-trap',
     methods: {
         caster: [
-            // mana: [-235]
+            new SimpleManaMethod(-235),
         ],
         target: [
             // effect: ["skip-step", 3]
@@ -277,7 +279,7 @@ export const chaosSkill = new Skill({
     key: 'sorcerer/chaos',
     methods: {
         caster: [
-            // mana: [-300]
+            new SimpleManaMethod(-300),
         ],
         target: [
             new RandomDamageMethod({ min: 66, max: 666 })
@@ -292,7 +294,7 @@ export const chiliRiffSkill = new Skill({
     key: 'bard/chili-riff',
     methods: {
         caster: [
-            // mana: [-200]
+            new SimpleManaMethod(-200),
         ],
         target: [
             // effect: ["fire", 7]
@@ -320,7 +322,7 @@ export const circleSkill = new Skill({
     key: 'sorcerer/circle',
     methods: {
         caster: [
-            // mana: [-175]
+            new SimpleManaMethod(-175),
         ],
         target: [
             // effect: ["energy", 4]
@@ -335,7 +337,7 @@ export const clfrSkill = new Skill({
     key: 'thief/clfr',
     methods: {
         caster: [
-            // mana: [-575]
+            new SimpleManaMethod(-575),
         ],
         target: [
             new DamageLevelMethod({ start: 45, up: 3 }),
@@ -351,7 +353,7 @@ export const coolArmorSkill = new Skill({
     key: 'engineer/cool-armor',
     methods: {
         caster: [
-            // mana: [-350]
+            new SimpleManaMethod(-350),
             // effectHasntEffect: ["armor-used", "defend", 350]
             // effectHasntEffect: ["armor-used", "armor-used", 999]
         ],
@@ -366,7 +368,7 @@ export const creepSkill = new Skill({
     key: 'sorcerer/creep',
     methods: {
         caster: [
-            // mana: [-340]
+            new SimpleManaMethod(-340),
         ],
         target: [
             // effect: ["zero-skill", 3]
@@ -381,7 +383,7 @@ export const crookSkill = new Skill({
     key: 'thief/crook',
     methods: {
         caster: [
-            // mana: [-150]
+            new SimpleManaMethod(-150),
         ],
         target: [
             new SimpleDamageMethod(120)
@@ -396,7 +398,7 @@ export const crossSkill = new Skill({
     key: 'knight/cross',
     methods: {
         caster: [
-            // mana: [-300]
+            new SimpleManaMethod(-300),
             // effect: ["invulnerable", 2]
         ],
         target: [
@@ -412,7 +414,7 @@ export const crptSkill = new Skill({
     key: 'sorcerer/crpt',
     methods: {
         caster: [
-            // mana: [-680]
+            new SimpleManaMethod(-680),
         ],
         target: [
             // effect: ["zero-skill", 7]
@@ -427,7 +429,7 @@ export const dblFghtSkill = new Skill({
     key: 'sorcerer/dblfght',
     methods: {
         caster: [
-            // mana: [-840]
+            new SimpleManaMethod(-840),
             // effect: ["damageup100", 7]
         ],
         target: [
@@ -443,7 +445,7 @@ export const drillSkill = new Skill({
     key: 'engineer/drill',
     methods: {
         caster: [
-            // mana: [-75]
+            new SimpleManaMethod(-75),
         ],
         target: [
             new LostHealthDamageMethod(75)
@@ -458,10 +460,10 @@ export const droneSkill = new Skill({
     key: 'engineer/drone',
     methods: {
         caster: [
-            // mana: [-100]
+            new SimpleManaMethod(-100),
         ],
         target: [
-            // mana: [-15]
+            new SimpleManaMethod(-15),
             // skipStep: []
         ]
     }
@@ -474,7 +476,7 @@ export const electroSkill = new Skill({
     key: 'engineer/electro',
     methods: {
         caster: [
-            // mana: [-250]
+            new SimpleManaMethod(-250),
         ],
         target: [
             // skipStep: []
@@ -490,7 +492,7 @@ export const endSkill = new Skill({
     key: 'sorcerer/end',
     methods: {
         caster: [
-            // mana: [-1250]
+            new SimpleManaMethod(-1250),
         ],
         target: [
             new RandomDamageMethod({ min: 1, max: 1500 })
@@ -505,7 +507,7 @@ export const envellSkill = new Skill({
     key: 'knight/envell',
     methods: {
         caster: [
-            // mana: [-85]
+            new SimpleManaMethod(-85),
         ],
         target: [
             // effect: ["invulnerable", 1]
@@ -520,7 +522,7 @@ export const feedbackSkill = new Skill({
     key: 'engineer/feedback',
     methods: {
         caster: [
-            // mana: [-225]
+            new SimpleManaMethod(-225),
         ],
         target: [
             // effect: ["return-damage", 1]
@@ -536,7 +538,7 @@ export const ffwfSkill = new Skill({
     key: 'thief/ffwf',
     methods: {
         caster: [
-            // mana: [-100]
+            new SimpleManaMethod(-100),
         ],
         target: [
             new SimpleDamageMethod(90),
@@ -552,7 +554,7 @@ export const fimaPlusSkill = new Skill({
     key: 'sorcerer/fima+',
     methods: {
         caster: [
-            // mana: [-75]
+            new SimpleManaMethod(-75),
         ],
         target: [
             // effect: ["fima-wait", 3]
@@ -567,7 +569,7 @@ export const fimaSkill = new Skill({
     key: 'sorcerer/fima',
     methods: {
         caster: [
-            // mana: [-65]
+            new SimpleManaMethod(-65),
         ],
         target: [
             // effect: ["zero-skill", 1]
@@ -583,7 +585,7 @@ export const finishSkill = new Skill({
     key: 'knight/finish',
     methods: {
         caster: [
-            // mana: [-635]
+            new SimpleManaMethod(-635),
         ],
         target: [
             new InstantKillDamageMethod(0.3)
@@ -598,7 +600,7 @@ export const flutterSkill = new Skill({
     key: 'engineer/flutter',
     methods: {
         caster: [
-            // mana: [-150]
+            new SimpleManaMethod(-150),
         ],
         target: [
             new DamageLevelMethod({ start: 38, up: 1.5 }),
@@ -613,7 +615,7 @@ export const forkSkill = new Skill({
     key: 'thief/fork',
     methods: {
         caster: [
-            // mana: [-50]
+            new SimpleManaMethod(-50),
         ],
         target: [
             // effect: ["clone", 10]
@@ -628,7 +630,7 @@ export const frarrSkill = new Skill({
     key: 'thief/frarr',
     methods: {
         caster: [
-            // mana: [-30]
+            new SimpleManaMethod(-30),
         ],
         target: [
             new DamageLevelMethod({ start: 15, up: 0.5 }),
@@ -645,7 +647,7 @@ export const friendSkill = new Skill({
     key: 'thief/friend',
     methods: {
         caster: [
-            // mana: [-700]
+            new SimpleManaMethod(-700),
             // effect: ["frnd", 3]
         ],
         target: []
@@ -659,7 +661,7 @@ export const gloveSkill = new Skill({
     key: 'knight/glove',
     methods: {
         caster: [
-            // mana: [-200]
+            new SimpleManaMethod(-200),
         ],
         target: [
             // effect: ["reverse-skill", 1]
@@ -674,7 +676,7 @@ export const goGoSkill = new Skill({
     key: 'knight/go-go',
     methods: {
         caster: [
-            // mana: [-50]
+            new SimpleManaMethod(-50),
         ],
         target: [
             // effect: ["skip-step", 1]
@@ -691,8 +693,7 @@ export const godHealSkill = new Skill({
     methods: {
         caster: [
             new PercentHealMethod(1),
-            // mana: [-1400]
-            // precentHeal: [100]
+            new SimpleManaMethod(-1400),
             // deleteEffects: [false]
         ],
         target: []
@@ -706,7 +707,7 @@ export const grenadeSkill = new Skill({
     key: 'knight/grenade',
     methods: {
         caster: [
-            // mana: [-200]
+            new SimpleManaMethod(-200),
         ],
         target: [
             new RandomDamageMethod({ min: 150, max: 250 }),
@@ -722,7 +723,7 @@ export const gtaSkill = new Skill({
     key: 'thief/gta',
     methods: {
         caster: [
-            // mana: [-950]
+            new SimpleManaMethod(-950),
         ],
         target: [
             new PercentDamageMethod(0.5),
@@ -738,11 +739,11 @@ export const guitarHeroSkill = new Skill({
     key: 'bard/guitar-hero',
     methods: {
         caster: [
-            // mana: [-650]
+            new SimpleManaMethod(-650),
         ],
         target: [
             // effect: ["skip-step", 2]
-            // mana: [-150]
+            new SimpleManaMethod(-150),
         ]
     }
 })
@@ -754,7 +755,7 @@ export const gunSkill = new Skill({
     key: 'knight/gun',
     methods: {
         caster: [
-            // mana: [-10]
+            new SimpleManaMethod(-10),
         ],
         target: [
             new DamageLevelMethod({ start: 25, up: 1.1 }),
@@ -769,7 +770,7 @@ export const hardRockSkill = new Skill({
     key: 'bard/hard-rock',
     methods: {
         caster: [
-            // mana: [-150]
+            new SimpleManaMethod(-150),
         ],
         target: [
             new RandomDamageMethod({ min: 0, max: 584 })
@@ -785,7 +786,7 @@ export const heroSongSkill = new Skill({
     methods: {
         caster: [
             new PercentHealMethod(0.5),
-            // precentMana: [-50]
+            new PercentManaMethod(-0.5),
         ],
         target: []
     }
@@ -798,7 +799,7 @@ export const hideSkill = new Skill({
     key: 'thief/hide',
     methods: {
         caster: [
-            // mana: [-480]
+            new SimpleManaMethod(-480),
             // effect: ["damageup100", 2]
         ],
         target: []
@@ -826,7 +827,7 @@ export const hrdArrSkill = new Skill({
     key: 'thief/hrdarr',
     methods: {
         caster: [
-            // mana: [-50]
+            new SimpleManaMethod(-50),
         ],
         target: [
             new DamageLevelMethod({ start: 30, up: 2 }),
@@ -841,7 +842,7 @@ export const iceSkill = new Skill({
     key: 'sorcerer/ice',
     methods: {
         caster: [
-            // mana: [-30]
+            new SimpleManaMethod(-30),
         ],
         target: [
             new SimpleDamageMethod(20),
@@ -857,7 +858,7 @@ export const invisSkill = new Skill({
     key: 'thief/invis',
     methods: {
         caster: [
-            // mana: [-100]
+            new SimpleManaMethod(-100),
             // effect: ["invulnerable", 1]
         ],
         target: []
@@ -886,7 +887,7 @@ export const ironSkill = new Skill({
     key: 'knight/iron',
     methods: {
         caster: [
-            // mana: [-200]
+            new SimpleManaMethod(-200),
             // effect: ["no-effects", 2]
             // deleteEffects: [false]
         ],
@@ -919,7 +920,7 @@ export const keySkill = new Skill({
     key: 'thief/key',
     methods: {
         caster: [
-            // mana: [-1]
+            new SimpleManaMethod(-1),
         ],
         target: [
             // deleteEffect: ["keyshld", false]
@@ -934,7 +935,7 @@ export const key85Skill = new Skill({
     key: 'thief/key85',
     methods: {
         caster: [
-            // mana: [-590]
+            new SimpleManaMethod(-590),
         ],
         target: [
             // effect: ["zero-skill", 6]
@@ -949,7 +950,7 @@ export const kingSongSkill = new Skill({
     key: 'bard/king-song',
     methods: {
         caster: [
-            // mana: [-175]
+            new SimpleManaMethod(-175),
         ],
         target: [
             // effect: ["king1", 2]
@@ -964,7 +965,7 @@ export const koffySkill = new Skill({
     key: 'bard/koffy',
     methods: {
         caster: [
-            // mana: [-250]
+            new SimpleManaMethod(-250),
             new SimpleHealMethod(100),
             // effect: ["invulnerable", 1]
         ],
@@ -992,7 +993,7 @@ export const kysSkill = new Skill({
     key: 'knight/kys',
     methods: {
         caster: [
-            // mana: [-50]
+            new SimpleManaMethod(-50),
         ],
         target: [
             // effect: ["self-attack", 1]
@@ -1007,7 +1008,7 @@ export const lampSkill = new Skill({
     key: 'bard/lamp',
     methods: {
         caster: [
-            // mana: [-100]
+            new SimpleManaMethod(-100),
             // effect: ["invulnerable", 1]
         ],
         target: []
@@ -1021,7 +1022,7 @@ export const laughSinSkill = new Skill({
     key: 'bard/laugh-sin',
     methods: {
         caster: [
-            // mana: [-45]
+            new SimpleManaMethod(-45),
         ],
         target: [
             // effect: ["ls1", 1]
@@ -1036,7 +1037,7 @@ export const lockShldSkill = new Skill({
     key: 'sorcerer/lockshld',
     methods: {
         caster: [
-            // mana: [-550]
+            new SimpleManaMethod(-550),
             // effect: ["keyshld", 4]
         ],
         target: []
@@ -1050,7 +1051,7 @@ export const loveSkill = new Skill({
     key: 'engineer/love',
     methods: {
         caster: [
-            // mana: [-450]
+            new SimpleManaMethod(-450),
             // effect: ["love-heal", 1]
         ],
         target: []
@@ -1064,7 +1065,7 @@ export const lShieldSkill = new Skill({
     key: 'knight/lshield',
     methods: {
         caster: [
-            // mana: [-350]
+            new SimpleManaMethod(-350),
             // effect: ["invulnerable", 3]
         ],
         target: []
@@ -1078,7 +1079,7 @@ export const lstLgtSkill = new Skill({
     key: 'sorcerer/lstlgt',
     methods: {
         caster: [
-            // mana: [-925]
+            new SimpleManaMethod(-925),
         ],
         target: [
             new SimpleDamageMethod(12),
@@ -1094,7 +1095,7 @@ export const lStoreSkill = new Skill({
     key: 'sorcerer/lstore',
     methods: {
         caster: [
-            // mana: [-450]
+            new SimpleManaMethod(-450),
             new SimpleHealMethod(200),
             // effect: ["damageup15", 3]
         ],
@@ -1109,7 +1110,7 @@ export const maadSkill = new Skill({
     key: 'knight/maad',
     methods: {
         caster: [
-            // mana: [-150]
+            new SimpleManaMethod(-150),
         ],
         target: [
             // effect: ["damageup-50", 5]
@@ -1138,7 +1139,7 @@ export const masterOfFieldSkill = new Skill({
     key: 'engineer/master-of-field',
     methods: {
         caster: [
-            // mana: [-160]
+            new SimpleManaMethod(-160),
         ],
         target: [
             // effect: ["damageup-40", 6]
@@ -1153,7 +1154,7 @@ export const maximSkill = new Skill({
     key: 'thief/maxim',
     methods: {
         caster: [
-            // mana: [-150]
+            new SimpleManaMethod(-150),
         ],
         target: [
             new RandomDamageMethod({ min: 0, max: 300 })
@@ -1168,7 +1169,7 @@ export const morgartSkill = new Skill({
     key: 'engineer/morgart',
     methods: {
         caster: [
-            // mana: [-900]
+            new SimpleManaMethod(-900),
             // effect: ["morgart-heal", 3]
         ],
         target: []
@@ -1182,7 +1183,7 @@ export const noSkillSkill = new Skill({
     key: 'thief/noskill',
     methods: {
         caster: [
-            // mana: [-500]
+            new SimpleManaMethod(-500),
         ],
         target: [
             // removeSkill: [0]
@@ -1197,7 +1198,7 @@ export const onSkySkill = new Skill({
     key: 'engineer/on-sky',
     methods: {
         caster: [
-            // mana: [-340]
+            new SimpleManaMethod(-340),
         ],
         target: [
             // effect: ["skip-step", 3]
@@ -1212,7 +1213,7 @@ export const oneTowerSkill = new Skill({
     key: 'engineer/one-tower',
     methods: {
         caster: [
-            // mana: [-14]
+            new SimpleManaMethod(-14),
         ],
         target: [
             new SimpleDamageMethod(28)
@@ -1227,7 +1228,7 @@ export const orbitSkill = new Skill({
     key: 'thief/orbit',
     methods: {
         caster: [
-            // mana: [-100]
+            new SimpleManaMethod(-100),
         ],
         target: [
             // effect: ["skip-step", 1]
@@ -1243,7 +1244,7 @@ export const phantomSkill = new Skill({
     key: 'engineer/phantom',
     methods: {
         caster: [
-            // mana: [-100]
+            new SimpleManaMethod(-100),
             // effect: ["skip-damage", 5]
         ],
         target: []
@@ -1257,12 +1258,12 @@ export const phenixSkill = new Skill({
     key: 'knight/phenix',
     methods: {
         caster: [
-            // mana: [-450]
+            new SimpleManaMethod(-450),
             new SimpleHealMethod(200),
         ],
         target: [
             new SimpleDamageMethod(100),
-            // mana: [-200]
+            new SimpleManaMethod(-200),
         ]
     }
 })
@@ -1274,7 +1275,7 @@ export const piglinsSkill = new Skill({
     key: 'knight/piglins',
     methods: {
         caster: [
-            // mana: [-350]
+            new SimpleManaMethod(-350),
         ],
         target: [
             // effect: ["damageup-50", 8]
@@ -1289,7 +1290,7 @@ export const punkRockSkill = new Skill({
     key: 'bard/punk-rock',
     methods: {
         caster: [
-            // mana: [-300]
+            new SimpleManaMethod(-300),
             // effect: ["good-punk", 3]
         ],
         target: []
@@ -1304,10 +1305,10 @@ export const qsrSkill = new Skill({
     methods: {
         caster: [
             // effect: ["skip-step", 2]
-            // mana: [-200]
+            new SimpleManaMethod(-200),
         ],
         target: [
-            // precentDamage: [30]
+            new PercentDamageMethod(0.3)
         ]
     }
 })
@@ -1319,7 +1320,7 @@ export const rockVoidSkill = new Skill({
     key: 'engineer/rock-void',
     methods: {
         caster: [
-            // mana: [-1]
+            new SimpleManaMethod(-1),
         ],
         target: [
             new SimpleDamageMethod(8)
@@ -1334,7 +1335,7 @@ export const scaryNotesSkill = new Skill({
     key: 'bard/scary-notes',
     methods: {
         caster: [
-            // mana: [-50]
+            new SimpleManaMethod(-50),
         ],
         target: [
             new SimpleDamageMethod(40),
@@ -1350,7 +1351,7 @@ export const shieldPlusSkill = new Skill({
     key: 'knight/shield+',
     methods: {
         caster: [
-            // mana: [-50]
+            new SimpleManaMethod(-50),
             // effectLevel: ["defend", 5, 1.75]
         ],
         target: []
@@ -1364,7 +1365,7 @@ export const shieldSkill = new Skill({
     key: 'knight/shield',
     methods: {
         caster: [
-            // mana: [-10]
+            new SimpleManaMethod(-10),
             // effectLevel: ["defend", 3, 1]
         ],
         target: []
@@ -1378,7 +1379,7 @@ export const showerSkill = new Skill({
     key: 'sorcerer/shower',
     methods: {
         caster: [
-            // mana: [-60]
+            new SimpleManaMethod(-60),
         ],
         target: [
             // effect: ["shower-cont", 4]
@@ -1393,7 +1394,7 @@ export const sleepMelodySkill = new Skill({
     key: 'bard/sleep-melody',
     methods: {
         caster: [
-            // mana: [60]
+            new SimpleManaMethod(60),
         ],
         target: []
     }
@@ -1406,7 +1407,7 @@ export const sleepSkill = new Skill({
     key: 'engineer/sleep',
     methods: {
         caster: [
-            // mana: [-220]
+            new SimpleManaMethod(-220),
             // effect: ["heal50", 6]
         ],
         target: []
@@ -1420,7 +1421,7 @@ export const staySkill = new Skill({
     key: 'bard/stay',
     methods: {
         caster: [
-            // mana: [-100]
+            new SimpleManaMethod(-100),
             // effect: ["2precent-heal", 3]
         ],
         target: []
@@ -1434,7 +1435,7 @@ export const stfuLightSkill = new Skill({
     key: 'knight/stfu-light',
     methods: {
         caster: [
-            // mana: [-75]
+            new SimpleManaMethod(-75),
             // effect: ["stfu-energy", 5]
         ],
         target: []
@@ -1448,7 +1449,7 @@ export const stringSkill = new Skill({
     key: 'bard/string',
     methods: {
         caster: [
-            // mana: [-3]
+            new SimpleManaMethod(-3),
         ],
         target: [
             new SimpleDamageMethod(16)
@@ -1463,7 +1464,7 @@ export const subwaysurfSkill = new Skill({
     key: 'knight/subwaysurf',
     methods: {
         caster: [
-            // mana: [-5]
+            new SimpleManaMethod(-5),
         ],
         target: [
             new DamageLevelMethod({ start: 25, up: 0.25 }),
@@ -1478,7 +1479,7 @@ export const sugarRainSkill = new Skill({
     key: 'sorcerer/sugar-rain',
     methods: {
         caster: [
-            // mana: [-65]
+            new SimpleManaMethod(-65),
         ],
         target: [
             new SimpleDamageMethod(40),
@@ -1494,7 +1495,7 @@ export const sunUpSkill = new Skill({
     key: 'bard/sun-up',
     methods: {
         caster: [
-            // mana: [-550]
+            new SimpleManaMethod(-550),
         ],
         target: [
             new SimpleDamageMethod(300),
@@ -1510,7 +1511,7 @@ export const superSkill = new Skill({
     key: 'knight/super',
     methods: {
         caster: [
-            // mana: [-80]
+            new SimpleManaMethod(-80),
             // effect: ["poison-bullet", 5]
         ],
         target: []
@@ -1524,7 +1525,7 @@ export const theftSkill = new Skill({
     key: 'thief/theft',
     methods: {
         caster: [
-            // mana: [-20]
+            new SimpleManaMethod(-20),
         ],
         target: [
             new MoneyLevelMethod({
@@ -1542,7 +1543,7 @@ export const thndrSkill = new Skill({
     key: 'sorcerer/thndr',
     methods: {
         caster: [
-            // mana: [-675]
+            new SimpleManaMethod(-675),
         ],
         target: [
             new SimpleDamageMethod(75),
@@ -1558,7 +1559,7 @@ export const towerSkill = new Skill({
     key: 'engineer/tower',
     methods: {
         caster: [
-            // mana: [-200]
+            new SimpleManaMethod(-200),
         ],
         target: [
             // effect: ["skip-skill", 1]
@@ -1575,7 +1576,7 @@ export const trSkill = new Skill({
     key: 'thief/tr',
     methods: {
         caster: [
-            // mana: [-1000]
+            new SimpleManaMethod(-1000),
         ],
         target: [
             // useSkillIndex: [0]
@@ -1591,11 +1592,11 @@ export const weDieSkill = new Skill({
     key: 'bard/we-die',
     methods: {
         caster: [
-            // precentMana: [-15]
+            new PercentManaMethod(-0.15),
         ],
         target: [
             new PercentDamageMethod(0.05),
-            // precentMana: [-10]
+            new PercentManaMethod(-0.1),
         ]
     }
 })
@@ -1607,7 +1608,7 @@ export const whiteDefSkill = new Skill({
     key: 'knight/white-def',
     methods: {
         caster: [
-            // mana: [-300]
+            new SimpleManaMethod(-300),
             // effect: ["damageup25", 10]
         ],
         target: []
@@ -1621,7 +1622,7 @@ export const whiteDefenderSkill = new Skill({
     key: 'bard/white-defender',
     methods: {
         caster: [
-            // mana: [-20]
+            new SimpleManaMethod(-20),
             // effect: ["defend", 25]
         ],
         target: []
@@ -1635,7 +1636,7 @@ export const womanetSkill = new Skill({
     key: 'engineer/womanet',
     methods: {
         caster: [
-            // mana: [-500]
+            new SimpleManaMethod(-500),
         ],
         target: [
             // effect: ["robot", 10]
@@ -1650,7 +1651,7 @@ export const woodSwordSkill = new Skill({
     key: 'engineer/wood-sword',
     methods: {
         caster: [
-            // mana: [-50]
+            new SimpleManaMethod(-50),
         ],
         target: [
             // effect: ["sword-effect", 7]
@@ -1665,7 +1666,7 @@ export const yammySkill = new Skill({
     key: 'sorcerer/yammy',
     methods: {
         caster: [
-            // mana: [-400]
+            new SimpleManaMethod(-400),
         ],
         target: [
             // effect: ["meatfall", 10]
@@ -1680,7 +1681,7 @@ export const yeahRockSkill = new Skill({
     key: 'bard/yeah-rock',
     methods: {
         caster: [
-            // mana: [-100]
+            new SimpleManaMethod(-100),
         ],
         target: [
             new RandomDamageMethod({ min: 75, max: 150 })

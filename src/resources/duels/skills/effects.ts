@@ -113,7 +113,7 @@ export const damageupMinus40Skill = new Skill({
 
 // damageup-5
 export const damageupMinus5Skill = new Skill({
-    id: 10010,
+    id: 1010,
     level: 1,
     key: 'sorcerer/damageup-5',
     methods: {
@@ -124,7 +124,7 @@ export const damageupMinus5Skill = new Skill({
 
 // damageup-50
 export const damageupMinus50Skill = new Skill({
-    id: 10011,
+    id: 1011,
     level: 1,
     key: 'knight/damageup-50',
     methods: {
@@ -135,7 +135,7 @@ export const damageupMinus50Skill = new Skill({
 
 // damageup-60
 export const damageupMinus60Skill = new Skill({
-    id: 10012,
+    id: 1012,
     level: 1,
     key: 'engineer/damageup-60',
     methods: {
@@ -146,7 +146,7 @@ export const damageupMinus60Skill = new Skill({
 
 // damageup100
 export const damageup100Skill = new Skill({
-    id: 10013,
+    id: 1013,
     level: 1,
     key: 'universal/damageup100',
     methods: {
@@ -157,7 +157,7 @@ export const damageup100Skill = new Skill({
 
 // damageup15
 export const damageup15Skill = new Skill({
-    id: 10014,
+    id: 1014,
     level: 1,
     key: 'sorcerer/damageup15',
     methods: {
@@ -168,7 +168,7 @@ export const damageup15Skill = new Skill({
 
 // damageup40
 export const damageup40Skill = new Skill({
-    id: 10015,
+    id: 1015,
     level: 1,
     key: 'bard/damageup40',
     methods: {
@@ -179,7 +179,7 @@ export const damageup40Skill = new Skill({
 
 // dead-punk
 export const deadPunkSkill = new Skill({
-    id: 10016,
+    id: 1016,
     level: 1,
     key: 'bard/dead-punk',
     methods: {
@@ -192,7 +192,7 @@ export const deadPunkSkill = new Skill({
 
 // defend
 export const defendSkill = new Skill({
-    id: 10017,
+    id: 1017,
     level: 1,
     key: 'universal/defend',
     methods: {
@@ -203,7 +203,7 @@ export const defendSkill = new Skill({
 
 // delete-energy
 export const deleteEnergySkill = new Skill({
-    id: 10018,
+    id: 1018,
     level: 1,
     key: 'knight/delete-energy',
     methods: {
@@ -216,7 +216,7 @@ export const deleteEnergySkill = new Skill({
 
 // energy
 export const energySkill = new Skill({
-    id: 10019,
+    id: 1019,
     level: 1,
     key: 'sorcerer/energy',
     methods: {
@@ -229,7 +229,7 @@ export const energySkill = new Skill({
 
 // fima-boom
 export const fimaBoomSkill = new Skill({
-    id: 10020,
+    id: 1020,
     level: 1,
     key: 'sorcerer/fima-boom',
     methods: {
@@ -242,7 +242,7 @@ export const fimaBoomSkill = new Skill({
 
 // fima-wait
 export const fimaWaitSkill = new Skill({
-    id: 10021,
+    id: 1021,
     level: 1,
     key: 'sorcerer/fima-wait',
     methods: {
@@ -255,7 +255,7 @@ export const fimaWaitSkill = new Skill({
 
 // fire-guitar
 export const fireGuitarSkill = new Skill({
-    id: 10022,
+    id: 1022,
     level: 1,
     key: 'bard/fire-guitar',
     methods: {
@@ -266,7 +266,7 @@ export const fireGuitarSkill = new Skill({
 
 // fire
 export const fireSkill = new Skill({
-    id: 10023,
+    id: 1023,
     level: 1,
     key: 'bard/fire',
     methods: {
@@ -279,7 +279,7 @@ export const fireSkill = new Skill({
 
 // freff+
 export const freffPlusSkill = new Skill({
-    id: 10024,
+    id: 1024,
     level: 1,
     key: 'thief/freff+',
     methods: {
@@ -292,7 +292,7 @@ export const freffPlusSkill = new Skill({
 
 // freff
 export const freffSkill = new Skill({
-    id: 10025,
+    id: 1025,
     level: 1,
     key: 'thief/freff',
     methods: {
@@ -305,7 +305,7 @@ export const freffSkill = new Skill({
 
 // frnd
 export const frndSkill = new Skill({
-    id: 10026,
+    id: 1026,
     level: 1,
     key: 'thief/frnd',
     methods: {
@@ -319,7 +319,7 @@ export const frndSkill = new Skill({
 
 // good-punk
 export const goodPunkSkill = new Skill({
-    id: 10027,
+    id: 1027,
     level: 1,
     key: 'bard/good-punk',
     methods: {
@@ -333,7 +333,7 @@ export const goodPunkSkill = new Skill({
 
 // hashon
 export const hashonSkill = new Skill({
-    id: 10028,
+    id: 1028,
     level: 1,
     key: 'thief/hashon',
     methods: {
@@ -344,7 +344,7 @@ export const hashonSkill = new Skill({
 
 // heal50
 export const heal50Skill = new Skill({
-    id: 10029,
+    id: 1029,
     level: 1,
     key: 'engineer/heal50',
     methods: {
@@ -357,7 +357,7 @@ export const heal50Skill = new Skill({
 
 // invulnerable
 export const invulnerableSkill = new Skill({
-    id: 10030,
+    id: 1030,
     level: 1,
     key: 'universal/invulnerable',
     methods: {
@@ -368,7 +368,7 @@ export const invulnerableSkill = new Skill({
 
 // keyshld
 export const keyShldSkill = new Skill({
-    id: 10031,
+    id: 1031,
     level: 1,
     key: 'sorcerer/keyshld',
     methods: {
@@ -381,7 +381,7 @@ export const keyShldSkill = new Skill({
 
 // king1
 export const king1Skill = new Skill({
-    id: 10032,
+    id: 1032,
     level: 1,
     key: 'bard/king1',
     methods: {
@@ -395,7 +395,7 @@ export const king1Skill = new Skill({
 
 // king2
 export const king2Skill = new Skill({
-    id: 10033,
+    id: 1033,
     level: 1,
     key: 'bard/king2',
     methods: {
@@ -408,7 +408,7 @@ export const king2Skill = new Skill({
 
 // love-heal
 export const loveHealSkill = new Skill({
-    id: 10034,
+    id: 1034,
     level: 1,
     key: 'engineer/love-heal',
     methods: {
@@ -421,7 +421,7 @@ export const loveHealSkill = new Skill({
 
 // ls1
 export const ls1Skill = new Skill({
-    id: 10035,
+    id: 1035,
     level: 5,
     key: 'bard/ls1',
     methods: {
@@ -435,7 +435,7 @@ export const ls1Skill = new Skill({
 
 // ls2
 export const ls2Skill = new Skill({
-    id: 10036,
+    id: 1036,
     level: 5,
     key: 'bard/ls2',
     methods: {
@@ -449,7 +449,7 @@ export const ls2Skill = new Skill({
 
 // ls3
 export const ls3Skill = new Skill({
-    id: 10037,
+    id: 1037,
     level: 5,
     key: 'bard/ls3',
     methods: {
@@ -463,7 +463,7 @@ export const ls3Skill = new Skill({
 
 // ls4
 export const ls4Skill = new Skill({
-    id: 10038,
+    id: 1038,
     level: 5,
     key: 'bard/ls4',
     methods: {
@@ -477,7 +477,7 @@ export const ls4Skill = new Skill({
 
 // ls5
 export const ls5Skill = new Skill({
-    id: 10039,
+    id: 1039,
     level: 5,
     key: 'bard/ls5',
     methods: {
@@ -490,7 +490,7 @@ export const ls5Skill = new Skill({
 
 // mana50
 export const mana50Skill = new Skill({
-    id: 10040,
+    id: 1040,
     level: 1,
     key: 'sorcerer/mana50',
     methods: {
@@ -503,7 +503,7 @@ export const mana50Skill = new Skill({
 
 // meatfall
 export const meatfallSkill = new Skill({
-    id: 10041,
+    id: 1041,
     level: 1,
     key: 'sorcerer/meatfall',
     methods: {
@@ -516,7 +516,7 @@ export const meatfallSkill = new Skill({
 
 // morgart-heal
 export const morgartHealSkill = new Skill({
-    id: 10042,
+    id: 1042,
     level: 1,
     key: 'engineer/morgart-heal',
     methods: {
@@ -529,7 +529,7 @@ export const morgartHealSkill = new Skill({
 
 // no-Skills
 export const noSkillsSkill = new Skill({
-    id: 10043,
+    id: 1043,
     level: 1,
     key: 'knight/no-Skills',
     methods: {
@@ -542,7 +542,7 @@ export const noSkillsSkill = new Skill({
 
 // omlet
 export const omletSkill = new Skill({
-    id: 10044,
+    id: 1044,
     level: 1,
     key: 'thief/omlet',
     methods: {
@@ -555,7 +555,7 @@ export const omletSkill = new Skill({
 
 // poison-10
 export const poison10Skill = new Skill({
-    id: 10045,
+    id: 1045,
     level: 15,
     key: 'bard/poison-10',
     methods: {
@@ -568,7 +568,7 @@ export const poison10Skill = new Skill({
 
 // poison-bullet
 export const poisonBulletSkill = new Skill({
-    id: 10046,
+    id: 1046,
     level: 1,
     key: 'knight/poison-bullet',
     methods: {
@@ -579,7 +579,7 @@ export const poisonBulletSkill = new Skill({
 
 // poison
 export const poisonSkill = new Skill({
-    id: 10047,
+    id: 1047,
     level: 1,
     key: 'knight/poison',
     methods: {
@@ -592,7 +592,7 @@ export const poisonSkill = new Skill({
 
 // psn10
 export const psn10Skill = new Skill({
-    id: 10048,
+    id: 1048,
     level: 1,
     key: 'sorcerer/psn10',
     methods: {
@@ -605,7 +605,7 @@ export const psn10Skill = new Skill({
 
 // psn35
 export const psn35Skill = new Skill({
-    id: 10049,
+    id: 1049,
     level: 1,
     key: 'engineer/psn35',
     methods: {
@@ -618,7 +618,7 @@ export const psn35Skill = new Skill({
 
 // rain-cont
 export const rainContSkill = new Skill({
-    id: 10050,
+    id: 1050,
     level: 1,
     key: 'sorcerer/rain-cont',
     methods: {
@@ -631,7 +631,7 @@ export const rainContSkill = new Skill({
 
 // return-damage
 export const returnDamageSkill = new Skill({
-    id: 10051,
+    id: 1051,
     level: 1,
     key: 'engineer/return-damage',
     methods: {
@@ -644,7 +644,7 @@ export const returnDamageSkill = new Skill({
 
 // reverse-skill
 export const reverseSkillSkill = new Skill({
-    id: 10052,
+    id: 1052,
     level: 1,
     key: 'universal/reverse-skill',
     methods: {
@@ -655,7 +655,7 @@ export const reverseSkillSkill = new Skill({
 
 // robot
 export const robotSkill = new Skill({
-    id: 10053,
+    id: 1053,
     level: 1,
     key: 'engineer/robot',
     methods: {
@@ -668,7 +668,7 @@ export const robotSkill = new Skill({
 
 // self-attack
 export const selfAttackSkill = new Skill({
-    id: 10054,
+    id: 1054,
     level: 1,
     key: 'knight/self-attack',
     methods: {
@@ -681,7 +681,7 @@ export const selfAttackSkill = new Skill({
 
 // shower-cont
 export const showerContSkill = new Skill({
-    id: 10055,
+    id: 1055,
     level: 1,
     key: 'sorcerer/shower-cont',
     methods: {
@@ -696,7 +696,7 @@ export const showerContSkill = new Skill({
 
 // skip-damage
 export const skipDamageSkill = new Skill({
-    id: 10056,
+    id: 1056,
     level: 1,
     key: 'engineer/skip-damage',
     methods: {
@@ -707,7 +707,7 @@ export const skipDamageSkill = new Skill({
 
 // skip-skill
 export const skipSkillSkill = new Skill({
-    id: 10057,
+    id: 1057,
     level: 1,
     key: 'universal/skip-skill',
     methods: {
@@ -718,7 +718,7 @@ export const skipSkillSkill = new Skill({
 
 // skip-step
 export const skipStepSkill = new Skill({
-    id: 10058,
+    id: 1058,
     level: 1,
     key: 'universal/skip-step',
     methods: {
@@ -731,7 +731,7 @@ export const skipStepSkill = new Skill({
 
 // stfu-energy
 export const stfuEnergySkill = new Skill({
-    id: 10059,
+    id: 1059,
     level: 1,
     key: 'knight/stfu-energy',
     methods: {
@@ -744,7 +744,7 @@ export const stfuEnergySkill = new Skill({
 
 // sword-Skill
 export const swordSkillSkill = new Skill({
-    id: 10060,
+    id: 1060,
     level: 1,
     key: 'engineer/sword-Skill',
     methods: {
@@ -757,7 +757,7 @@ export const swordSkillSkill = new Skill({
 
 // thndr-eff
 export const thndrEffSkill = new Skill({
-    id: 10061,
+    id: 1061,
     level: 1,
     key: 'sorcerer/thndr-eff',
     methods: {
@@ -771,7 +771,7 @@ export const thndrEffSkill = new Skill({
 
 // tower-continue
 export const towerContinueSkill = new Skill({
-    id: 10062,
+    id: 1062,
     level: 1,
     key: 'engineer/tower-continue',
     methods: {
@@ -784,7 +784,7 @@ export const towerContinueSkill = new Skill({
 
 // used-mana-up
 export const usedManaUpSkill = new Skill({
-    id: 10063,
+    id: 1063,
     level: 1,
     key: 'bard/used-mana-up',
     methods: {
@@ -795,7 +795,7 @@ export const usedManaUpSkill = new Skill({
 
 // zero-skill
 export const zeroSkillSkill = new Skill({
-    id: 10064,
+    id: 1064,
     level: 1,
     key: 'universal/zero-skill',
     methods: {

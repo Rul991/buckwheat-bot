@@ -1,0 +1,13 @@
+include /utils/emojies.pug
+
+- 
+    const texts = [
+        `${CLASS_EMOJIES['knight']} Рыцарь`,
+        `${CLASS_EMOJIES['thief']} Вор`,
+        `${CLASS_EMOJIES['sorcerer']} Маг`,
+        `${CLASS_EMOJIES['engineer']} Инженер`,
+        `${CLASS_EMOJIES['bard']} Бард`,
+        `${EMOJIES.EFFECT} Эффекты`,
+    ]
+
+| #{texts[type]}

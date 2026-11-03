@@ -6,6 +6,8 @@ import RankUtils from "../../../../utils/db/RankUtils"
 import CallbackQueryAction from "../../base/CallbackQueryAction"
 import SkillRegistry from "../../../../utils/duel/skill/SkillRegistry"
 import SelectedSkillsService from "../../../../db/services/duel/SelectedSkillsService"
+import MessageUtils from "../../../../utils/bot/MessageUtils"
+import SkillPresenter from "../../../../utils/duel/skill/SkillPresenter"
 
 class SkillRemoveButton extends CallbackQueryAction<SkillRemoveButtonData> {
     override schema: GenMessage<SkillRemoveButtonData> = SkillRemoveButtonDataSchema
@@ -42,6 +44,18 @@ class SkillRemoveButton extends CallbackQueryAction<SkillRemoveButtonData> {
             id,
             skill
         })
+
+        if(isRemoved) {
+            const {
+                key,
+                options: messageOptions
+            } = await SkillPresenter.menu(ctx)
+            await MessageUtils.editText(
+                ctx,
+                key,
+                messageOptions
+            )
+        }
 
         return {
             key: `skills/message/remove/${isRemoved ? 'done' : 'fail'}`,

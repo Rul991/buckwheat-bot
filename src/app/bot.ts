@@ -227,6 +227,9 @@ import SkillAddScrollerButton from "../bot/actions/callback-query/skills/SkillAd
 import SkillShowButton from "../bot/actions/callback-query/skills/SkillShowButton"
 import SkillAddButton from "../bot/actions/callback-query/skills/SkillAddButton"
 import SkillRemoveButton from "../bot/actions/callback-query/skills/SkillRemoveButton"
+import SkillBookMenuButton from "../bot/actions/callback-query/skills/SkillBookMenuButton"
+import SkillBookScrollerButton from "../bot/actions/callback-query/skills/SkillBookScrollerButton"
+import SkillBookCommand from "../bot/actions/commands/buckwheat/duel/SkillBookCommand"
 
 export const runBot = async () => {
     const bot = new TelegramBot()
@@ -376,6 +379,8 @@ export const runBot = async () => {
                 SkillShowButton,
                 SkillAddButton,
                 SkillRemoveButton,
+                SkillBookMenuButton,
+                SkillBookScrollerButton,
             ),
 
         new MessageHandler()
@@ -493,6 +498,7 @@ export const runBot = async () => {
                 new NoteCommand(),
                 new BusinessCommand(),
                 new SkillCommand(),
+                new SkillBookCommand(),
             ),
 
         new PhotoActionHandler()

@@ -1,6 +1,6 @@
 include /utils/mixins.pug
 
-mixin methods(emoji, title, texts)
+mixin method(emoji, title, texts)
     if texts.length
         +heading(emoji)
             | На #{title}:
@@ -8,24 +8,31 @@ mixin methods(emoji, title, texts)
         for text in texts
             | !{text}
             |
+        |
+        |
+
+mixin methods(casterMethods, targetMethods)
+    +method(EMOJIES.TARGET, 'цель', targetMethods)
+    +method(EMOJIES.CASTER, 'заклинателя', casterMethods)
+
+mixin skill_heading(skill)
+    +heading(EMOJIES.SKILL)
+        | #{skill.title}
+    |
 
 mixin skill(options)
     - 
         const {
-            className,
             skill,
             targetMethods,
             casterMethods
         } = options
 
-    +heading(CLASS_EMOJIES[className] || EMOJIES.PLAYER)
-        | #{skill.title}
-    |
+    +skill_heading(skill)
     blockquote !{skill.description}
     |
     +plain_code_param(`${EMOJIES.LEVEL} Нужный уровень`, formatNumber(skill.level))
     |
     |
     |
-    +methods(EMOJIES.TARGET, 'цель', targetMethods)
-    +methods(EMOJIES.CASTER, 'заклинателя', casterMethods)
+    +methods(casterMethods, targetMethods)

@@ -1,0 +1,5 @@
+include ./mixins.pug
+
++message()
+    | #{method.coef >= 0 ? '+' : ''}#{formatNumber(method.coef * 100)}%
+| , если #{EMOJIES.HP} < 0

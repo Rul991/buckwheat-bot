@@ -1,12 +1,14 @@
 import { MAX_SELECTED_SKILLS_COUNT } from "../../consts/number"
 import SelectedSkillsService from "../../db/services/duel/SelectedSkillsService"
-import { SkillShowType } from "../../protos/skills_pb"
+import { SkillBookScrollerType, SkillShowType } from "../../protos/skills_pb"
 import SkillRegistry from "../../utils/duel/skill/SkillRegistry"
 import KeyboardCreator from "../../utils/keyboard/KeyboardCreator"
 import ExperienceUtils from "../../utils/level/ExperienceUtils"
+import ArrayUtils from "../../utils/math/ArrayUtils"
 import SelectedSkillsMenuButton from "../actions/callback-query/skills/SelectedSkillsMenuButton"
 import SkillAddButton from "../actions/callback-query/skills/SkillAddButton"
 import SkillAddScrollerButton from "../actions/callback-query/skills/SkillAddScrollerButton"
+import SkillBookScrollerButton from "../actions/callback-query/skills/SkillBookScrollerButton"
 import SkillRemoveButton from "../actions/callback-query/skills/SkillRemoveButton"
 import SkillShowButton from "../actions/callback-query/skills/SkillShowButton"
 
@@ -178,6 +180,79 @@ export const selectedSkillKeyboard = KeyboardCreator.create<{
                     }
                 })
             )
+        return keyboard.toFlowed(1)
+    }
+)
+
+export const skillBookStartKeyboard = KeyboardCreator.create<{
+    id: number
+}>(
+    async ({
+        ctx,
+        data,
+        keyboard
+    }) => {
+        const id = BigInt(data.id)
+
+        for (const i of ArrayUtils.range(
+            SkillBookScrollerType.Knight,
+            SkillBookScrollerType.Effect
+        )) {
+            keyboard.add(
+                SkillBookScrollerButton.button({
+                    ctx,
+                    data: {
+                        type: i as SkillBookScrollerType,
+                        data: {
+                            id,
+                            $typeName: 'ScrollerData',
+                            data: {
+                                case: 'update',
+                                value: false
+                            }
+                        },
+                    },
+                    key: 'skills/button/book'
+                })
+            )
+        }
+        return keyboard.toFlowed(1)
+    }
+)
+
+export const skillBookShowKeyboard = KeyboardCreator.create<{
+    id: number
+    page: number
+    type: SkillBookScrollerType
+}>(
+    async ({
+        ctx,
+        data,
+        keyboard
+    }) => {
+        const id = BigInt(data.id)
+        const {
+            page,
+            type
+        } = data
+
+        keyboard.add(
+            SkillBookScrollerButton.button({
+                ctx,
+                data: {
+                    type,
+                    data: {
+                        $typeName: 'ScrollerData',
+                        id,
+                        data: {
+                            case: 'page',
+                            value: page
+                        }
+                    }
+                },
+                key: 'button/back'
+            })
+        )
         return keyboard.toFlowed(1)
     }
 )

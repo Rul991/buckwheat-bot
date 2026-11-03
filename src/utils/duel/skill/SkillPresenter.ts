@@ -1,4 +1,4 @@
-import { selectedSkillsMenuKeyboard } from "../../../bot/keyboards/skills"
+import { selectedSkillsMenuKeyboard, skillBookStartKeyboard } from "../../../bot/keyboards/skills"
 import DuelistService from "../../../db/services/duel/DuelistService"
 import LevelService from "../../../db/services/level/LevelService"
 import UserService from "../../../db/services/user/UserService"
@@ -114,9 +114,6 @@ export default class SkillPresenter {
             attack
         } = options
 
-        const user = await ctx.vars.user.require()
-        const className = user.className
-
         return {
             key: 'skills/message/show',
             vars: {
@@ -124,7 +121,6 @@ export default class SkillPresenter {
                     ...skill,
                     ...skill.getVars(ctx)
                 },
-                className,
                 casterMethods: await this._getSkillMethodsText({
                     ctx,
                     methods: skill.methods.caster,
@@ -137,6 +133,21 @@ export default class SkillPresenter {
                     type: showType,
                     attack
                 }),
+            }
+        }
+    }
+
+    static async bookMenu(ctx: BotContext) {
+        const id = ctx.vars.id
+        return {
+            key: 'skills/message/book/menu',
+            options: {
+                keyboard: await skillBookStartKeyboard(
+                    ctx,
+                    {
+                        id
+                    }
+                )
             }
         }
     }

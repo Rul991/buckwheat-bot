@@ -1,0 +1,4 @@
+include ./mixins.pug
+
++message()
+    | #{method.manaCoef >= 0 ? '+' : ''}#{formatNumber(method.manaCoef * 100)}%

@@ -20,7 +20,8 @@ const envSchema = object({
     START_MESSAGE: string().max(2048).default('Good morning, I’m awake!'),
     SPECIAL_IDS: string()
         .transform(s => s.trim() === "" ? [] : s.split(","))
-        .pipe(specialIdSchema.array()),
+        .pipe(specialIdSchema.array())
+        .default([]),
 })
 
 const envData = envSchema.parse(env)

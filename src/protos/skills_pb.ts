@@ -12,7 +12,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file skills.proto.
  */
 export const file_skills: GenFile = /*@__PURE__*/
-  fileDesc("Cgxza2lsbHMucHJvdG8iKgocU2VsZWN0ZWRTa2lsbHNNZW51QnV0dG9uRGF0YRIKCgJpZBgBIAEoBCJsChNTa2lsbFNob3dCdXR0b25EYXRhEgoKAmlkGAEgASgEEg8KB3NraWxsSWQYAiABKA0SHAoEdHlwZRgDIAEoDjIOLlNraWxsU2hvd1R5cGUSEQoEcGFnZRgEIAEoDUgAiAEBQgcKBV9wYWdlIjkKGlNraWxsQWRkU2Nyb2xsZXJCdXR0b25EYXRhEhsKBGRhdGEYASABKAsyDS5TY3JvbGxlckRhdGEiMQoSU2tpbGxBZGRCdXR0b25EYXRhEgoKAmlkGAEgASgEEg8KB3NraWxsSWQYAiABKA0iNAoVU2tpbGxSZW1vdmVCdXR0b25EYXRhEgoKAmlkGAEgASgEEg8KB3NraWxsSWQYAiABKA0qOgoNU2tpbGxTaG93VHlwZRIICgREdWVsEAASBwoDQWRkEAESDAoIU2VsZWN0ZWQQAhIICgRCb29rEANiBnByb3RvMw", [file_scroller]);
+  fileDesc("Cgxza2lsbHMucHJvdG8iKgocU2VsZWN0ZWRTa2lsbHNNZW51QnV0dG9uRGF0YRIKCgJpZBgBIAEoBCKwAQoTU2tpbGxTaG93QnV0dG9uRGF0YRIKCgJpZBgBIAEoBBIPCgdza2lsbElkGAIgASgNEhwKBHR5cGUYAyABKA4yDi5Ta2lsbFNob3dUeXBlEhEKBHBhZ2UYBCABKA1IAIgBARIxCgxzY3JvbGxlclR5cGUYBSABKA4yFi5Ta2lsbEJvb2tTY3JvbGxlclR5cGVIAYgBAUIHCgVfcGFnZUIPCg1fc2Nyb2xsZXJUeXBlIjkKGlNraWxsQWRkU2Nyb2xsZXJCdXR0b25EYXRhEhsKBGRhdGEYASABKAsyDS5TY3JvbGxlckRhdGEiMQoSU2tpbGxBZGRCdXR0b25EYXRhEgoKAmlkGAEgASgEEg8KB3NraWxsSWQYAiABKA0iNAoVU2tpbGxSZW1vdmVCdXR0b25EYXRhEgoKAmlkGAEgASgEEg8KB3NraWxsSWQYAiABKA0iJQoXU2tpbGxCb29rTWVudUJ1dHRvbkRhdGESCgoCaWQYASABKAQiYAobU2tpbGxCb29rU2Nyb2xsZXJCdXR0b25EYXRhEhsKBGRhdGEYASABKAsyDS5TY3JvbGxlckRhdGESJAoEdHlwZRgCIAEoDjIWLlNraWxsQm9va1Njcm9sbGVyVHlwZSo6Cg1Ta2lsbFNob3dUeXBlEggKBER1ZWwQABIHCgNBZGQQARIMCghTZWxlY3RlZBACEggKBEJvb2sQAypgChVTa2lsbEJvb2tTY3JvbGxlclR5cGUSCgoGS25pZ2h0EAASCQoFVGhpZWYQARIMCghTb3JjZXJlchACEgwKCEVuZ2luZWVyEAMSCAoEQmFyZBAEEgoKBkVmZmVjdBAFYgZwcm90bzM", [file_scroller]);
 
 /**
  * @generated from message SelectedSkillsMenuButtonData
@@ -64,6 +64,13 @@ export type SkillShowButtonData = Message<"SkillShowButtonData"> & {
    * @generated from field: optional uint32 page = 4;
    */
   page?: number | undefined;
+
+  /**
+   * scroller type
+   *
+   * @generated from field: optional SkillBookScrollerType scrollerType = 5;
+   */
+  scrollerType?: SkillBookScrollerType | undefined;
 };
 
 /**
@@ -143,6 +150,47 @@ export const SkillRemoveButtonDataSchema: GenMessage<SkillRemoveButtonData> = /*
   messageDesc(file_skills, 4);
 
 /**
+ * @generated from message SkillBookMenuButtonData
+ */
+export type SkillBookMenuButtonData = Message<"SkillBookMenuButtonData"> & {
+  /**
+   * user's id
+   *
+   * @generated from field: uint64 id = 1;
+   */
+  id: bigint;
+};
+
+/**
+ * Describes the message SkillBookMenuButtonData.
+ * Use `create(SkillBookMenuButtonDataSchema)` to create a new message.
+ */
+export const SkillBookMenuButtonDataSchema: GenMessage<SkillBookMenuButtonData> = /*@__PURE__*/
+  messageDesc(file_skills, 5);
+
+/**
+ * @generated from message SkillBookScrollerButtonData
+ */
+export type SkillBookScrollerButtonData = Message<"SkillBookScrollerButtonData"> & {
+  /**
+   * @generated from field: ScrollerData data = 1;
+   */
+  data?: ScrollerData | undefined;
+
+  /**
+   * @generated from field: SkillBookScrollerType type = 2;
+   */
+  type: SkillBookScrollerType;
+};
+
+/**
+ * Describes the message SkillBookScrollerButtonData.
+ * Use `create(SkillBookScrollerButtonDataSchema)` to create a new message.
+ */
+export const SkillBookScrollerButtonDataSchema: GenMessage<SkillBookScrollerButtonData> = /*@__PURE__*/
+  messageDesc(file_skills, 6);
+
+/**
  * @generated from enum SkillShowType
  */
 export enum SkillShowType {
@@ -180,4 +228,45 @@ export enum SkillShowType {
  */
 export const SkillShowTypeSchema: GenEnum<SkillShowType> = /*@__PURE__*/
   enumDesc(file_skills, 0);
+
+/**
+ * @generated from enum SkillBookScrollerType
+ */
+export enum SkillBookScrollerType {
+  /**
+   * @generated from enum value: Knight = 0;
+   */
+  Knight = 0,
+
+  /**
+   * @generated from enum value: Thief = 1;
+   */
+  Thief = 1,
+
+  /**
+   * @generated from enum value: Sorcerer = 2;
+   */
+  Sorcerer = 2,
+
+  /**
+   * @generated from enum value: Engineer = 3;
+   */
+  Engineer = 3,
+
+  /**
+   * @generated from enum value: Bard = 4;
+   */
+  Bard = 4,
+
+  /**
+   * @generated from enum value: Effect = 5;
+   */
+  Effect = 5,
+}
+
+/**
+ * Describes the enum SkillBookScrollerType.
+ */
+export const SkillBookScrollerTypeSchema: GenEnum<SkillBookScrollerType> = /*@__PURE__*/
+  enumDesc(file_skills, 1);
 

@@ -10,7 +10,6 @@ import type Skill from "../../../../utils/duel/skill/Skill"
 import { characters } from "../../../../resources/duels/characters/characters"
 import SelectedSkillsMenuButton from "./SelectedSkillsMenuButton"
 import ExperienceUtils from "../../../../utils/level/ExperienceUtils"
-import SkillPresenter from "../../../../utils/duel/skill/SkillPresenter"
 import SkillShowButton from "./SkillShowButton"
 import ClassUtils from "../../../../utils/db/ClassUtils"
 
@@ -83,19 +82,11 @@ class SkillAddScrollerButton extends ScrollerButton<Object, ScrollerData> {
 
     protected override async _editMessage(options: ScrollerButtonEditMessageOptions<Object, ScrollerData>): Promise<ScrollerButtonEditMessageResult> {
         const {
-            ctx
+            
         } = options
 
-        const {
-            key,
-            options: {
-                vars
-            }
-        } = await SkillPresenter.menu(ctx)
-
         return {
-            key,
-            vars
+            key: 'skills/message/add/list',
         }
     }
 }

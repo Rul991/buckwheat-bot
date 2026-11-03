@@ -14,11 +14,11 @@ class SkillAddButton extends CallbackQueryAction<SkillAddButtonData> {
     override minimumRank: number = RankUtils.min
     override settingId: number = 184
     override name: string = 'skadd'
-    
+
     protected override async _getId(options: CallbackQueryActionOptions<SkillAddButtonData>): Promise<number | number[] | undefined> {
         return Number(options.data.id)
     }
-    
+
     protected override async _execute(options: CallbackQueryActionOptions<SkillAddButtonData>): Promise<CallbackQueryExecuteResult> {
         const {
             data,
@@ -28,11 +28,11 @@ class SkillAddButton extends CallbackQueryAction<SkillAddButtonData> {
         } = options
 
         const {
-            skillId
+            skillId,
         } = data
 
         const skill = SkillRegistry.get(skillId)
-        if(!skill) {
+        if (!skill) {
             return {
                 key: 'skills/message/not-exist'
             }
@@ -51,17 +51,19 @@ class SkillAddButton extends CallbackQueryAction<SkillAddButtonData> {
             level,
             skill
         })
-        if(!canAdd) {
+        if (!canAdd) {
             return {
                 key: 'skills/message/add/fail'
             }
         }
 
-        await SelectedSkillsService.add({
-            chatId,
-            id,
-            skill
-        })
+        await Promise.all([
+            SelectedSkillsService.add({
+                chatId,
+                id,
+                skill
+            }),
+        ])
 
         return {
             key: 'skills/message/add/done',

@@ -3,7 +3,7 @@ import type { EditMediaOptions, InvoiceOptions, ReplyMediaOptions, ReplyOptions 
 import ExceptionUtils from "../exceptions/ExceptionUtils"
 import type { Dices } from "../../types/unions"
 import Logger from "../logs/Logger"
-import type { Message } from "grammy/types"
+import type { InlineKeyboardMarkup, Message } from "grammy/types"
 import RandomUtils from "../math/RandomUtils"
 import ContextUtils from "./ContextUtils"
 import { InputMediaBuilder } from "grammy"
@@ -254,6 +254,17 @@ export default class MessageUtils {
                     other
                 )
                 return Boolean(result)
+            },
+            false
+        )
+    }
+
+    static async editKeyboard(ctx: BotContext, markup: InlineKeyboardMarkup) {
+        return await ExceptionUtils.handleAsync(
+            async () => {
+                return Boolean(await ctx.editMessageReplyMarkup({
+                    reply_markup: markup
+                }))
             },
             false
         )

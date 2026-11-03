@@ -8,7 +8,6 @@ enum SkillShowType {
     Book = 3; // in skill book
 }
 
-// 'knight' | 'thief' | 'sorcerer' | 'engineer' | 'bard'
 enum SkillBookScrollerType {
     Knight = 0;
     Thief = 1;
@@ -27,6 +26,7 @@ message SkillShowButtonData {
     uint32 skillId = 2; // skill's id
     SkillShowType type = 3; // skill show type
     optional uint32 page = 4; // back page index
+    optional SkillBookScrollerType scrollerType = 5; // scroller type
 }
 
 message SkillAddScrollerButtonData {

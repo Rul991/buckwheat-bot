@@ -1,5 +1,5 @@
 import type { GenMessage } from "@bufbuild/protobuf/codegenv2"
-import { type SkillShowButtonData, SkillShowButtonDataSchema, SkillShowType } from "../../../../protos/skills_pb"
+import { SkillBookScrollerType, type SkillShowButtonData, SkillShowButtonDataSchema, SkillShowType } from "../../../../protos/skills_pb"
 import type { CallbackQueryActionOptions } from "../../../../types/action-options"
 import type { CallbackQueryExecuteResult } from "../../../../types/results"
 import RankUtils from "../../../../utils/db/RankUtils"
@@ -8,7 +8,7 @@ import SkillRegistry from "../../../../utils/duel/skill/SkillRegistry"
 import MessageUtils from "../../../../utils/bot/MessageUtils"
 import SkillPresenter from "../../../../utils/duel/skill/SkillPresenter"
 import type { BotContext } from "../../../../types/bot"
-import { addSkillKeyboard, selectedSkillKeyboard } from "../../../keyboards/skills"
+import { addSkillKeyboard, selectedSkillKeyboard, skillBookShowKeyboard } from "../../../keyboards/skills"
 
 class SkillShowButton extends CallbackQueryAction<SkillShowButtonData> {
     override schema: GenMessage<SkillShowButtonData> = SkillShowButtonDataSchema
@@ -26,8 +26,12 @@ class SkillShowButton extends CallbackQueryAction<SkillShowButtonData> {
         const {
             page = 0,
             skillId,
-            type
+            type,
+            scrollerType = SkillBookScrollerType.Knight
         } = ctx.actionData
+
+        const skill = SkillRegistry.get(skillId)
+        if(!skill) return undefined
 
         if(type == SkillShowType.Duel) {
 
@@ -52,7 +56,14 @@ class SkillShowButton extends CallbackQueryAction<SkillShowButtonData> {
             )
         }
         else if(type == SkillShowType.Book) {
-
+            return await skillBookShowKeyboard(
+                ctx,
+                {
+                    id,
+                    page,
+                    type: scrollerType
+                }
+            )
         }
 
         return undefined
