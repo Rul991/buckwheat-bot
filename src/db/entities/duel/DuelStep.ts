@@ -8,10 +8,10 @@ export default class DuelStep extends BaseEntity {
     @prop()
     duelist: number
 
-    @prop({ unique: true })
+    @prop({ index: true })
     chatId: number
 
-    @prop({ index: true })
+    @prop()
     createdAt: Date
 
     constructor({

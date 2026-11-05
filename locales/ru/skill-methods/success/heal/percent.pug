@@ -2,3 +2,5 @@ include ./mixins.pug
 
 +message()
     | #{method.healCoef >= 0 ? '+' : ''}#{formatNumber(method.healCoef * 100)}%
+    if data
+        |  (#{formatNumber(data)})

@@ -40,7 +40,7 @@ export default class LevelCommand extends BuckwheatCommand {
                 vars: {
                     level: currentLevel,
                     reply,
-                    percents
+                    levelPercents: percents
                 }
             }
         }

@@ -31,3 +31,8 @@ export const BUCKWHEAT_STAKE_PRICE = 5
 export const MAX_BUSINESS_STAKES = 100_000
 export const MIN_BUSINESS_STOCK_PRICE = 0
 export const MAX_BUSINESS_STOCK_PRICE = 15_000_000
+
+export const MIN_DUEL_PRIZE = 10
+export const MAX_DUEL_PRIZE = 4_000_000_000
+export const MIN_DUEL_STEPS_FOR_LEVEL = 15
+export const DUEL_EXPERIENCE_PER_STEP = 10

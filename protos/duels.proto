@@ -1,5 +1,4 @@
 syntax = "proto3";
-import "scroller.proto";
 
 enum SkillAttack {
     Fail = 0;
@@ -7,5 +6,33 @@ enum SkillAttack {
     Crit = 2;
 }
 
-// skills
+message DuelYesButtonData {
+    uint64 replyId = 1; // reply's id
+    uint64 suggesterId = 2; // suggester's id
+    uint32 prize = 3; // duel's prize
+}
 
+message DuelNoButtonData {
+    uint64 replyId = 1; // reply's id
+    uint64 suggesterId = 2; // suggester's id
+}
+
+message DuelFightButtonData {
+
+}
+
+message DuelAwayButtonData {
+    
+}
+
+message DuelEffectsButtonData {
+
+}
+
+message DuelSkillsButtonData {
+
+}
+
+message DuelSkillUseButtonData {
+    uint32 skillId = 1; // skill's id
+}

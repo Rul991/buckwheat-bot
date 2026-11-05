@@ -2,15 +2,145 @@
 // @generated from file duels.proto (syntax proto3)
 /* eslint-disable */
 
-import type { GenEnum, GenFile } from "@bufbuild/protobuf/codegenv2";
-import { enumDesc, fileDesc } from "@bufbuild/protobuf/codegenv2";
-import { file_scroller } from "./scroller_pb";
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import { enumDesc, fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
+import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file duels.proto.
  */
 export const file_duels: GenFile = /*@__PURE__*/
-  fileDesc("CgtkdWVscy5wcm90byotCgtTa2lsbEF0dGFjaxIICgRGYWlsEAASCgoGTm9ybWFsEAESCAoEQ3JpdBACYgZwcm90bzM", [file_scroller]);
+  fileDesc("CgtkdWVscy5wcm90byJIChFEdWVsWWVzQnV0dG9uRGF0YRIPCgdyZXBseUlkGAEgASgEEhMKC3N1Z2dlc3RlcklkGAIgASgEEg0KBXByaXplGAMgASgNIjgKEER1ZWxOb0J1dHRvbkRhdGESDwoHcmVwbHlJZBgBIAEoBBITCgtzdWdnZXN0ZXJJZBgCIAEoBCIVChNEdWVsRmlnaHRCdXR0b25EYXRhIhQKEkR1ZWxBd2F5QnV0dG9uRGF0YSIXChVEdWVsRWZmZWN0c0J1dHRvbkRhdGEiFgoURHVlbFNraWxsc0J1dHRvbkRhdGEiKQoWRHVlbFNraWxsVXNlQnV0dG9uRGF0YRIPCgdza2lsbElkGAEgASgNKi0KC1NraWxsQXR0YWNrEggKBEZhaWwQABIKCgZOb3JtYWwQARIICgRDcml0EAJiBnByb3RvMw");
+
+/**
+ * @generated from message DuelYesButtonData
+ */
+export type DuelYesButtonData = Message<"DuelYesButtonData"> & {
+  /**
+   * reply's id
+   *
+   * @generated from field: uint64 replyId = 1;
+   */
+  replyId: bigint;
+
+  /**
+   * suggester's id
+   *
+   * @generated from field: uint64 suggesterId = 2;
+   */
+  suggesterId: bigint;
+
+  /**
+   * duel's prize
+   *
+   * @generated from field: uint32 prize = 3;
+   */
+  prize: number;
+};
+
+/**
+ * Describes the message DuelYesButtonData.
+ * Use `create(DuelYesButtonDataSchema)` to create a new message.
+ */
+export const DuelYesButtonDataSchema: GenMessage<DuelYesButtonData> = /*@__PURE__*/
+  messageDesc(file_duels, 0);
+
+/**
+ * @generated from message DuelNoButtonData
+ */
+export type DuelNoButtonData = Message<"DuelNoButtonData"> & {
+  /**
+   * reply's id
+   *
+   * @generated from field: uint64 replyId = 1;
+   */
+  replyId: bigint;
+
+  /**
+   * suggester's id
+   *
+   * @generated from field: uint64 suggesterId = 2;
+   */
+  suggesterId: bigint;
+};
+
+/**
+ * Describes the message DuelNoButtonData.
+ * Use `create(DuelNoButtonDataSchema)` to create a new message.
+ */
+export const DuelNoButtonDataSchema: GenMessage<DuelNoButtonData> = /*@__PURE__*/
+  messageDesc(file_duels, 1);
+
+/**
+ * @generated from message DuelFightButtonData
+ */
+export type DuelFightButtonData = Message<"DuelFightButtonData"> & {
+};
+
+/**
+ * Describes the message DuelFightButtonData.
+ * Use `create(DuelFightButtonDataSchema)` to create a new message.
+ */
+export const DuelFightButtonDataSchema: GenMessage<DuelFightButtonData> = /*@__PURE__*/
+  messageDesc(file_duels, 2);
+
+/**
+ * @generated from message DuelAwayButtonData
+ */
+export type DuelAwayButtonData = Message<"DuelAwayButtonData"> & {
+};
+
+/**
+ * Describes the message DuelAwayButtonData.
+ * Use `create(DuelAwayButtonDataSchema)` to create a new message.
+ */
+export const DuelAwayButtonDataSchema: GenMessage<DuelAwayButtonData> = /*@__PURE__*/
+  messageDesc(file_duels, 3);
+
+/**
+ * @generated from message DuelEffectsButtonData
+ */
+export type DuelEffectsButtonData = Message<"DuelEffectsButtonData"> & {
+};
+
+/**
+ * Describes the message DuelEffectsButtonData.
+ * Use `create(DuelEffectsButtonDataSchema)` to create a new message.
+ */
+export const DuelEffectsButtonDataSchema: GenMessage<DuelEffectsButtonData> = /*@__PURE__*/
+  messageDesc(file_duels, 4);
+
+/**
+ * @generated from message DuelSkillsButtonData
+ */
+export type DuelSkillsButtonData = Message<"DuelSkillsButtonData"> & {
+};
+
+/**
+ * Describes the message DuelSkillsButtonData.
+ * Use `create(DuelSkillsButtonDataSchema)` to create a new message.
+ */
+export const DuelSkillsButtonDataSchema: GenMessage<DuelSkillsButtonData> = /*@__PURE__*/
+  messageDesc(file_duels, 5);
+
+/**
+ * @generated from message DuelSkillUseButtonData
+ */
+export type DuelSkillUseButtonData = Message<"DuelSkillUseButtonData"> & {
+  /**
+   * skill's id
+   *
+   * @generated from field: uint32 skillId = 1;
+   */
+  skillId: number;
+};
+
+/**
+ * Describes the message DuelSkillUseButtonData.
+ * Use `create(DuelSkillUseButtonDataSchema)` to create a new message.
+ */
+export const DuelSkillUseButtonDataSchema: GenMessage<DuelSkillUseButtonData> = /*@__PURE__*/
+  messageDesc(file_duels, 6);
 
 /**
  * @generated from enum SkillAttack

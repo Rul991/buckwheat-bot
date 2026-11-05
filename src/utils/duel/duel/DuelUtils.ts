@@ -1,13 +1,24 @@
 import type Duel from "../../../db/entities/duel/Duel"
+import Logger from "../../logs/Logger"
 import MathUtils from "../../math/MathUtils"
 
 export default class DuelUtils {
     static getEnemy(duel: Duel, currentDuelist: number): number {
         const index = duel.duelists.indexOf(currentDuelist)
         const newIndex = MathUtils.wrap(
-            index,
+            index + 1,
             0,
             duel.duelists.length - 1
+        )
+
+        Logger.debug(
+            'DuelUtils.getEnemy',
+            {
+                index,
+                newIndex,
+                duelists: duel.duelists,
+                currentDuelist
+            }
         )
         return duel.duelists[newIndex]!
     }

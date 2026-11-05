@@ -1,0 +1,7 @@
+include ./mixins.pug
+
++message()
+    if showType == 'info'
+        | #{formatNumber(method.money.start)} + #{formatNumber(method.money.up)} * (ваш ур. - 1)
+    else
+        | #{formatNumber(data)}

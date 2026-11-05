@@ -11,8 +11,11 @@ export default class RandomDamageMethod extends BaseDamageMethod {
         return RandomUtils.range(min, max)
     }
 
-    constructor(damage: RandomDamageMethod['damage']) {
+    constructor(min: number, max: number) {
         super()
-        this.damage = damage
+        this.damage = {
+            min,
+            max
+        }
     }
 }

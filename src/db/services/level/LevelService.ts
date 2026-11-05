@@ -50,6 +50,9 @@ class LevelService extends BaseService<typeof Level> {
                 prevExperience: ExperienceUtils.min,
                 currentExperience: ExperienceUtils.min,
                 isLevelUpChecked: true
+            },
+            {
+                upsert: true
             }
         )
     }

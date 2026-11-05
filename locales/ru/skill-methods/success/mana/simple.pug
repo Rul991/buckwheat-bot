@@ -1,4 +1,4 @@
 include ./mixins.pug
 
 +message()
-    | #{method.mana >= 0 ? '+' : ''}#{formatNumber(method.mana)}
+    | #{method.mana >= 0 ? '+' : ''}#{formatNumber(data || method.mana)}

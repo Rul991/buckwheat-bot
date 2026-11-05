@@ -1,0 +1,11 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.DECLINE} Игрок 
++link(user)
+|  
+if isSuggester
+    | отменил дуэль
+else
+    | отказался от дуэли с игроком 
+    +id_link(suggester)
+| !

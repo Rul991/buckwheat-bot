@@ -5,4 +5,5 @@ include ./mixins.pug
         | #{formatNumber(method.damage)}
     else
         | #{formatNumber(data)}
-|  (чем меньше у вас #{EMOJIES.HP}, тем больше урон)
+if showType != 'attack'
+    |  (чем меньше #{EMOJIES.HP} у заклинателя, тем больше урон)

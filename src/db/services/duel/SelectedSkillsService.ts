@@ -18,7 +18,7 @@ type IndexOptions = {
     index: number
 }
 
-type CanAddOptions = {
+type CanOptions = {
     className: ClassTypes
     level: number
     chatId: number
@@ -54,11 +54,25 @@ class SelectedSkillsService extends BaseService<typeof SelectedSkills> {
         const selectedSkills = await this.get(chatId, id)
         const skills = selectedSkills.skills
 
-        return skills
+        const availableSkills = skills
             .map(id => {
                 return SkillRegistry.get(id)
             })
             .filter(v => v !== undefined)
+
+        if(skills.length != availableSkills.length) {
+            await this._repo.updateOne(
+                {
+                    chatId,
+                    id
+                },
+                {
+                    skills: availableSkills.map(v => v.id)
+                }
+            )
+        }
+
+        return availableSkills
     }
 
     async add({
@@ -96,10 +110,11 @@ class SelectedSkillsService extends BaseService<typeof SelectedSkills> {
             ],
             {
                 upsert: true,
+                returnDocument: 'before'
             }
         )
 
-        return (result && result.skills.find(v => v == skill.id)) !== undefined
+        return Boolean(result && !result.skills.some(v => v == skill.id))
     }
 
     async remove({ chatId, id, skill }: SkillOptions): Promise<boolean> {
@@ -150,15 +165,33 @@ class SelectedSkillsService extends BaseService<typeof SelectedSkills> {
         skill,
         level,
         className
-    }: CanAddOptions) {
-        const canAdd = characters[className].canAdd(
+    }: CanOptions) {
+        const canAdd = characters[className].canUse(
             skill,
             level
-        )
+        ) ?? true
         if(!canAdd) return false
         
         const skills = await this.get(chatId, id)
-        return skills.skills.length < MAX_SELECTED_SKILLS_COUNT && !skills.skills.find(v => v == skill.id)
+        return skills.skills.length < MAX_SELECTED_SKILLS_COUNT && !skills.skills.some(v => v == skill.id)
+    }
+
+    async canUse({
+        chatId,
+        id,
+        skill,
+        level,
+        className
+    }: CanOptions) {
+        const canUse = characters[className].canUse(
+            skill,
+            level
+        )
+        if(canUse === undefined) return true
+        if(!canUse) return false
+        
+        const skills = await this.get(chatId, id)
+        return !skills.skills.some(v => v == skill.id)
     }
 }
 

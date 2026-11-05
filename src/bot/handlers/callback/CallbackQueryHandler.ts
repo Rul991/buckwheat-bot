@@ -72,13 +72,12 @@ export default class CallbackQueryHandler extends RankedHandler<CallbackQueryAct
                     id,
                     chatId
                 })
-                if(!result) return next()
 
                 const {
                     isAlert,
                     key,
                     vars
-                } = result
+                } = result ?? {}
 
                 await AlertUtils.show(
                     ctx,

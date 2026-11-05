@@ -127,6 +127,22 @@ export default class SkillExecutor {
             target: targetType
         } = options
 
+        const {
+            methods: {
+                caster: casterMethods,
+                target: targetMethods
+            }
+        } = skill
+        if(casterMethods.length + targetMethods.length <= 0) {
+            return {
+                ok: true,
+                datas: {
+                    caster: [],
+                    target: []
+                }
+            }
+        }
+
         const duel = await ctx.vars.duel.get()
         if (!duel) {
             return {
@@ -134,13 +150,6 @@ export default class SkillExecutor {
                 failText: ctx.t('duel/message/not-exist')
             }
         }
-
-        const {
-            methods: {
-                caster: casterMethods,
-                target: targetMethods
-            }
-        } = skill
 
         const casterId = ctx.vars.id
         const chatId = ctx.vars.chatId!

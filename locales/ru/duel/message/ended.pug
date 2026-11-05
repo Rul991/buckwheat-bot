@@ -1,0 +1,12 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.WIN} Поздравляю игрока 
+u
+    +id_link(winner)
+|  с победой в дуэли с игроком 
++link(loser)
+| !
+| #{EMOJIES.PRIZE} Победитель получает #{formatNumber(prize)}#{EMOJIES.MONEY}!
+if experience > 0
+    |
+    | #{EMOJIES.LEVEL} Все получают #{formatNumber(experience)} опыта!

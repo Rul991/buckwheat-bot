@@ -78,11 +78,17 @@ mixin heading(emoji, hasBottomPadding = true)
         |
         |
 
-mixin plain_bold_param(title, value)
-    |
-    | #{title}: 
-    b #{value}
-    |
+mixin plain_bold_param(title, value, paddingAfter = false)
+    if paddingAfter
+        | #{title}: 
+        b #{value}
+        |
+        |
+    else
+        |
+        | #{title}: 
+        b #{value}
+        |
 
 mixin plain_code_param(title, value)
     |

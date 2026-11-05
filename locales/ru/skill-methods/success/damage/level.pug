@@ -2,6 +2,6 @@ include ./mixins.pug
 
 +message()
     if showType == 'info'
-        | #{formatNumber(method.damage.start - method.damage.up)} + (#{formatNumber(method.damage.up)} * ваш уровень)
+        | #{formatNumber(method.damage.start)} + #{formatNumber(method.damage.up)} * (ваш ур. - 1)
     else
         | #{formatNumber(data)}

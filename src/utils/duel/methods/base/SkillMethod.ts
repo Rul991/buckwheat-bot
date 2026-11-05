@@ -44,7 +44,8 @@ export default abstract class SkillMethod {
         const {
             ctx,
             data,
-            showType
+            showType,
+            boost = 1
         } = options
 
         return ctx.t(
@@ -52,7 +53,8 @@ export default abstract class SkillMethod {
             {
                 data,
                 method: this,
-                showType
+                showType,
+                boost
             }
         )
     }

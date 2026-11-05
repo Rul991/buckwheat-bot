@@ -12,6 +12,8 @@ import InventoryItemService from "../../../../../db/services/items/InventoryItem
 import UserService from "../../../../../db/services/user/UserService"
 import type User from "../../../../../db/entities/user/User"
 import BalanceService from "../../../../../db/services/money/BalanceService"
+import DuelPresenter from "../../../../../utils/duel/duel/DuelPresenter"
+import Duel from "../../../../../db/entities/duel/Duel"
 
 type GetUserOptions = {
     chatId: number
@@ -108,9 +110,14 @@ export default class DevCommand extends BuckwheatCommand {
         }
 
         await this._giveMoney(chatId, id)
-        return {
-            key: 'dev/done'
-        }
+        return await DuelPresenter.fight({
+            duel: new Duel({
+                chatId,
+                duelists: [id, 7960196031],
+                prize: 10
+            }),
+            ctx
+        })
     }
 
     private async _prod(_options: BuckwheatCommandOptions): Promise<BuckwheatCommandExecuteResult> {

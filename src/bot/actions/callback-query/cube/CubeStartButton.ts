@@ -14,6 +14,7 @@ import { setTimeout } from "node:timers/promises"
 import { CUBE_DROP_TIME } from "../../../../consts/time"
 import GameService from "../../../../db/services/game/GameService"
 import Logger from "../../../../utils/logs/Logger"
+import AdminUtils from "../../../../utils/bot/AdminUtils"
 
 type DenyOptions = {
     ctx: BotContext
@@ -282,26 +283,33 @@ class CubeStartButton extends CallbackQueryAction<CubeStartButtonData> {
         const winnerUser = winner == firstUserId ? firstUser : secondUser
         const loserUser = loser == firstUserId ? firstUser : secondUser
 
-        await MessageUtils.reply(
-            ctx,
-            'cube/game-result',
-            {
-                vars: {
-                    winner: winnerUser,
-                    loser: loserUser,
-                    boost,
-                    prize,
-                    first: {
-                        user: firstUser,
-                        dice: firstDice
-                    },
-                    second: {
-                        user: secondUser,
-                        dice: secondDice
+        await Promise.all([
+            MessageUtils.reply(
+                ctx,
+                'cube/game-result',
+                {
+                    vars: {
+                        winner: winnerUser,
+                        loser: loserUser,
+                        boost,
+                        prize,
+                        first: {
+                            user: firstUser,
+                            dice: firstDice
+                        },
+                        second: {
+                            user: secondUser,
+                            dice: secondDice
+                        }
                     }
                 }
-            }
-        )
+            ),
+            AdminUtils.gameKick({
+                ctx,
+                chatId,
+                id: loser
+            })
+        ])
 
         Logger.debug(
             'CubeStartButton._play',

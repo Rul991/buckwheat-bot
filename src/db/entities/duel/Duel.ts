@@ -2,7 +2,7 @@ import { prop } from "@typegoose/typegoose"
 import BaseEntity from "../base/BaseEntity"
 
 type DuelConstructorOptions =
-    & Pick<Duel, 'duelists' | 'chatId'>
+    & Pick<Duel, 'duelists' | 'chatId' | 'prize'>
 
 export default class Duel extends BaseEntity {
     @prop({ type: [Number] })
@@ -11,13 +11,18 @@ export default class Duel extends BaseEntity {
     @prop({ unique: true })
     chatId: number
 
+    @prop()
+    prize: number
+
     constructor({
         duelists,
         chatId,
+        prize,
     }: DuelConstructorOptions) {
         super()
 
         this.duelists = duelists
         this.chatId = chatId
+        this.prize = prize
     }
 }

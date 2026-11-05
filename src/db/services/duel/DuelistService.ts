@@ -6,7 +6,6 @@ import type { CanSaveDuelistResult } from "../../../types/duels"
 import ClassUtils from "../../../utils/db/ClassUtils"
 import DuelistUtils from "../../../utils/duel/duelist/DuelistUtils"
 import type Item from "../../../utils/items/Item"
-import ExperienceUtils from "../../../utils/level/ExperienceUtils"
 import Logger from "../../../utils/logs/Logger"
 import RandomUtils from "../../../utils/math/RandomUtils"
 import Duelist from "../../entities/duel/Duelist"
@@ -80,7 +79,7 @@ class DuelistService extends BaseService<typeof Duelist> {
             )
         }
 
-        const level = ExperienceUtils.getLevelFromObject(await LevelService.get(chatId, id))
+        const level = await LevelService.getCurrentLevel(chatId, id)
         const className = (await UserService.get(chatId, id))?.className ?? ClassUtils.defaultClassName
         const { hp: maxHp, mana: maxMana } = characters[className].getMaxCharacteristics(level)
 

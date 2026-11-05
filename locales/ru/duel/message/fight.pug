@@ -1,0 +1,39 @@
+include /utils/mixins.pug
+
+- let i = 0
+- const duelists = [currentDuelist, enemyDuelist]
+
+mixin stats(duelist, title)
+    |
+    |
+    u #{title}:
+    |
+    +chars({
+        hpTitle: 'Здоровье',
+        manaTitle: 'Мана',
+        currentChars: duelist.current,
+        maxChars: duelist.max
+    })
+    |
+    |
+
++heading(EMOJIES.DUEL)
+    | Дуэль между игроками 
+    for duelist in duelists
+        +link(duelist.user)
+        if ++i < duelists.length
+            |  и 
+    | :
+|
+| #{EMOJIES.PLAYER} Текущий шаг у игрока 
+u
+    +id_link(currentDuelist.user)
+| !
++plain_bold_param(`${EMOJIES.STEP} Всего шагов`, formatNumber(steps))
+|
+|
++stats(currentDuelist, `${EMOJIES.CASTER} Вы`)
++stats(enemyDuelist, `${EMOJIES.TARGET} Противник`)
+|
+|
+i #{EMOJIES.QUESTION} Что будете делать?

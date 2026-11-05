@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file proto.proto.
  */
 export const file_proto: GenFile = /*@__PURE__*/
-  fileDesc("Cgtwcm90by5wcm90byIRCg9FbXB0eUJ1dHRvbkRhdGFiBnByb3RvMw");
+  fileDesc("Cgtwcm90by5wcm90byIRCg9FbXB0eUJ1dHRvbkRhdGEiKgoQRGVsZXRlQnV0dG9uRGF0YRIPCgJpZBgBIAEoBEgAiAEBQgUKA19pZGIGcHJvdG8z");
 
 /**
  * empty button data
@@ -26,4 +26,23 @@ export type EmptyButtonData = Message<"EmptyButtonData"> & {
  */
 export const EmptyButtonDataSchema: GenMessage<EmptyButtonData> = /*@__PURE__*/
   messageDesc(file_proto, 0);
+
+/**
+ * @generated from message DeleteButtonData
+ */
+export type DeleteButtonData = Message<"DeleteButtonData"> & {
+  /**
+   * user's id
+   *
+   * @generated from field: optional uint64 id = 1;
+   */
+  id?: bigint | undefined;
+};
+
+/**
+ * Describes the message DeleteButtonData.
+ * Use `create(DeleteButtonDataSchema)` to create a new message.
+ */
+export const DeleteButtonDataSchema: GenMessage<DeleteButtonData> = /*@__PURE__*/
+  messageDesc(file_proto, 1);
 

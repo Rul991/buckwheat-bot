@@ -37,6 +37,7 @@ export type MethodGetSuccessTextOptions =
     & Pick<MethodPreCheckOptions, 'ctx' | 'data'>
     & {
         showType: SkillMethodGetTextShowType
+        boost?: number
     }
 
 export type MethodGetFailTextOptions =

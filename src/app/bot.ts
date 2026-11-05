@@ -182,7 +182,7 @@ import MarketSellButton from "../bot/actions/callback-query/market/MarketSellBut
 import MarketSellConversation from "../bot/actions/conversations/market/MarketSellConversation"
 import MarketBuyButton from "../bot/actions/callback-query/market/MarketBuyButton"
 import MarketDeleteButton from "../bot/actions/callback-query/market/MarketDeleteButton"
-import NoteCommand from "../bot/actions/commands/notes/NoteCommand"
+import NoteCommand from "../bot/actions/commands/buckwheat/notes/NoteCommand"
 import NoteFolderScrollerButton from "../bot/actions/callback-query/notes/NoteFolderScrollerButton"
 import NoteScrollerButton from "../bot/actions/callback-query/notes/NoteScrollerButton"
 import NoteFolderAddButton from "../bot/actions/callback-query/notes/NoteFolderAddButton"
@@ -230,6 +230,13 @@ import SkillRemoveButton from "../bot/actions/callback-query/skills/SkillRemoveB
 import SkillBookMenuButton from "../bot/actions/callback-query/skills/SkillBookMenuButton"
 import SkillBookScrollerButton from "../bot/actions/callback-query/skills/SkillBookScrollerButton"
 import SkillBookCommand from "../bot/actions/commands/buckwheat/duel/SkillBookCommand"
+import OnDuelConditionalCommand from "../bot/actions/commands/conditional/OnDuelConditionalCommand"
+import DuelCommand from "../bot/actions/commands/buckwheat/duel/DuelCommand"
+import DuelNoButton from "../bot/actions/callback-query/duel/DuelNoButton"
+import DuelYesButton from "../bot/actions/callback-query/duel/DuelYesButton"
+import DeleteButton from "../bot/actions/callback-query/delete/DeleteButton"
+import DuelAwayButton from "../bot/actions/callback-query/duel/DuelAwayButton"
+import DuelFightButton from "../bot/actions/callback-query/duel/DuelFightButton"
 
 export const runBot = async () => {
     const bot = new TelegramBot()
@@ -381,6 +388,11 @@ export const runBot = async () => {
                 SkillRemoveButton,
                 SkillBookMenuButton,
                 SkillBookScrollerButton,
+                DuelNoButton,
+                DuelYesButton,
+                DeleteButton,
+                DuelAwayButton,
+                DuelFightButton,
             ),
 
         new MessageHandler()
@@ -407,6 +419,7 @@ export const runBot = async () => {
         new ConditionalCommandHandler()
             .add(
                 new CapsConditionalCommand(),
+                new OnDuelConditionalCommand(),
                 new NoClassConditionalCommand(),
                 new ShortCommandConditionalCommand(),
                 new RoleplayConditionalCommand(),
@@ -499,6 +512,7 @@ export const runBot = async () => {
                 new BusinessCommand(),
                 new SkillCommand(),
                 new SkillBookCommand(),
+                new DuelCommand()
             ),
 
         new PhotoActionHandler()

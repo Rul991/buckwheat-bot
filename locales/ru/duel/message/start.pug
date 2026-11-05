@@ -1,0 +1,42 @@
+include /utils/mixins.pug
+
+-
+    const {
+        user
+    } = duelistOptions.user
+
+    const {
+        user: reply
+    } = duelistOptions.reply
+
+mixin duelist(options)
+    -
+        const {
+            user,
+            hp,
+            mana,
+            prize,
+            skills
+        } = options
+    | #{EMOJIES.MINUS} Игрок 
+    +link(user)
+    | : 
+    blockquote
+        +plain_bold_param(`${EMOJIES.MONEY} Взнос`, `${formatNumber(prize)}`, true)
+        +plain_bold_param(`${EMOJIES.SKILL} Навыки`, `${formatNumber(skills)}`, true)
+        +plain_bold_param(`${EMOJIES.HP} Здоровье`, `${formatNumber(hp)}`, true)
+        +plain_bold_param(`${EMOJIES.MANA} Мана`, `${formatNumber(mana)}`, true)
+    |
+    |
+
+| #{EMOJIES.DUEL} Игрок 
++id_link(reply)
+| , вы были вызваны на дуэль игроком 
++link(user)
+| !
+|
+|
++duelist(duelistOptions.user)
++duelist(duelistOptions.reply)
+|
+b #{EMOJIES.QUESTION} Примете вызов или бесчестиво откажетесь?

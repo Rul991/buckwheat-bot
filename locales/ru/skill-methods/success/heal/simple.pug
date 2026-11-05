@@ -1,4 +1,4 @@
 include ./mixins.pug
 
 +message()
-    | #{method.hp >= 0 ? '+' : ''}#{formatNumber(method.hp)}
+    | #{method.hp >= 0 ? '+' : ''}#{formatNumber(data || method.hp)}

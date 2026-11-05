@@ -53,8 +53,8 @@ export default class Character {
         }
     }
 
-    canAdd(skill: Skill, level: number): boolean {
-        if(skill == this.skills.main) return true
+    canUse(skill: Skill, level: number): boolean | undefined {
+        if(skill == this.skills.main) return undefined
         return this._totalSkills.some(v => v.id == skill.id && v.level <= level)
     }
 

@@ -49,7 +49,7 @@ class GameService extends BaseService<typeof Game> {
         )
     }
 
-    private async _stopGame({
+    async stop({
         chatId,
         id,
         key,
@@ -77,14 +77,14 @@ class GameService extends BaseService<typeof Game> {
     }
 
     async win(options: BaseOptions): Promise<Game | undefined> {
-        return this._stopGame({
+        return this.stop({
             ...options,
             key: 'wins'
         })
     }
 
     async lose(options: BaseOptions): Promise<Game | undefined> {
-        return this._stopGame({
+        return this.stop({
             ...options,
             key: 'loses'
         })
