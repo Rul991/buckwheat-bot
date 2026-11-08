@@ -5,7 +5,6 @@ import AdminUtils from "../../../../../utils/bot/AdminUtils"
 import ClassUtils from "../../../../../utils/db/ClassUtils"
 import RankUtils from "../../../../../utils/db/RankUtils"
 import DuelistUtils from "../../../../../utils/duel/duelist/DuelistUtils"
-import ExperienceUtils from "../../../../../utils/level/ExperienceUtils"
 import TimeUtils from "../../../../../utils/time/TimeUtils"
 import BuckwheatCommand from "../../../base/BuckwheatCommand"
 
@@ -28,9 +27,8 @@ export default class SaveCommand extends BuckwheatCommand {
         const user = await ctx.vars.user.get()
         const className = user?.className ?? ClassUtils.defaultClassName
         const duelist = await ctx.vars.duelist.get()
+        
         const level = await ctx.vars.level.get()
-
-        const levelNumber = ExperienceUtils.getLevelFromObject(level)
         const isPlayer = ClassUtils.isPlayer(className)
 
         const mustKicked = other == ctx.t('save/kick-command')
@@ -79,7 +77,7 @@ export default class SaveCommand extends BuckwheatCommand {
             chatId,
             id,
             className,
-            level: levelNumber
+            level: level
         })
 
         return {

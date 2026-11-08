@@ -7,7 +7,6 @@ import type { BuckwheatCommandExecuteResult } from "../../../../../types/results
 import ClassUtils from "../../../../../utils/db/ClassUtils"
 import RankUtils from "../../../../../utils/db/RankUtils"
 import ItemUtils from "../../../../../utils/items/ItemUtils"
-import ExperienceUtils from "../../../../../utils/level/ExperienceUtils"
 import BuckwheatCommand from "../../../base/BuckwheatCommand"
 
 export default class CharsCommand extends BuckwheatCommand {
@@ -48,9 +47,7 @@ export default class CharsCommand extends BuckwheatCommand {
         
         const duelist = isSelf ? await ctx.vars.duelist.get() : await DuelistService.get(chatId, replyId)
         const character = characters[className]
-        
-        const levelNumber = ExperienceUtils.getLevelFromObject(level)
-        const maxChars = character.getMaxCharacteristics(levelNumber)
+        const maxChars = character.getMaxCharacteristics(level)
 
         const selectedGun = await SelectedGunService.get(
             chatId,
@@ -68,7 +65,7 @@ export default class CharsCommand extends BuckwheatCommand {
                     currentChars: duelist,
                     maxChars,
                     classVars: ClassUtils.getVars(ctx, className),
-                    level: levelNumber,
+                    level: level,
                     gun: gun?.getVars(ctx)
                 }
             }

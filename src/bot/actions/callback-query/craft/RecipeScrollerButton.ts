@@ -8,7 +8,6 @@ import RankUtils from "../../../../utils/db/RankUtils"
 import type Recipe from "../../../../utils/recipes/Recipe"
 import ScrollerButton from "../scroller/ScrollerButton"
 import RecipeUtils from "../../../../utils/recipes/RecipeUtils"
-import ExperienceUtils from "../../../../utils/level/ExperienceUtils"
 import RecipeShowButton from "./RecipeShowButton"
 
 class RecipeScrollerButton extends ScrollerButton<Recipe, BaseScrollerData> {
@@ -38,9 +37,7 @@ class RecipeScrollerButton extends ScrollerButton<Recipe, BaseScrollerData> {
 
         const bigId = BigInt(id)
         const count = 1
-
-        const levelObject = await ctx.vars.level.get()
-        const level = ExperienceUtils.getLevelFromObject(levelObject)
+        const level = await ctx.vars.level.get()
 
         for (const recipe of slicedObjects) {
             const item = recipe.result.item

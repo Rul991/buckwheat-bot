@@ -14,6 +14,9 @@ export default class Duel extends BaseEntity {
     @prop()
     prize: number
 
+    @prop()
+    createdAt: Date
+
     constructor({
         duelists,
         chatId,
@@ -24,5 +27,6 @@ export default class Duel extends BaseEntity {
         this.duelists = duelists
         this.chatId = chatId
         this.prize = prize
+        this.createdAt = new Date()
     }
 }

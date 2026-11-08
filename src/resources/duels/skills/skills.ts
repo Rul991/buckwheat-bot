@@ -144,6 +144,16 @@ export const attackBossSkill = new Skill({
     }
 })
 
+export const brokenStringBardSkill = new Skill({
+    id: 8,
+    level: 1,
+    key: 'bard/broken-string',
+    methods: {
+        caster: [],
+        target: []
+    }
+})
+
 export const skills: Skill[] = [
     devSkill,
     attackBardSkill,

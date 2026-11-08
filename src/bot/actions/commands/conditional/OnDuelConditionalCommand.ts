@@ -11,7 +11,7 @@ export default class OnDuelConditionalCommand extends ConditionalCommand {
             id
         } = options
 
-        const duel = await ctx.vars.duel.get()
+        const duel = await ctx.vars.duel.duel.get()
         if (!duel) {
             return false
         }

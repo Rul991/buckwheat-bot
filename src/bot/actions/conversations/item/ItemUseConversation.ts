@@ -36,9 +36,7 @@ class ItemUseConversation extends ConversationAction<[InventoryItem]> {
                 'items/convo/not-enough-count',
                 ctx => ({
                     vars: {
-                        item: {
-                            title: item.getTitle(ctx)
-                        }
+                        item: item.getVars(ctx)
                     },
                     lazyKeys: ['user']
                 })

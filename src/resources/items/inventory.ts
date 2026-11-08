@@ -139,7 +139,7 @@ export const fuelGunItem = new Item({
     key: 'fuel/gun',
     isConsumable: false,
     gun: {
-        damage: [50, 100],
+        damage: [500, 1000],
         ammo: fuelOreItem
     },
     basePrice: 8000,
@@ -330,7 +330,7 @@ export const oneTimeGunItem = new Item({
     key: 'gun/one-time',
     isConsumable: true,
     gun: {
-        damage: [50, 200]
+        damage: [500, 2000]
     },
     basePrice: 3200,
     emoji: 'gun',
@@ -354,10 +354,7 @@ export const defaultGunItem = new Item({
     key: 'gun/default-pistol',
     isConsumable: false,
     gun: {
-        damage: [
-            5,
-            7
-        ],
+        damage: [50, 70],
         ammo: pistolAmmoItem
     },
     basePrice: 1000,
@@ -432,7 +429,7 @@ export const simpleShieldItem = new Item({
     key: 'shield/simple',
     isConsumable: true,
     shield: {
-        durability: 500
+        durability: 240
     },
     basePrice: 1000,
     emoji: 'shield',
@@ -451,8 +448,8 @@ export const stickGunItem = new Item({
     isConsumable: true,
     gun: {
         damage: [
-            1000,
-            5000
+            2500,
+            10_000
         ]
     },
     basePrice: 25_000,
@@ -646,26 +643,20 @@ export const banItem = new Item({
     callbacks: {
         use: async ({
             ctx,
-            id,
             item,
             count
         }) => {
-            const isBanned = await AdminUtils.ban(ctx, id, 0)
-
             await MessageUtils.reply(
                 ctx,
                 'admin/ban/item',
                 {
                     vars: {
-                        title: item.getTitle(ctx),
+                        item: item.getVars(ctx),
                         user: await ctx.vars.user.get(),
                         count,
-                        isBanned
                     }
                 }
             )
-
-            return isBanned
         }
     }
 })

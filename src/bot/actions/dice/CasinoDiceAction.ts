@@ -102,18 +102,30 @@ export default class CasinoDiceAction extends DiceAction {
         }
 
         if (balance + prize >= MAX_DEBT_VALUE) {
-            await Promise.all([
-                setTimeout(this._delay),
-                BalanceService.add({
-                    chatId,
-                    id,
-                    money: prize
-                }),
+            const [ownersHasMoney] = await Promise.all([
                 BusinessStockService.income(
                     casino.id,
                     -prize
-                )
+                ),
             ])
+
+            if (ownersHasMoney) {
+                await Promise.all([
+                    setTimeout(this._delay),
+                    BalanceService.add({
+                        chatId,
+                        id,
+                        money: prize
+                    })
+                ])
+            }
+            else {
+                await MessageUtils.reply(
+                    ctx,
+                    'casino/owners-no-money'
+                )
+                return
+            }
 
             const isSendMessage = await GrindUtils.isSendMessage(ctx, id)
             if (!isSendMessage) return

@@ -7,7 +7,6 @@ import RankUtils from "../../../../utils/db/RankUtils"
 import UserClassService from "../../../../db/services/user/UserClassService"
 import type { ClassTypes } from "../../../../types/class"
 import MessageUtils from "../../../../utils/bot/MessageUtils"
-import ExperienceUtils from "../../../../utils/level/ExperienceUtils"
 import DuelistService from "../../../../db/services/duel/DuelistService"
 import ClassUtils from "../../../../utils/db/ClassUtils"
 import { IS_PROD } from "../../../../consts/env"
@@ -32,7 +31,6 @@ class ChangeClassButton extends CallbackQueryAction<ClassData> {
         } = options
 
         const level = await ctx.vars.level.get()
-        const levelNumber = ExperienceUtils.getLevelFromObject(level)
         const user = await ctx.vars.user.require()
 
         if(IS_PROD && ClassUtils.isPlayer(user.className)) {
@@ -56,7 +54,7 @@ class ChangeClassButton extends CallbackQueryAction<ClassData> {
                 chatId,
                 id,
                 className,
-                level: levelNumber
+                level
             }),
             MessageUtils.reply(
                 ctx,

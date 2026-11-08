@@ -12,12 +12,6 @@ type SkillOptions = {
     skill: Skill
 }
 
-type IndexOptions = {
-    chatId: number
-    id: number
-    index: number
-}
-
 type CanOptions = {
     className: ClassTypes
     level: number
@@ -126,39 +120,6 @@ class SelectedSkillsService extends BaseService<typeof SelectedSkills> {
         return Boolean(result?.skills.every(v => v != skill.id))
     }
 
-    async removeByIndex({ chatId, id, index }: IndexOptions): Promise<boolean> {
-        if (!Number.isInteger(index) || index < 0 || index >= MAX_SELECTED_SKILLS_COUNT) return false
-
-        const result = await this._repo.updateOne(
-            { chatId, id },
-            [
-                {
-                    $set: {
-                        skills: {
-                            $let: {
-                                vars: { cur: { $ifNull: ["$skills", []] } },
-                                in: {
-                                    $cond: [
-                                        { $lt: [index, { $size: "$$cur" }] },
-                                        {
-                                            $concatArrays: [
-                                                { $slice: ["$$cur", 0, index] },
-                                                { $slice: ["$$cur", { $add: [index, 1] }, { $size: "$$cur" }] }
-                                            ]
-                                        },
-                                        "$$cur"
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            ]
-        )
-
-        return Boolean(result)
-    }
-
     async canAdd({
         chatId,
         id,
@@ -191,7 +152,7 @@ class SelectedSkillsService extends BaseService<typeof SelectedSkills> {
         if(!canUse) return false
         
         const skills = await this.get(chatId, id)
-        return !skills.skills.some(v => v == skill.id)
+        return skills.skills.some(v => v == skill.id)
     }
 }
 

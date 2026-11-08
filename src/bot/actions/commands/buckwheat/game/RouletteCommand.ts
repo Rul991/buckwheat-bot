@@ -56,7 +56,7 @@ export default class RouletteCommand extends BuckwheatCommand {
             })
         }
         else if (!isWin) {
-            await DuelistService.dead(chatId, id)
+            await DuelistService.kill(chatId, id)
 
             const isKicked = await AdminUtils.gameKick({
                 ctx,

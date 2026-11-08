@@ -9,7 +9,6 @@ import ScrollerButton from "../scroller/ScrollerButton"
 import type Skill from "../../../../utils/duel/skill/Skill"
 import { characters } from "../../../../resources/duels/characters/characters"
 import SelectedSkillsMenuButton from "./SelectedSkillsMenuButton"
-import ExperienceUtils from "../../../../utils/level/ExperienceUtils"
 import SkillShowButton from "./SkillShowButton"
 import ClassUtils from "../../../../utils/db/ClassUtils"
 
@@ -45,8 +44,7 @@ class SkillAddScrollerButton extends ScrollerButton<Object, ScrollerData> {
             page
         } = options
         const bigId = BigInt(id)
-        const levelObject = await ctx.vars.level.get()
-        const level = ExperienceUtils.getLevelFromObject(levelObject)
+        const level = await ctx.vars.level.get()
 
         for (const skill of skills) {
             const style = level < skill.level ? 'danger' : undefined

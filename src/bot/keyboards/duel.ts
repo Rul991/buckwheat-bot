@@ -1,10 +1,18 @@
-import DuelStepService from "../../db/services/duel/DuelStepService"
+import SelectedSkillsService from "../../db/services/duel/SelectedSkillsService"
+import UserService from "../../db/services/user/UserService"
+import { SkillShowType } from "../../protos/skills_pb"
+import { characters } from "../../resources/duels/characters/characters"
+import ClassUtils from "../../utils/db/ClassUtils"
 import KeyboardCreator from "../../utils/keyboard/KeyboardCreator"
 import DeleteButton from "../actions/callback-query/delete/DeleteButton"
 import DuelAwayButton from "../actions/callback-query/duel/DuelAwayButton"
+import DuelEffectsButton from "../actions/callback-query/duel/DuelEffectsButton"
 import DuelFightButton from "../actions/callback-query/duel/DuelFightButton"
 import DuelNoButton from "../actions/callback-query/duel/DuelNoButton"
+import DuelSkillsButton from "../actions/callback-query/duel/DuelSkillsButton"
+import DuelSkillUseButton from "../actions/callback-query/duel/DuelSkillUseButton"
 import DuelYesButton from "../actions/callback-query/duel/DuelYesButton"
+import SkillShowButton from "../actions/callback-query/skills/SkillShowButton"
 
 export const duelStartKeyboard = KeyboardCreator.create<{
     suggester: number
@@ -53,8 +61,7 @@ export const duelAwayKeyboard = KeyboardCreator.create<{
         keyboard
     }) => {
         const id = BigInt(data.id)
-        const duel = await ctx.vars.duel.get()
-        const currentDuelist = await DuelStepService.getCurrentDuelist(duel)
+        const currentDuelist = await ctx.vars.duel.currentDuelist.get()
         const isMyStep = currentDuelist == data.id
 
         keyboard.add(
@@ -76,5 +83,137 @@ export const duelAwayKeyboard = KeyboardCreator.create<{
                     key: 'button/decline'
                 })
         )
+    }
+)
+
+export const duelFightKeyboard = KeyboardCreator.create<{
+    
+}>(
+    async ({
+        ctx,
+        keyboard
+    }) => {
+        const id = ctx.vars.id
+        const chatId = ctx.vars.chatId!
+        const currentDuelistId = await ctx.vars.duel.currentDuelist.get()
+
+        const user = id == currentDuelistId ?
+            await ctx.vars.user.require() :
+            await UserService.get(chatId, currentDuelistId)
+        const className = user?.className ?? ClassUtils.defaultClassName
+        const character = characters[className]
+        const mainSkill = character.skills.main
+
+        keyboard.add(
+            DuelSkillUseButton.button({
+                ctx,
+                data: {
+                    skillId: mainSkill.id
+                },
+                key: 'duel/button/attack',
+            }),
+            DuelEffectsButton.button({
+                ctx,
+                data: {}
+            }),
+            DuelSkillsButton.button({
+                ctx,
+                data: {}
+            })
+        )
+    }
+)
+
+export const backFightDuelKeyboard = KeyboardCreator.create<{
+    key?: string
+}>(
+    async ({
+        ctx,
+        keyboard,
+        data: {
+            key = 'button/back'
+        }
+    }) => {
+        keyboard.add(
+            DuelFightButton.button({
+                ctx,
+                data: {},
+                key
+            })
+        )
+    }
+)
+
+export const skillsDuelKeyboard = KeyboardCreator.create<{
+
+}>(
+    async ({
+        ctx,
+        keyboard
+    }) => {
+        const id = ctx.vars.id
+        const bigId = BigInt(id)
+        const chatId = ctx.vars.chatId!
+
+        const skills = await SelectedSkillsService.getSkills(
+            chatId,
+            id
+        )
+
+        for (const skill of skills) {
+            keyboard.add(
+                SkillShowButton.button({
+                    ctx,
+                    data: {
+                        id: bigId,
+                        skillId: skill.id,
+                        type: SkillShowType.Duel
+                    },
+                    vars: {
+                        title: skill.getTitle(ctx)
+                    }
+                })
+            )
+        }
+
+        keyboard.add(
+            DuelFightButton.button({
+                ctx,
+                data: {},
+                key: 'button/back'
+            })
+        )
+
+        return keyboard.toFlowed(1)
+    }
+)
+
+export const skillUseShowDuelKeyboard = KeyboardCreator.create<{
+    skillId: number
+}>(
+    async ({
+        ctx,
+        data,
+        keyboard
+    }) => {
+        const {
+            skillId
+        } = data
+
+        keyboard.add(
+            DuelSkillUseButton.button({
+                ctx,
+                data: {
+                    skillId: skillId
+                },
+                style: 'primary'
+            }),
+            DuelSkillsButton.button({
+                ctx,
+                data: {},
+                key: 'button/back'
+            })
+        )
+        return keyboard.toFlowed(1)
     }
 )

@@ -44,7 +44,7 @@ class InventoryUseButton extends CallbackQueryAction<InventoryUseButtonData> {
             id,
             item
         })
-        if(!inventoryItem) {
+        if(!inventoryItem?.count) {
             return {
                 key: 'inventory/not-exist'
             }

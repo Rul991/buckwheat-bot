@@ -17,6 +17,7 @@ import RankUtils from "../../../utils/db/RankUtils"
 
 export default abstract class CallbackQueryAction<T extends Record<string, any>> extends RankedAction {
     protected override _lowRankKey: string = 'button/low-rank'
+    protected _wrongIdKey: string = 'cb-query/wrong-id'
     abstract schema: GenMessage<T & Message<any>>
     abstract defaultTextKey: string
 
@@ -77,7 +78,7 @@ export default abstract class CallbackQueryAction<T extends Record<string, any>>
         if (hasntNeedId) {
             return {
                 isAlert: true,
-                key: 'cb-query/wrong-id'
+                key: this._wrongIdKey
             }
         }
 

@@ -1,4 +1,5 @@
 import DuelistService from "../../../../db/services/duel/DuelistService"
+import DuelStepService from "../../../../db/services/duel/DuelStepService"
 import type { MethodGetDataOptions, MethodPreCheckOptions, MethodExecuteOptions } from "../../../../types/skill-methods"
 import SkillMethod from "../base/SkillMethod"
 
@@ -23,16 +24,16 @@ export default abstract class BaseDamageMethod extends SkillMethod {
             chatId,
             target,
         } = options
-        
-        if(data == 0) return
-        target.duelist.set(
-            await DuelistService.add({
+
+        if (data == 0) return
+        await Promise.all([
+            DuelistService.add({
                 chatId,
                 id: target.id,
                 value: -data,
                 key: 'hp'
-            })
-        )
+            }),
+            DuelStepService.addDamage(chatId, data)
+        ])
     }
-
 }

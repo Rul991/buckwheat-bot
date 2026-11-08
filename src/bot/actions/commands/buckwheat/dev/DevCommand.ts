@@ -12,8 +12,9 @@ import InventoryItemService from "../../../../../db/services/items/InventoryItem
 import UserService from "../../../../../db/services/user/UserService"
 import type User from "../../../../../db/entities/user/User"
 import BalanceService from "../../../../../db/services/money/BalanceService"
-import DuelPresenter from "../../../../../utils/duel/duel/DuelPresenter"
-import Duel from "../../../../../db/entities/duel/Duel"
+import SkillPresenter from "../../../../../utils/duel/skill/SkillPresenter"
+import { SkillAttack } from "../../../../../protos/duels_pb"
+import { devSkill } from "../../../../../resources/duels/skills/skills"
 
 type GetUserOptions = {
     chatId: number
@@ -110,13 +111,10 @@ export default class DevCommand extends BuckwheatCommand {
         }
 
         await this._giveMoney(chatId, id)
-        return await DuelPresenter.fight({
-            duel: new Duel({
-                chatId,
-                duelists: [id, 7960196031],
-                prize: 10
-            }),
-            ctx
+        return await SkillPresenter.attack({
+            ctx,
+            attack: SkillAttack.Normal,
+            skill: devSkill,
         })
     }
 

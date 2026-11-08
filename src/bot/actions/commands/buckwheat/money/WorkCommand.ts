@@ -8,7 +8,6 @@ import type { BuckwheatCommandOptions } from "../../../../../types/action-option
 import type { BuckwheatCommandExecuteResult } from "../../../../../types/results"
 import RankUtils from "../../../../../utils/db/RankUtils"
 import GrindUtils from "../../../../../utils/grind/GrindUtils"
-import ExperienceUtils from "../../../../../utils/level/ExperienceUtils"
 import TimeUtils from "../../../../../utils/time/TimeUtils"
 import WorkUtils from "../../../../../utils/work/WorkUtils"
 import BuckwheatCommand from "../../../base/BuckwheatCommand"
@@ -62,12 +61,11 @@ export default class WorkCommand extends BuckwheatCommand {
 
         const user = await ctx.vars.user.get()
         const level = await ctx.vars.level.get()
-        const levelNumber = ExperienceUtils.getLevelFromObject(level)
         const inventory = await InventoryItemService.getInventory(chatId, id)
 
         const money = WorkUtils.getMoney(inventory)
         const experience = WorkUtils.getExperience(
-            levelNumber,
+            level,
             inventory
         )
 
@@ -80,9 +78,12 @@ export default class WorkCommand extends BuckwheatCommand {
 
         await Promise.all([
             BalanceService.add({ chatId, id, money }),
-            LevelService.add(chatId, id, experience),
             WorkService.updateTime(chatId, id),
         ])
+
+        ctx.vars.levelObject.set(
+            await LevelService.add(chatId, id, experience)
+        )
         ctx.vars.level.update()
 
         if (item) {

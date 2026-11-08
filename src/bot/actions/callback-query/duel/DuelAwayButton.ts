@@ -20,8 +20,8 @@ class DuelAwayButton extends CallbackQueryAction<DuelAwayButtonData> {
         const {
             ctx,
         } = options
-        const duel = await ctx.vars.duel.get()
-        return duel?.duelists.map(v => Number(v))
+        const duel = await ctx.vars.duel.duel.get()
+        return duel?.duelists.map(v => Number(v)) ?? 0
     }
     
     protected override async _execute(options: CallbackQueryActionOptions<DuelAwayButtonData>): Promise<CallbackQueryExecuteResult> {
@@ -31,7 +31,7 @@ class DuelAwayButton extends CallbackQueryAction<DuelAwayButtonData> {
             id
         } = options
 
-        const duel = await ctx.vars.duel.require()
+        const duel = await ctx.vars.duel.duel.require()
         const winner = DuelUtils.getEnemy(duel, id)
 
         const {

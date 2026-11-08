@@ -1,4 +1,5 @@
 import { MAX_BUSINESS_STAKES } from "../../../consts/number"
+import Logger from "../../../utils/logs/Logger"
 import BusinessStock from "../../entities/business/BusinessStock"
 import BaseService from "../base/BaseService"
 import BalanceService from "../money/BalanceService"
@@ -72,15 +73,35 @@ class BusinessStockService extends BaseService<typeof BusinessStock> {
     async getAllByUser(chatId: number, id: number) {
         return await this._repo.find({
             chatId,
-            id
+            id,
+            count: {
+                $gt: 0
+            }
         })
     }
 
     async income(businessId: number, money: number) {
         let currentMoney = money
         const stocks = await this._repo.find({
-            businessId
+            businessId,
+            count: {
+                $gt: 0
+            }
         })
+
+        const sum = await BalanceService.getTotalSumByStocks(stocks)
+
+        Logger.debug(
+            'BusinessStockService.income',
+            {
+                money,
+                sum,
+                stocks
+            }
+        )
+        if (sum + money < 0) {
+            return false
+        }
 
         const incomes = stocks
             .sort((a, b) => a.count - b.count)
@@ -120,6 +141,8 @@ class BusinessStockService extends BaseService<typeof BusinessStock> {
                 })
             )
         ])
+
+        return true
     }
 }
 

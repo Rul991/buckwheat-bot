@@ -1,10 +1,11 @@
-import { DUEL_EXPERIENCE_PER_STEP, MIN_DUEL_STEPS_FOR_LEVEL } from "../../../consts/number"
-import DuelUtils from "../../../utils/duel/duel/DuelUtils"
+import { DEAD_HEALTH, DUEL_EXPERIENCE_PER_STEP, MIN_DUEL_STEPS_FOR_LEVEL } from "../../../consts/number"
 import Duel from "../../entities/duel/Duel"
 import BaseService from "../base/BaseService"
 import GameService from "../game/GameService"
 import LevelService from "../level/LevelService"
 import BalanceService from "../money/BalanceService"
+import DuelEffectService from "./DuelEffectService"
+import DuelistService from "./DuelistService"
 import DuelStepService from "./DuelStepService"
 
 type GetPrizesOptions = {
@@ -47,6 +48,7 @@ class DuelService extends BaseService<typeof Duel> {
         const [duelResult, duelStepResult] = await Promise.all([
             this._repo.deleteOne({ chatId }),
             DuelStepService.deleteByChatId(chatId),
+            DuelEffectService.deleteByChatId(chatId),
         ])
 
         return duelStepResult && duelResult.deletedCount > 0
@@ -115,14 +117,23 @@ class DuelService extends BaseService<typeof Duel> {
         }
     }
 
-    async getCurrentDuelist(chatId: number): Promise<number> {
+    async whoLose(chatId: number) {
         const duel = await this.get(chatId)
-        if(!duel) return 0
+        if(!duel) return undefined
 
-        const lastStep = await DuelStepService.getLast(chatId)
-        if(!lastStep) return duel.duelists[0]!
+        const duelists = await Promise.all(
+            duel.duelists.map(id => {
+                return DuelistService.get(chatId, id)
+            })
+        )
+        const sortedDuelists = duelists.toSorted(
+            (a, b) => b.hp - a.hp
+        )
 
-        return DuelUtils.getEnemy(duel, lastStep.duelist)
+        const loser = sortedDuelists[0]
+        if(loser && loser.hp <= DEAD_HEALTH) return loser.id
+
+        return undefined
     }
 }
 

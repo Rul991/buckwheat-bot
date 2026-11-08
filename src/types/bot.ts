@@ -12,6 +12,7 @@ import type ShortCommand from "../db/entities/short/ShortCommand"
 import type { CommandStrings } from "./command"
 import type { LazyCacheRecord } from "./types"
 import type Duel from "../db/entities/duel/Duel"
+import type DuelStep from "../db/entities/duel/DuelStep"
 
 export type BotContext<T = Record<string, any>> =
     & Context
@@ -25,16 +26,21 @@ export type BotContext<T = Record<string, any>> =
             commandStrings: CommandStrings | undefined
             roleplay: Roleplay | undefined
             shortCommand: ShortCommand | undefined
+            duel: LazyCacheRecord<{
+                duel: Duel | undefined
+                currentStep: DuelStep | undefined
+                currentDuelist: number
+            }>
         }
         & LazyCacheRecord<{
             isOwner: boolean
             chatMember: ChatMember | undefined
             user: User | undefined
             balance: Balance | undefined
-            level: Level | undefined
+            levelObject: Level | undefined
+            level: number
             chat: Chat | undefined
             duelist: Duelist | undefined
-            duel: Duel | undefined
         }>
     }
     & {

@@ -1,6 +1,6 @@
 import type Duel from "../db/entities/duel/Duel"
 import type Duelist from "../db/entities/duel/Duelist"
-import type Level from "../db/entities/level/Level"
+import type Balance from "../db/entities/money/Balance"
 import type User from "../db/entities/user/User"
 import type { SkillAttack } from "../protos/duels_pb"
 import type LazyValue from "../utils/cache/LazyValue"
@@ -10,7 +10,8 @@ export type MethodParticipant = {
     id: number
     user: LazyValue<User | undefined>
     duelist: LazyValue<Duelist | undefined>
-    level: LazyValue<Level | undefined>
+    balance: LazyValue<Balance | undefined>
+    level: LazyValue<number>
 }
 
 export type MethodGetDataOptions = {
@@ -39,6 +40,3 @@ export type MethodGetSuccessTextOptions =
         showType: SkillMethodGetTextShowType
         boost?: number
     }
-
-export type MethodGetFailTextOptions =
-    & Pick<MethodPreCheckOptions, 'ctx'>

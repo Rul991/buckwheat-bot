@@ -9,6 +9,7 @@ import MessageUtils from "../../../../utils/bot/MessageUtils"
 import SkillPresenter from "../../../../utils/duel/skill/SkillPresenter"
 import type { BotContext } from "../../../../types/bot"
 import { addSkillKeyboard, selectedSkillKeyboard, skillBookShowKeyboard } from "../../../keyboards/skills"
+import { skillUseShowDuelKeyboard } from "../../../keyboards/duel"
 
 class SkillShowButton extends CallbackQueryAction<SkillShowButtonData> {
     override schema: GenMessage<SkillShowButtonData> = SkillShowButtonDataSchema
@@ -34,7 +35,12 @@ class SkillShowButton extends CallbackQueryAction<SkillShowButtonData> {
         if(!skill) return undefined
 
         if(type == SkillShowType.Duel) {
-
+            return await skillUseShowDuelKeyboard(
+                ctx,
+                {
+                    skillId
+                }
+            )
         }
         else if(type == SkillShowType.Add) {
             return await addSkillKeyboard(

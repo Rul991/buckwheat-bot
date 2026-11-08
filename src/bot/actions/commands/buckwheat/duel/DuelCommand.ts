@@ -33,21 +33,21 @@ export default class DuelCommand extends BuckwheatCommand {
 
         if(!replyFrom) {
             return {
-                key: 'duel/message/no-reply'
+                key: 'duel/message/reply/no'
             }
         }
 
         const replyId = replyFrom.id
         if(replyId == id) {
             return {
-                key: 'duel/message/self-reply'
+                key: 'duel/message/reply/self'
             }
         }
 
         const replyUser = await UserService.get(chatId, replyId)
         if(replyFrom.is_bot) {
             return {
-                key: 'duel/message/bot-reply',
+                key: 'duel/message/reply/bot',
                 options: {
                     vars: {
                         reply: replyUser
@@ -56,7 +56,7 @@ export default class DuelCommand extends BuckwheatCommand {
             }
         }
 
-        const duel = await ctx.vars.duel.get()
+        const duel = await ctx.vars.duel.duel.get()
         if(duel) {
             return {
                 key: 'duel/message/already-exist'

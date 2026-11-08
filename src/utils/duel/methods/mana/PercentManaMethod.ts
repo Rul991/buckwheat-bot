@@ -1,6 +1,5 @@
 import { characters } from "../../../../resources/duels/characters/characters"
 import type { MethodGetDataOptions } from "../../../../types/skill-methods"
-import ExperienceUtils from "../../../level/ExperienceUtils"
 import BaseManaMethod from "./BaseManaMethod"
 
 export default class PercentManaMethod extends BaseManaMethod {
@@ -12,8 +11,7 @@ export default class PercentManaMethod extends BaseManaMethod {
             target,
         } = options
 
-        const levelObject = await target.level.require()
-        const level = ExperienceUtils.getLevelFromObject(levelObject)
+        const level = await target.level.require()
         const user = await target.user.require()
 
         const maxMana = characters[user.className].getMana(level)

@@ -141,7 +141,7 @@ export default class ProfileCommand extends BuckwheatCommand {
 
         const selfUser = await ctx.vars.user.get()
         const level = user.id == selfUser?.id
-            ? await ctx.vars.level.get() :
+            ? await ctx.vars.levelObject.get() :
             await LevelService.get(chatId, user.id)
 
         const currentExperience = level?.currentExperience ?? ExperienceUtils.min

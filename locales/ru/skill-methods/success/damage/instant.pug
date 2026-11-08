@@ -5,4 +5,5 @@ include ./mixins.pug
         | 100%
     else
         | #{formatNumber(data)}
-| , если меньше #{percents(method.coef, 1)} #{EMOJIES.HP}
+if showType == 'info'
+    | , если меньше #{percents(method.coef, 1)} #{EMOJIES.HP}

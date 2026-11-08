@@ -237,6 +237,9 @@ import DuelYesButton from "../bot/actions/callback-query/duel/DuelYesButton"
 import DeleteButton from "../bot/actions/callback-query/delete/DeleteButton"
 import DuelAwayButton from "../bot/actions/callback-query/duel/DuelAwayButton"
 import DuelFightButton from "../bot/actions/callback-query/duel/DuelFightButton"
+import DuelEffectsButton from "../bot/actions/callback-query/duel/DuelEffectsButton"
+import DuelSkillsButton from "../bot/actions/callback-query/duel/DuelSkillsButton"
+import DuelSkillUseButton from "../bot/actions/callback-query/duel/DuelSkillUseButton"
 
 export const runBot = async () => {
     const bot = new TelegramBot()
@@ -393,6 +396,9 @@ export const runBot = async () => {
                 DeleteButton,
                 DuelAwayButton,
                 DuelFightButton,
+                DuelEffectsButton,
+                DuelSkillsButton,
+                DuelSkillUseButton,
             ),
 
         new MessageHandler()

@@ -1,6 +1,5 @@
 import { characters } from "../../../../resources/duels/characters/characters"
 import type { MethodGetDataOptions } from "../../../../types/skill-methods"
-import ExperienceUtils from "../../../level/ExperienceUtils"
 import BaseDamageMethod from "./BaseDamageMethod"
 
 export default class InstantKillDamageMethod extends BaseDamageMethod {
@@ -14,9 +13,7 @@ export default class InstantKillDamageMethod extends BaseDamageMethod {
 
         const duelist = await target.duelist.require()
         const user = await target.user.require()
-
-        const levelObject = await target.level.require()
-        const level = ExperienceUtils.getLevelFromObject(levelObject)
+        const level = await target.level.require()
 
         const currentHp = duelist.hp
         const maxHp = characters[user.className].getHealth(level)

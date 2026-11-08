@@ -1,3 +1,4 @@
+import { duelFightKeyboard } from "../../../bot/keyboards/duel"
 import type Duel from "../../../db/entities/duel/Duel"
 import DuelistService from "../../../db/services/duel/DuelistService"
 import DuelStepService from "../../../db/services/duel/DuelStepService"
@@ -6,7 +7,6 @@ import UserService from "../../../db/services/user/UserService"
 import { characters } from "../../../resources/duels/characters/characters"
 import type { BotContext } from "../../../types/bot"
 import ClassUtils from "../../db/ClassUtils"
-import ExperienceUtils from "../../level/ExperienceUtils"
 import DuelUtils from "./DuelUtils"
 
 type FightOptions = {
@@ -45,14 +45,13 @@ export default class DuelPresenter {
         const [
             user,
             duelist,
-            levelObject
+            level
         ] = await Promise.all([
             this._getUser({ ctx, id }),
             isCurrentDuelistClicked ? ctx.vars.duelist.require() : await DuelistService.get(chatId, id),
-            isCurrentDuelistClicked ? ctx.vars.level.get() : await LevelService.get(chatId, id)
+            isCurrentDuelistClicked ? ctx.vars.level.get() : await LevelService.getCurrentLevel(chatId, id)
         ])
 
-        const level = ExperienceUtils.getLevelFromObject(levelObject)
         const className = user?.className ?? ClassUtils.defaultClassName
         const maxChars = characters[className].getMaxCharacteristics(level)
 
@@ -76,7 +75,7 @@ export default class DuelPresenter {
         ctx
     }: FightOptions) {
         const chatId = duel.chatId
-        const currentDuelistId = await DuelStepService.getCurrentDuelist(duel)
+        const currentDuelistId = await ctx.vars.duel.currentDuelist.get()
         const enemyDuelistId = DuelUtils.getEnemy(duel, currentDuelistId)
 
         const [
@@ -90,13 +89,14 @@ export default class DuelPresenter {
         ])
 
         return {
-            key: 'duel/message/fight',
+            key: 'duel/message/fight/fight',
             options: {
                 vars: {
                     steps,
                     currentDuelist,
                     enemyDuelist
-                }
+                },
+                keyboard: await duelFightKeyboard(ctx, {})
             }
         }
     }
@@ -112,7 +112,7 @@ export default class DuelPresenter {
         const loser = await this._getUser({ ctx, id: loserId })
 
         return {
-            key: 'duel/message/ended',
+            key: 'duel/message/fight/ended',
             options: {
                 vars: {
                     prize,

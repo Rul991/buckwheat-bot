@@ -1,0 +1,9 @@
+include /utils/mixins.pug
+
+| #{EMOJIES.SKILL} Игрок 
++link(user)
+| , 
+if skills.length
+    | выберите навыки:
+else
+    | у вас нет навыков!

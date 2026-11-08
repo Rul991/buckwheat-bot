@@ -32,7 +32,7 @@ class InventoryGiftButton extends CallbackQueryAction<InventoryGiftButtonData> {
         } = data
         const item = ItemUtils.get(itemId)
         if(!item) return {
-            key: 'item/not-exist',
+            key: 'inventory/not-exist',
             vars: {
                 totally: true
             }
@@ -43,9 +43,9 @@ class InventoryGiftButton extends CallbackQueryAction<InventoryGiftButtonData> {
             id,
             item
         })
-        if(!inventoryItem) {
+        if(!inventoryItem?.count) {
             return {
-                key: 'item/not-exist'
+                key: 'inventory/not-exist'
             }
         }
 

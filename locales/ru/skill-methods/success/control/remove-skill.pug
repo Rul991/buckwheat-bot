@@ -1,0 +1,8 @@
+include /utils/emojies.pug
+
+| #{EMOJIES.SKILL} 
+if showType == 'attack'
+    | Теряет навык 
+    u #{skill}
+else
+    | Теряет первый навык

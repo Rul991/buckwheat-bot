@@ -1,7 +1,6 @@
 import { characters } from "../../../../resources/duels/characters/characters"
 import type { MethodGetDataOptions } from "../../../../types/skill-methods"
 import type { StartUp } from "../../../../types/types"
-import ExperienceUtils from "../../../level/ExperienceUtils"
 import CharacteristicsUtils from "../../chars/CharacteristicsUtils"
 
 type GetByLevelOptions =
@@ -24,8 +23,7 @@ export default class SkillMethodUtils {
             [options.calcTarget]: calcTarget,
             value
         } = options
-        const levelObject = await calcTarget.level.require()
-        const level = ExperienceUtils.getLevelFromObject(levelObject)
+        const level = await calcTarget.level.require()
 
         return CharacteristicsUtils.calcStartUp(
             level,
@@ -46,20 +44,19 @@ export default class SkillMethodUtils {
         return addedHp
     }
 
-    static async getValueByMaxHpAndPercent(options: GetByPercentOptions) {
+    static async getValueByMaxCharAndPercent(options: GetByPercentOptions) {
         const {
             target,
             coef,
             functionKey = 'getHealth'
         } = options
 
-        const levelObject = await target.level.require()
-        const level = ExperienceUtils.getLevelFromObject(levelObject)
+        const level = await target.level.require()
         const user = await target.user.require()
 
-        const maxHp = characters[user.className][functionKey](level)
-        const addedHp = maxHp * coef
+        const maxValue = characters[user.className][functionKey](level)
+        const addedValue = maxValue * coef
 
-        return addedHp
+        return addedValue
     }
 }

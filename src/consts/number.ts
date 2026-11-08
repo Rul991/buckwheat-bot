@@ -3,6 +3,7 @@ import { IS_PROD } from "./env"
 export const MAX_DEBT_VALUE = -500
 export const START_MONEY = 50
 export const MAX_PERCENTS = 100
+export const MAX_SHOP_OBJECTS_PER_PAGE = 7
 
 export const ROULETTE_PRIZE = 25
 export const ROULETTE_PRIZE_WINSTREAK = IS_PROD ? 8 : 3

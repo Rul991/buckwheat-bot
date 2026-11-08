@@ -1,6 +1,7 @@
 import { join } from "path/posix"
-import type { MethodExecuteOptions, MethodGetDataOptions, MethodGetFailTextOptions, MethodGetSuccessTextOptions, MethodPreCheckOptions } from "../../../../types/skill-methods"
+import type { MethodExecuteOptions, MethodGetDataOptions, MethodGetSuccessTextOptions, MethodPreCheckOptions } from "../../../../types/skill-methods"
 import { SkillAttack } from "../../../../protos/duels_pb"
+import type { GrullyI18nVars } from "@grully/i18n"
 
 export default abstract class SkillMethod {
     protected abstract _key: string
@@ -30,46 +31,44 @@ export default abstract class SkillMethod {
     }
 
     getBoost(attack: SkillAttack): number {
-        if(attack == SkillAttack.Fail) {
+        if (attack == SkillAttack.Fail) {
             return this._attackCoef.fail
         }
-        else if(attack == SkillAttack.Crit) {
+        else if (attack == SkillAttack.Crit) {
             return this._attackCoef.crit
         }
 
         return this._attackCoef.normal
     }
 
-    getSuccessText(options: MethodGetSuccessTextOptions): string {
+    getSuccessTextVars(options: MethodGetSuccessTextOptions): GrullyI18nVars {
         const {
-            ctx,
             data,
             showType,
             boost = 1
         } = options
 
-        return ctx.t(
-            join('skill-methods', 'success', this._key),
-            {
-                data,
-                method: this,
-                showType,
-                boost
-            }
-        )
+        return {
+            data,
+            method: this,
+            showType,
+            boost
+        }
     }
 
-    getFailText(options: MethodGetFailTextOptions) {
+    getSuccessText(options: MethodGetSuccessTextOptions): string {
         const {
             ctx
         } = options
 
         return ctx.t(
-            join('skill-methods', 'fail', this._key),
-            {
-                method: this
-            }
+            join('skill-methods', 'success', this._key),
+            this.getSuccessTextVars(options)
         )
+    }
+
+    getFailText() {
+        return join('skill-methods', 'fail', this._key)
     }
 
     get key(): string {

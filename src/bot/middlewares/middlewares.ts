@@ -3,6 +3,7 @@ import ChatService from "../../db/services/chat/ChatService"
 import LinkedChatService from "../../db/services/chat/LinkedChatService"
 import DuelistService from "../../db/services/duel/DuelistService"
 import DuelService from "../../db/services/duel/DuelService"
+import DuelStepService from "../../db/services/duel/DuelStepService"
 import LevelService from "../../db/services/level/LevelService"
 import BalanceService from "../../db/services/money/BalanceService"
 import UserService from "../../db/services/user/UserService"
@@ -10,6 +11,7 @@ import type { BotContext } from "../../types/bot"
 import ContextUtils from "../../utils/bot/ContextUtils"
 import LazyValue from "../../utils/cache/LazyValue"
 import RankUtils from "../../utils/db/RankUtils"
+import ExperienceUtils from "../../utils/level/ExperienceUtils"
 
 export const setContextVarsAndData = async (ctx: BotContext, next: () => Promise<void>) => {
     const id = ctx.from?.id
@@ -67,12 +69,18 @@ export const setContextVarsAndData = async (ctx: BotContext, next: () => Promise
             },
             'user'
         ),
-        level: new LazyValue(
+        levelObject: new LazyValue(
             async () => {
                 return chatId ? await LevelService.get(
                     chatId,
                     id
                 ) : undefined
+            }
+        ),
+        level: new LazyValue(
+            async () => {
+                const level = await ctx.vars.levelObject.get()
+                return ExperienceUtils.getLevelFromObject(level)
             }
         ),
         duelist: new LazyValue(
@@ -88,11 +96,24 @@ export const setContextVarsAndData = async (ctx: BotContext, next: () => Promise
                 return chatId ? await ChatService.get(chatId) : undefined
             }
         ),
-        duel: new LazyValue(
-            async () => {
-                return chatId ? await DuelService.get(chatId) : undefined
-            }
-        )
+        duel: {
+            duel: new LazyValue(
+                async () => {
+                    return chatId ? await DuelService.get(chatId) : undefined
+                }
+            ),
+            currentStep: new LazyValue(
+                async () => {
+                    return chatId ? await DuelStepService.getCurrent(chatId) : undefined
+                }
+            ),
+            currentDuelist: new LazyValue(
+                async () => {
+                    const duel = await ctx.vars.duel.duel.get()
+                    return await DuelStepService.getCurrentDuelist(duel)
+                }
+            )
+        },
     }
 
     ctx.actionData = {}

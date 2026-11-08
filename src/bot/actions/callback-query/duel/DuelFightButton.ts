@@ -4,7 +4,6 @@ import type { CallbackQueryActionOptions } from "../../../../types/action-option
 import type { CallbackQueryExecuteResult } from "../../../../types/results"
 import RankUtils from "../../../../utils/db/RankUtils"
 import CallbackQueryAction from "../../base/CallbackQueryAction"
-import DuelStepService from "../../../../db/services/duel/DuelStepService"
 import DuelPresenter from "../../../../utils/duel/duel/DuelPresenter"
 import MessageUtils from "../../../../utils/bot/MessageUtils"
 
@@ -16,18 +15,14 @@ class DuelFightButton extends CallbackQueryAction<DuelFightButtonData> {
     override name: string = 'duelfight'
 
     protected override async _getId(options: CallbackQueryActionOptions<DuelFightButtonData>): Promise<number | number[] | undefined> {
-        const {
-            ctx,
-        } = options
-        const duel = await ctx.vars.duel.get()
-        return DuelStepService.getCurrentDuelist(duel)
+        return await options.ctx.vars.duel.currentDuelist.get()
     }
 
     protected override async _execute(options: CallbackQueryActionOptions<DuelFightButtonData>): Promise<CallbackQueryExecuteResult> {
         const {
             ctx
         } = options
-        const duel = await ctx.vars.duel.require()
+        const duel = await ctx.vars.duel.duel.require()
 
         const {
             key,

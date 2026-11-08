@@ -1,0 +1,26 @@
+include ./mixins.pug
+
+-
+    const messages = [
+        'Критический промах',
+        'Обычная атака',
+        'Критическое попадание'
+    ]
+
+    const emojies = [
+        EMOJIES.FAIL_ATTACK,
+        EMOJIES.ATTACK,
+        EMOJIES.CRIT_ATTACK
+    ]
+
++reverse_heading(emojies[attack], false)
+    i #{messages[attack]}
++plain_code_param(`${EMOJIES.SKILL} Использован навык`, skill)
+|
+|
+|
++methods(casterMethods, targetMethods)
+|
+| #{EMOJIES.NEXT} Игрок 
++id_link(next)
+| , ваш ход!

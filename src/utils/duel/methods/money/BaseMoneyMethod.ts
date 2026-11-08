@@ -8,26 +8,18 @@ export default abstract class BaseMoneyMethod extends SkillMethod {
     protected override async _getData(options: MethodGetDataOptions): Promise<number> {
         const money = await this._getRawMoney(options)
         const {
-            boost
+            boost,
+            target
         } = options
-        return Math.floor(money * boost)
+
+        const fullMoney = Math.floor(money * boost)
+        const availableMoney = (await target.balance.require()).total
+
+        return Math.min(fullMoney, availableMoney)
     }
 
-    protected override async _precheck(options: MethodPreCheckOptions): Promise<boolean> {
-        const {
-            target,
-            chatId,
-            data: needMoney,
-            ctx
-        } = options
-        const balance = ctx.vars.id != target.id ?
-            await BalanceService.get(
-                chatId,
-                target.id
-            ) :
-            await ctx.vars.balance.get()
-
-        return (balance?.total ?? 0) >= needMoney
+    protected override async _precheck(_options: MethodPreCheckOptions): Promise<boolean> {
+        return true
     }
 
     protected override async _execute(options: MethodExecuteOptions): Promise<void> {
@@ -36,10 +28,8 @@ export default abstract class BaseMoneyMethod extends SkillMethod {
             chatId,
             target,
             caster,
-            ctx
         } = options
 
-        ctx.vars.balance.update()
         await BalanceService.transfer({
             chatId,
             owner: target.id,

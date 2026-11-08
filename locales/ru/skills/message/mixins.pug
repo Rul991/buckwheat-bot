@@ -2,17 +2,20 @@ include /utils/mixins.pug
 
 mixin method(emoji, title, texts)
     if texts.length
+        |
         +heading(emoji)
             | На #{title}:
         |
-        for text in texts
-            | !{text}
+        blockquote
+            for text in texts
+                | !{text}
+                |
             |
-        |
-        |
 
 mixin methods(casterMethods, targetMethods)
     +method(EMOJIES.TARGET, 'цель', targetMethods)
+    |
+    |
     +method(EMOJIES.CASTER, 'заклинателя', casterMethods)
 
 mixin skill_heading(skill)

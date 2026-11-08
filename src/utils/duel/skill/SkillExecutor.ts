@@ -1,13 +1,8 @@
 import type Duel from "../../../db/entities/duel/Duel"
-import DuelistService from "../../../db/services/duel/DuelistService"
-import LevelService from "../../../db/services/level/LevelService"
-import UserService from "../../../db/services/user/UserService"
 import { SkillAttack } from "../../../protos/duels_pb"
 import type { BotContext } from "../../../types/bot"
 import type { MethodParticipant } from "../../../types/skill-methods"
-import LazyValue from "../../cache/LazyValue"
 import RandomUtils from "../../math/RandomUtils"
-import DuelUtils from "../duel/DuelUtils"
 import type SkillMethod from "../methods/base/SkillMethod"
 import type Skill from "./Skill"
 
@@ -30,14 +25,15 @@ type PrecheckOptions =
 type ExecuteOptions =
     & {
         skill: Skill
-        target: 'self' | 'enemy'
+        target: MethodParticipant
+        caster: MethodParticipant
         ctx: BotContext
     }
 
 type ExecuteResult =
     | {
         ok: false
-        failText: string
+        failKey: string
     }
     | {
         ok: true
@@ -45,6 +41,7 @@ type ExecuteResult =
             caster: number[]
             target: number[]
         }
+        attack: SkillAttack
     }
 
 export default class SkillExecutor {
@@ -86,9 +83,7 @@ export default class SkillExecutor {
                 duel
             })
             if (!methodResult) {
-                return method.getFailText({
-                    ctx
-                })
+                return method.getFailText()
             }
         }
 
@@ -124,7 +119,8 @@ export default class SkillExecutor {
         const {
             skill,
             ctx,
-            target: targetType
+            target,
+            caster
         } = options
 
         const {
@@ -133,43 +129,26 @@ export default class SkillExecutor {
                 target: targetMethods
             }
         } = skill
-        if(casterMethods.length + targetMethods.length <= 0) {
+        if (casterMethods.length + targetMethods.length <= 0) {
             return {
                 ok: true,
                 datas: {
                     caster: [],
                     target: []
-                }
+                },
+                attack: SkillAttack.Normal
             }
         }
 
-        const duel = await ctx.vars.duel.get()
+        const duel = await ctx.vars.duel.duel.get()
         if (!duel) {
             return {
                 ok: false,
-                failText: ctx.t('duel/message/not-exist')
+                failKey: 'duel/message/not-exist'
             }
         }
 
-        const casterId = ctx.vars.id
         const chatId = ctx.vars.chatId!
-        const targetId = targetType == 'self' ?
-            casterId :
-            DuelUtils.getEnemy(duel, casterId)
-
-        const caster: MethodParticipant = {
-            id: casterId,
-            user: ctx.vars.user,
-            duelist: ctx.vars.duelist,
-            level: ctx.vars.level
-        }
-        const target: MethodParticipant = {
-            id: targetId,
-            user: new LazyValue(() => UserService.get(chatId, targetId)),
-            duelist: new LazyValue(() => DuelistService.get(chatId, targetId)),
-            level: new LazyValue(() => LevelService.get(chatId, targetId)),
-        }
-
         const attack = this.getSkillAttack()
 
         const casterDatas = await this.getData({
@@ -194,7 +173,7 @@ export default class SkillExecutor {
         if (casterPrecheckResult) {
             return {
                 ok: false,
-                failText: casterPrecheckResult
+                failKey: casterPrecheckResult
             }
         }
 
@@ -220,40 +199,40 @@ export default class SkillExecutor {
         if (targetPrecheckResult) {
             return {
                 ok: false,
-                failText: targetPrecheckResult
+                failKey: targetPrecheckResult
             }
         }
 
-        let i = 0
-        for (const method of casterMethods) {
-            await method.execute({
-                chatId,
-                caster,
-                target: caster,
-                ctx,
-                duel,
-                data: casterDatas[i++]!
+        await Promise.all([
+            ...casterMethods.map(async (method, i) => {
+                return await method.execute({
+                    chatId,
+                    caster,
+                    target: caster,
+                    ctx,
+                    duel,
+                    data: targetDatas[i]!
+                })
+            }),
+            ...targetMethods.map(async (method, i) => {
+                return await method.execute({
+                    chatId,
+                    caster,
+                    target,
+                    ctx,
+                    duel,
+                    data: targetDatas[i]!
+                })
             })
-        }
-
-        i = 0
-        for (const method of targetMethods) {
-            await method.execute({
-                chatId,
-                caster,
-                target,
-                ctx,
-                duel,
-                data: targetDatas[i++]!
-            })
-        }
+        ])
 
         return {
             ok: true,
             datas: {
                 caster: casterDatas,
                 target: targetDatas
-            }
+            },
+            attack
         }
     }
 }

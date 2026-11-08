@@ -1,6 +1,8 @@
+import type { QueryFilter } from "mongoose"
 import { START_MONEY } from "../../../consts/number"
 import Balance from "../../entities/money/Balance"
 import BaseService from "../base/BaseService"
+import type BusinessStock from "../../entities/business/BusinessStock"
 
 type AddOptions = {
     chatId: number
@@ -25,6 +27,14 @@ type Income = {
 class BalanceService extends BaseService<typeof Balance> {
     constructor() {
         super(Balance)
+    }
+
+    private async _getTotalSum(filter: QueryFilter<Balance>): Promise<number> {
+        const [result] = await this._repo.model.aggregate([
+            { $match: filter },
+            { $group: { _id: null, total: { $sum: '$total' } } },
+        ])
+        return result?.total ?? 0
     }
 
     override async create(balance: Balance): Promise<Balance> {
@@ -72,7 +82,7 @@ class BalanceService extends BaseService<typeof Balance> {
         ).exec()) ?? undefined
     }
 
-    async get(chatId: number, id: number): Promise<Balance | undefined> {
+    async get(chatId: number, id: number): Promise<Balance> {
         return await this.create(Balance.default(chatId, id))
     }
 
@@ -86,11 +96,19 @@ class BalanceService extends BaseService<typeof Balance> {
         })
     }
 
+    async getTotalSumByStocks(stocks: BusinessStock[]) {
+        return await this._getTotalSum({
+            $or: stocks.map(v => {
+                return {
+                    chatId: v.chatId,
+                    id: v.id
+                }
+            })
+        })
+    }
+
     async getEnvellBalance(): Promise<number> {
-        const result = await this._repo.model.aggregate([
-            { $group: { _id: null, totalMoney: { $sum: "$total" } } }
-        ])
-        return result.length ? result[0].totalMoney : 0
+        return await this._getTotalSum({})
     }
 
     async transfer({ chatId, owner, target, money }: TransferOptions): Promise<boolean> {

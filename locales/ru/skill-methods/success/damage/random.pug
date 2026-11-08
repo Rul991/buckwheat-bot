@@ -1,7 +1,7 @@
 include ./mixins.pug
 
 +message()
-    if showType == 'duel'
+    if showType == 'attack'
         | #{formatNumber(data)}
     else
         | #{formatNumber(method.damage.min)} - #{formatNumber(method.damage.max)}

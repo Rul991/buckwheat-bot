@@ -8,6 +8,7 @@ import InventoryItemService from "../../../../db/services/items/InventoryItemSer
 import ItemUtils from "../../../../utils/items/ItemUtils"
 import MessageUtils from "../../../../utils/bot/MessageUtils"
 import { showItemKeyboard } from "../../../keyboards/inventory"
+import InventoryItem from "../../../../db/entities/items/InventoryItem"
 
 class InventoryShowButton extends CallbackQueryAction<InventoryShowButtonData> {
     override defaultTextKey: string = 'button/show'
@@ -47,13 +48,11 @@ class InventoryShowButton extends CallbackQueryAction<InventoryShowButtonData> {
             chatId,
             id,
             item
+        }) ?? new InventoryItem({
+            chatId,
+            id,
+            item,
         })
-
-        if(!inventoryItem) {
-            return {
-                key: 'inventory/not-exist'
-            }
-        }
 
         await MessageUtils.editText(
             ctx,

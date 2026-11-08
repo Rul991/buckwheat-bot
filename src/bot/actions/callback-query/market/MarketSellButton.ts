@@ -46,7 +46,7 @@ class MarketSellButton extends CallbackQueryAction<MarketSellButtonData> {
             id,
             item
         })
-        if(!inventoryItem) {
+        if(!inventoryItem?.count) {
             return {
                 key: 'inventory/not-exist'
             }

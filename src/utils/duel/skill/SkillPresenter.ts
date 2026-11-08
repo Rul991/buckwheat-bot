@@ -1,6 +1,8 @@
+import { backFightDuelKeyboard } from "../../../bot/keyboards/duel"
 import { selectedSkillsMenuKeyboard, skillBookStartKeyboard } from "../../../bot/keyboards/skills"
 import DuelistService from "../../../db/services/duel/DuelistService"
 import LevelService from "../../../db/services/level/LevelService"
+import BalanceService from "../../../db/services/money/BalanceService"
 import UserService from "../../../db/services/user/UserService"
 import { SkillAttack } from "../../../protos/duels_pb"
 import type { BotContext } from "../../../types/bot"
@@ -15,6 +17,7 @@ type GetSkillMethodsDataOptions = {
     ctx: BotContext
     methods: SkillMethod[]
     attack?: SkillAttack
+    datas?: number[]
 }
 
 type GetSkillMethodsTextOptions =
@@ -29,6 +32,13 @@ type ShowOptions = {
     showType: SkillMethodGetTextShowType
     attack?: SkillAttack
 }
+
+type AttackOptions =
+    & Required<Omit<ShowOptions, 'showType'>>
+    & {
+        casterDatas?: number[]
+        targetDatas?: number[]
+    }
 
 export default class SkillPresenter {
     static async menu(ctx: BotContext) {
@@ -55,10 +65,14 @@ export default class SkillPresenter {
     private static async _getSkillMethodsData({
         ctx,
         methods,
-        attack = SkillAttack.Normal
+        attack = SkillAttack.Normal,
+        datas
     }: GetSkillMethodsDataOptions): Promise<number[]> {
+        if (datas) {
+            return datas
+        }
         const caster = ctx.vars.id
-        const duel = await ctx.vars.duel.get()
+        const duel = await ctx.vars.duel.duel.get()
         if (!duel) {
             return []
         }
@@ -80,12 +94,14 @@ export default class SkillPresenter {
                 level: ctx.vars.level,
                 user: ctx.vars.user,
                 duelist: ctx.vars.duelist,
+                balance: ctx.vars.balance
             },
             target: {
                 id: target,
-                level: new LazyValue(() => LevelService.get(chatId, target)),
+                level: new LazyValue(() => LevelService.getCurrentLevel(chatId, target)),
                 user: new LazyValue(() => UserService.get(chatId, target)),
                 duelist: new LazyValue(() => DuelistService.get(chatId, target)),
+                balance: new LazyValue(() => BalanceService.get(chatId, target))
             }
         })
     }
@@ -133,6 +149,49 @@ export default class SkillPresenter {
                     type: showType,
                     attack
                 }),
+            }
+        }
+    }
+
+    static async attack(options: AttackOptions) {
+        const {
+            ctx,
+            skill,
+            attack,
+            casterDatas,
+            targetDatas
+        } = options
+
+        const type = 'attack'
+        const chatId = ctx.vars.chatId!
+
+        const nextDuelistId = await ctx.vars.duel.currentDuelist.get()
+        const next = await UserService.get(chatId, nextDuelistId)
+
+        return {
+            key: 'skills/message/attack',
+            options: {
+                vars: {
+                    skill: skill.getTitle(ctx),
+                    casterMethods: await this._getSkillMethodsText({
+                        ctx,
+                        methods: skill.methods.caster,
+                        type,
+                        attack,
+                        datas: casterDatas,
+                    }),
+                    targetMethods: await this._getSkillMethodsText({
+                        ctx,
+                        methods: skill.methods.target,
+                        type,
+                        attack,
+                        datas: targetDatas,
+                    }),
+                    attack,
+                    next,
+                },
+                keyboard: await backFightDuelKeyboard(ctx, { key: 'duel/button/fight' }),
+                chatId
             }
         }
     }

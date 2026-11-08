@@ -44,6 +44,7 @@ export const showShopKeyboard = KeyboardCreator.create<{
     count: number
     index: number
     hasCoupon: boolean
+    currentCount: number
 }>(
     async ({
         keyboard,
@@ -54,7 +55,8 @@ export const showShopKeyboard = KeyboardCreator.create<{
             remainingCount,
             count,
             index,
-            hasCoupon
+            hasCoupon,
+            currentCount
         }
     }) => {
         const bigId = BigInt(id)
@@ -130,7 +132,7 @@ export const showShopKeyboard = KeyboardCreator.create<{
                         id: bigId,
                         page: 0
                     },
-                    key: 'inventory/button/to-inventory'
+                    key: currentCount > 0 ? 'inventory/button/to-inventory' : 'inventory/button/info'
                 }))
                 .row()
         }

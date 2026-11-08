@@ -1,3 +1,4 @@
+import { MAX_SHOP_OBJECTS_PER_PAGE } from "../../consts/number"
 import { shopItems } from "../../resources/items/shop"
 import type Item from "../../utils/items/Item"
 import KeyboardCreator from "../../utils/keyboard/KeyboardCreator"
@@ -59,7 +60,7 @@ export const showItemKeyboard = KeyboardCreator.create<{
         const itemId = item.id
         const bigId = BigInt(id)
 
-        if(item.gun && count > 0) {
+        if (item.gun && count > 0) {
             keyboard
                 .add(GunSetButton.button({
                     ctx,
@@ -71,7 +72,7 @@ export const showItemKeyboard = KeyboardCreator.create<{
         }
 
         const shopIndex = shopItems.indexOf(item)
-        if(shopIndex != -1) {
+        if (shopIndex != -1) {
             keyboard
                 .add(
                     ShopShowButton.button({
@@ -79,47 +80,52 @@ export const showItemKeyboard = KeyboardCreator.create<{
                         data: {
                             id: bigId,
                             index: shopIndex,
-                            page: 0,
+                            page: Math.floor(shopIndex / MAX_SHOP_OBJECTS_PER_PAGE),
                             count: 1
                         },
-                        key: 'inventory/button/buy'
+                        key: 'inventory/button/buy',
+                        style: count <= 0 ? 'primary' : undefined
                     })
                 )
                 .row()
         }
 
-        if (item.canUse) {
+        if (count > 0) {
+            if (item.canUse) {
+                keyboard
+                    .add(InventoryUseButton.button({
+                        ctx,
+                        data: {
+                            id: bigId,
+                            itemId: itemId
+                        }
+                    }))
+            }
+
             keyboard
-                .add(InventoryUseButton.button({
-                    ctx,
-                    data: {
-                        id: bigId,
-                        itemId: itemId
-                    }
-                }))
+                .row()
+                .add(
+                    InventoryGiftButton.button({
+                        ctx,
+                        data: {
+                            id: bigId,
+                            itemId,
+                        }
+                    })
+                )
+                .add(
+                    MarketSellButton.button({
+                        ctx,
+                        data: {
+                            id: bigId,
+                            itemId,
+                        }
+                    })
+                )
+                .row()
         }
 
         keyboard
-            .row()
-            .add(
-                InventoryGiftButton.button({
-                    ctx,
-                    data: {
-                        id: bigId,
-                        itemId,
-                    }
-                })
-            )
-            .add(
-                MarketSellButton.button({
-                    ctx,
-                    data: {
-                        id: bigId,
-                        itemId,
-                    }
-                })
-            )
-            .row()
             .add(
                 InventoryScrollerButton.button({
                     ctx,
@@ -133,7 +139,7 @@ export const showItemKeyboard = KeyboardCreator.create<{
                             $typeName: 'ScrollerData',
                         }
                     },
-                    key: 'button/back'
+                    key: count > 0 ? 'button/back' : 'inventory/button/to-inventory'
                 })
             )
     }

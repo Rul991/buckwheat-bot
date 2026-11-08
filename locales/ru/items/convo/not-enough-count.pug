@@ -1,7 +1,8 @@
 include /utils/mixins.pug
 
-| Игрок 
+| #{EMOJIES.DECLINE} Игрок 
 +link(vars.user)
 | , у тебя нет предмета 
-u #{item.title}
+u
+    +item(item)
 |  в инвентаре!

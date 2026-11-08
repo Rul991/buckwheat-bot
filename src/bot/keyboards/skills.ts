@@ -3,7 +3,6 @@ import SelectedSkillsService from "../../db/services/duel/SelectedSkillsService"
 import { SkillBookScrollerType, SkillShowType } from "../../protos/skills_pb"
 import SkillRegistry from "../../utils/duel/skill/SkillRegistry"
 import KeyboardCreator from "../../utils/keyboard/KeyboardCreator"
-import ExperienceUtils from "../../utils/level/ExperienceUtils"
 import ArrayUtils from "../../utils/math/ArrayUtils"
 import SelectedSkillsMenuButton from "../actions/callback-query/skills/SelectedSkillsMenuButton"
 import SkillAddButton from "../actions/callback-query/skills/SkillAddButton"
@@ -94,9 +93,7 @@ export const addSkillKeyboard = KeyboardCreator.create<{
 
         const skill = SkillRegistry.get(skillId)
         if (skill) {
-            const levelObject = await ctx.vars.level.get()
-            const level = ExperienceUtils.getLevelFromObject(levelObject)
-
+            const level = await ctx.vars.level.get()
             const user = await ctx.vars.user.require()
             const className = user.className
 

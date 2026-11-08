@@ -184,7 +184,7 @@ class DuelistService extends BaseService<typeof Duelist> {
         })
     }
 
-    async dead(chatId: number, id: number): Promise<Duelist | undefined> {
+    async kill(chatId: number, id: number): Promise<Duelist | undefined> {
         return await this._repo.updateOne(
             {
                 chatId,
@@ -193,6 +193,11 @@ class DuelistService extends BaseService<typeof Duelist> {
             {
                 hp: DEAD_HEALTH
             })
+    }
+
+    async isDead(chatId: number, id: number) {
+        const duelist = await this.get(chatId, id)
+        return duelist.hp <= DEAD_HEALTH
     }
 
     async gun({

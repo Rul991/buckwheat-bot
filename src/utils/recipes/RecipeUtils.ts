@@ -1,7 +1,6 @@
 import { showRecipeKeyboard } from "../../bot/keyboards/recipe"
 import InventoryItemService from "../../db/services/items/InventoryItemService"
 import type { BotContext } from "../../types/bot"
-import ExperienceUtils from "../level/ExperienceUtils"
 import type Recipe from "./Recipe"
 
 type ShowOptions = {
@@ -45,9 +44,7 @@ export default class RecipeUtils {
         const id = ctx.vars.id
         const chatId = ctx.vars.chatId!
 
-        const levelObject = await ctx.vars.level.get()
-        const level = ExperienceUtils.getLevelFromObject(levelObject)
-
+        const level = await ctx.vars.level.get()
         const inventory = await InventoryItemService.getInventory(chatId, id)
         const experience = recipe.getExperience(inventory, count)
 

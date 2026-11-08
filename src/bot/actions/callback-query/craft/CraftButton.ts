@@ -7,7 +7,6 @@ import CallbackQueryAction from "../../base/CallbackQueryAction"
 import RecipeUtils from "../../../../utils/recipes/RecipeUtils"
 import InventoryItemService from "../../../../db/services/items/InventoryItemService"
 import MessageUtils from "../../../../utils/bot/MessageUtils"
-import ExperienceUtils from "../../../../utils/level/ExperienceUtils"
 import ClassUtils from "../../../../utils/db/ClassUtils"
 
 class CraftButton extends CallbackQueryAction<CraftButtonData> {
@@ -47,9 +46,7 @@ class CraftButton extends CallbackQueryAction<CraftButtonData> {
         const recipe = RecipeUtils.get(recipeId)
         if (!recipe) return
 
-        const levelObject = await ctx.vars.level.get()
-        const level = ExperienceUtils.getLevelFromObject(levelObject)
-
+        const level = await ctx.vars.level.get()
         if(recipe.level > level) {
             return {
                 key: 'craft/cant/low-level'

@@ -68,7 +68,8 @@ export default class ShopUtils {
                         remainingCount: count.remaining,
                         index,
                         count: chooseCount,
-                        hasCoupon
+                        hasCoupon,
+                        currentCount: count.current
                     }
                 )
             }

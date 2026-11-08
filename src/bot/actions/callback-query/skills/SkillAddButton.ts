@@ -6,7 +6,6 @@ import RankUtils from "../../../../utils/db/RankUtils"
 import CallbackQueryAction from "../../base/CallbackQueryAction"
 import SkillRegistry from "../../../../utils/duel/skill/SkillRegistry"
 import SelectedSkillsService from "../../../../db/services/duel/SelectedSkillsService"
-import ExperienceUtils from "../../../../utils/level/ExperienceUtils"
 
 class SkillAddButton extends CallbackQueryAction<SkillAddButtonData> {
     override schema: GenMessage<SkillAddButtonData> = SkillAddButtonDataSchema
@@ -41,9 +40,7 @@ class SkillAddButton extends CallbackQueryAction<SkillAddButtonData> {
         const user = await ctx.vars.user.require()
         const className = user.className
 
-        const levelObject = await ctx.vars.level.get()
-        const level = ExperienceUtils.getLevelFromObject(levelObject)
-
+        const level = await ctx.vars.level.get()
         const canAdd = await SelectedSkillsService.canAdd({
             chatId,
             id,

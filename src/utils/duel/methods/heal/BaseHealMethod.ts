@@ -24,14 +24,12 @@ export default abstract class BaseHealMethod extends SkillMethod {
             target,
         } = options
 
-        target.duelist.set(
-            await DuelistService.add({
-                chatId,
-                id: target.id,
-                value: data,
-                key: 'hp'
-            })
-        )
+        await DuelistService.add({
+            chatId,
+            id: target.id,
+            value: data,
+            key: 'hp'
+        })
     }
 
 }

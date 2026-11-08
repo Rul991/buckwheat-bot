@@ -1,0 +1,19 @@
+include /utils/mixins.pug
+
+for duelistEffect in duelistEffects
+    - const {user, effects} = duelistEffect
+    - const maxLength = Math.max(...effects.map(effect => effect.title.length))
+    +heading(EMOJIES.EFFECT, false)
+        | Игрока 
+        +link(user)
+        | :
+    for effect in effects
+        - const length = effect.title.length
+        +plain_code_param(`${EMOJIES.MINUS} ${effect.title}`, `${''.padEnd(maxLength - length - 1, ' ')}${formatNumber(effect.steps)}${EMOJIES.STEP}`)
+        |
+    |
+    |
+    |
+
+if !duelistEffects.length
+    | #{EMOJIES.EMPTY} Эффектов нет!

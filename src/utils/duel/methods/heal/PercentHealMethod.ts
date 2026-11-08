@@ -1,6 +1,5 @@
 import { characters } from "../../../../resources/duels/characters/characters"
 import type { MethodGetDataOptions } from "../../../../types/skill-methods"
-import ExperienceUtils from "../../../level/ExperienceUtils"
 import BaseHealMethod from "./BaseHealMethod"
 
 export default class PercentHealMethod extends BaseHealMethod {
@@ -12,8 +11,7 @@ export default class PercentHealMethod extends BaseHealMethod {
             target,
         } = options
 
-        const levelObject = await target.level.require()
-        const level = ExperienceUtils.getLevelFromObject(levelObject)
+        const level = await target.level.require()
         const user = await target.user.require()
 
         const maxHp = characters[user.className].getHealth(level)

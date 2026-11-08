@@ -1,4 +1,4 @@
-import DuelUtils from "../../../utils/duel/duel/DuelUtils"
+import TimeUtils from "../../../utils/time/TimeUtils"
 import type Duel from "../../entities/duel/Duel"
 import DuelStep from "../../entities/duel/DuelStep"
 import BaseService from "../base/BaseService"
@@ -8,11 +8,56 @@ class DuelStepService extends BaseService<typeof DuelStep> {
         super(DuelStep)
     }
 
-    async getLast(chatId: number) {
-        return await this._repo.model.findOne({ chatId })
-            .sort({ _id: -1 })
-            .lean()
+    async getCurrent(chatId: number) {
+        return await this._repo.findOne(
+            { chatId },
+            {
+                sort: {
+                    _id: -1
+                }
+            }
+        )
+    }
+
+    async deleteCurrent(chatId: number) {
+        const result = await this._repo.model
+            .deleteOne(
+                {
+                    chatId
+                }
+            )
+            .sort({
+                _id: -1
+            })
             .exec()
+
+        return result.deletedCount > 0
+    }
+
+    async addDamage(chatId: number, damage: number) {
+        return await this._repo.updateOne(
+            {
+                chatId
+            },
+            {
+                $inc: {
+                    damage
+                }
+            },
+            {
+                sort: {
+                    _id: -1
+                }
+            }
+        )
+    }
+
+    async getElapsedTime(duel: Duel) {
+        const chatId = duel.chatId
+        const currentStep = await this.getCurrent(chatId)
+        
+        if(!currentStep) return TimeUtils.getElapsed(+duel.createdAt)
+        return TimeUtils.getElapsed(+currentStep.createdAt)
     }
 
     async deleteByChatId(chatId: number) {
@@ -28,10 +73,26 @@ class DuelStepService extends BaseService<typeof DuelStep> {
         if (!duel) return 0
         const chatId = duel.chatId
 
-        const lastStep = await this.getLast(chatId)
-        if (!lastStep) return duel.duelists[0]!
+        const currentStep = await this.getCurrent(chatId)
+        if (!currentStep) return duel.duelists[0]!
 
-        return DuelUtils.getEnemy(duel, lastStep.duelist)
+        return currentStep.duelist
+    }
+
+    async setNextDuelist(chatId: number, duelist: number) {
+        return await this._repo.updateOne(
+            {
+                chatId
+            },
+            {
+                nextDuelist: duelist
+            },
+            {
+                sort: {
+                    _id: -1
+                }
+            }
+        )
     }
 }
 

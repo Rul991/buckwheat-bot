@@ -9,6 +9,7 @@ import RankUtils from "../../../../utils/db/RankUtils"
 import { shopItems } from "../../../../resources/items/shop"
 import { InlineKeyboard } from "grammy"
 import ShopShowButton from "./ShopShowButton"
+import { MAX_SHOP_OBJECTS_PER_PAGE } from "../../../../consts/number"
 
 class ShopScrollerButton extends ScrollerButton<Item> {
     override schema: GenMessage<BaseScrollerData> = BaseScrollerDataSchema
@@ -16,7 +17,7 @@ class ShopScrollerButton extends ScrollerButton<Item> {
     override settingId: number = 86
     override name: string = 'shopscr'
     protected override _isNeedCache: boolean = false
-    protected override _objectsPerPage: number = 5
+    protected override _objectsPerPage: number = MAX_SHOP_OBJECTS_PER_PAGE
     
     protected override async _getRawObjects(_options: CallbackQueryActionOptions<BaseScrollerData>): Promise<Item<any>[]> {
         return shopItems

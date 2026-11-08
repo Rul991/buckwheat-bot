@@ -1,0 +1,9 @@
+include /utils/emojies.pug
+
+| #{EMOJIES.SKILL} 
+if showType == 'attack'
+    | Заклинатель использует навык 
+    u #{skill}
+    |  цели против нее
+else
+    | Заклинатель использует первый навык цели против нее

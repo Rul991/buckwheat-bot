@@ -40,9 +40,11 @@ export default class BaseRepository<T extends RepoExtends> {
         return result
     }
 
-    async findOne(filter: Filter<T>): Promise<Result<T> | undefined> {
+    async findOne(filter: Filter<T>, options?: QueryOptions<T>): Promise<Result<T> | undefined> {
         return (await this.model.findOne(
-            filter
+            filter,
+            undefined,
+            options
         ).exec())?.toObject()
     }
 
