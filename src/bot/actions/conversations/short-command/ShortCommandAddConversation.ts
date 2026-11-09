@@ -55,7 +55,7 @@ class ShortCommandAddConversation extends ConversationAction<T> {
                 return await ShortCommandService.create(
                     new ShortCommand({
                         id: needId,
-                        command,
+                        command: command.toLowerCase(),
                         text
                     })
                 )
