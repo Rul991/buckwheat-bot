@@ -5,7 +5,7 @@ export default class SimpleManaMethod extends BaseManaMethod {
     protected override _key: string = 'mana/simple'
     mana: number
 
-    protected override async _getRawMana(_options: MethodGetDataOptions): Promise<number> {
+    protected override async _getRawData(_options: MethodGetDataOptions): Promise<number> {
         return this.mana
     }
 

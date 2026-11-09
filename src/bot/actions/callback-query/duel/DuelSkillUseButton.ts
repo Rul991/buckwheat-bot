@@ -19,8 +19,6 @@ import type { MethodParticipant } from "../../../../types/skill-methods"
 import LazyValue from "../../../../utils/cache/LazyValue"
 import DuelUtils from "../../../../utils/duel/duel/DuelUtils"
 import DuelService from "../../../../db/services/duel/DuelService"
-import DuelPresenter from "../../../../utils/duel/duel/DuelPresenter"
-import AdminUtils from "../../../../utils/bot/AdminUtils"
 import DuelEffectService from "../../../../db/services/duel/DuelEffectService"
 
 class DuelSkillUseButton extends CallbackQueryAction<DuelSkillUseButtonData> {
@@ -75,17 +73,18 @@ class DuelSkillUseButton extends CallbackQueryAction<DuelSkillUseButtonData> {
 
         const duel = await ctx.vars.duel.duel.require()
         const currentStep = await ctx.vars.duel.currentStep.get()
-        const duelist = currentStep?.nextDuelist ?? await ctx.vars.duel.currentDuelist.get()
-        ctx.vars.duel.currentStep.set(
-            await DuelStepService.create(
-                new DuelStep({
-                    duelist,
-                    chatId,
-                    duel,
-                })
+        if (!currentStep) {
+            const duelist = id
+            ctx.vars.duel.currentStep.set(
+                await DuelStepService.create(
+                    new DuelStep({
+                        duelist,
+                        chatId,
+                        duel,
+                    })
+                )
             )
-        )
-        ctx.vars.duel.currentDuelist.update()
+        }
 
         const casterId = ctx.vars.id
         const enemyId = DuelUtils.getEnemy(duel, casterId)
@@ -106,6 +105,20 @@ class DuelSkillUseButton extends CallbackQueryAction<DuelSkillUseButtonData> {
             balance: new LazyValue(() => BalanceService.get(chatId, enemyId))
         }
 
+        const executeResult = await SkillExecutor.execute({
+            skill,
+            ctx,
+            caster,
+            target: enemy
+        })
+
+        if (!executeResult.ok) {
+            return {
+                key: executeResult.failKey,
+                isAlert: true
+            }
+        }
+
         const effects = await DuelEffectService.getAllByChatId(chatId)
         for (const effect of effects) {
             const {
@@ -115,7 +128,7 @@ class DuelSkillUseButton extends CallbackQueryAction<DuelSkillUseButtonData> {
             } = effect
 
             const skill = SkillRegistry.get(skillId)
-            if(!skill) continue
+            if (!skill) continue
 
             await SkillExecutor.execute({
                 ctx,
@@ -126,58 +139,33 @@ class DuelSkillUseButton extends CallbackQueryAction<DuelSkillUseButtonData> {
         }
         await DuelEffectService.step(chatId)
 
-        const executeResult = await SkillExecutor.execute({
-            skill,
-            ctx,
-            caster,
-            target: enemy
-        })
-
-        if (!executeResult.ok) {
-            await DuelStepService.deleteCurrent(chatId)
-            ctx.vars.duel.currentStep.update()
-            ctx.vars.duel.currentDuelist.update()
-
-            return {
-                key: executeResult.failKey,
-                isAlert: true
-            }
-        }
-
         const loser = await DuelService.whoLose(chatId)
         if (loser) {
-            const winner = DuelUtils.getEnemy(duel, loser)
-            const {
-                experience,
-                prize
-            } = await DuelService.end(chatId, winner)
-
-            const {
-                key,
-                options: messageOptions
-            } = await DuelPresenter.end({
-                winner,
-                loser: id,
-                prize,
-                experience,
-                ctx
+            await DuelUtils.end({
+                duel,
+                loser,
+                ctx,
+                isDelete: true,
+                isKick: true
             })
-
-            await Promise.all([
-                MessageUtils.deleteMessages(ctx),
-                MessageUtils.reply(
-                    ctx,
-                    key,
-                    messageOptions
-                ),
-                AdminUtils.gameKick({
-                    ctx,
-                    chatId,
-                    id: loser,
-                })
-            ])
             return
         }
+
+        const nextStep = await ctx.vars.duel.currentStep.get()
+        const duelist = nextStep?.nextDuelist ?? DuelUtils.getEnemy(
+            duel,
+            await ctx.vars.duel.currentDuelist.get()
+        )
+        ctx.vars.duel.currentStep.set(
+            await DuelStepService.create(
+                new DuelStep({
+                    duelist,
+                    chatId,
+                    duel,
+                })
+            )
+        )
+        ctx.vars.duel.currentDuelist.update()
 
         const { datas, attack } = executeResult
         const {
@@ -190,6 +178,7 @@ class DuelSkillUseButton extends CallbackQueryAction<DuelSkillUseButtonData> {
             casterDatas: datas.caster,
             targetDatas: datas.target
         })
+
         await Promise.all([
             MessageUtils.deleteMessages(ctx),
             MessageUtils.reply(

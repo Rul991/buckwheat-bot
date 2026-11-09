@@ -5,7 +5,7 @@ export default class PercentDamageMethod extends BaseDamageMethod {
     protected override _key: string = 'damage/percent'
     coef: number
 
-    protected override async _getRawDamage(options: MethodGetDataOptions): Promise<number> {
+    protected override async _getRawData(options: MethodGetDataOptions): Promise<number> {
         const {
             target
         } = options

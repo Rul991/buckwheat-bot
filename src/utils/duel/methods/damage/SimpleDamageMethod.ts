@@ -5,7 +5,7 @@ export default class SimpleDamageMethod extends BaseDamageMethod {
     protected override _key: string = 'damage/simple'
     damage: number
 
-    protected override async _getRawDamage(_options: MethodGetDataOptions): Promise<number> {
+    protected override async _getRawData(_options: MethodGetDataOptions): Promise<number> {
         return this.damage
     }
 

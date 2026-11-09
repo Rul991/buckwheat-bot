@@ -3,10 +3,10 @@ import type { MethodGetDataOptions, MethodPreCheckOptions, MethodExecuteOptions 
 import SkillMethod from "../base/SkillMethod"
 
 export default abstract class BaseHealMethod extends SkillMethod {
-    protected abstract _getRawHealth(options: MethodGetDataOptions): Promise<number>
+    protected abstract _getRawData(options: MethodGetDataOptions): Promise<number>
 
     protected override async _getData(options: MethodGetDataOptions): Promise<number> {
-        const health = await this._getRawHealth(options)
+        const health = await this._getRawData(options)
         const {
             boost
         } = options
@@ -24,6 +24,7 @@ export default abstract class BaseHealMethod extends SkillMethod {
             target,
         } = options
 
+        if (data == 0) return
         await DuelistService.add({
             chatId,
             id: target.id,

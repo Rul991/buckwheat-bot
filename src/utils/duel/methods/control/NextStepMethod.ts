@@ -26,5 +26,6 @@ export default class NextStepMethod extends SkillMethod {
                 target.id
             )
         )
+        ctx.vars.duel.currentDuelist.update()
     }
 }

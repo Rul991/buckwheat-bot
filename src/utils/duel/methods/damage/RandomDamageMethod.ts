@@ -6,7 +6,7 @@ export default class RandomDamageMethod extends BaseDamageMethod {
     protected override _key: string = 'damage/random'
     damage: { min: number, max: number }
 
-    protected override async _getRawDamage(_options: MethodGetDataOptions): Promise<number> {
+    protected override async _getRawData(_options: MethodGetDataOptions): Promise<number> {
         const { min, max } = this.damage
         return RandomUtils.range(min, max)
     }

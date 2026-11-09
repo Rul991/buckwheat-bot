@@ -6,7 +6,7 @@ export default class PercentHealMethod extends BaseHealMethod {
     protected override _key: string = 'heal/percent'
     healCoef: number
     
-    protected override async _getRawHealth(options: MethodGetDataOptions): Promise<number> {
+    protected override async _getRawData(options: MethodGetDataOptions): Promise<number> {
         const {
             target,
         } = options

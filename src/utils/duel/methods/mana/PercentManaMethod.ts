@@ -6,7 +6,7 @@ export default class PercentManaMethod extends BaseManaMethod {
     protected override _key: string = 'mana/percent'
     manaCoef: number
     
-    protected override async _getRawMana(options: MethodGetDataOptions): Promise<number> {
+    protected override async _getRawData(options: MethodGetDataOptions): Promise<number> {
         const {
             target,
         } = options

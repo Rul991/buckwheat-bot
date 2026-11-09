@@ -1,3 +1,4 @@
+import { DUEL_STEP_TIME } from "../../../consts/time"
 import TimeUtils from "../../../utils/time/TimeUtils"
 import type Duel from "../../entities/duel/Duel"
 import DuelStep from "../../entities/duel/DuelStep"
@@ -34,10 +35,11 @@ class DuelStepService extends BaseService<typeof DuelStep> {
         return result.deletedCount > 0
     }
 
-    async addDamage(chatId: number, damage: number) {
+    async addDamage(chatId: number, needDuelist: number, damage: number) {
         return await this._repo.updateOne(
             {
-                chatId
+                chatId,
+                duelist: needDuelist
             },
             {
                 $inc: {
@@ -52,12 +54,12 @@ class DuelStepService extends BaseService<typeof DuelStep> {
         )
     }
 
-    async getElapsedTime(duel: Duel) {
+    async isExpired(duel: Duel) {
         const chatId = duel.chatId
         const currentStep = await this.getCurrent(chatId)
         
-        if(!currentStep) return TimeUtils.getElapsed(+duel.createdAt)
-        return TimeUtils.getElapsed(+currentStep.createdAt)
+        if(!currentStep) return TimeUtils.isExpired(+duel.createdAt, DUEL_STEP_TIME)
+        return TimeUtils.isExpired(+currentStep.createdAt, DUEL_STEP_TIME)
     }
 
     async deleteByChatId(chatId: number) {
@@ -86,6 +88,20 @@ class DuelStepService extends BaseService<typeof DuelStep> {
             },
             {
                 nextDuelist: duelist
+            },
+            {
+                sort: {
+                    _id: -1
+                }
+            }
+        )
+    }
+
+    async getLastByDuelist(chatId: number, duelist: number) {
+        return await this._repo.findOne(
+            {
+                chatId,
+                duelist
             },
             {
                 sort: {

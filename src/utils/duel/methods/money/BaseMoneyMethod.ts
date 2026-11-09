@@ -30,6 +30,7 @@ export default abstract class BaseMoneyMethod extends SkillMethod {
             caster,
         } = options
 
+        if(money == 0) return
         await BalanceService.transfer({
             chatId,
             owner: target.id,
@@ -37,5 +38,4 @@ export default abstract class BaseMoneyMethod extends SkillMethod {
             money
         })
     }
-
 }

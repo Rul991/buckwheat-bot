@@ -1,5 +1,6 @@
 include ./mixins.pug
 
 +message()
-    | #{method.coef >= 0 ? '+' : ''}#{data ? formatNumber(data) : `${formatNumber(method.coef * 100)}%`}
-| , если #{EMOJIES.HP} &lt; 0
+    | #{method.coef >= 0 ? '+' : ''}#{showType == 'attack' ? formatNumber(data) : `${formatNumber(method.coef * 100)}%`}
+if showType != 'attack'
+    | , если #{EMOJIES.HP} &lt; 0

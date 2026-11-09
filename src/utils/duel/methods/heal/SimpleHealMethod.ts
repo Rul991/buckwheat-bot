@@ -5,7 +5,7 @@ export default class SimpleHealMethod extends BaseHealMethod {
     protected override _key: string = 'heal/simple'
     hp: number
 
-    protected override async _getRawHealth(_options: MethodGetDataOptions): Promise<number> {
+    protected override async _getRawData(_options: MethodGetDataOptions): Promise<number> {
         return this.hp
     }
 

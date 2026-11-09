@@ -130,8 +130,11 @@ class DuelService extends BaseService<typeof Duel> {
             (a, b) => b.hp - a.hp
         )
 
-        const loser = sortedDuelists[0]
-        if(loser && loser.hp <= DEAD_HEALTH) return loser.id
+        for (const duelist of sortedDuelists) {
+            if(duelist.hp <= DEAD_HEALTH) {
+                return duelist.id
+            }
+        }
 
         return undefined
     }

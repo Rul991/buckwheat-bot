@@ -1,0 +1,9 @@
+include /utils/functions.pug
+
+| #{EMOJIES.BACK} Возвращает 
+code
+    if showType == 'attack'
+        | #{formatNumber(data)}
+    else
+        | #{formatNumber(method.coef * 100)}%
+|  урона

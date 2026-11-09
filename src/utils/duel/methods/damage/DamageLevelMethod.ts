@@ -7,7 +7,7 @@ export default class DamageLevelMethod extends BaseDamageMethod {
     protected override _key: string = 'damage/level'
     damage: StartUp<number>
 
-    protected override async _getRawDamage(options: MethodGetDataOptions): Promise<number> {
+    protected override async _getRawData(options: MethodGetDataOptions): Promise<number> {
         return await SkillMethodUtils.getValueByLevel({
             ...options,
             calcTarget: 'caster',
@@ -15,8 +15,11 @@ export default class DamageLevelMethod extends BaseDamageMethod {
         })
     }
 
-    constructor(damage: StartUp<number>) {
+    constructor(start: number, up: number) {
         super()
-        this.damage = damage
+        this.damage = {
+            start,
+            up
+        }
     }
 }

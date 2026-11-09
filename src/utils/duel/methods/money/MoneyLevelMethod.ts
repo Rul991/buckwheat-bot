@@ -15,8 +15,11 @@ export default class MoneyLevelMethod extends BaseMoneyMethod {
         })
     }
 
-    constructor(money: StartUp<number>) {
+    constructor(start: number, up: number) {
         super()
-        this.money = money
+        this.money = {
+            start,
+            up
+        }
     }
 }

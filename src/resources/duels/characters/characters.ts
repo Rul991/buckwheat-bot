@@ -1,7 +1,6 @@
 import Character from "../../../utils/duel/character/Character"
 import type { ClassTypes } from "../../../types/class"
-import { attackBardSkill, attackEngineerSkill, attackKnightSkill, attackSorcererSkill, attackThiefSkill, attackBossSkill, attackUniversalSkill, devSkill } from "../skills/skills"
-
+import { attackBardSkill, attackEngineerSkill, attackKnightSkill, attackSorcererSkill, attackThiefSkill, attackBossSkill, attackUniversalSkill, devSkill, absoluteHarmonySkill, chordOfRetributionSkill, deafeningNoteSkill, dissonanceSkill, finalChordSkill, hymnOfResilienceSkill, inspiringMotifSkill, lullabySkill, mockerySkill, requiemSkill, sirensLamentSkill, skillTheftSkill, stringStrikeSkill, thievingBalladSkill, vampiricMelodySkill, arcWelderSkill, coreMeltdownSkill, deployTurretSkill, droneShieldSkill, emergencyVentSkill, gauntletPunchSkill, hijackSkill, magneticPullSkill, oilSlickSkill, reactivePlatingSkill, repairKitSkill, scrapCannonSkill, scrapSalvageSkill, selfDestructProtocolSkill, shockTrapSkill, armorPlatingSkill, blockStanceSkill, deepCutSkill, disarmSkill, executionersShotSkill, indomitableSkill, lastStandSkill, piercingShotSkill, rallyingCrySkill, riposteSkill, shieldBashSkill, shotgunBlastSkill, slashSkill, sunderArmorSkill, suppressiveFireSkill, absoluteZeroSkill, arcaneBoltSkill, arcaneOverloadSkill, arcaneSiphonSkill, arcaneWardSkill, dispelSkill, iceSpikeSkill, igniteSkill, lightningBoltSkill, manaShieldSkill, manaSpringSkill, meteorSkill, puppetStringsSkill, silenceSkill, timeFreezeSkill, assassinateSkill, backstabSkill, crossbowVolleySkill, cutStrapSkill, evasionSkill, fireArrowSkill, hookAndPullSkill, masterPickpocketSkill, poisonArrowSkill, poisonedBoltSkill, quickShotSkill, shadowCloakSkill, smokeBombSkill, stealCoinsSkill, venomTrapSkill } from "../skills/skills"
 export const bardCharacter = new Character({
     hp: {
         start: 80,
@@ -14,7 +13,21 @@ export const bardCharacter = new Character({
     skills: {
         main: attackBardSkill,
         showable: [
-            devSkill,
+            stringStrikeSkill,
+            mockerySkill,
+            inspiringMotifSkill,
+            thievingBalladSkill,
+            lullabySkill,
+            dissonanceSkill,
+            chordOfRetributionSkill,
+            hymnOfResilienceSkill,
+            deafeningNoteSkill,
+            sirensLamentSkill,
+            vampiricMelodySkill,
+            skillTheftSkill,
+            requiemSkill,
+            finalChordSkill,
+            absoluteHarmonySkill,
         ]
     }
 })
@@ -30,7 +43,9 @@ export const botCharacter = new Character({
     },
     skills: {
         main: attackUniversalSkill,
-        showable: []
+        showable: [
+            devSkill
+        ]
     }
 })
 
@@ -46,7 +61,21 @@ export const engineerCharacter = new Character({
     skills: {
         main: attackEngineerSkill,
         showable: [
-            devSkill,
+            gauntletPunchSkill,
+            deployTurretSkill,
+            repairKitSkill,
+            shockTrapSkill,
+            reactivePlatingSkill,
+            oilSlickSkill,
+            arcWelderSkill,
+            droneShieldSkill,
+            magneticPullSkill,
+            scrapCannonSkill,
+            emergencyVentSkill,
+            scrapSalvageSkill,
+            hijackSkill,
+            selfDestructProtocolSkill,
+            coreMeltdownSkill,
         ]
     }
 })
@@ -63,7 +92,21 @@ export const knightCharacter = new Character({
     skills: {
         main: attackKnightSkill,
         showable: [
-            devSkill,
+            slashSkill,
+            shotgunBlastSkill,
+            blockStanceSkill,
+            armorPlatingSkill,
+            deepCutSkill,
+            shieldBashSkill,
+            sunderArmorSkill,
+            rallyingCrySkill,
+            suppressiveFireSkill,
+            disarmSkill,
+            piercingShotSkill,
+            lastStandSkill,
+            riposteSkill,
+            executionersShotSkill,
+            indomitableSkill,
         ]
     }
 })
@@ -80,7 +123,21 @@ export const sorcererCharacter = new Character({
     skills: {
         main: attackSorcererSkill,
         showable: [
-            devSkill,
+            arcaneBoltSkill,
+            igniteSkill,
+            manaShieldSkill,
+            iceSpikeSkill,
+            lightningBoltSkill,
+            manaSpringSkill,
+            arcaneWardSkill,
+            dispelSkill,
+            meteorSkill,
+            timeFreezeSkill,
+            arcaneSiphonSkill,
+            silenceSkill,
+            puppetStringsSkill,
+            arcaneOverloadSkill,
+            absoluteZeroSkill,
         ]
     }
 })
@@ -97,7 +154,21 @@ export const thiefCharacter = new Character({
     skills: {
         main: attackThiefSkill,
         showable: [
-            devSkill,
+            quickShotSkill,
+            poisonArrowSkill,
+            stealCoinsSkill,
+            fireArrowSkill,
+            smokeBombSkill,
+            crossbowVolleySkill,
+            evasionSkill,
+            venomTrapSkill,
+            backstabSkill,
+            cutStrapSkill,
+            shadowCloakSkill,
+            poisonedBoltSkill,
+            hookAndPullSkill,
+            masterPickpocketSkill,
+            assassinateSkill,
         ]
     }
 })
@@ -113,7 +184,9 @@ export const unknownCharacter = new Character({
     },
     skills: {
         main: attackUniversalSkill,
-        showable: []
+        showable: [
+            devSkill
+        ]
     }
 })
 

@@ -49,6 +49,41 @@ class DuelEffectService extends BaseService<typeof DuelEffect> {
         return await this.deleteMany({ chatId })
     }
 
+    async deleteBySkillsAndDuelists(
+        chatId: number,
+        skills: Skill[],
+        duelists: number[]
+    ) {
+        const values = skills.map(skill => {
+            return duelists.map(duelist => {
+                return {
+                    chatId,
+                    skillId: skill.id,
+                    target: duelist
+                }
+            })
+        }).flat()
+        const result = await this._repo.deleteMany({
+            $or: values
+        })
+
+        return result.deletedCount > 0
+    }
+
+    async deleteByDuelists(
+        chatId: number,
+        duelists: number[]
+    ) {
+        const result = await this._repo.deleteMany({
+            chatId,
+            target: {
+                $in: duelists
+            }
+        })
+
+        return result.deletedCount > 0
+    }
+
     async getAllByChatId(chatId: number) {
         return await this._repo.find({ chatId, steps: { $gt: 0 } })
     }
@@ -83,7 +118,9 @@ class DuelEffectService extends BaseService<typeof DuelEffect> {
                 skillId: skill.id
             },
             {
-                $inc: steps
+                $inc: {
+                    steps
+                }
             },
             {
                 upsert: true

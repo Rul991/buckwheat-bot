@@ -4,10 +4,10 @@ import type { MethodGetDataOptions, MethodPreCheckOptions, MethodExecuteOptions 
 import SkillMethod from "../base/SkillMethod"
 
 export default abstract class BaseDamageMethod extends SkillMethod {
-    protected abstract _getRawDamage(options: MethodGetDataOptions): Promise<number>
+    protected abstract _getRawData(options: MethodGetDataOptions): Promise<number>
 
     protected override async _getData(options: MethodGetDataOptions): Promise<number> {
-        const damage = await this._getRawDamage(options)
+        const damage = await this._getRawData(options)
         const {
             boost
         } = options
@@ -23,17 +23,27 @@ export default abstract class BaseDamageMethod extends SkillMethod {
             data,
             chatId,
             target,
+            caster,
+            ctx,
         } = options
 
         if (data == 0) return
-        await Promise.all([
+        const [
+            _duelist,
+            step
+        ] = await Promise.all([
             DuelistService.add({
                 chatId,
                 id: target.id,
                 value: -data,
                 key: 'hp'
             }),
-            DuelStepService.addDamage(chatId, data)
+            DuelStepService.addDamage(
+                chatId,
+                caster.id,
+                data
+            )
         ])
+        ctx.vars.duel.currentStep.set(step)
     }
 }

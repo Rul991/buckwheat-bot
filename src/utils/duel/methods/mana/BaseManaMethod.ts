@@ -3,10 +3,10 @@ import type { MethodGetDataOptions, MethodPreCheckOptions, MethodExecuteOptions 
 import SkillMethod from "../base/SkillMethod"
 
 export default abstract class BaseManaMethod extends SkillMethod {
-    protected abstract _getRawMana(options: MethodGetDataOptions): Promise<number>
+    protected abstract _getRawData(options: MethodGetDataOptions): Promise<number>
 
     protected override async _getData(options: MethodGetDataOptions): Promise<number> {
-        const mana = await this._getRawMana(options)
+        const mana = await this._getRawData(options)
         const {
             boost
         } = options

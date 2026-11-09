@@ -6,7 +6,7 @@ export default class InstantKillDamageMethod extends BaseDamageMethod {
     protected override _key: string = 'damage/instant'
     coef: number
 
-    protected override async _getRawDamage(options: MethodGetDataOptions): Promise<number> {
+    protected override async _getRawData(options: MethodGetDataOptions): Promise<number> {
         const {
             target,
         } = options

@@ -74,7 +74,7 @@ export default class DuelCommand extends BuckwheatCommand {
         const userSelectedSkills = await SelectedSkillsService.getSkills(chatId, id)
 
         const replyDuelist = await DuelistService.get(chatId, replyId)
-        const replySelectedSkills = await SelectedSkillsService.getSkills(chatId, id)
+        const replySelectedSkills = await SelectedSkillsService.getSkills(chatId, replyId)
 
         const {
             first: userPrize,

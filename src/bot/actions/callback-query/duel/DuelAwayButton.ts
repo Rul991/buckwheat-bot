@@ -4,10 +4,7 @@ import type { CallbackQueryActionOptions } from "../../../../types/action-option
 import type { CallbackQueryExecuteResult } from "../../../../types/results"
 import RankUtils from "../../../../utils/db/RankUtils"
 import CallbackQueryAction from "../../base/CallbackQueryAction"
-import DuelService from "../../../../db/services/duel/DuelService"
-import MessageUtils from "../../../../utils/bot/MessageUtils"
 import DuelUtils from "../../../../utils/duel/duel/DuelUtils"
-import DuelPresenter from "../../../../utils/duel/duel/DuelPresenter"
 
 class DuelAwayButton extends CallbackQueryAction<DuelAwayButtonData> {
     override schema: GenMessage<DuelAwayButtonData> = DuelAwayButtonDataSchema
@@ -27,37 +24,17 @@ class DuelAwayButton extends CallbackQueryAction<DuelAwayButtonData> {
     protected override async _execute(options: CallbackQueryActionOptions<DuelAwayButtonData>): Promise<CallbackQueryExecuteResult> {
         const {
             ctx,
-            chatId,
             id
         } = options
 
         const duel = await ctx.vars.duel.duel.require()
-        const winner = DuelUtils.getEnemy(duel, id)
-
-        const {
-            experience,
-            prize
-        } = await DuelService.end(chatId, winner)
-
-        const {
-            key,
-            options: messageOptions
-        } = await DuelPresenter.end({
-            winner,
+        await DuelUtils.end({
+            duel,
             loser: id,
-            prize,
-            experience,
-            ctx
+            ctx,
+            isDelete: true,
+            isKick: false
         })
-
-        await Promise.all([
-            MessageUtils.deleteMessages(ctx),
-            MessageUtils.reply(
-                ctx,
-                key,
-                messageOptions
-            )
-        ])
     }
 }
 

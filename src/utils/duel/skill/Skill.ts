@@ -3,7 +3,10 @@ import type { BotContext } from "../../../types/bot"
 import type SkillMethod from "../methods/base/SkillMethod"
 
 type SkillConstructorOptions =
-    & Pick<Skill, 'id' | 'level' | 'methods' | 'key'>
+    & Pick<Skill, 'id' | 'level' | 'key'>
+    & {
+        methods: Partial<Skill['methods']>
+    }
 
 type SkillTextVars = {
     title: string
@@ -32,7 +35,10 @@ export default class Skill {
         this.id = id
         this.level = level
         this.key = key
-        this.methods = methods
+        this.methods = {
+            caster: methods.caster ?? [],
+            target: methods.target ?? [],
+        }
     }
 
     getTitle(ctx: BotContext) {
