@@ -2,10 +2,10 @@ include /utils/functions.pug
 
 mixin id_link(user)
     i
-        a(href=`tg://user?id=${user.id}`) #{user.name}
+        a(href=`tg://user?id=${user.id || 0}`) #{user.name || '???'}
 
 mixin username_link(user)
-    a(href=`t.me/${user.username}`) #{user.name}
+    a(href=`t.me/${user.username || 'buckhweat_channel'}`) #{user.name || '???'}
 
 mixin link(user)
     if user.username 
