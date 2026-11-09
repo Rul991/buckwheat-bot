@@ -5,10 +5,10 @@ mixin id_link(user)
         a(href=`tg://user?id=${user ? user.id : 0}`) #{user ? user.name : '???'}
 
 mixin username_link(user)
-    a(href=`t.me/${user.username || 'buckhweat_channel'}`) #{user ? user.name : '???'}
+    a(href=`t.me/${user ? user.username : 'buckhweat_channel'}`) #{user ? user.name : '???'}
 
 mixin link(user)
-    if user.username 
+    if user && user.username 
         +username_link(user)
     else 
         +id_link(user)
