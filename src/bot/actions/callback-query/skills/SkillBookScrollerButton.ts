@@ -108,11 +108,17 @@ class SkillBookScrollerButton extends ScrollerButton<Object, ScrollerData> {
 
     protected override async _editMessage(options: ScrollerButtonEditMessageOptions<Object, ScrollerData>): Promise<ScrollerButtonEditMessageResult> {
         const {
-
+            data
         } = options
+        const {
+            type
+        } = data
 
         return {
-            key: 'skills/message/book/menu'
+            key: 'skills/message/book/menu',
+            vars: {
+                type
+            }
         }
     }
 }

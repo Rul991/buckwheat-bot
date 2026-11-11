@@ -24,6 +24,7 @@ type PrecheckOptions =
 
 type ExecuteOptions =
     & {
+        inUseSkillMethod?: boolean
         skill: Skill
         target: MethodParticipant
         caster: MethodParticipant
@@ -69,7 +70,7 @@ export default class SkillExecutor {
             target,
             ctx,
             chatId,
-            duel
+            duel,
         } = options
 
         let i = 0
@@ -80,7 +81,7 @@ export default class SkillExecutor {
                 chatId,
                 ctx,
                 data: datas[i++]!,
-                duel
+                duel,
             })
             if (!methodResult) {
                 return method.getFailText()
@@ -120,7 +121,8 @@ export default class SkillExecutor {
             skill,
             ctx,
             target,
-            caster
+            caster,
+            inUseSkillMethod = false
         } = options
 
         const {
@@ -211,7 +213,8 @@ export default class SkillExecutor {
                     target: caster,
                     ctx,
                     duel,
-                    data: targetDatas[i]!
+                    data: targetDatas[i]!,
+                    inUseSkillMethod
                 })
             }),
             ...targetMethods.map(async (method, i) => {
@@ -221,7 +224,8 @@ export default class SkillExecutor {
                     target,
                     ctx,
                     duel,
-                    data: targetDatas[i]!
+                    data: targetDatas[i]!,
+                    inUseSkillMethod
                 })
             })
         ])

@@ -30,7 +30,11 @@ export type MethodPreCheckOptions =
         data: number
     }
 
-export type MethodExecuteOptions = MethodPreCheckOptions
+export type MethodExecuteOptions = 
+    & MethodPreCheckOptions
+    & {
+        inUseSkillMethod: boolean
+    }
 
 export type SkillMethodGetTextShowType = 'attack' | 'duel' | 'info'
 

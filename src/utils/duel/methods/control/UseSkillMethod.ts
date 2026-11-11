@@ -38,7 +38,7 @@ export default class UseSkillMethod extends SkillMethod {
 
     protected override async _precheck(options: MethodPreCheckOptions): Promise<boolean> {
         const {
-            data
+            data,
         } = options
 
         return data != this._notFoundSkillId
@@ -47,14 +47,17 @@ export default class UseSkillMethod extends SkillMethod {
     protected override async _execute(options: MethodExecuteOptions): Promise<void> {
         const {
             data: skillId,
+            inUseSkillMethod
         } = options
+        if(inUseSkillMethod) return
 
         const skill = SkillRegistry.get(skillId)
         if(!skill) return
 
         await SkillExecutor.execute({
             ...options,
-            skill
+            skill,
+            inUseSkillMethod: true
         })
     }
 

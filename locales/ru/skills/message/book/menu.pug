@@ -1,3 +1,13 @@
 include /utils/emojies.pug
 
-| #{EMOJIES.SKILL} Книга навыков:
+-
+    const emojies = [
+        CLASS_EMOJIES['knight'], 
+        CLASS_EMOJIES['thief'], 
+        CLASS_EMOJIES['sorcerer'], 
+        CLASS_EMOJIES['engineer'], 
+        CLASS_EMOJIES['bard'], 
+        EMOJIES.EFFECT, 
+    ]
+
+| #{emojies[type] || EMOJIES.SKILL} Книга навыков:

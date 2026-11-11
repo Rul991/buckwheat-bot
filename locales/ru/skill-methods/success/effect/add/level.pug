@@ -2,6 +2,6 @@ include ./mixins.pug
 
 +message(skill)
     if showType == 'info'
-        | #{formatNumber(method.steps.start)} + #{formatNumber(method.steps.up)} * (ваш ур. - 1)
+        | #{formatNumber(method.steps.start)} + #{formatNumber(method.steps.up)} * (ур. заклинателя - 1)
     else
         | #{formatNumber(data)}
