@@ -37,3 +37,4 @@ export const MIN_DUEL_PRIZE = 10
 export const MAX_DUEL_PRIZE = 4_000_000_000
 export const MIN_DUEL_STEPS_FOR_LEVEL = 15
 export const DUEL_EXPERIENCE_PER_STEP = 10
+export const BAN_ITEM_CHANCE = 0.00001

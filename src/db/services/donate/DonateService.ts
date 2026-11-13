@@ -9,7 +9,17 @@ class DonateService extends BaseService<typeof Donate> {
 
     async getTop(chatId: number): Promise<TopValues[]> {
         const map = new Map<number, number>()
-        const donates = await this._repo.find({ chatId })
+        const ids = await this._repo.model.distinct(
+            'id',
+            {
+                chatId
+            }
+        )
+        const donates = await this._repo.find({
+            id: {
+                $in: ids
+            }
+        })
 
         for (const donate of donates) {
             const id = donate.id

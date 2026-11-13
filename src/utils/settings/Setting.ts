@@ -81,8 +81,8 @@ export default class Setting<K extends SettingTypes, V extends SettingValueTypes
 
     getVars(ctx: BotContext) {
         return {
-            title: ctx.t(this.titleKey, { setting: this }),
-            description: ctx.t(this.descriptionKey, { setting: this })
+            title: ctx.t(this.titleKey, { ...this.vars, setting: this }),
+            description: ctx.t(this.descriptionKey, { ...this.vars, setting: this })
         }
     }
 }

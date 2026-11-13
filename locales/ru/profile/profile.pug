@@ -13,11 +13,13 @@ mixin withTitle(title)
     b
         block
 
-blockquote 
-    | #{user.emoji || EMOJIES.STAR} !{(user.description || '...')}
+blockquote
+    if summonEmojiPlace == 'description'
+        | #{user.emoji || EMOJIES.STAR} 
+    | !{(user.description || '...')}
 |
 |
-| #{EMOJIES.PLAYER} Это - игрок 
+| #{summonEmojiPlace == 'player' ? user.emoji || EMOJIES.PLAYER : EMOJIES.PLAYER} Это - игрок 
 +link(user)
 | . 
 

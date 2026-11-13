@@ -1,4 +1,5 @@
 import { MAX_NAME_LENGTH } from "../../../../../consts/lengths"
+import { DESCRIPTION_PROFILE_PLACE_EMOJI } from "../../../../../consts/texts"
 import type Chat from "../../../../../db/entities/chat/Chat"
 import Marriage from "../../../../../db/entities/marriage/Marriage"
 import AvaHistory from "../../../../../db/entities/user/AvaHistory"
@@ -11,7 +12,7 @@ import MessagesService from "../../../../../db/services/message/MessagesService"
 import SettingValueService from "../../../../../db/services/settings/SettingValueService"
 import UserAvaService from "../../../../../db/services/user/UserAvaService"
 import UserService from "../../../../../db/services/user/UserService"
-import { summonEmojiSetting } from "../../../../../resources/settings/user"
+import { summonEmojiPlaceSetting, summonEmojiSetting } from "../../../../../resources/settings/user"
 import type { BuckwheatCommandOptions } from "../../../../../types/action-options"
 import type { BotContext } from "../../../../../types/bot"
 import type { MessageTextContext } from "../../../../../types/contexts"
@@ -244,11 +245,14 @@ export default class ProfileCommand extends BuckwheatCommand {
             }
         ) ?? true
         const linkedChat = await this._getLinkedChat(user.id)
-        const summonEmojiSettingValue = await SettingValueService.get({
+        const summonEmoji = await SettingValueService.getValue({
             setting: summonEmojiSetting,
             id: user.id
         })
-        const summonEmoji = summonEmojiSettingValue.value
+        const summonEmojiPlace = await SettingValueService.getValue({
+            setting: summonEmojiPlaceSetting,
+            id: user.id
+        }) == DESCRIPTION_PROFILE_PLACE_EMOJI ? 'description' : 'player'
 
         const messages = await MessagesService.get(
             chatId,
@@ -282,7 +286,8 @@ export default class ProfileCommand extends BuckwheatCommand {
                 family: partner ? {
                     partner,
                     date: TimeUtils.formatMillisecondsToTime(ctx, TimeUtils.getElapsed(+marriage!.createdAt))
-                } : undefined
+                } : undefined,
+                summonEmojiPlace
             },
             keyboard: await profileKeyboard(
                 ctx,

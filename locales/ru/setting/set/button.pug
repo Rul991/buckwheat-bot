@@ -9,6 +9,6 @@ else if setting.type == 'string'
 else if setting.type == 'boolean'
     | #{bool(value)}
 else if setting.type == 'enum'
-    | #{formatValue(setting.properties.values[value])}
+    | #{formatValue(setting.properties.values[value] || '-')}
 else 
-    | #{formatValue(value)}
+    | #{formatValue(value || '-')}

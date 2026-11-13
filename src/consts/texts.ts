@@ -27,3 +27,6 @@ export const WRONG_COMMAND_REACTS = [
     '🤔',
     '😡',
 ] as const
+
+export const DESCRIPTION_PROFILE_PLACE_EMOJI = '💫'
+export const PLAYER_PROFILE_PLACE_EMOJI = '👾'

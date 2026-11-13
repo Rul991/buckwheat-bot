@@ -14,6 +14,7 @@ export default class ShortenCommand extends BuckwheatCommand {
     override settingId: number = 73
     override name: string = 'сокращение'
     protected override _rankCanBeChange: boolean = false
+    override needData: boolean = true
 
     override async execute(options: BuckwheatCommandOptions): Promise<BuckwheatCommandExecuteResult> {
         const {

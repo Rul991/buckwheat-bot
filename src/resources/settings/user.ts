@@ -1,4 +1,4 @@
-import { DEFAULT_REACT_EMOJI, REACT_EMOJIES } from "../../consts/texts"
+import { DEFAULT_REACT_EMOJI, DESCRIPTION_PROFILE_PLACE_EMOJI, PLAYER_PROFILE_PLACE_EMOJI, REACT_EMOJIES } from "../../consts/texts"
 import { SettingValueTypes } from "../../protos/settings_pb"
 import Setting from "../../utils/settings/Setting"
 
@@ -63,6 +63,26 @@ export const noteEmojiesSetting = new Setting({
     valueType: SettingValueTypes.User
 })
 
+export const summonEmojiPlaceSetting = new Setting({
+    id: 6,
+    textKey: 'summon/emoji-place',
+    type: 'enum',
+    properties: {
+        values: [
+            DESCRIPTION_PROFILE_PLACE_EMOJI,
+            PLAYER_PROFILE_PLACE_EMOJI,
+        ]
+    },
+    default: DESCRIPTION_PROFILE_PLACE_EMOJI,
+    valueType: SettingValueTypes.User,
+    vars: {
+        emoji: {
+            description: DESCRIPTION_PROFILE_PLACE_EMOJI,
+            player: PLAYER_PROFILE_PLACE_EMOJI
+        }
+    }
+})
+
 export const userSettings = [
     grindSetting,
     pingEmojiSetting,
@@ -70,4 +90,5 @@ export const userSettings = [
     notesPublicSetting,
     autolinkSetting,
     noteEmojiesSetting,
+    summonEmojiPlaceSetting,
 ]

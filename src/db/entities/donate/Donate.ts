@@ -7,6 +7,12 @@ import ChatIdEntity from "../base/ChatIdEntity"
     }
 })
 export default class Donate extends ChatIdEntity {
+    @prop({ index: true })
+    declare id: number
+
+    @prop({ index: true })
+    declare chatId: number
+
     @prop()
     stars: number
 

@@ -2,4 +2,8 @@ include /utils/mixins.pug
 
 | #{EMOJIES.APPROVE} Игрок 
 +link(vars.user)
-| , новая заметка была добавлена!
+| , новая заметка была добавлена
+if folderTitle
+    |  в папку 
+    u #{folderTitle}
+| !

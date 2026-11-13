@@ -56,6 +56,12 @@ class NoteFolderService extends BaseService<typeof NoteFolder> {
             ]
         )
     }
+
+    async getFirst(owner: number) {
+        return await this._repo.findOne({
+            owner
+        })
+    }
 }
 
 export default new NoteFolderService()

@@ -1,6 +1,6 @@
 import { GREED_BOX_LEAVE_CHANCE } from "../../consts/chances"
-import { GREED_BOX_PRIZE, MAX_GREED_BOX_PRIZE } from "../../consts/number"
-import { COOKIE_TIME } from "../../consts/time"
+import { BAN_ITEM_CHANCE, GREED_BOX_PRIZE, MAX_GREED_BOX_PRIZE } from "../../consts/number"
+import { COOKIE_TIME, MILLISECONDS_IN_MINUTE } from "../../consts/time"
 import DuelistService from "../../db/services/duel/DuelistService"
 import GreedBoxService from "../../db/services/greed-box/GreedBoxService"
 import InventoryItemService from "../../db/services/items/InventoryItemService"
@@ -18,6 +18,7 @@ import Logger from "../../utils/logs/Logger"
 import LootBoxUtils from "../../utils/lootbox/LootBoxUtils"
 import RandomUtils from "../../utils/math/RandomUtils"
 import ShieldUtils from "../../utils/shield/ShieldUtils"
+import TimeUtils from "../../utils/time/TimeUtils"
 import { canUseUnmuteSetting } from "../settings/chat"
 
 export const businessPaperItem = new Item({
@@ -644,8 +645,15 @@ export const banItem = new Item({
         use: async ({
             ctx,
             item,
-            count
+            count,
+            id
         }) => {
+            const time = MILLISECONDS_IN_MINUTE * count
+            const isKicked = RandomUtils.chance(BAN_ITEM_CHANCE) && await AdminUtils.ban(
+                ctx,
+                id,
+                time
+            )
             await MessageUtils.reply(
                 ctx,
                 'admin/ban/item',
@@ -654,10 +662,15 @@ export const banItem = new Item({
                         item: item.getVars(ctx),
                         user: await ctx.vars.user.get(),
                         count,
+                        isKicked,
+                        time: TimeUtils.formatMillisecondsToTime(ctx, time)
                     }
                 }
             )
         }
+    },
+    maxCount: {
+        use: 1
     }
 })
 

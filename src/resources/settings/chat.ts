@@ -149,6 +149,13 @@ export const autoJoinSetting = new Setting({
     },
     default: SEND_MESSAGE_JOIN_REQUEST_SYMBOL,
     valueType: SettingValueTypes.Chat,
+    vars: {
+        emoji: {
+            automatic: AUTO_ALLOW_JOIN_REQUEST_SYMBOL,
+            admin: SEND_MESSAGE_JOIN_REQUEST_SYMBOL,
+            nothing: DO_NOTHING_JOIN_REQUEST_SYMBOL,
+        }
+    }
 })
 
 export const stickerChanceSetting = new Setting({

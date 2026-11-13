@@ -1,12 +1,12 @@
 include /utils/mixins.pug
 
-| #{EMOJIES.IDK} Игрок 
+| #{isKicked ? EMOJIES.BAN : EMOJIES.IDK} Игрок 
 +link(user)
-|  использовал предмет 
+|  использовал предмет
 b
     +item(item)
-    code  x#{formatNumber(count)}
-| , но ничего не произошло!
-| #{EMOJIES.MINUS} Как выяснилось, этот предмет ничего не делает!
-|
-tg-spoiler (какая жалость)
+if isKicked
+    |  и был забанен на #{time}
+else
+    | , но ничего не произошло
+| !

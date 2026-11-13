@@ -71,17 +71,17 @@ export default class DevCommand extends BuckwheatCommand {
         )
     }
 
-    private async _giveItems(chatId: number, id: number) {
-        const count = 1_000_000
-        for (const item of inventoryItems) {
-            await InventoryItemService.add({
-                chatId,
-                id,
-                item,
-                count
-            })
-        }
-    }
+    // private async _giveItems(chatId: number, id: number) {
+    //     const count = 1_000_000
+    //     for (const item of inventoryItems) {
+    //         await InventoryItemService.add({
+    //             chatId,
+    //             id,
+    //             item,
+    //             count
+    //         })
+    //     }
+    // }
 
     private async _giveMoney(chatId: number, id: number) {
         return await BalanceService.add({
